@@ -1,0 +1,487 @@
+/* Coco Vanille · « Atelier Vanille » base (v0c §7, 08 §6).
+   Mobile first, logical properties (a future RTL language stays possible), no layout shift. */
+:root {
+  --creme: #f7f0e3;
+  --coco: #fffcf6;
+  --gousse: #2e211a;
+  --gousse-soft: #5a4636;
+  --caramel: #c8915a;
+  --framboise: #b8435a;
+  --framboise-dark: #96344a;
+  --pistache: #b9c99a;
+  --line: #e6dccb;
+  --fact: #8a2b00;
+
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 2vw, 3rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --radius: 14px;
+  --ease-whip: cubic-bezier(0.22, 1, 0.36, 1);
+  --bar-height: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--creme);
+  color: var(--gousse);
+  font-family: var(--font-ui);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  /* Space reserved for the sticky bar so it never covers content. */
+  padding-block-end: calc(var(--bar-height) + env(safe-area-inset-bottom));
+}
+
+img,
+video {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+a {
+  color: var(--framboise-dark);
+  text-underline-offset: 0.18em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--framboise);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  line-height: 1.15;
+  font-weight: 560;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-3);
+  margin-block: var(--space-2) var(--space-2);
+}
+
+h2 {
+  font-size: var(--step-2);
+  margin-block: var(--space-4) var(--space-1);
+}
+
+h3 {
+  font-size: var(--step-1);
+  margin-block: var(--space-2) var(--space-1);
+}
+
+.wrap {
+  inline-size: min(100% - 2rem, 68rem);
+  margin-inline: auto;
+}
+
+.skip {
+  position: absolute;
+  inset-inline-start: -999px;
+}
+
+.skip:focus {
+  inset-inline-start: 1rem;
+  inset-block-start: 1rem;
+  background: var(--coco);
+  padding: var(--space-1) var(--space-2);
+  z-index: 10;
+}
+
+/* Header */
+.site-header {
+  background: var(--coco);
+  border-block-end: 1px solid var(--line);
+}
+
+.header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+  padding-block: var(--space-1);
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--gousse);
+  line-height: 1;
+}
+
+.wordmark-small {
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.wordmark-big {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-variation-settings: 'SOFT' 100;
+}
+
+.nav,
+.lang,
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.nav a,
+.lang a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 48px;
+  text-decoration: none;
+  color: var(--gousse);
+}
+
+.nav a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-color: var(--caramel);
+  text-decoration-thickness: 3px;
+}
+
+.lang a {
+  font-size: var(--step--1);
+}
+
+/* Breadcrumb */
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-size: var(--step--1);
+}
+
+.breadcrumb li + li::before {
+  content: '›';
+  margin-inline-end: 0.25rem;
+  color: var(--gousse-soft);
+}
+
+/* Page contract */
+.page {
+  padding-block-end: var(--space-4);
+}
+
+.answer {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  max-inline-size: 42rem;
+  border-inline-start: 4px solid var(--caramel);
+  padding-inline-start: var(--space-2);
+}
+
+.category-sentence {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+}
+
+.qa {
+  max-inline-size: 44rem;
+}
+
+.qa-answer {
+  font-weight: 560;
+}
+
+.key-facts {
+  background: var(--coco);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  margin-block: var(--space-4);
+  max-inline-size: 44rem;
+}
+
+.key-facts h2 {
+  margin-block-start: 0;
+}
+
+.faq details {
+  background: var(--coco);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+  margin-block: var(--space-1);
+  max-inline-size: 44rem;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-block-size: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.conversion-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block: var(--space-4);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 56px;
+  padding-inline: var(--space-3);
+  border-radius: 999px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 250ms var(--ease-whip), background-color 250ms var(--ease-whip);
+}
+
+.btn-primary {
+  background: var(--framboise);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--framboise-dark);
+}
+
+.btn-quiet {
+  border: 2px solid var(--gousse);
+  color: var(--gousse);
+}
+
+.meta-line {
+  font-size: var(--step--1);
+  color: var(--gousse-soft);
+}
+
+.notice {
+  background: #fff4e5;
+  border: 1px dashed var(--fact);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+}
+
+/* A missing fact is loud on staging, never silent (zero-invention rule). */
+.fact-needed {
+  color: var(--fact);
+  background: #fff4e5;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
+  padding-inline: 0.2em;
+}
+
+/* Tables: the quotable facts (portions, prices, hours, allergens). */
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+  max-inline-size: 44rem;
+  background: var(--coco);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+caption {
+  text-align: start;
+  font-weight: 650;
+  padding-block: var(--space-1);
+}
+
+th,
+td {
+  text-align: start;
+  padding: 0.65rem var(--space-2);
+  border-block-end: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+/* Products */
+.product-grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+}
+
+.product-card {
+  background: var(--coco);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+}
+
+.product-card h3 {
+  margin-block-start: 0;
+}
+
+.price {
+  font-weight: 650;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+
+.badge-soldout {
+  background: var(--gousse);
+  color: var(--coco);
+}
+
+.open-pill {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  background: var(--coco);
+  border: 1px solid var(--line);
+  min-block-size: 2.2rem;
+}
+
+.open-pill.is-open span {
+  color: #2f6b2f;
+}
+
+.open-pill.is-closed span {
+  color: var(--framboise-dark);
+}
+
+.small {
+  font-size: var(--step--1);
+  color: var(--gousse-soft);
+}
+
+/* Footer */
+.site-footer {
+  background: var(--gousse);
+  color: var(--creme);
+  padding-block: var(--space-4);
+  margin-block-start: var(--space-4);
+}
+
+.site-footer a {
+  color: var(--creme);
+}
+
+.site-footer table {
+  background: transparent;
+  color: var(--creme);
+}
+
+.site-footer th,
+.site-footer td {
+  border-color: #4a3a2f;
+  padding-inline: 0 var(--space-2);
+}
+
+.site-footer .fact-needed {
+  color: var(--gousse);
+}
+
+.footer-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.footer-title {
+  margin-block-start: 0;
+  font-size: var(--step-1);
+}
+
+.footer-links {
+  flex-direction: column;
+}
+
+address {
+  font-style: normal;
+}
+
+/* Sticky action bar (thumb zone) */
+.sticky-bar {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  block-size: calc(var(--bar-height) + env(safe-area-inset-bottom));
+  padding-block-end: env(safe-area-inset-bottom);
+  z-index: 5;
+}
+
+.sticky-bar a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--coco);
+  color: var(--gousse);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.sticky-bar a.primary {
+  background: var(--framboise);
+  color: #fff;
+}
+
+@media (min-width: 60rem) {
+  body {
+    padding-block-end: 0;
+  }
+
+  .sticky-bar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

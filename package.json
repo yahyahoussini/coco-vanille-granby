@@ -1,0 +1,14 @@
+{
+  "name": "coco-vanille-granby",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix apps/web run dev",
+    "build": "npm --prefix apps/web run build",
+    "start": "npm --prefix apps/web run start",
+    "seed": "npm --prefix apps/web run seed",
+    "test": "npm --prefix apps/web test",
+    "audit": "node tools/audit.mjs",
+    "links": "node tools/links.mjs"
+  }
+}

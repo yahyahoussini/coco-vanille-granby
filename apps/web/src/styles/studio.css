@@ -1,0 +1,32 @@
+/* Coco Studio base (16 §3.0): targets ≥ 48 px, primary buttons ≥ 64 px, status = icon + word + colour. */
+:root {
+  --s-bg: #f7f0e3;
+  --s-card: #fffcf6;
+  --s-ink: #2e211a;
+  --s-soft: #5a4636;
+  --s-line: #e6dccb;
+  --s-primary: #b8435a;
+  --s-ok: #2f6b2f;
+  --s-warn: #8a5a00;
+  --s-bad: #a12a2a;
+  --s-radius: 14px;
+  font-family: 'Inter Variable', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.studio {
+  margin: 0;
+  background: var(--s-bg);
+  color: var(--s-ink);
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.studio-main {
+  padding: 1rem;
+  max-inline-size: 48rem;
+  margin-inline: auto;
+}
