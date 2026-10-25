@@ -1,0 +1,699 @@
+{
+  "as_of": "2026-10-25",
+  "method": "WebSearch result summaries only (US-based, not a Granby-localized SERP); WebFetch/curl blocked; no page opened directly. Status: verified = 2+ independent sources or 1 official source; conflict = sources disagree; unverified = single non-official source or inference; needed = no public evidence.",
+  "entity": {
+    "status": "canonical DRAFT pending owner sign-off",
+    "name": "Pâtisserie Coco Vanille",
+    "legalName": "Pâtisserie Coco Vanille inc.",
+    "alternateName": ["Pâtisserie Cocovanille", "Patisserie Coco Vanille Inc"],
+    "identifier": { "type": "NEQ", "value": "1177082220" },
+    "schemaType": "Bakery",
+    "address": {
+      "streetAddress": "3 rue Court",
+      "addressLocality": "Granby",
+      "addressRegion": "QC",
+      "postalCode": "J2G 4Y6",
+      "addressCountry": "CA"
+    },
+    "geo": { "latitude": 45.3995807, "longitude": -72.7250821, "status": "unverified (brief's Google Maps pointer; Maps not openable)" },
+    "telephone": "+1-450-372-7177",
+    "telephoneDisplay": "450-372-7177",
+    "email": "[[FACT NEEDED: email]]",
+    "url": "[[FACT NEEDED: domain — none found]]",
+    "openingHours": "[[FACT NEEDED: current hours — 6 conflicting schedules, see fact hours.*]]",
+    "operatingStatus": "[[FACT NEEDED: confirm open in Oct 2026; RestoMontreal flags 'may be temporarily closed']]",
+    "foundingDate": "[[FACT NEEDED: shop opening date — corporation registered 2021-11-09]]",
+    "founder": "[[FACT NEEDED: owner/chef name, role, background]]",
+    "priceRange": "[[FACT NEEDED: owner price range — directory shows '$ & $$' (unverified)]]",
+    "areaServed": "[[FACT NEEDED: pickup only or delivery radius]]",
+    "sameAs": ["https://www.facebook.com/PatisserieCocoVanille/"],
+    "sameAs_unverified": ["https://www.instagram.com/coco_vanillegranby/"],
+    "category_sentence": "[[FACT NEEDED: owner to choose option A (custom cakes) or B (pâtisserie-boulangerie) — see research/01-business-facts.md §11]]"
+  },
+  "facts": [
+    {
+      "id": "name.trade.google",
+      "value": "Pâtisserie Cocovanille",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Listing name 'Pâtisserie Cocovanille', 3 Rue Court, Granby", "date": "undated (page title says 2026)" },
+        { "url": "https://canada.chamberofcommerce.com/business-directory/quebec/granby/pastry-shop/1192259-patisserie-cocovanille", "says": "Pâtisserie Cocovanille, pastry shop, Granby QC J2G 4Y6", "date": "undated" },
+        { "url": "https://foodpages.ca/ptisseriecocovanille", "says": "Pâtisserie Cocovanille, 3 Rue Court, Granby; listing updated 2023-11-25", "date": "2023-11-25" }
+      ],
+      "notes": "Brief states Google Maps uses this spelling; directories mirroring Google data use it too (inference)."
+    },
+    {
+      "id": "name.trade.owner_channels",
+      "value": "Pâtisserie Coco Vanille",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.facebook.com/PatisserieCocoVanille/about", "says": "Page name 'Pâtisserie Coco Vanille'", "date": "undated" },
+        { "url": "https://www.tripadvisor.com/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html", "says": "Listing 'Pâtisserie Coco Vanille', Granby", "date": "undated" },
+        { "url": "https://ici.radio-canada.ca/nouvelle/1932271/granby-travaux-marchand-rue", "says": "Names 'Pâtisserie Coco Vanille' among rue Principale merchants selling at the Marché public", "date": "2022" },
+        { "url": "https://marchepublicgranby.ca/exposants/", "says": "Exhibitor list includes Pâtisserie Coco Vanille", "date": "undated" }
+      ],
+      "notes": "Recommended canonical display name (pending owner)."
+    },
+    {
+      "id": "name.variants.errors",
+      "value": "'Patisserie Coco Vanill' (MapQuest typo); 'Pâtisserie Cocovanille, Magog, QC' (Wanderlog wrong city); 'Patisserie Coco Vanille Inc' as trade name (Yellow Pages, D&B)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.mapquest.com/ca/quebec/patisserie-coco-vanill-754679978", "says": "Patisserie Coco Vanill, 3 Rue Court, Granby", "date": "undated" },
+        { "url": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille", "says": "Title 'Pâtisserie Cocovanille, Magog, QC', phone +1 450-372-7177", "date": "undated" },
+        { "url": "https://www.yellowpages.ca/bus/Quebec/Granby/Patisserie-Coco-Vanille-Inc/102750737.html", "says": "Patisserie Coco Vanille Inc - 3 Rue Court, Granby, QC", "date": "undated" },
+        { "url": "https://www.dnb.com/business-directory/company-profiles.patisserie_coco_vanille_inc.def6e6d3ea762188a0f800c49a1dd49d.html", "says": "Patisserie Coco Vanille Inc, 3 Rue Ct Granby, QC, J2G 4Y6", "date": "undated" }
+      ],
+      "notes": "Citation cleanup targets."
+    },
+    {
+      "id": "legal.name",
+      "value": "Pâtisserie Coco Vanille inc.",
+      "status": "verified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Pâtisserie Coco Vanille inc. · 3 rue Court, Granby, Quebec J2G 4Y6", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Patisserie Coco Vanille inc. - 1177082220 - Québec", "date": "data as of 2026-05-31" }
+      ],
+      "notes": "Aggregators of the Registraire des entreprises; REQ itself not opened."
+    },
+    {
+      "id": "legal.neq",
+      "value": "1177082220",
+      "status": "verified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "NEQ 1177082220", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Company number 1177082220", "date": "data as of 2026-05-31" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "legal.form",
+      "value": "Société par actions (Québec Loi sur les sociétés par actions)",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Joint stock corporation under Quebec's Loi sur les sociétés par actions (per search summary)", "date": "undated" }
+      ],
+      "notes": "Confirm on REQ."
+    },
+    {
+      "id": "legal.registration_date",
+      "value": "2021-11-09",
+      "status": "verified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Registered (immatriculation) 2021-11-09", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "2021-11-09 (labelled incorporation date)", "date": "data as of 2026-05-31" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "legal.incorporation_date",
+      "value": "2021-11-08 (opengovca) vs 2021-11-09 (b2bhint)",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Incorporation date 2021-11-08", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Incorporation date 2021-11-09", "date": "data as of 2026-05-31" }
+      ],
+      "notes": "Resolve on REQ."
+    },
+    {
+      "id": "legal.status",
+      "value": "Immatriculée; not in liquidation as of 2026-05-31",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Status Registered / Immatriculée", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Not in liquidation as of May 31, 2026", "date": "2026-05-31" }
+      ],
+      "notes": "Most recent dated evidence of entity activity. Says nothing about the storefront."
+    },
+    {
+      "id": "legal.activity_code",
+      "value": "CAE 6013 – Boulangeries et pâtisseries",
+      "status": "verified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Economic activity 6013 - Boulangeries et pâtisseries", "date": "undated" },
+        { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Bakery and pastry-shop activity", "date": "data as of 2026-05-31" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "legal.employees_declared",
+      "value": "Aucun",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Number of employees: Aucun", "date": "undated" }
+      ],
+      "notes": "Likely a declaration artefact; do not publish."
+    },
+    {
+      "id": "address",
+      "value": "3 Rue Court, Granby, QC J2G 4Y6",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.yellowpages.ca/bus/Quebec/Granby/Patisserie-Coco-Vanille-Inc/102750737.html", "says": "3 Rue Court, Granby, QC", "date": "undated" },
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "3 rue Court, Granby, Quebec J2G 4Y6", "date": "undated" },
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "3 Rue Court, Granby, J2G 4Y6", "date": "undated" },
+        { "url": "https://canada.chamberofcommerce.com/business-directory/quebec/granby/pastry-shop/1192259-patisserie-cocovanille", "says": "3 Rue Court, Granby, Quebec J2G 4Y6", "date": "undated" }
+      ],
+      "notes": "Consistent on every source seen."
+    },
+    {
+      "id": "phone.primary",
+      "value": "450-372-7177",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.yellowpages.ca/bus/Quebec/Granby/Patisserie-Coco-Vanille-Inc/102750737.html", "says": "450-372-7177 Primary", "date": "undated" },
+        { "url": "https://www.allbiz.ca/p%C3%A2tisserie-cocovanille-450-372-7177", "says": "450-372-7177", "date": "undated" },
+        { "url": "https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027", "says": "+1 450-372-7177", "date": "2025-08-20" },
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "(450) 372-7177", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "phone.alternate",
+      "value": "450-372-5917",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://www.yellowpages.ca/search/si/1/Coco-Vanille/Granby+QC", "says": "One search summary reported 450-372-5917 on a Yellow Pages result; a follow-up search found no 5917 listing", "date": "undated" }
+      ],
+      "notes": "Ask owner: old line, second line or error."
+    },
+    {
+      "id": "web.domain",
+      "value": "none found",
+      "status": "needed",
+      "sources": [],
+      "notes": "Searched cocovanille.ca, patisseriecocovanille.com, handles. No website surfaced."
+    },
+    {
+      "id": "web.email",
+      "value": "none found",
+      "status": "needed",
+      "sources": [],
+      "notes": ""
+    },
+    {
+      "id": "hours.restomontreal",
+      "value": "Mon–Tue closed; Wed–Sat 8:30–17:30 (one summary: Thu to 18:30); Sun 9:00–17:00 (one summary: 17:30)",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Wed 8:30 am - 5:30 pm ... Sun 9 am - 5 pm; Mon, Tue closed", "date": "undated" }
+      ],
+      "notes": "Probably older schedule."
+    },
+    {
+      "id": "hours.threebestrated",
+      "value": "Thu–Fri 9:00–16:30; Sat 9:00–15:00; Sun–Wed closed",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://threebestrated.ca/fr-boulangeries-in-granby-qc", "says": "Jeudi et vendredi : 9h - 16h30. Sam : 9h - 15h. Lun-Mer et Dim : Fermé", "date": "2025" }
+      ],
+      "notes": "Same pattern on allbiz, wanderlog, find-open."
+    },
+    {
+      "id": "hours.find_open",
+      "value": "Thu–Fri 9:00–16:30 (one summary: Wed–Fri); Sat 9:00–15:00; Sun, Mon, Tue closed",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027", "says": "Hours set 2025-08-20; 9:00 AM–4:30 PM weekdays listed, Sat 9:00 AM–3:00 PM", "date": "2025-08-20" },
+        { "url": "https://www.allbiz.ca/p%C3%A2tisserie-cocovanille-450-372-7177", "says": "Thu–Fri 9 AM–4:30 PM; Sat 9 AM–3 PM; closed Mon–Wed, Sun", "date": "undated" },
+        { "url": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille", "says": "Thursday/Friday 9AM–4:30PM, Saturday 9AM–3PM", "date": "undated" }
+      ],
+      "notes": "Most recent dated schedule; probable current GBP hours (unverified)."
+    },
+    {
+      "id": "hours.chamberofcommerce",
+      "value": "Wed–Fri 9:00–17:00; Sat 9:00–16:00; Sun–Tue closed",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://canada.chamberofcommerce.com/business-directory/quebec/granby/pastry-shop/1192259-patisserie-cocovanille", "says": "Wednesday to Friday 9:00 AM - 5:00 PM and Saturday 9:00 AM - 4:00 PM", "date": "undated (reviews from 2023)" }
+      ],
+      "notes": "Likely oldest."
+    },
+    {
+      "id": "status.temporarily_closed_flag",
+      "value": "'Cette entreprise peut être temporairement fermée' / 'may be temporarily closed'",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Cette entreprise peut être temporairement fermée", "date": "undated" },
+        { "url": "https://www.restomontreal.ca/restaurants/takeout-granby/en/?f=33&d=103", "says": "May be temporarily closed", "date": "undated" },
+        { "url": "https://www.restomontreal.ca/restaurants/bakeries-granby/en/?c=338&d=103", "says": "This business may be temporarily closed", "date": "undated" }
+      ],
+      "notes": "Only RestoMontreal carries the flag; may mirror a GBP status. Critical to check."
+    },
+    {
+      "id": "status.operating_2025",
+      "value": "Likely operating in 2025",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "Listed #2 of 3 best bakeries in Granby; 4.8 from 115 ratings; order by phone, ready next day", "date": "2025" },
+        { "url": "https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027", "says": "Hours set 20.08.2025", "date": "2025-08-20" }
+      ],
+      "notes": "No 2026 post, review or news found. October 2026 status = needed."
+    },
+    {
+      "id": "history.rue_principale_merchant_2022",
+      "value": "Counted among rue Principale merchants selling through the Marché public kiosk during downtown works (works began Aug 2021; street closed > 1 year)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://ici.radio-canada.ca/nouvelle/1932271/granby-travaux-marchand-rue", "says": "Pâtisserie Coco Vanille among merchants with La Fabrique de Bagel, Tartes et Clafoutis, Les confiturières, C'est Belge, Avec un grand A", "date": "2022" },
+        { "url": "https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/", "says": "Visitors found prêts-à-manger from Pâtisserie Coco Vanille", "date": "2022-10-23" }
+      ],
+      "notes": "Earliest dated evidence of trading. Opening date still needed."
+    },
+    {
+      "id": "partner.marche_public",
+      "value": "Listed as exhibitor of Marché public de Granby et région",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://marchepublicgranby.ca/exposants/", "says": "Exhibitors include Pâtisserie Coco Vanille", "date": "undated" }
+      ],
+      "notes": "Confirm 2026 participation; potential local backlink/citation."
+    },
+    {
+      "id": "products.owner_description",
+      "value": "Nous offrons une grande variété de pâtisseries, gâteaux et pains !",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.facebook.com/PatisserieCocoVanille/about", "says": "Nous offrons une grande variété de pâtisseries, gâteaux et pains !", "date": "undated" }
+      ],
+      "notes": "Owner's own words."
+    },
+    {
+      "id": "products.named",
+      "value": "Croissants (almond), Paris-Brest, tarts (chocolate), cream pastries, cakes, strawberry shortcake, raspberry cake, vol-au-vent, breads, baguettes, frozen bread/baguettes, coffee, prêt-à-manger; sweet and savoury",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Croissants, cakes, tarts, handcrafted breads; reviews praise almond croissants, Paris-Brest, custom cakes", "date": "undated" },
+        { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "Pastries, cakes, breads (including baguettes), frozen bakery products, made-to-order items", "date": "2025" },
+        { "url": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille", "says": "Strawberry shortcake, raspberry cake, vol-au-vents (order by phone ahead), coffee", "date": "undated" },
+        { "url": "https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/", "says": "prêts-à-manger", "date": "2022-10-23" }
+      ],
+      "notes": "Directory/review-summary level; owner product list needed."
+    },
+    {
+      "id": "products.custom_cakes",
+      "value": "Custom / made-to-order cakes exist (thin evidence)",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Standouts include custom cakes; one concern regarding a cake order error", "date": "undated" },
+        { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "Made-to-order items", "date": "2025" }
+      ],
+      "notes": "No evidence of wedding cakes, macarons, bûches, catering, delivery."
+    },
+    {
+      "id": "service.next_day_phone_order",
+      "value": "Order by phone, ready the next day",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "You can order by phone and your order will be ready the next day", "date": "2025" }
+      ],
+      "notes": "Supports a 'gâteau pour demain' cluster if owner confirms lead time."
+    },
+    {
+      "id": "service.seating",
+      "value": "About ten seats",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Reviewer: the shop has only about ten seats", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "service.delivery_platforms",
+      "value": "Not found on Uber Eats, DoorDash or SkipTheDishes",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.skipthedishes.com/city-cuisines/granby/dessert", "says": "Generic Granby dessert page; shop not named", "date": "undated" },
+        { "url": "https://www.doordash.com/food-delivery/granby-qc-restaurants/", "says": "Generic Granby page; shop not named", "date": "undated" }
+      ],
+      "notes": "Absence of evidence only."
+    },
+    {
+      "id": "price.range",
+      "value": "$ & $$",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Price range $ to $$", "date": "undated" }
+      ],
+      "notes": "No item prices published anywhere."
+    },
+    {
+      "id": "reviews.google",
+      "value": "4.9 (86% five-star); count not shown",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Google 4.9; 86% 5-star", "date": "undated" }
+      ],
+      "notes": "Google review count = needed."
+    },
+    {
+      "id": "reviews.threebestrated",
+      "value": "4.8 from 115 ratings; ranked #2 bakery in Granby (behind Pain-Pain Boulangerie, ahead of Mélisse Pâtisserie)",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "4.8, 115 ratings, #2", "date": "2025" }
+      ],
+      "notes": "Editorial 50-point method."
+    },
+    {
+      "id": "reviews.restomontreal",
+      "value": "4.8 from 22 ratings",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "4.8 from 22 ratings", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "reviews.chamberofcommerce",
+      "value": "5.0 from 11 reviewers",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://canada.chamberofcommerce.com/business-directory/quebec/granby/pastry-shop/1192259-patisserie-cocovanille", "says": "5.0 Star Rating from 11 reviewers", "date": "reviews from 2023" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "reviews.wanderlog",
+      "value": "5.0 from 21 reviews",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille", "says": "5.0 rating from 21 reviews", "date": "undated" }
+      ],
+      "notes": "Listing mislabelled Magog."
+    },
+    {
+      "id": "reviews.tripadvisor",
+      "value": "Listing d27188801; .com/.co.za show no reviews; .ca snapshot shows 4.7 from 107 ratings with 'no reviews'",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://www.tripadvisor.com/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html", "says": "No reviews yet", "date": "undated" },
+        { "url": "https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html", "says": "4.7, 107 ratings; 'No reviews for this property yet'", "date": "labelled 2025" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "reviews.themes",
+      "value": "Positive: fresh pastries, almond croissants, Paris-Brest, custom cakes, strawberry shortcake, raspberry cake, vol-au-vent, friendly staff/owners, reasonable prices, cozy. Negative (1): cake order not as ordered (2 stars).",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Praise for pastries, almond croissants, Paris-Brest, custom cakes, staff, prices; one cake-order error", "date": "undated" },
+        { "url": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille", "says": "Praise for strawberry shortcake, pastries, coffee, staff; raspberry cake and vol-au-vents recommended", "date": "undated" }
+      ],
+      "notes": "Online-ordering spec must include written order recap to prevent repeat of the complaint."
+    },
+    {
+      "id": "social.facebook",
+      "value": "facebook.com/PatisserieCocoVanille — 605 likes (older snapshot); 1,046 followers, 103 talking about this (later snapshot)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.facebook.com/PatisserieCocoVanille/about", "says": "605 likes · 1 talking about this · 3 were here", "date": "snapshot undated" },
+        { "url": "https://www.facebook.com/PatisserieCocoVanille/", "says": "1,046 followers · 103 talking about this · 4 were here", "date": "snapshot undated" }
+      ],
+      "notes": "Page exists; counts depend on undated snapshots."
+    },
+    {
+      "id": "social.instagram",
+      "value": "@coco_vanillegranby",
+      "status": "unverified",
+      "sources": [],
+      "notes": "From the brief; not surfaced by any search (exact-handle search returned nothing)."
+    },
+    {
+      "id": "press.mentions",
+      "value": "Radio-Canada (2022) and La Voix de l'Est (2022-10-23) market-kiosk mentions; no awards found",
+      "status": "verified",
+      "sources": [
+        { "url": "https://ici.radio-canada.ca/nouvelle/1932271/granby-travaux-marchand-rue", "says": "Named among merchants", "date": "2022" },
+        { "url": "https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/", "says": "Prêts-à-manger from Pâtisserie Coco Vanille", "date": "2022-10-23" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "collision.choco_vanille",
+      "value": "choco.vanille (Le Marmiton, Granby) sells custom cakes — near-identical name, same city",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.facebook.com/chocovanille.marmiton/", "says": "Unique cakes, starting at $4 per portion; 1,402 likes", "date": "undated" },
+        { "url": "https://lemarmiton.ca/dessert-choco-vanille/", "says": "Le parfait gâteau d'anniversaire ou d'événement personnalisé", "date": "undated" }
+      ],
+      "notes": "Entity disambiguation and beachhead competitor."
+    },
+    {
+      "id": "collision.others",
+      "value": "Mancera 'Coco Vanille' perfume; Pâtisserie Coco (Montréal Chinatown); Coco Vanille (Bras-Panon, La Réunion, listed closed); Orange Coco (Granby, seeking buyer 2026-04-24); Cake Design Granby",
+      "status": "verified",
+      "sources": [
+        { "url": "https://alshayaperfumes.com/en/products/mancera-coco-vanille-edp-120-ml", "says": "Coco Vanille perfume by Mancera", "date": "undated" },
+        { "url": "https://tastet.ca/critiques/patisserie-coco-quartier-chinois/", "says": "Pâtisserie Coco, Chinatown Montréal", "date": "undated" },
+        { "url": "https://www.facebook.com/CocoVanille97412/", "says": "Boulangerie/Pâtisserie Coco Vanille (Réunion)", "date": "undated" },
+        { "url": "https://www.lavoixdelest.ca/affaires/affaires-locales/2026/04/24/la-proprio-dorange-coco-veut-tourner-la-page-AVE542UFAVGRRP6M45I4HZV5B4/", "says": "Orange Coco à Granby cherche un repreneur", "date": "2026-04-24" },
+        { "url": "https://cakegranby.ca/products/cocolat-vanille", "says": "Cake Design Granby, custom cupcakes and cakes", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "granby.population.census2021",
+      "value": "69,025 (2016: 66,222; +4.2%); 152.7 km²; 452.1/km²",
+      "status": "verified",
+      "sources": [
+        { "url": "https://en.wikipedia.org/wiki/Granby,_Quebec", "says": "Population 69,025 in the 2021 census; CA 90,833", "date": "undated" },
+        { "url": "https://www.careerbeacon.com/en/canada/quebec/granby", "says": "69,025 in 2021, up 4.2% from 66,222 in 2016; 152.7 km²; 452.1/km²", "date": "undated" }
+      ],
+      "notes": "Secondary sources citing Statistics Canada."
+    },
+    {
+      "id": "granby.population.ca2021",
+      "value": "90,833 (Wikipedia) vs 88,250 total in StatCan CA immigration table",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://en.wikipedia.org/wiki/Granby,_Quebec", "says": "Census agglomeration 90,833", "date": "undated" },
+        { "url": "https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/page.cfm?Lang=E&SearchText=Granby&DGUIDlist=2021S0504450&GENDERlist=1%2C2%2C3&STATISTIClist=1&HEADERlist=0", "says": "Total 88,250; immigrants 4,420", "date": "2021 census" }
+      ],
+      "notes": "Probably different universes (private households); unverified explanation."
+    },
+    {
+      "id": "granby.population.decree2026",
+      "value": "72,078 (décret 2026, in force 2026-01-01, ISQ estimates)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/gazette/pdf_encrypte/lois_reglements/2025F/86980.pdf", "says": "Granby (47017, V) 72 078 — décret de 2026", "date": "2025-12-24" },
+        { "url": "https://haute-yamaska.ca/la-mrc/territoire-et-municipalites/", "says": "Granby 72 078", "date": "undated" },
+        { "url": "https://www.granbyexpress.com/actualites/decret-populationnel-en-haute-yamaska-la-communaute-regionale-encore-en-progression/", "says": "72 078 Granbyens au 1er janvier", "date": "undated" }
+      ],
+      "notes": "Official figure to cite on the site."
+    },
+    {
+      "id": "granby.population.decree2025",
+      "value": "71,572",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.granbyexpress.com/actualites/decret-de-la-population-granby-sapproche-du-plateau-des-70-000-habitants/", "says": "Granby accueille 71 572 personnes", "date": "undated" },
+        { "url": "https://villes-et-villages.quebec/granby", "says": "Dernière valeur : 71 572 (2025)", "date": "undated" }
+      ],
+      "notes": "Superseded by decree 2026."
+    },
+    {
+      "id": "region.mrc",
+      "value": "MRC de La Haute-Yamaska, 8 municipalities, 98,146 (2026 decree, MRC site); 98,256 (Québec portrait, 2025)",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://haute-yamaska.ca/la-mrc/territoire-et-municipalites/", "says": "Granby 72 078; Canton de Shefford 7 703; Waterloo 5 713; Roxton Pond 4 881; Saint-Alphonse-de-Granby 3 544; Sainte-Cécile-de-Milton 2 266; Saint-Joachim-de-Shefford 1 551; Warden 410", "date": "undated (2026 decree values)" },
+        { "url": "https://www.economie.gouv.qc.ca/pages-regionales/estrie/portrait-regional/occupation-du-territoire", "says": "MRC total 98 256 (2025)", "date": "2025" }
+      ],
+      "notes": "Municipal values sum to 98,146."
+    },
+    {
+      "id": "region.administrative",
+      "value": "Estrie (moved from Montérégie, in force 2021-07-28)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://statistique.quebec.ca/fr/actualite/modification-decoupages-regions-administratives-estrie-et-monteregie", "says": "MRC 46 and 47 move from Montérégie (16) to Estrie (05), effective 2021-07-28", "date": "2021" },
+        { "url": "https://www.quebec.ca/nouvelles/actualites/details/les-mrc-brome-missisquoi-et-de-la-haute-yamaska-desormais-en-estrie-33282", "says": "Announcement Granby, 2021-07-08", "date": "2021-07-08" }
+      ],
+      "notes": "Use 'Estrie' / 'Cantons-de-l'Est' in copy and schema areaServed."
+    },
+    {
+      "id": "granby.language.french_mother_tongue",
+      "value": "62,150 = 91.8% (2016: 92.9%)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/page.cfm?topic=6&dguid=2021A00052447017&lang=F", "says": "Français langue maternelle 62 150, 91,8 %", "date": "2021 census" }
+      ],
+      "notes": "Granby ville (CSD 2447017)."
+    },
+    {
+      "id": "granby.language.home",
+      "value": "French most often at home 64,720 (95.6%); English 1,910 (2.8%)",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www12.statcan.gc.ca/census-recensement/2021/as-sa/fogs-spg/page.cfm?topic=6&dguid=2021A00052447017&lang=F", "says": "Langue parlée le plus souvent à la maison: français 64 720 (95,6 %), anglais 1 910 (2,8 %)", "date": "2021 census" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "granby.language.english_mother_tongue",
+      "value": "1,440 (≈2.1%, computed from 1,440 / 67,730); non-official only 3,020; multiple 1,120",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.citypopulation.de/en/canada/quebec/admin/la_haute_yamaska/2447017__granby/", "says": "Mother tongue: English 1,440; French 62,150; other 3,020; multiple 1,120", "date": "2021 census" }
+      ],
+      "notes": "Share computed by this agent."
+    },
+    {
+      "id": "granby.language.spanish",
+      "value": "2021 Granby figure not found; 2011 Granby CA: 965 Spanish mother-tongue speakers = 1.3% (most common non-official language)",
+      "status": "needed",
+      "sources": [
+        { "url": "https://www12.statcan.gc.ca/census-recensement/2011/as-sa/fogs-spg/Facts-cma-fra.cfm?LANG=Fra&GK=CMA&GC=450", "says": "Espagnol 965 locuteurs, 1,3 %", "date": "2011 census" }
+      ],
+      "notes": "Pull 2021 detailed mother tongue / home language table for CSD 2447017."
+    },
+    {
+      "id": "granby.immigration.2021",
+      "value": "3,550 immigrants (+15% vs 2016); 1,105 from the Americas incl. 535 Colombians",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.granbyexpress.com/actualites/plus-de-3500-immigrants-adoptent-granby/", "says": "3550 immigrants; 1105 from the Americas, including 535 Colombians (2021 census)", "date": "undated" }
+      ],
+      "notes": "Press citing StatCan; not confirmed in StatCan tables seen."
+    },
+    {
+      "id": "granby.refugee_destination",
+      "value": "One of 14 Québec destination cities for government-assisted refugees; SERY is the MIFI-mandated settlement organization",
+      "status": "verified",
+      "sources": [
+        { "url": "https://sery-granby.org/sery-cest/", "says": "Granby among the 14 Québec cities designated for government-assisted refugees", "date": "undated" },
+        { "url": "https://m105.ca/nouvelle/granby-et-le-sery-soulignent-la-journee-mondiale-des-refugies/", "says": "Granby and SERY mark World Refugee Day; destination-city status", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "granby.colombian_community",
+      "value": "Most Colombian immigrants arrived as refugees around the early 2000s; several now run businesses",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.ledevoir.com/actualites/societe/763253/immigration-de-refugies-colombiens-a-entrepreneurs-granbyiens", "says": "La plupart sont arrivés à Granby en tant que réfugiés au tournant des années 2000", "date": "undated" },
+        { "url": "https://sery-granby.org/une-hausse-notable-dans-laccueil-des-immigrants/", "says": "Colombians among leading nationalities received (2023)", "date": "2023" }
+      ],
+      "notes": "Supports a Spanish page subset; quinceañera demand unproven."
+    },
+    {
+      "id": "tourism.zoo.visitors",
+      "value": "2025: >665,000 (+45,000); 2024: 620,000 (−25,000 vs 2023; lockout Jul 2024–Feb 2025); summer 2025 >500,000 (+15%); summer 2024 446,000",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.granbyexpress.com/actualites/bilan-2025-le-zoo-de-granby-rebondit-apres-une-annee-en-demi-teinte/", "says": "Plus de 665 000 visiteurs en 2025 (per search summary)", "date": "2025/2026 (not shown)" },
+        { "url": "https://www.journalleguide.com/infolettre/un-bilan-2024-en-demi-teinte-pour-le-zoo/", "says": "620 000 visiteurs (2024) (per search summary)", "date": "not shown" },
+        { "url": "https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby", "says": "Plus de 500 000 visiteurs cet été, hausse de 15 %", "date": "not shown" },
+        { "url": "https://en.wikipedia.org/wiki/Granby_Zoo", "says": "Summer attendance 446,000, ~4,000 fewer than 2023, below target 475,000", "date": "undated" }
+      ],
+      "notes": "Annual figures not re-confirmed by a second search; cite only after opening the primary release."
+    },
+    {
+      "id": "tourism.ficg.2026",
+      "value": "58th edition, 13–23 Aug 2026; attendance not found",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://festapp.io/festivals/festival-international-de-la-chanson-de-granby/2026", "says": "FICG 2026, 13–23 August, 58th edition", "date": "2026" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "tourism.lac_boivin",
+      "value": "CINLB, 700 rue Drummond, Granby; ~10 km trails, >400 m boardwalks; ZICO bird site; free parking",
+      "status": "verified",
+      "sources": [
+        { "url": "https://www.quebecvacances.com/en/attractions/centre-dinterpretation-de-la-nature-du-lac-boivin", "says": "10 km hiking trails, 400+ m wooden footbridges", "date": "undated" },
+        { "url": "https://www.easterntownships.org/things-to-do/210/centre-d-interpretation-de-la-nature-du-lac-boivin", "says": "700 rue Drummond; bird-watching site", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "tourism.marche_public",
+      "value": "Marché public de Granby et région, rue Principale (176 vs 160); 2026 season Saturdays 2 May–7 Nov 9:00–14:00, Thursdays 18 Jun–27 Aug 16:00–19:00",
+      "status": "conflict",
+      "sources": [
+        { "url": "https://www.bonjourquebec.com/en-us/listing/to-see-and-do/marche-public-de-granby-et-region/1dx2", "says": "Marché public de Granby et région listing", "date": "undated" },
+        { "url": "https://easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region", "says": "160, rue Principale; Saturdays June to October", "date": "undated" },
+        { "url": "https://marchepublicgranby.ca/exposants/", "says": "Exhibitors list (season dates per search summary)", "date": "undated" }
+      ],
+      "notes": "Address conflict 176 vs 160; season dates from a search summary only."
+    },
+    {
+      "id": "downtown.works",
+      "value": "Rue Principale works from Aug 2021 (street closed > 1 year); phase 2 Gill→Court then Court→Dufferin, $14,995,000; City lists 'Rue Principale, phase 2' sewer works mid-Aug–mid-Oct 2025 and 'phase 3' in 2026",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://ici.radio-canada.ca/nouvelle/1932271/granby-travaux-marchand-rue", "says": "Works began August 2021; street closed more than a year", "date": "2022" },
+        { "url": "https://www.granbyexpress.com/actualites/centre-ville-de-granby-la-phase-2-des-travaux-de-revitalisation-est-lancee/", "says": "Phase 2 Gill to Court closed, then Court to Dufferin; 14 995 000 $", "date": "undated (2022–2023 per summary)" },
+        { "url": "https://www.granby.ca/fr/ville/travaux-voirie-2025", "says": "Rue Principale, phase 2 — égout et aqueduc, mi-août à mi-octobre", "date": "2025" },
+        { "url": "https://www.granby.ca/fr/travaux-voirie", "says": "Rue Principale, phase 3 (2026)", "date": "2026" }
+      ],
+      "notes": "Whether 2025/2026 segments touch rue Court is unverified."
+    },
+    {
+      "id": "distance.bromont",
+      "value": "26 km by road (~25 min); straight line 9.9–11.3 km",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.distancede.com/ca/distance-entre-granby-et-bromont/HistoiredeDistance/2111214.aspx", "says": "26 km, ~25 min", "date": "undated" },
+        { "url": "https://www.thecitiesnow.com/canada/granby", "says": "Bromont 7.03 miles", "date": "undated" },
+        { "url": "https://www.distantias.com/towns-radius-granby-quebec-canada.htm", "says": "Bromont 6.15 miles", "date": "undated" }
+      ],
+      "notes": "Calculator sites; recompute from verified geo with a routing API."
+    },
+    {
+      "id": "distance.waterloo",
+      "value": "Straight line 17.3–17.8 km; road distance not found",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.thecitiesnow.com/canada/granby", "says": "Waterloo 11.07 miles", "date": "undated" },
+        { "url": "https://www.distantias.com/towns-radius-granby-quebec-canada.htm", "says": "Waterloo 10.76 miles", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "distance.cowansville",
+      "value": "29 km by road; 22.28 km straight line",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.bonnesroutes.com/rating/country/1428125/430", "says": "Granby–Cowansville 29 km", "date": "undated" },
+        { "url": "https://www.thecitiesnow.com/canada/granby", "says": "Cowansville 13.84 miles (22.28 km)", "date": "undated" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "distance.montreal",
+      "value": "~80 km east of Montréal; 83.74 km driving Montréal→Zoo (~1 h 12)",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.travelprofy.com/montreal/granby-zoo", "says": "83.74 km, about 1 h 12 min", "date": "undated" }
+      ],
+      "notes": ""
+    }
+  ],
+  "fact_needed": [
+    "Is the shop open in Oct 2026? Is the Google Business Profile set to 'temporarily closed'? Who holds GBP owner access?",
+    "Exact name on the storefront sign; approve canonical NAP 'Pâtisserie Coco Vanille · 3 rue Court, Granby (QC) J2G 4Y6 · 450-372-7177'",
+    "Current weekly hours, holiday hours, seasonal closures",
+    "Is 450-372-5917 an old/second line or an error?",
+    "Owner and chef names, roles, training, background; photo consent (About/Founder pages)",
+    "Shop opening date; any previous business or previous Coco Vanille location at/before 3 rue Court",
+    "Business email; any registered domain",
+    "Instagram handle confirmation (@coco_vanillegranby?), follower counts, other social accounts",
+    "Revenue mix (counter viennoiseries/bread/café vs custom cakes vs market vs frozen); custom-cake orders per week; lead times",
+    "Product list with prices: sizes, portions, flavours, finishes, custom-cake price grid, deposit policy",
+    "Wedding cakes offered? tiers, delivery, set-up",
+    "Delivery offered? radius, fee, days",
+    "Allergen policy (nuts, gluten); MAPAQ permit number/category",
+    "Seating count, Wi-Fi, parking (with photos)",
+    "Current Google review count; context and fix for the cake-order complaint",
+    "2026 participation at the Marché public de Granby",
+    "Spanish-speaking staff/customers (justifies ES tier and WhatsApp on ES pages)",
+    "Directors/shareholders from REQ (if a Person/founder entity is wanted)",
+    "Granby 2021 Spanish mother-tongue and home-language counts (StatCan detailed table, CSD 2447017)",
+    "Road distances from 3 rue Court to Shefford, Saint-Alphonse-de-Granby, Roxton Pond, Saint-Paul-d'Abbotsford, Sainte-Cécile-de-Milton, Waterloo (compute from verified geo)",
+    "Walking distance from 3 rue Court to the Marché public, Zoo de Granby and Lac Boivin"
+  ]
+}
