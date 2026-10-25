@@ -666,9 +666,331 @@ const patisseries = {
   },
 }
 
+// ---------- Legal (07 §1–§5). Drafts for counsel: every page carries the lawyer-review marker. ----------
+const LAWYER = fn('révision par un avocat')
+const PREVAILS = 'This English translation is provided for information; in case of discrepancy, the French version prevails.'
+
+const confidentialite = {
+  key: 'confidentialite',
+  status: 'core',
+  locales: {
+    fr: {
+      title: 'Politique de confidentialité · Pâtisserie Coco Vanille',
+      description: 'Comment la Pâtisserie Coco Vanille, à Granby, recueille, utilise et protège vos renseignements personnels selon la Loi 25, et comment exercer vos droits.',
+      h1: 'Politique de confidentialité',
+      answer:
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, recueille seulement les renseignements nécessaires pour préparer vos commandes et répondre à vos demandes. Cette politique explique quels renseignements sont recueillis, pourquoi, où ils sont conservés et comment exercer vos droits selon la Loi 25. ${LAWYER}.`,
+      sections: [
+        s('Qui est responsable de vos renseignements personnels?', 'La personne responsable de la protection des renseignements personnels de Pâtisserie Coco Vanille inc. est désignée dans l’encadré « Responsable » de cette page, avec son titre et ses coordonnées. Par défaut, la loi confie ce rôle à la personne qui a la plus haute autorité dans l’entreprise, qui peut le déléguer par écrit.', {
+          body: 'Entreprise : Pâtisserie Coco Vanille inc., 3, rue Court, Granby (Québec) J2G 4Y6, numéro d’entreprise du Québec 1177082220, téléphone 450-372-7177.',
+        }),
+        s('Quels renseignements recueillez-vous et pourquoi?', 'La Pâtisserie Coco Vanille recueille seulement ce qu’il faut pour préparer et remettre votre commande, et pour vous répondre.', {
+          list: [
+            'Commande : nom, téléphone, courriel, produits, date et plage de cueillette, pour préparer la commande, vous joindre et vous envoyer la confirmation.',
+            'Demande de gâteau : description, photo de référence, nombre d’invités et date, pour préparer la soumission.',
+            'Note d’allergie, facultative : seulement pour préparer votre commande; elle n’est jamais copiée dans un courriel, un texto ou un outil d’intelligence artificielle.',
+            'Paiement : traité par le processeur de paiement; la boutique ne voit ni ne conserve le numéro de votre carte.',
+            'Consentements aux témoins et aux messages : votre choix, sa date et la version du texte accepté, pour prouver votre consentement.',
+            'Journaux du serveur : adresse IP et pages demandées, pour la sécurité du site.',
+          ],
+        }),
+        s('Vos renseignements sortent-ils du Québec?', `Certains fournisseurs peuvent traiter des renseignements hors du Québec, comme le processeur de paiement, le service d’envoi de textos et, si vous les activez, les outils de mesure d’audience. Avant de leur communiquer un renseignement, la boutique fait une évaluation des facteurs relatifs à la vie privée et signe une entente écrite, comme l’exige l’article 17 de la loi.`, {
+          body: `Fournisseurs, pays de traitement et date des évaluations : ${fn('liste des fournisseurs, pays de traitement et évaluations')}. Hébergement du site et de la base de données : ${fn('fournisseur et ville du centre de données')}.`,
+        }),
+        s('Quels sont vos droits?', `Vous pouvez demander l’accès à vos renseignements, leur rectification et leur communication dans un format technologique structuré et couramment utilisé, et retirer un consentement à tout moment. Écrivez à la personne responsable; délai de réponse : ${fn('délai de réponse aux demandes d’accès')}.`, {
+          body: 'Si vous n’êtes pas satisfait de la réponse, vous pouvez porter plainte à la Commission d’accès à l’information du Québec.',
+        }),
+        s('Que faites-vous en cas d’incident de confidentialité?', 'La boutique inscrit chaque incident de confidentialité dans un registre. Si un incident présente un risque de préjudice sérieux, elle avise la Commission d’accès à l’information et les personnes concernées, et prend les mesures pour limiter le préjudice.'),
+        s('Combien de temps gardez-vous vos renseignements?', 'La boutique garde vos renseignements le temps nécessaire aux fins indiquées, puis les détruit ou les rend anonymes.', {
+          list: [
+            `Commandes et factures : ${fn('durée de conservation exigée par les règles fiscales')}`,
+            `Note d’allergie : ${fn('durée de conservation de la note d’allergie (30 jours après la cueillette proposé)')}`,
+            `Journaux du serveur : ${fn('durée de conservation des journaux (90 jours proposé)')}`,
+            `Boîtes abandonnées : ${fn('durée de conservation des boîtes non commandées')}`,
+          ],
+        }),
+      ],
+      faq: [
+        q('Vendez-vous mes renseignements personnels?', 'Non : la Pâtisserie Coco Vanille ne vend ni ne loue vos renseignements personnels.'),
+        q('Mon numéro de carte est-il conservé?', 'Non : le numéro de carte est saisi sur la page sécurisée du processeur de paiement et n’arrive jamais sur les serveurs de la boutique.'),
+        q('Allez-vous m’envoyer des courriels promotionnels?', 'Seulement si vous cochez la case prévue pour chaque type de message : précommandes saisonnières, rappel d’anniversaire ou demande d’avis. Chaque message permet de vous désabonner.'),
+        q('Utilisez-vous des témoins?', 'Seulement les témoins essentiels par défaut. Les outils de mesure d’audience restent désactivés tant que vous ne les activez pas; la page Témoins donne le détail.'),
+        q('Comment retirer mon consentement?', 'Pour les témoins, le lien « Témoins » en bas de chaque page permet de changer votre choix. Pour les messages, utilisez le lien de désabonnement ou répondez STOP à un texto.'),
+        q('Mes renseignements servent-ils à entraîner une intelligence artificielle?', 'Non : aucun renseignement de commande ni aucune note d’allergie n’est transmis à un outil d’intelligence artificielle.'),
+      ],
+      changeNote: 'Première version de la politique, à faire réviser par un avocat avant la mise en ligne.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Privacy policy · Pâtisserie Coco Vanille, Granby',
+      description: 'How Pâtisserie Coco Vanille in Granby, Québec, collects, uses and protects your personal information under Québec’s Law 25, and how to exercise your rights.',
+      h1: 'Privacy policy',
+      answer:
+        `Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec, only collects the information it needs to prepare your orders and answer your requests. This policy explains what is collected, why, where it is kept and how to exercise your rights under Law 25. ${PREVAILS} ${LAWYER}.`,
+      sections: [
+        s('Who is responsible for your personal information?', 'The person in charge of protecting personal information at Pâtisserie Coco Vanille inc. is named in the “Person in charge” box on this page, with their title and contact details. By default, the law gives this role to the person with the highest authority in the business, who may delegate it in writing.', {
+          body: 'Business: Pâtisserie Coco Vanille inc., 3 rue Court, Granby, Québec J2G 4Y6, Québec enterprise number 1177082220, phone 450-372-7177.',
+        }),
+        s('What information do you collect, and why?', 'Pâtisserie Coco Vanille only collects what it needs to prepare and hand over your order, and to answer you.', {
+          list: [
+            'Order: name, phone, email, products, pickup date and slot, to prepare the order, reach you and send the confirmation.',
+            'Cake request: description, reference photo, number of guests and date, to prepare the quote.',
+            'Allergy note, optional: only used to prepare your order; never copied into an email, a text message or an artificial-intelligence tool.',
+            'Payment: handled by the payment processor; the shop never sees or stores your card number.',
+            'Cookie and message consents: your choice, its date and the version of the text you accepted, to prove your consent.',
+            'Server logs: IP address and pages requested, for the security of the site.',
+          ],
+        }),
+        s('Does your information leave Québec?', 'Some providers may process information outside Québec, such as the payment processor, the text-message service and, if you turn them on, audience-measurement tools. Before sharing any information with them, the shop carries out a privacy impact assessment and signs a written agreement, as section 17 of the law requires.', {
+          body: `Providers, processing countries and assessment dates: ${fn('provider list, processing countries and assessments')}. Hosting of the site and database: ${fn('provider and data-centre city')}.`,
+        }),
+        s('What are your rights?', `You may ask to access your information, to correct it and to receive it in a structured, commonly used technological format, and you may withdraw a consent at any time. Write to the person in charge; response time: ${fn('response time for access requests')}.`, {
+          body: 'If you are not satisfied with the answer, you may file a complaint with the Commission d’accès à l’information du Québec.',
+        }),
+        s('What happens if there is a confidentiality incident?', 'The shop records every confidentiality incident in a register. If an incident carries a risk of serious injury, it notifies the Commission d’accès à l’information and the people concerned, and takes steps to limit the harm.'),
+        s('How long do you keep your information?', 'The shop keeps your information as long as needed for the purposes stated, then destroys it or makes it anonymous.', {
+          list: [
+            `Orders and invoices: ${fn('retention required by tax rules')}`,
+            `Allergy note: ${fn('allergy note retention (30 days after pickup proposed)')}`,
+            `Server logs: ${fn('log retention (90 days proposed)')}`,
+            `Abandoned boxes: ${fn('retention of boxes never ordered')}`,
+          ],
+        }),
+      ],
+      faq: [
+        q('Do you sell my personal information?', 'No: Pâtisserie Coco Vanille does not sell or rent your personal information.'),
+        q('Is my card number stored?', 'No: your card number is entered on the payment processor’s secure page and never reaches the shop’s servers.'),
+        q('Will you send me promotional emails?', 'Only if you tick the box for each kind of message: seasonal pre-orders, birthday reminder or review request. Every message lets you unsubscribe.'),
+        q('Do you use cookies?', 'Only essential cookies by default. Audience-measurement tools stay off until you turn them on; the Cookies page has the details.'),
+        q('How do I withdraw my consent?', 'For cookies, the “Cookies” link at the bottom of every page lets you change your choice. For messages, use the unsubscribe link or reply STOP to a text message.'),
+        q('Is my information used to train artificial intelligence?', 'No: no order information and no allergy note is sent to an artificial-intelligence tool.'),
+      ],
+      changeNote: 'First version of the policy, to be reviewed by a lawyer before launch.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const conditionsDeVente = {
+  key: 'conditions-de-vente',
+  status: 'core',
+  locales: {
+    fr: {
+      title: 'Conditions de vente · Pâtisserie Coco Vanille, Granby',
+      description: 'Conditions de vente de la Pâtisserie Coco Vanille, à Granby : commande en ligne, prix tout compris, acompte, cueillette, annulation, remboursement en 15 jours.',
+      h1: 'Conditions de vente',
+      answer:
+        `Ces conditions s’appliquent aux commandes passées en ligne ou par téléphone à la Pâtisserie Coco Vanille, au 3, rue Court, à Granby, pour une cueillette en boutique. Elles précisent les prix, le paiement, l’acompte, la cueillette, l’annulation et le remboursement, selon la Loi sur la protection du consommateur. ${LAWYER}.`,
+      sections: [
+        s('Qui vend et comment nous joindre?', `Le commerçant est Pâtisserie Coco Vanille inc., 3, rue Court, Granby (Québec) J2G 4Y6, numéro d’entreprise du Québec 1177082220, téléphone 450-372-7177. Courriel : ${fn('adresse courriel de la boutique')}.`, {
+          body: `Numéros d’inscription à la TPS et à la TVQ : ${fn('numéros de TPS et de TVQ')}.`,
+        }),
+        s('Comment le contrat est-il conclu?', 'Le contrat est conclu quand vous confirmez la commande, après avoir vérifié le récapitulatif et coché la case « J’ai lu et j’accepte les conditions de vente ». Aucune case n’est cochée d’avance.', {
+          body: 'Avant la confirmation, le récapitulatif indique chaque produit, son prix, la quantité, les options, la date et la plage de cueillette, l’adresse de cueillette, le total avant taxes, la TPS, la TVQ et le total en dollars canadiens, ainsi que l’acompte et le solde s’il y a lieu. Vous pouvez corriger chaque ligne avant de confirmer.\n\nUne copie du contrat vous est envoyée par courriel dès la confirmation, en français d’abord, avec ces conditions.',
+        }),
+        s('Quels prix et quels frais s’appliquent?', 'Le prix affiché comprend tous les frais obligatoires; seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Aucun frais de service, d’emballage ou de carte n’est ajouté, et le prix est le même quel que soit le mode de paiement.', {
+          body: 'Les taxes dépendent du produit et de la quantité; leur montant est affiché séparément avant le paiement. La boutique n’exige jamais plus que le prix annoncé.',
+        }),
+        s('Comment fonctionne l’acompte d’un gâteau personnalisé?', `Un gâteau personnalisé est réservé par un acompte de ${DEPOSIT_FR} du prix, payé à l’acceptation de la soumission; le solde se paie à la cueillette.`, {
+          body: `Durée de validité d’une soumission : ${fn('durée de validité des soumissions')}. Ce que couvre l’acompte et son remboursement en cas d’annulation : ${fn('règle de remboursement de l’acompte, à rédiger avec l’avocat')}.`,
+        }),
+        s('Comment se passe la cueillette?', `Vous récupérez votre commande au 3, rue Court, à Granby, pendant la plage choisie, en donnant votre numéro de commande. La boutique ne change jamais une date ou une plage confirmée sans votre accord.`, {
+          body: `Commande non récupérée pendant la plage : ${fn('politique pour les commandes non récupérées')}.`,
+        }),
+        s('Puis-je annuler, et quand suis-je remboursé?', `Vous pouvez annuler sans frais jusqu’à ${fn('délai d’annulation sans frais avant la cueillette')}, en appelant au 450-372-7177. Si la boutique ne peut pas remplir la commande, ou si la date du contrat diffère de celle annoncée avant l’achat, vous pouvez annuler et êtes remboursé au complet dans les 15 jours.`, {
+          body: `Si un remboursement dû n’est pas fait, vous pouvez demander à l’émetteur de votre carte de crédit d’annuler le paiement, dans les 60 jours. Produit non conforme ou abîmé : ${fn('recours offert pour un produit non conforme, à rédiger avec l’avocat')}.`,
+        }),
+      ],
+      faq: [
+        q('Puis-je annuler une commande en ligne à n’importe quel moment?', 'Non : au Québec, il n’existe pas de droit général d’annuler un achat en ligne. L’annulation suit les règles ci-dessus et les cas prévus par la Loi sur la protection du consommateur.'),
+        q('Dans quelle langue est le contrat?', 'En français. Une traduction anglaise est offerte pour information; en cas de divergence, la version française prévaut.'),
+        q('Le prix peut-il changer après ma commande?', 'Non : le prix confirmé dans le récapitulatif est celui que vous payez.'),
+        q('Y a-t-il un pourboire à payer en ligne?', 'Non : la commande en ligne ne propose aucun pourboire.'),
+        q('Les cartes-cadeaux expirent-elles?', `Non : une carte-cadeau de la Pâtisserie Coco Vanille n’a ni date d’expiration ni frais. Cartes-cadeaux offertes : ${fn('cartes-cadeaux offertes ou non')}.`),
+        q('Comment obtenir une copie de mon contrat?', 'La confirmation envoyée par courriel est votre copie du contrat. Pour en recevoir une autre, appelez au 450-372-7177.'),
+      ],
+      changeNote: 'Première version des conditions, à faire réviser par un avocat avant la vente en ligne.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Terms of sale · Pâtisserie Coco Vanille, Granby',
+      description: 'Terms of sale of Pâtisserie Coco Vanille in Granby, Québec: online orders, all-in prices, deposit, pickup, cancellation and refunds within 15 days.',
+      h1: 'Terms of sale',
+      answer:
+        `These terms apply to orders placed online or by phone with Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec, for pickup at the shop. They cover prices, payment, the deposit, pickup, cancellation and refunds under Québec’s Consumer Protection Act. ${PREVAILS} ${LAWYER}.`,
+      sections: [
+        s('Who is the seller, and how do I reach you?', `The merchant is Pâtisserie Coco Vanille inc., 3 rue Court, Granby, Québec J2G 4Y6, Québec enterprise number 1177082220, phone 450-372-7177. Email: ${fn('shop email address')}.`, {
+          body: `GST and QST registration numbers: ${fn('GST and QST numbers')}.`,
+        }),
+        s('How is the contract made?', 'The contract is made when you confirm the order, after checking the summary and ticking the box “I have read and accept the terms of sale”. No box is ticked in advance.', {
+          body: 'Before you confirm, the summary shows each product, its price, the quantity, the options, the pickup date and slot, the pickup address, the total before taxes, GST, QST and the total in Canadian dollars, plus the deposit and balance where they apply. You can correct every line before confirming.\n\nA copy of the contract is emailed to you as soon as you confirm, French version first, with these terms. On the English site, you confirm that you received the French version and expressly choose to be bound by the English version.',
+        }),
+        s('Which prices and fees apply?', 'The price shown includes every mandatory fee; only GST and QST are added where they apply. No service, packaging or card fee is added, and the price is the same whatever the payment method.', {
+          body: 'Taxes depend on the product and quantity; their amount is shown separately before payment. The shop never charges more than the advertised price.',
+        }),
+        s('How does the deposit for a custom cake work?', `A custom cake is reserved with a deposit of ${DEPOSIT_EN} of the price, paid when you accept the quote; the balance is paid at pickup.`, {
+          body: `How long a quote is valid: ${fn('quote validity period')}. What the deposit covers and its refund if you cancel: ${fn('deposit refund rule, to be written with the lawyer')}.`,
+        }),
+        s('How does pickup work?', 'You pick up your order at 3 rue Court, Granby, during the slot you chose, by giving your order number. The shop never changes a confirmed date or slot without your agreement.', {
+          body: `Orders not picked up during the slot: ${fn('policy for orders not picked up')}.`,
+        }),
+        s('Can I cancel, and when am I refunded?', `You may cancel at no charge up to ${fn('free cancellation deadline before pickup')}, by calling 450-372-7177. If the shop cannot fill the order, or if the date in the contract differs from the one announced before purchase, you may cancel and are refunded in full within 15 days.`, {
+          body: `If a refund that is owed is not made, you may ask your credit-card issuer to reverse the payment, within 60 days. Product not as ordered or damaged: ${fn('remedy for a product not as ordered, to be written with the lawyer')}.`,
+        }),
+      ],
+      faq: [
+        q('Can I cancel an online order at any time?', 'No: in Québec there is no general right to cancel an online purchase. Cancellation follows the rules above and the cases set out in the Consumer Protection Act.'),
+        q('What language is the contract in?', `French. This English translation is provided for information; in case of discrepancy, the French version prevails.`),
+        q('Can the price change after I order?', 'No: the price confirmed in the summary is the price you pay.'),
+        q('Is there a tip to pay online?', 'No: online ordering never asks for a tip.'),
+        q('Do gift cards expire?', `No: a Pâtisserie Coco Vanille gift card has no expiry date and no fees. Gift cards offered: ${fn('gift cards offered or not')}.`),
+        q('How do I get a copy of my contract?', 'The confirmation sent by email is your copy of the contract. For another copy, call 450-372-7177.'),
+      ],
+      changeNote: 'First version of the terms, to be reviewed by a lawyer before online sales start.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const temoins = {
+  key: 'temoins',
+  status: 'core',
+  locales: {
+    fr: {
+      title: 'Témoins et consentement · Pâtisserie Coco Vanille',
+      description: 'Quels témoins le site de la Pâtisserie Coco Vanille, à Granby, utilise-t-il? Les essentiels seulement; la mesure d’audience reste éteinte sans votre accord.',
+      h1: 'Témoins et consentement',
+      answer:
+        `Le site de la Pâtisserie Coco Vanille, boutique du 3, rue Court, à Granby, n’utilise par défaut que les témoins essentiels à son fonctionnement, comme « Ma boîte » et la sécurité du paiement. Les outils de mesure d’audience restent désactivés tant que vous ne les activez pas. ${LAWYER}.`,
+      sections: [
+        s('Qu’est-ce qu’un témoin?', 'Un témoin, ou « cookie », est un petit fichier qu’un site enregistre dans votre navigateur pour se souvenir d’une information, comme le contenu de votre boîte ou votre choix de témoins.'),
+        s('Quels témoins le site utilise-t-il?', 'Le site utilise deux catégories de témoins : les essentiels, toujours actifs, et la mesure d’audience, seulement avec votre accord.', {
+          list: [
+            'Essentiels, toujours actifs : « Ma boîte », sécurité des formulaires et du paiement, mémoire de votre choix de témoins. Sans eux, la commande en ligne ne fonctionne pas.',
+            `Mesure d’audience, désactivée par défaut : outils qui comptent les visites et peuvent suivre votre navigation. Ils ne se chargent qu’après votre accord. Outils retenus : ${fn('outils de mesure retenus et leurs témoins')}.`,
+            'Publicité : aucun témoin et aucun pixel publicitaire.',
+          ],
+        }),
+        s('Comment donner ou changer votre choix?', 'Quand un outil de mesure est offert, un bandeau vous demande votre choix, avec « Tout refuser » et « Tout accepter » de même taille, et « Choisir ». Le lien « Témoins », en bas de chaque page, permet de changer ce choix à tout moment, aussi facilement que vous l’avez donné.'),
+        s('Combien de temps les témoins sont-ils conservés?', `La durée dépend du témoin : ${fn('durée de conservation de chaque témoin')}. Votre choix est redemandé si la liste des outils change.`),
+        s('Le site vous suit-il sans témoins?', 'Non, aucun suivi publicitaire. Le serveur garde des journaux techniques, comme l’adresse IP et la page demandée, pour la sécurité et pour compter les visites de façon agrégée, sans témoin.'),
+      ],
+      faq: [
+        q('Le site fonctionne-t-il si je refuse tout?', 'Oui : refuser la mesure d’audience ne change rien au contenu du site ni à la commande en ligne.'),
+        q('Utilisez-vous le pixel de Facebook?', 'Non : le site n’utilise aucun pixel publicitaire, de Meta ou d’ailleurs.'),
+        q('Pourquoi « Tout refuser » est-il aussi visible que « Tout accepter »?', 'Parce que refuser doit être aussi simple qu’accepter : les deux boutons ont la même taille et le même style.'),
+        q('Mon choix est-il enregistré?', 'Oui : votre choix est enregistré avec sa date et la version du texte affiché, sans votre nom, pour prouver le consentement.'),
+        q('Puis-je bloquer aussi les témoins essentiels?', 'Oui, dans les réglages de votre navigateur, mais « Ma boîte » et le paiement en ligne ne fonctionneront plus.'),
+      ],
+      changeNote: 'Première version : aucun outil de mesure n’est actif; texte à faire réviser par un avocat.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Cookies and consent · Pâtisserie Coco Vanille',
+      description: 'Which cookies does the Pâtisserie Coco Vanille website in Granby, Québec, use? Only essential ones by default; audience measurement stays off without consent.',
+      h1: 'Cookies and consent',
+      answer:
+        `The website of Pâtisserie Coco Vanille, the shop at 3 rue Court in Granby, Québec, only uses the cookies it needs to work by default, such as “My box” and payment security. Audience-measurement tools stay off until you turn them on. ${PREVAILS} ${LAWYER}.`,
+      sections: [
+        s('What is a cookie?', 'A cookie is a small file a website stores in your browser to remember something, such as what is in your box or your cookie choice.'),
+        s('Which cookies does the site use?', 'The site uses two kinds of cookies: essential ones, always on, and audience measurement, only with your consent.', {
+          list: [
+            'Essential, always on: “My box”, form and payment security, and remembering your cookie choice. Without them, online ordering does not work.',
+            `Audience measurement, off by default: tools that count visits and may track your browsing. They only load after you agree. Tools chosen: ${fn('measurement tools chosen and their cookies')}.`,
+            'Advertising: no advertising cookies and no advertising pixels.',
+          ],
+        }),
+        s('How do I give or change my choice?', 'When a measurement tool is offered, a banner asks for your choice, with “Refuse all” and “Accept all” the same size, plus “Choose”. The “Cookies” link at the bottom of every page lets you change that choice at any time, as easily as you gave it.'),
+        s('How long are cookies kept?', `It depends on the cookie: ${fn('retention of each cookie')}. You are asked again if the list of tools changes.`),
+        s('Does the site track you without cookies?', 'No advertising tracking. The server keeps technical logs, such as the IP address and the page requested, for security and to count visits in aggregate, without cookies.'),
+      ],
+      faq: [
+        q('Does the site work if I refuse everything?', 'Yes: refusing audience measurement changes nothing about the site’s content or online ordering.'),
+        q('Do you use the Facebook pixel?', 'No: the site uses no advertising pixel, from Meta or anyone else.'),
+        q('Why is “Refuse all” as visible as “Accept all”?', 'Because refusing must be as easy as accepting: both buttons have the same size and style.'),
+        q('Is my choice recorded?', 'Yes: your choice is recorded with its date and the version of the text shown, without your name, to prove consent.'),
+        q('Can I block essential cookies too?', 'Yes, in your browser settings, but “My box” and online payment will stop working.'),
+      ],
+      changeNote: 'First version: no measurement tool is active; text to be reviewed by a lawyer.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const accessibilite = {
+  key: 'accessibilite',
+  status: 'core',
+  locales: {
+    fr: {
+      title: 'Accessibilité du site · Pâtisserie Coco Vanille, Granby',
+      description: 'Engagement d’accessibilité de la Pâtisserie Coco Vanille, à Granby : site conçu selon les WCAG 2.2 niveau AA, limites connues et moyen de signaler un problème.',
+      h1: 'Accessibilité du site',
+      answer:
+        `Le site de la Pâtisserie Coco Vanille, boutique du 3, rue Court, à Granby, vise la conformité aux Règles pour l’accessibilité des contenus Web 2.2, niveau AA. Si une page vous pose problème, appelez au 450-372-7177 : la boutique vous donne l’information ou prend votre commande autrement. ${LAWYER}.`,
+      sections: [
+        s('Quelle norme le site suit-il?', 'Le site suit les Règles pour l’accessibilité des contenus Web (WCAG) 2.2 du W3C, niveau AA.', {
+          list: [
+            'Contraste d’au moins 4,5 pour 1 entre le texte et son fond',
+            'Navigation complète au clavier, avec un repère de focus visible',
+            'Boutons et liens d’au moins 48 pixels de haut',
+            'Texte de remplacement pour chaque image utile',
+            'Formulaires étiquetés et erreurs annoncées en texte',
+            'Respect du réglage « réduire les animations » de votre appareil',
+          ],
+        }),
+        s('Comment l’accessibilité est-elle vérifiée?', `Chaque version du site passe des tests automatiques d’accessibilité et un contrôle du contraste des couleurs avant sa mise en ligne. Dernier contrôle manuel avec un lecteur d’écran : ${fn('date du dernier contrôle manuel au lecteur d’écran')}.`),
+        s('Quelles sont les limites connues?', `Les limites connues sont publiées ici après chaque contrôle : ${fn('limites connues après le contrôle manuel')}.`),
+        s('Comment signaler un problème d’accessibilité?', `Appelez au 450-372-7177 ou écrivez à ${fn('adresse courriel de la boutique')} en décrivant la page et le problème. Délai de réponse : ${fn('délai de réponse aux signalements')}.`),
+        s('La boutique est-elle accessible en personne?', `L’accès à la boutique du 3, rue Court reste à décrire : ${fn('marches, largeur de porte et accès en fauteuil roulant')}.`),
+      ],
+      faq: [
+        q('Puis-je commander sans utiliser le site?', 'Oui : appelez la boutique au 450-372-7177. Les commandes par téléphone suivent le même calendrier que les commandes en ligne.'),
+        q('Le site fonctionne-t-il sans JavaScript?', 'Oui pour le contenu : les heures, les prix, la FAQ et les allergènes sont dans le HTML de chaque page. JavaScript ajoute seulement des améliorations.'),
+        q('Puis-je agrandir le texte?', 'Oui : le texte s’agrandit avec le zoom du navigateur, jusqu’à 200 %, sans perte de contenu.'),
+        q('Les animations peuvent-elles être désactivées?', 'Oui : le site respecte le réglage « réduire les animations » de votre appareil et reste complet sans animation.'),
+        q('Le site est-il offert en anglais?', 'Oui, en français et en anglais. La version française est la version de référence.'),
+      ],
+      changeNote: 'Première version de la déclaration d’accessibilité; contrôle manuel à planifier.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Website accessibility · Pâtisserie Coco Vanille, Granby',
+      description: 'Accessibility statement of Pâtisserie Coco Vanille in Granby, Québec: a website built to WCAG 2.2 level AA, known limits and how to report a problem.',
+      h1: 'Website accessibility',
+      answer:
+        `The website of Pâtisserie Coco Vanille, the shop at 3 rue Court in Granby, Québec, aims to meet the Web Content Accessibility Guidelines 2.2, level AA. If a page gives you trouble, call 450-372-7177 and the shop will help you another way. ${PREVAILS} ${LAWYER}.`,
+      sections: [
+        s('Which standard does the site follow?', 'The site follows the W3C Web Content Accessibility Guidelines (WCAG) 2.2, level AA.', {
+          list: [
+            'Contrast of at least 4.5 to 1 between text and its background',
+            'Full keyboard navigation, with a visible focus indicator',
+            'Buttons and links at least 48 pixels tall',
+            'Text alternatives for every meaningful image',
+            'Labelled forms and errors announced in text',
+            'Respect for your device’s “reduce motion” setting',
+          ],
+        }),
+        s('How is accessibility checked?', `Every version of the site goes through automated accessibility tests and a colour-contrast check before it goes live. Last manual check with a screen reader: ${fn('date of the last manual screen-reader check')}.`),
+        s('What are the known limits?', `Known limits are published here after each check: ${fn('known limits after the manual check')}.`),
+        s('How do I report an accessibility problem?', `Call 450-372-7177 or write to ${fn('shop email address')}, describing the page and the problem. Response time: ${fn('response time for reports')}.`),
+        s('Is the shop accessible in person?', `Access to the shop at 3 rue Court is still to be described: ${fn('steps, door width and wheelchair access')}.`),
+      ],
+      faq: [
+        q('Can I order without using the website?', 'Yes: call the shop at 450-372-7177. Phone orders use the same calendar as online orders.'),
+        q('Does the site work without JavaScript?', 'Yes for the content: hours, prices, the FAQ and allergens are in the HTML of every page. JavaScript only adds enhancements.'),
+        q('Can I make the text bigger?', 'Yes: text grows with your browser zoom, up to 200%, without losing content.'),
+        q('Can animations be turned off?', 'Yes: the site follows your device’s “reduce motion” setting and stays complete without animation.'),
+        q('Is the site available in French?', 'Yes: French is the main version of the site, and the French text prevails.'),
+      ],
+      changeNote: 'First version of the accessibility statement; manual check to be scheduled.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
 const withTypography = (page) => ({
   ...page,
   locales: Object.fromEntries(Object.entries(page.locales).map(([locale, copy]) => [locale, locale === 'fr' ? frTypo(copy) : copy])),
 })
 
-export const pages = [home, carte, commander, nousTrouver, aPropos, allergenes, faq, viennoiseries, pains, gateaux, patisseries].map(withTypography)
+export const pages = [home, carte, commander, nousTrouver, aPropos, allergenes, faq, viennoiseries, pains, gateaux, patisseries, confidentialite, conditionsDeVente, temoins, accessibilite].map(withTypography)

@@ -33,16 +33,25 @@ function phoneAction(business, locale) {
 }
 
 // Generic page-contract template: h1 → answer → sections → key facts → FAQ → action → meta.
-function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, children, keyFacts }) {
+function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, children, keyFacts, boilerplate = false }) {
   return (
     <article className="wrap page">
       <h1>{doc?.h1 || doc?.title || <Fact value={null} label="titre de la page" />}</h1>
       <Missing text={conditionNotice} />
       <AnswerBlock text={doc?.answer} />
       {children}
-      <Sections sections={doc?.sections} />
-      <KeyFacts items={keyFacts} locale={locale} />
-      <Faq items={doc?.faq} locale={locale} />
+      {boilerplate ? (
+        <div data-nosnippet="">
+          <Sections sections={doc?.sections} />
+          <Faq items={doc?.faq} locale={locale} />
+        </div>
+      ) : (
+        <>
+          <Sections sections={doc?.sections} />
+          <KeyFacts items={keyFacts} locale={locale} />
+          <Faq items={doc?.faq} locale={locale} />
+        </>
+      )}
       <ConversionBand primary={primary} secondary={secondary} />
       <MetaLine doc={doc} locale={locale} />
     </article>
@@ -220,8 +229,69 @@ function ProductTemplate({ product, locale, business }) {
 }
 ProductTemplate.schema = async ({ product, url }) => [productNode({ product, url })]
 
+const LEGAL_LABELS = {
+  fr: { officer: 'Responsable de la protection des renseignements personnels', merchant: 'Commerçant', name: 'Nom', role: 'Titre', email: 'Courriel', phone: 'Téléphone', neq: 'NEQ', address: 'Adresse', translation: null },
+  en: { officer: 'Person in charge of personal information', merchant: 'Merchant', name: 'Name', role: 'Title', email: 'Email', phone: 'Phone', neq: 'Québec enterprise number', address: 'Address', translation: 'Translation for information only: in case of discrepancy, the French version prevails.', readFrench: 'Lire la version française' },
+}
+
+function FactList({ id, title, rows }) {
+  return (
+    <section className="fact-box" aria-labelledby={id}>
+      <h2 id={id}>{title}</h2>
+      <dl>
+        {rows.map(([term, value, label, factId]) => (
+          <div key={term}>
+            <dt>{term}</dt>
+            <dd><Fact value={value} label={label} id={factId} /></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}
+
+// Legal pages: the person in charge (Loi 25 s. 3.1) and the merchant identity (LPC s. 54.4) come from the
+// business global, so the footer, the policy and the contract never disagree. Translations say French prevails.
 function LegalTemplate(props) {
-  return <ContentTemplate {...props} />
+  const { page, business, locale } = props
+  const l = LEGAL_LABELS[locale] || LEGAL_LABELS.en
+  const officer = business?.privacyOfficer || {}
+  const a = business?.address || {}
+  const frPath = pathFor(page.key, 'fr')
+  return (
+    <ContentTemplate {...props} boilerplate>
+      {l.translation && (
+        <p className="notice translation-notice">
+          {l.translation} <a href={frPath} hrefLang="fr" lang="fr">{l.readFrench}</a>
+        </p>
+      )}
+      {page.key === 'confidentialite' && (
+        <FactList
+          id="legal-officer"
+          title={l.officer}
+          rows={[
+            [l.name, officer.name, 'nom de la personne responsable (Loi 25)', 'privacyOfficer.name'],
+            [l.role, officer.title, 'titre de la personne responsable', 'privacyOfficer.title'],
+            [l.email, officer.email, 'courriel de la personne responsable', 'privacyOfficer.email'],
+            [l.phone, business?.phoneDisplay, 'téléphone', 'phoneDisplay'],
+          ]}
+        />
+      )}
+      {page.key === 'conditions-de-vente' && (
+        <FactList
+          id="legal-merchant"
+          title={l.merchant}
+          rows={[
+            [l.name, business?.legalName, 'raison sociale', 'legalName'],
+            [l.address, a.street && `${a.street}, ${a.city} (${a.region}) ${a.postalCode || ''}`.trim(), 'adresse', 'address'],
+            [l.neq, business?.neq, 'NEQ', 'neq'],
+            [l.phone, business?.phoneDisplay, 'téléphone', 'phoneDisplay'],
+            [l.email, business?.email, 'courriel de la boutique', 'email'],
+          ]}
+        />
+      )}
+    </ContentTemplate>
+  )
 }
 
 export const TEMPLATES = {
