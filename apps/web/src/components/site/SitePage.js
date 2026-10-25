@@ -63,7 +63,6 @@ export async function buildMetadata(locale, segments) {
     return {
       title: `${p.title} · Coco Vanille, Granby`,
       description: p.summary?.slice(0, 160),
-      alternates: { canonical: `${SITE_ORIGIN}${hit.path}`, languages: await productAlternates(p) },
       robots: robotsIndex,
     }
   }
@@ -72,7 +71,6 @@ export async function buildMetadata(locale, segments) {
   return {
     title: doc?.title || 'Pâtisserie Coco Vanille · Granby',
     description: doc?.description,
-    alternates: { canonical: `${SITE_ORIGIN}${hit.path}`, languages: alternatesFor(hit.page.key) },
     robots: indexable ? robotsIndex : { index: false, follow: true },
     openGraph: { title: doc?.title, description: doc?.description, url: `${SITE_ORIGIN}${hit.path}`, siteName: 'Pâtisserie Coco Vanille', locale: locale === 'en' ? 'en_CA' : locale === 'es' ? 'es_ES' : 'fr_CA', type: 'website' },
   }
@@ -114,6 +112,9 @@ export async function SitePage({ locale, segments = [] }) {
   }
 
   const url = `${SITE_ORIGIN}${hit.path}`
+  // Canonical + hreflang as real <link> tags (React 19 hoists them to <head>). Next's metadata API
+  // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
+  const languages = hit.kind === 'product' ? await productAlternates(hit.product) : alternatesFor(hit.page.key)
   const pageNodes = [
     bakeryNode(business, shop, locale),
     websiteNode(),
@@ -124,6 +125,10 @@ export async function SitePage({ locale, segments = [] }) {
 
   return (
     <>
+      <link rel="canonical" href={url} />
+      {Object.entries(languages).map(([lang, href]) => (
+        <link key={lang} rel="alternate" hrefLang={lang} href={href} />
+      ))}
       <Header locale={locale} pageKey={pageKey} />
       <main id="contenu" className="site-main">
         <div className="wrap">

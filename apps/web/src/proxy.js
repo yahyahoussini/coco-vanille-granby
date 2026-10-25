@@ -28,9 +28,11 @@ export function proxy(req) {
     if (pathname === '/robots.txt') {
       // Crawlable + noindex header: Google must fetch a URL to see its noindex (16b §2.4).
       res = new NextResponse('User-agent: *\nAllow: /\n', { headers: { 'content-type': 'text/plain' } })
-    } else if (pathname.startsWith('/admin') || pathname.startsWith('/api') || isAsset(pathname)) {
+    } else if (pathname.startsWith('/admin') || pathname.startsWith('/api') || pathname.startsWith('/_next/')) {
       res = NextResponse.next()
     } else {
+      // Everything else (screens and files like /sw.js, /manifest.webmanifest) comes from the Studio tree,
+      // so public files such as /sitemap.xml or /llms.txt never answer on the admin host.
       const url = req.nextUrl.clone()
       url.pathname = `/studio${pathname === '/' ? '' : pathname}`
       res = NextResponse.rewrite(url)
