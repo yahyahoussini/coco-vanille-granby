@@ -106,7 +106,7 @@ export async function SitePage({ locale, segments = [] }) {
     doc = await getPageDoc(page.key, locale)
     if (strict && (!doc || containsMarker(doc))) notFound()
     Template = TEMPLATES[page.template] || TEMPLATES.content
-    props = { ...props, page, doc, conditionNotice: page.status === 'conditional' && !doc ? marker(page.condition) : null }
+    props = { ...props, page, doc, conditionNotice: page.status === 'conditional' && (!doc || containsMarker(doc)) ? marker(page.condition) : null }
     pageName = doc?.h1 || doc?.title
     crumbs = crumbsFor(page.key, locale, doc?.h1)
   }

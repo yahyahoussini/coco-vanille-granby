@@ -988,9 +988,285 @@ const accessibilite = {
   },
 }
 
+// ---------- Conditional pages: published once the owner facts in `condition` exist (00 §5.2) ----------
+const PRICE_GRID_FR = fn('grille de prix par format, datée')
+const PRICE_GRID_EN = fn('price grid per size, dated')
+const PORTIONS_FR = fn('portions par format de gâteau')
+const PORTIONS_EN = fn('servings per cake size')
+
+const prix = {
+  key: 'prix',
+  status: 'conditional',
+  condition: 'Grille de prix du propriétaire',
+  locales: {
+    fr: {
+      title: 'Prix des gâteaux et pâtisseries à Granby · Coco Vanille',
+      description: 'Les prix de la Pâtisserie Coco Vanille, à Granby, dans un tableau daté : format, portions, prix avant taxes et prix par portion. Aucun frais ajouté en ligne.',
+      h1: 'Prix des gâteaux et des pâtisseries à Granby',
+      answer:
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, affiche ses prix en texte, avant taxes, dans un tableau daté : format, portions, prix et prix par portion. Aucun frais ne s’ajoute en ligne; seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Grille de prix : ${PRICE_GRID_FR}.`,
+      sections: [
+        s('Combien coûte un gâteau de fête?', `Le prix d’un gâteau de fête dépend du format : à partir de ${fn('prix du plus petit format')} pour ${fn('portions du plus petit format')} portions, selon la grille de la boutique. Le tableau de cette page donne le prix de chaque format, et sert aussi pour un gâteau d’anniversaire sur commande.`),
+        s('Combien coûte une portion de gâteau?', 'Le prix par portion est le prix d’un format divisé par son nombre de portions. Le tableau l’affiche dès que la boutique a confirmé les deux chiffres, pour comparer les formats entre eux.'),
+        s('Les taxes sont-elles incluses dans les prix?', 'Non : les prix sont affichés avant taxes. La TPS et la TVQ s’ajoutent seulement s’il y a lieu, selon le produit et la quantité, et le total avec chaque taxe est affiché avant le paiement.'),
+        s('Pourquoi le prix d’un gâteau personnalisé varie-t-il?', `Le prix d’un gâteau personnalisé dépend du format, de la saveur et du décor demandé : ${fn('suppléments de décor et de saveur')}. La soumission écrite donne le prix exact avant tout acompte.`),
+        s('Les prix changent-ils?', 'Chaque prix est daté : la mention « Prix au » sous le tableau indique la dernière mise à jour. Un prix confirmé dans votre récapitulatif ne change plus.'),
+      ],
+      faq: [
+        q('Y a-t-il des frais de service en ligne?', 'Non : aucun frais de service, d’emballage ou de carte ne s’ajoute au prix affiché.'),
+        q('Le prix change-t-il selon le mode de paiement?', 'Non : le prix est le même quel que soit le mode de paiement, sans supplément pour la carte de crédit.'),
+        q('La boîte est-elle comprise dans le prix?', 'Oui : l’emballage est compris dans le prix du produit; aucun frais de boîte n’est ajouté.'),
+        q('Faut-il payer un acompte?', `Pour un gâteau personnalisé, un acompte de ${DEPOSIT_FR} réserve la date; le solde se paie à la cueillette.`),
+        q('Le prix est-il le même en boutique et en ligne?', `La politique de prix entre la boutique et le site reste à confirmer : ${fn('prix identiques en ligne et en boutique ou non')}.`),
+        q('Combien coûte un gâteau pour 20 personnes?', `Le prix pour 20 personnes est celui du plus petit format qui donne au moins 20 portions : ${fn('format et prix pour 20 portions')}. Le calculateur de portions fait ce calcul pour vous.`),
+      ],
+      changeNote: 'Première version : la grille de prix attend les chiffres de la boutique.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Cake and pastry prices in Granby, Québec · Coco Vanille',
+      description: 'Pâtisserie Coco Vanille prices in Granby, Québec, in a dated table: size, servings, price as text before taxes and price per serving. No fees added online.',
+      h1: 'Cake and pastry prices in Granby',
+      answer:
+        `Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec, shows its prices as text, before taxes, in a dated table: size, servings, price and price per serving. No fees are added online; only GST and QST are added where they apply. Price grid: ${PRICE_GRID_EN}.`,
+      sections: [
+        s('How much is a birthday cake?', `The price of a birthday cake depends on the size: from ${fn('price of the smallest size')} for ${fn('servings of the smallest size')} servings, according to the shop’s grid. The table on this page gives the price of every size.`),
+        s('How much is a serving of cake?', 'The price per serving is the price of a size divided by its number of servings. The table shows it once the shop has confirmed both numbers, so you can compare sizes.'),
+        s('Are taxes included in the prices?', 'No: prices are shown before taxes. GST and QST are added only where they apply, depending on the product and quantity, and the total with each tax is shown before you pay.'),
+        s('Why does the price of a custom cake vary?', `The price of a custom cake depends on the size, the flavour and the decoration you ask for: ${fn('decoration and flavour supplements')}. The written quote gives the exact price before any deposit.`),
+        s('Do prices change?', 'Every price is dated: the “Prices as of” line under the table shows the last update. A price confirmed in your summary no longer changes.'),
+      ],
+      faq: [
+        q('Are there service fees online?', 'No: no service, packaging or card fee is added to the price shown.'),
+        q('Does the price change with the payment method?', 'No: the price is the same whatever the payment method, with no credit-card surcharge.'),
+        q('Is the box included in the price?', 'Yes: packaging is included in the product price; no box fee is added.'),
+        q('Is a deposit required?', `For a custom cake, a deposit of ${DEPOSIT_EN} holds the date; the balance is paid at pickup.`),
+        q('Is the price the same in store and online?', `The pricing policy between the shop and the website is still to be confirmed: ${fn('same prices online and in store or not')}.`),
+        q('How much is a cake for 20 people?', `The price for 20 people is the price of the smallest size with at least 20 servings: ${fn('size and price for 20 servings')}. The serving calculator does this for you.`),
+      ],
+      changeNote: 'First version: the price grid is waiting for the shop’s numbers.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const calculateur = {
+  key: 'calculateur',
+  status: 'conditional',
+  condition: 'Portions par taille fournies par le propriétaire',
+  locales: {
+    fr: {
+      title: 'Calculateur de portions de gâteau · Pâtisserie Coco Vanille',
+      description: 'Quelle grosseur de gâteau pour vos invités? Le calculateur de portions de la Pâtisserie Coco Vanille, à Granby, propose les formats qui suffisent.',
+      h1: 'Quelle grosseur de gâteau pour mon nombre d’invités?',
+      answer:
+        `Le calculateur de portions de la Pâtisserie Coco Vanille, à Granby, propose les formats de gâteau qui suffisent pour votre nombre d’invités, à partir des portions publiées par la boutique du 3, rue Court. Indiquez le nombre d’invités et lancez le calcul : il fonctionne aussi sans JavaScript. Portions par format : ${PORTIONS_FR}.`,
+      sections: [
+        s('Comment fonctionne le calculateur?', 'Le calculateur compare votre nombre d’invités aux portions de chaque format de gâteau et affiche les formats qui suffisent, du plus petit au plus grand, avec leur prix quand il est confirmé.'),
+        s('Quelle grosseur de gâteau pour 20 personnes?', `Pour 20 personnes, le calculateur propose le plus petit format d’au moins 20 portions : ${fn('format pour 20 portions')}.`),
+        s('Combien de portions dans un gâteau de 8 pouces?', `Le nombre de portions d’un gâteau de 8 po (20 cm) dépend de sa hauteur et de la taille des parts : ${fn('portions d’un gâteau de 8 po selon la boutique')}.`),
+        s('Qu’est-ce qu’une portion de gâteau?', `Une portion est la part que la boutique compte pour un invité; sa taille est donnée avec la grille des portions : ${fn('taille d’une portion, en centimètres')}.`),
+      ],
+      faq: [
+        q('Faut-il prévoir une portion par invité?', 'Le calculateur compte une portion par invité. Ajoutez quelques portions si vous voulez des restes ou si des invités s’ajoutent à la dernière minute.'),
+        q('Le calculateur fonctionne-t-il sans JavaScript?', 'Oui : le formulaire envoie votre nombre d’invités au serveur, qui calcule et affiche les formats sur une nouvelle page.'),
+        q('Et pour 50 invités ou plus?', `Pour un grand nombre d’invités, appelez au 450-372-7177 : la boutique conseille un format ou plusieurs gâteaux. Plus grand format offert : ${fn('plus grand format de gâteau offert')}.`),
+        q('Le calculateur donne-t-il le prix?', 'Oui, quand le prix du format est confirmé : chaque format proposé affiche son prix et son prix par portion.'),
+        q('Comment commander le format proposé?', 'Choisissez ce format sur la page du gâteau ou sur la page Commander; le calendrier propose la première date de cueillette possible.'),
+      ],
+      changeNote: 'Première version : le calcul attend les portions par format de la boutique.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Cake serving calculator · Pâtisserie Coco Vanille',
+      description: 'What size cake for your guests? The serving calculator of Pâtisserie Coco Vanille in Granby, Québec, suggests the sizes that are enough, with their prices.',
+      h1: 'What size cake do I need for my guests?',
+      answer:
+        `The serving calculator of Pâtisserie Coco Vanille in Granby, Québec, suggests the cake sizes that feed your number of guests, using the servings published by the shop at 3 rue Court. Enter the number of guests and run the calculation: it also works without JavaScript. Servings per size: ${PORTIONS_EN}.`,
+      sections: [
+        s('How does the calculator work?', 'The calculator compares your number of guests with the servings of each cake size and shows the sizes that are enough, from smallest to largest, with their price once it is confirmed.'),
+        s('What size cake for 20 people?', `For 20 people, the calculator suggests the smallest size with at least 20 servings: ${fn('size for 20 servings')}.`),
+        s('How many servings are in an 8-inch round cake?', `The number of servings in an 8-inch (20 cm) cake depends on its height and the size of the slices: ${fn('servings in an 8-inch cake according to the shop')}.`),
+        s('What counts as a serving of cake?', `A serving is the slice the shop counts for one guest; its size is given with the serving grid: ${fn('serving size, in centimetres')}.`),
+      ],
+      faq: [
+        q('Should I plan one serving per guest?', 'The calculator counts one serving per guest. Add a few servings if you want leftovers or if guests join at the last minute.'),
+        q('Does the calculator work without JavaScript?', 'Yes: the form sends your number of guests to the server, which calculates and shows the sizes on a new page.'),
+        q('What size cake do I need for 30 guests?', 'Enter 30 in the calculator: it shows the smallest size with at least 30 servings, and the larger sizes after it.'),
+        q('What about 50 guests or more?', `For a large number of guests, call 450-372-7177: the shop suggests a size or several cakes. Largest size offered: ${fn('largest cake size offered')}.`),
+        q('Does the calculator show the price?', 'Yes, when the price of the size is confirmed: each size suggested shows its price and its price per serving.'),
+      ],
+      changeNote: 'First version: the calculation is waiting for the shop’s servings per size.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const gateauxPersonnalises = {
+  key: 'gateaux-personnalises',
+  status: 'conditional',
+  condition: 'Gâteaux sur commande confirmés (volume, délai, prix)',
+  locales: {
+    fr: {
+      title: 'Gâteaux personnalisés à Granby · Pâtisserie Coco Vanille',
+      description: 'Gâteaux personnalisés à la Pâtisserie Coco Vanille, à Granby : photo de référence, prix écrit, acompte, délai de commande et cueillette au 3, rue Court.',
+      h1: 'Gâteaux personnalisés à Granby',
+      answer:
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, prépare des gâteaux personnalisés sur commande : vous envoyez une photo de référence, le nombre d’invités et la date, puis vous recevez un prix et un récapitulatif écrit. Délai minimum : ${fn('délai minimum d’un gâteau personnalisé')}. Formats : ${fn('portions minimum et maximum')}.`,
+      sections: [
+        s('Comment commander un gâteau personnalisé?', 'Un gâteau personnalisé se commande en cinq étapes, de la demande jusqu’à la cueillette au 3, rue Court.', {
+          list: [
+            'Envoyer la demande : photo de référence, nombre d’invités, date, saveur et message',
+            `Recevoir la soumission avec le prix, dans un délai de ${fn('délai de réponse aux demandes')}`,
+            `Verser l’acompte de ${DEPOSIT_FR} pour réserver la date`,
+            'Approuver le récapitulatif écrit : format, saveur, couleurs et message',
+            'Récupérer le gâteau pendant la plage de cueillette choisie',
+          ],
+        }),
+        s('Combien de jours d’avance faut-il commander?', `Le délai dépend de la complexité du gâteau : ${fn('délai par type de gâteau personnalisé, en jours')}. Le calendrier de la demande propose seulement les dates possibles.`),
+        s('Combien coûte un gâteau personnalisé?', `Un gâteau personnalisé coûte à partir de ${fn('prix du plus petit gâteau personnalisé')}, selon le format et le décor. La page Prix donne chaque format, et la soumission écrite le prix exact.`),
+        s('Est-ce que mon gâteau va ressembler à la photo?', 'Votre photo de référence est jointe à la demande, et le récapitulatif écrit décrit le format, la saveur, les couleurs et le message. La préparation commence seulement après votre approbation.'),
+        s('Quels thèmes pouvez-vous faire?', `Les thèmes possibles restent à confirmer par la boutique : ${fn('thèmes offerts et politique sur les personnages')}.`),
+      ],
+      faq: [
+        q('C’est-tu possible d’avoir un gâteau personnalisé pour la fin de semaine?', `Ça dépend du délai minimum et des places libres dans le calendrier : ${fn('délai minimum d’un gâteau personnalisé')}. La demande en ligne affiche seulement les dates possibles.`),
+        q('Pouvez-vous écrire « Bonne fête » sur le gâteau?', `Le message sur le gâteau reste à confirmer : ${fn('message sur le gâteau offert ou non, longueur maximale')}.`),
+        q('Faites-vous des gâteaux à étages?', `Les gâteaux à étages restent à confirmer : ${fn('gâteaux à étages offerts ou non')}.`),
+        q('Faites-vous des gâteaux à écraser (smash cakes)?', `Le gâteau à écraser du premier anniversaire reste à confirmer : ${fn('smash cake offert ou non')}.`),
+        q('Puis-je modifier ma commande après l’acompte?', `Les modifications après l’acompte suivent les conditions de vente : ${fn('délai de modification après l’acompte')}.`),
+        q('Livrez-vous les gâteaux?', `Les gâteaux se récupèrent au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
+      ],
+      changeNote: 'Première version : délais, formats, prix et thèmes des gâteaux personnalisés à confirmer.',
+      contentUpdatedAt: UPDATED,
+    },
+    en: {
+      title: 'Custom cakes in Granby, Québec · Pâtisserie Coco Vanille',
+      description: 'Custom cakes from Pâtisserie Coco Vanille in Granby, Québec: reference photo, written price, deposit, lead time and pickup at 3 rue Court, in the downtown core.',
+      h1: 'Custom cakes in Granby',
+      answer:
+        `Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec, makes custom cakes to order: you send a reference photo, the number of guests and the date, then receive a price and a written summary. Minimum lead time: ${fn('minimum lead time for a custom cake')}. Sizes: ${fn('minimum and maximum servings')}.`,
+      sections: [
+        s('How do I order a custom cake?', 'A custom cake is ordered in five steps, from the request to pickup at 3 rue Court.', {
+          list: [
+            'Send the request: reference photo, number of guests, date, flavour and message',
+            `Receive the quote with the price, within ${fn('response time for requests')}`,
+            `Pay the ${DEPOSIT_EN} deposit to hold the date`,
+            'Approve the written summary: size, flavour, colours and message',
+            'Pick up the cake during the pickup slot you chose',
+          ],
+        }),
+        s('How far in advance should I order?', `The lead time depends on how complex the cake is: ${fn('lead time per type of custom cake, in days')}. The request calendar only offers possible dates.`),
+        s('How much is a custom cake?', `A custom cake costs from ${fn('price of the smallest custom cake')}, depending on the size and decoration. The Prices page lists every size, and the written quote gives the exact price.`),
+        s('Will my cake look like the photo?', 'Your reference photo is attached to the request, and the written summary describes the size, flavour, colours and message. Baking starts only after you approve it.'),
+        s('Which themes can you do?', `Possible themes are still to be confirmed by the shop: ${fn('themes offered and policy on characters')}.`),
+      ],
+      faq: [
+        q('Can I get a custom cake for this weekend?', `It depends on the minimum lead time and the open slots in the calendar: ${fn('minimum lead time for a custom cake')}. The online request only shows possible dates.`),
+        q('Can you write “Happy birthday” on the cake?', `Messages on cakes are still to be confirmed: ${fn('message on the cake offered or not, maximum length')}.`),
+        q('Do you make tiered cakes?', `Tiered cakes are still to be confirmed: ${fn('tiered cakes offered or not')}.`),
+        q('Do you make smash cakes?', `The first-birthday smash cake is still to be confirmed: ${fn('smash cake offered or not')}.`),
+        q('Can I change my order after the deposit?', `Changes after the deposit follow the terms of sale: ${fn('deadline for changes after the deposit')}.`),
+        q('Do you deliver cakes?', `Cakes are picked up at 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
+      ],
+      changeNote: 'First version: custom-cake lead times, sizes, prices and themes to be confirmed.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const gateauPourDemain = {
+  key: 'gateau-pour-demain',
+  status: 'conditional',
+  condition: 'Commande pour le lendemain + heure limite confirmées',
+  locales: {
+    fr: {
+      title: 'Gâteau pour demain à Granby · Pâtisserie Coco Vanille',
+      description: 'Un gâteau pour demain à Granby? À la Pâtisserie Coco Vanille, commandez avant l’heure limite pour une cueillette le lendemain au 3, rue Court, au centre-ville.',
+      h1: 'Un gâteau pour demain à Granby',
+      answer:
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, prépare des gâteaux pour le lendemain quand la commande arrive avant l’heure limite : ${fn('heure limite de commande pour le lendemain')}. Les formats offerts pour le lendemain sont ${fn('formats offerts pour le lendemain')}, à récupérer en boutique. Le calendrier affiche seulement les dates possibles.`,
+      sections: [
+        s('Peut-on avoir un gâteau pour demain à Granby?', `Oui, si la commande arrive avant ${fn('heure limite de commande pour le lendemain')} : la Pâtisserie Coco Vanille prépare alors un gâteau pour une cueillette le lendemain au 3, rue Court.`),
+        s('Quels gâteaux sont offerts pour le lendemain?', `Les gâteaux offerts pour le lendemain restent à confirmer par la boutique : ${fn('gâteaux et formats offerts pour le lendemain')}.`),
+        s('Jusqu’à quelle heure commander pour demain?', `L’heure limite est ${fn('heure limite de commande pour le lendemain')}. Le calendrier calcule la première date possible à partir de l’heure limite, des jours de fermeture et des places libres de la journée.`),
+        s('Et si c’est pour aujourd’hui?', 'Pour aujourd’hui, la vitrine du jour, sur la page d’accueil, montre les gâteaux et les pâtisseries en vente. Appelez au 450-372-7177 pour vérifier avant de vous déplacer.'),
+      ],
+      faq: [
+        q('C’est-tu possible d’avoir un gâteau pour demain?', `Oui, si vous commandez avant ${fn('heure limite de commande pour le lendemain')}, dans les formats offerts pour le lendemain. Après l’heure limite, le calendrier propose le jour suivant.`),
+        q('Peut-on personnaliser un gâteau pour demain?', `La personnalisation d’un gâteau pour le lendemain reste à confirmer : ${fn('personnalisation possible pour le lendemain ou non')}.`),
+        q('Peut-on commander un gâteau pour demain par téléphone?', 'Oui : appelez au 450-372-7177 avant l’heure limite. La commande entre dans le même calendrier que les commandes en ligne.'),
+        q('Peut-on commander pour un lendemain de fermeture?', `Non : le calendrier saute les jours de fermeture et propose la prochaine journée ouverte. Jours de fermeture : ${HOURS_FR}.`),
+        q('Peut-on écrire un message sur un gâteau pour demain?', `Le message sur un gâteau pour le lendemain reste à confirmer : ${fn('message possible sur un gâteau pour le lendemain')}.`),
+      ],
+      changeNote: 'Première version : la page attend la confirmation de la commande pour le lendemain et de l’heure limite.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const buches = {
+  key: 'buches',
+  status: 'conditional',
+  condition: 'Bûches offertes (oui/non avant le 1er novembre)',
+  locales: {
+    fr: {
+      title: 'Bûches de Noël à Granby · Pâtisserie Coco Vanille',
+      description: 'Bûches de Noël de la Pâtisserie Coco Vanille, à Granby : saveurs, formats, portions, prix et dates de précommande pour une cueillette au 3, rue Court.',
+      h1: 'Bûches de Noël à Granby',
+      answer:
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, publie sur cette page permanente ses bûches de Noël, leurs formats, leurs portions et leurs prix, avec l’état des précommandes : bientôt, ouvertes, complet ou de retour l’an prochain. Bûches offertes en 2026 : ${fn('bûches offertes, oui ou non, avant le 1er novembre')}.`,
+      sections: [
+        s('Où acheter une bûche de Noël à Granby?', `À la Pâtisserie Coco Vanille, au 3, rue Court, si la boutique offre des bûches cette année : ${fn('bûches offertes en 2026')}. Elles se précommandent sur cette page et se récupèrent en boutique.`),
+        s('Quand faut-il commander sa bûche de Noël?', `Les précommandes ouvrent et ferment aux dates affichées en haut de cette page : ${fn('dates d’ouverture et de fermeture des précommandes')}. Une fois les places prises, la page affiche « Complet ».`),
+        s('Combien coûte une bûche de Noël?', `Le prix de chaque bûche est écrit en texte sur sa page, avant taxes : ${fn('prix des bûches par format')}.`),
+        s('Combien de personnes nourrit une bûche de Noël?', `Le nombre de portions dépend du format de la bûche : ${fn('portions par format de bûche')}.`),
+        s('Qu’est-ce qu’une bûche de Noël?', 'La bûche de Noël est un gâteau roulé en forme de bûche, garni de crème et décoré, servi pendant le temps des Fêtes.'),
+      ],
+      faq: [
+        q('Quelles sont les dates de cueillette pour Noël?', `Les dates de cueillette sont affichées avec les précommandes : ${fn('dates de cueillette des bûches')}.`),
+        q('Peut-on choisir la saveur de sa bûche?', `Les saveurs offertes restent à confirmer : ${fn('saveurs de bûches')}.`),
+        q('Faites-vous des bûches glacées?', `Les bûches glacées restent à confirmer : ${fn('bûches glacées offertes ou non')}.`),
+        q('Que se passe-t-il quand les bûches sont complètes?', `La page affiche « Complet » et les dates de cueillette disparaissent du calendrier. Liste d’attente : ${fn('liste d’attente offerte ou non')}.`),
+        q('Faut-il payer à la précommande?', 'Les conditions de vente précisent quand le paiement est pris. Si la boutique annule une précommande, vous êtes remboursé au complet dans les 15 jours.'),
+      ],
+      changeNote: 'Première version de la page permanente des bûches; offre 2026 à confirmer avant le 1er novembre.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
+const chef = {
+  key: 'chef',
+  status: 'conditional',
+  condition: 'Consentement photo + biographie du chef',
+  locales: {
+    fr: {
+      title: 'Le chef de la Pâtisserie Coco Vanille, à Granby',
+      description: 'Qui prépare les gâteaux et les viennoiseries de la Pâtisserie Coco Vanille, à Granby? Parcours, formation et spécialités du chef, présentés avec son accord.',
+      h1: 'Le chef de la Pâtisserie Coco Vanille',
+      answer:
+        `Cette page présente la personne qui dirige la cuisine de la Pâtisserie Coco Vanille, au 3, rue Court, à Granby : son nom, son parcours, sa formation et ses spécialités. Elle est publiée seulement avec son accord écrit et une photo autorisée. Chef : ${fn('nom, rôle et parcours, avec consentement')}.`,
+      sections: [
+        s('Qui est le chef de la Pâtisserie Coco Vanille?', `Le chef sera présenté ici avec son accord : ${fn('nom et rôle du chef')}.`),
+        s('Quelle est sa formation?', `La formation du chef reste à confirmer : ${fn('formation et parcours du chef')}.`),
+        s('Quelles sont ses spécialités?', `Les spécialités du chef restent à confirmer : ${fn('spécialités du chef')}.`),
+      ],
+      faq: [
+        q('Depuis quand le chef travaille-t-il à la Pâtisserie Coco Vanille?', `La date d’arrivée du chef reste à confirmer : ${fn('année d’arrivée du chef')}.`),
+        q('Peut-on rencontrer le chef pour un gâteau personnalisé?', `Les rencontres pour un gâteau personnalisé restent à confirmer : ${fn('rencontre avec le chef offerte ou non')}.`),
+        q('Le chef a-t-il reçu des prix?', `Aucun prix n’est indiqué pour l’instant : ${fn('prix ou distinctions, avec une preuve datée')}.`),
+        q('Où voir le travail du chef?', 'Les photos publiées par la boutique sont sur sa page Facebook, facebook.com/PatisserieCocoVanille, et sur les pages de produits de ce site.'),
+        q('Qui prépare les viennoiseries?', `L’équipe de production reste à présenter, avec son accord : ${fn('équipe de production')}.`),
+      ],
+      changeNote: 'Première version : la page attend la biographie et le consentement photo du chef.',
+      contentUpdatedAt: UPDATED,
+    },
+  },
+}
+
 const withTypography = (page) => ({
   ...page,
   locales: Object.fromEntries(Object.entries(page.locales).map(([locale, copy]) => [locale, locale === 'fr' ? frTypo(copy) : copy])),
 })
 
-export const pages = [home, carte, commander, nousTrouver, aPropos, allergenes, faq, viennoiseries, pains, gateaux, patisseries, confidentialite, conditionsDeVente, temoins, accessibilite].map(withTypography)
+export const pages = [home, carte, commander, nousTrouver, aPropos, allergenes, faq, viennoiseries, pains, gateaux, patisseries, confidentialite, conditionsDeVente, temoins, accessibilite, prix, calculateur, gateauxPersonnalises, gateauPourDemain, buches, chef].map(withTypography)
