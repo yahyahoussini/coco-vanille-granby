@@ -8,6 +8,7 @@ import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine } from '../site/Contract'
+import { orderingTemplates } from './ordering'
 
 const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
 const productPath = (p, locale) => (p?.category?.slug ? `${prefixFor(locale)}/${p.category.slug}/${p.slug}/` : null)
@@ -223,14 +224,6 @@ function LegalTemplate(props) {
   return <ContentTemplate {...props} />
 }
 
-function UtilityTemplate(props) {
-  return <ContentTemplate {...props} conditionNotice={props.conditionNotice || marker('module de commande (en construction)')} />
-}
-
-function OrderTemplate(props) {
-  return <ContentTemplate {...props} secondary={phoneAction(props.business, props.locale)} />
-}
-
 export const TEMPLATES = {
   home: HomeTemplate,
   content: (p) => <ContentTemplate {...p} primary={orderAction(p.locale)} />,
@@ -241,13 +234,10 @@ export const TEMPLATES = {
   product: ProductTemplate,
   allergens: AllergensTemplate,
   legal: LegalTemplate,
-  order: OrderTemplate,
   prices: (p) => <ContentTemplate {...p} primary={orderAction(p.locale)} />,
   calculator: (p) => <ContentTemplate {...p} primary={orderAction(p.locale)} />,
   seasonal: (p) => <ContentTemplate {...p} primary={orderAction(p.locale)} />,
-  box: UtilityTemplate,
-  checkout: UtilityTemplate,
-  thanks: UtilityTemplate,
+  ...orderingTemplates,
 }
 
 export { SITE_ORIGIN }
