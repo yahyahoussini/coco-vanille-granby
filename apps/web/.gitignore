@@ -5,3 +5,4 @@ node_modules/
 /media/
 /test-results/
 /playwright-report/
+payload-types.ts

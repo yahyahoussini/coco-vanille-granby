@@ -44,5 +44,7 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
+  // JavaScript project: no generated payload-types.ts.
+  typescript: { autoGenerate: false },
   telemetry: false,
 })
