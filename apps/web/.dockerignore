@@ -1,0 +1,16 @@
+# Build context = apps/web. Secrets, local builds and test output never enter the image.
+.env
+.env.*
+!.env.example
+node_modules
+.next
+media
+test
+test-results
+playwright-report
+reports
+scripts/test
+*.log
+.DS_Store
+Dockerfile
+.dockerignore
