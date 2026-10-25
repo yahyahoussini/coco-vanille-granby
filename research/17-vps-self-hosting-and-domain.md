@@ -4,6 +4,7 @@
 > Inputs: `requirements-2026-10-25.md` (owner's VPS, public + admin hosts), `plan-v1-ranking-stack.md` §11, §12, §15, §16, §17, `plan-v0a-master-plan.md` Part 2.1, `plan-v0c-site-ux-ordering.md` §8–9, `16b-admin-tech-subdomain.md` (admin host, nginx, proxy.js, security), rank-first `references/03-technical.md`, `10-measurement.md`, `14-unknown-unknowns.md`, `scripts/log-bots.mjs`.
 > Labels: **UNVERIFIED** = from a search summary, a third-party page or prior knowledge; not confirmed on an official page this session. **[[FACT NEEDED: …]]** = the owner must supply it. **(est.)** = my own engineering estimate.
 > Research limit: the shared web-search budget ran out after 30 queries. Items I could not check are marked UNVERIFIED and listed in §14.
+> Fact-check pass 2026-10-25 (6 searches): OVH plan mapping contested, OVH Toronto site added, SES plan rates confirmed, Workspace CAD confirmed, M365 July 2026 increase added, cost floor corrected. See the Verification log before Sources.
 > `research/07-legal-quebec-compliance.md` did not exist when this was written. The Loi 25 points in §7 need cross-checking against it.
 > Code sketches are JavaScript only, illustrative, and have not been run. Server config (nginx, Compose) is described in tables, not as code.
 
@@ -13,8 +14,8 @@
 
 | Question | Recommendation | Why |
 |---|---|---|
-| VPS location | **A data centre in Québec**: OVHcloud Beauharnois, AWS ca-central-1 (Montréal), or a Montréal provider. [[FACT NEEDED: provider + data-centre city of the owner's VPS]] | Takes the largest personal-data store out of the Loi 25 s.17 assessment, and keeps network distance to Granby short |
-| Size | **4 vCPU / 8 GB RAM / ≥ 75 GB NVMe** for production + staging on one box. Minimum 2 vCPU / 4 GB if staging runs elsewhere (est.) | Two Next.js processes + worker + Postgres + staging. Builds run in CI, never on the VPS |
+| VPS location | **A data centre in Québec**: OVHcloud Beauharnois (BHS), AWS ca-central-1 (Montréal [[VERIFY]]), or a Montréal provider. OVHcloud also runs a Toronto-area site (Cambridge, ON, announced March 2024), so "OVH Canada" alone doesn't mean Québec: pick BHS explicitly (§7.3). [[FACT NEEDED: provider + data-centre city of the owner's VPS]] | Takes the largest personal-data store out of the Loi 25 s.17 assessment, and keeps network distance to Granby short |
+| Size | **4 vCPU / 8 GB RAM / ≥ 75 GB NVMe** for production + staging on one box. Minimum 2 vCPU / 4 GB if staging runs elsewhere (est.). At OVH this spec is reported as the entry plan **VPS-1** (third-party listings, §7.3) | Two Next.js processes + worker + Postgres + staging. Builds run in CI, never on the VPS |
 | Runtime | One Docker image (Next.js `output: 'standalone'` + Payload 3), run as **web** (public), **studio** (admin), **worker** (`payload jobs:run`). Postgres in a container on a private network | Matches 16b. Same build, isolated processes |
 | Reverse proxy | **nginx on the host + certbot** (not Caddy, not Traefik) | 16b already depends on nginx features (`limit_req`, buffering off for SSE, headers on error pages). nginx's default `combined` log format works with `log-bots.mjs` unchanged |
 | CDN | **None at launch.** DNS-only. Revisit on measured triggers (§6) | Local audience + local origin. No AI-crawler default blocks. Real client IPs in our own logs. No extra party in the order and admin data path |
@@ -23,7 +24,7 @@
 | Backups | Nightly `pg_dump` + WAL archiving once ordering is live, encrypted with `age`, sent to **object storage in Québec at a different provider**. Monthly automated restore test | Survives losing the VPS or the whole provider |
 | Email | Transactional mail through an API (**Amazon SES ca-central-1** for data location, or Postmark for simplicity). Mailbox: Microsoft 365 Business Basic or Google Workspace. **Never SMTP from the VPS** | Deliverability. Loi 25 |
 | Domain | `cocovanillegranby.com` canonical at the **apex**; `www` → 301. Register `cocovanillegranby.ca` defensively (owner task). DNSSEC + CAA. HSTS ramped up, no preload at launch | Search Console country targeting is gone, so the .com relies on hreflang + content + local signals; the .ca would only add a country signal |
-| Monthly cost | **≈ C$35–55** (est., §11) | — |
+| Monthly cost | **≈ C$25–55** (est., §11; corrected from C$35–55 after the fact-check: the §11 line items sum to ≈ C$25–47) | — |
 
 ---
 
@@ -287,10 +288,10 @@ Prices are list prices from the pages or summaries named in the source column, a
 
 | Provider | Data centre | In Québec? | Example plan | Price seen | Source / caveat |
 |---|---|---|---|---|---|
-| **OVHcloud** | Beauharnois (BHS), QC | **Yes** | VPS-2: 4 vCores, 8 GB, 75 GB NVMe, 1 Gbps · VPS-1: 2 vCores, 4 GB, 40 GB NVMe | VPS-2 **from $11.64/mo**, VPS-1 from $6.20/mo (en-ca page; currency not explicit, structured data tagged CAD) | OVH en-ca VPS Canada page. Beauharnois per HostingCompass / Vpsium (third-party). Price rise from 2026-04-01 (next.ink) and compute price changes on 2026-10-01 (LowEndTalk post) reported: **re-check** |
+| **OVHcloud** | Beauharnois (BHS), QC. OVH's first Canadian data centre, opened January 2012 (OVHcloud newsroom). OVH **also** has a Toronto-area site (Cambridge, ON, Ascent TOR1, announced March 2024; its landing page lists Hosted Private Cloud and Scale dedicated servers, not VPS). Which Canadian site a VPS order lands in: [[VERIFY at checkout]] | **BHS only** | **Plan mapping CONTESTED.** This session's earlier read: VPS-2 = 4 vCores, 8 GB, 75 GB NVMe; VPS-1 = 2 vCores, 4 GB, 40 GB. Fact-check (third-party listings, Sept 2025): **VPS-1 = 4 vCores, 8 GB, 75 GB NVMe; VPS-2 = 6 vCores, 12 GB, 100 GB NVMe**. Pick by specs, not by name | **UNVERIFIED.** Earlier read: VPS-2 from $11.64/mo, VPS-1 from $6.20/mo (en-ca page; currency not explicit). Third-party: US$4.20 (VPS-1) / US$6.75 (VPS-2) in Sept 2025, then a reported +55 % rise on 2026-04-01 (e.g., VPS-1 $4.90 → $7.60) | OVH en-ca VPS Canada page; whtop; agentdeals; next.ink (2026-04-01 rise); LowEndTalk (2026-10-01 changes). **Re-check specs, price, currency and data centre at checkout** |
 | **AWS Lightsail** | Canada (Central) `ca-central-1` (code CAN1) | **Yes** (Montréal per plan v0a / brief; [[VERIFY]]) | 2 vCPU, 4 GB, 80 GB SSD, 4 TB transfer | $24/mo global list price; **Canada price not confirmed** | AWS Lightsail pricing page; billing docs (CAN1) |
 | Montréal providers | Montréal, QC | Yes | Patrii Cloud from C$5.25 · Astral Internet unmanaged from C$17.49 (Tier III) · Sucura Networks from US$7.50 · VPS Shell (managed KVM) US$9 · GTHost 1 core / 1 GB US$4 · PlanetHoster managed 2 CPU / 4 GB / 40 GB C$66.20 | as listed | Provider pages / directories. **All UNVERIFIED**; check specs, support, backups and track record |
-| DigitalOcean | TOR1 Toronto, ON | No | Basic 2 vCPU, 4 GB, 80 GB, 4 TB | $24/mo (third-party; a 20 % Basic price cut in Jan 2026 is also reported, so possibly lower). Backups +20 % weekly / +30 % daily | diyai.io, CostBench, Better Stack review (SFO3). TOR1 price not confirmed |
+| DigitalOcean | TOR1 Toronto, ON | No | Basic 2 vCPU, 4 GB, 80 GB, 4 TB | $24/mo (third-party; a 20 % Basic price cut in early 2026 is also reported, so possibly lower. Month UNVERIFIED: this file said Jan 2026, the CostBench changelog URL says 2026-02). Backups +20 % weekly / +30 % daily | diyai.io, CostBench, Better Stack review (SFO3). TOR1 price not confirmed |
 | Vultr | Toronto, ON | No | Regular 2 vCPU, 4 GB, 80 GB, 3 TB | $20/mo (undated, region not stated) | vpsbenchmarks. Toronto not seen in this session's excerpt: [[VERIFY]] |
 | Akamai / Linode | Toronto (ca-central), ON | No | Linode 4 GB shared: 2 vCPU, 80 GB, 4 TB | $24/mo | akamai.com/cloud/pricing; history stable (CostBench). Toronto price not confirmed |
 | Hetzner | — | No Canadian location [[UNVERIFIED, prior knowledge]] | — | — | Listed only because it's a common cheap choice: not suitable |
@@ -308,7 +309,8 @@ Decision tree for the owner's VPS:
 
 | Option | Region | In Québec? | Price seen | Notes |
 |---|---|---|---|---|
-| **AWS S3 `ca-central-1`** | Canada (Central) | Yes [[VERIFY]] | [[UNVERIFIED: search budget exhausted]] | Good pair with an OVH VPS (different provider) |
+| **AWS S3 `ca-central-1`** | Canada (Central) | Yes [[VERIFY]] | [[UNVERIFIED: the fact-check search returned only the us-east-1 rate, $0.023/GB-mo (Upstash, third-party); no ca-central-1 rate]] | Good pair with an OVH VPS (different provider) |
+| Lightsail object storage (buckets) | Any Lightsail region; ca-central-1 bucket availability [[VERIFY]] | Yes, if in ca-central-1 | Fixed bundles, **same price in every Region where Lightsail is available**: $1/mo for 5 GB, $3/mo for 100 GB, $5/mo for 250 GB; first tier free for 12 months (AWS Lightsail buckets FAQ, via search summary) | Simplest fixed-price option for < 100 GB of backups. Same provider as a Lightsail VPS, so pair it with OVH |
 | **OVHcloud Object Storage** | BHS [[VERIFY that S3 Standard is offered in BHS]] | Yes | ≈ $0.0081/GB-mo or €0.0119/GB-mo (third-party, region not stated). Egress reported free | Good pair with an AWS/Lightsail VPS. Not independent if the VPS is also at OVH |
 | Wasabi | Toronto region [[UNVERIFIED]] | No | **$7.99/TB-mo** from the first billing cycle on or after 2026-07-01 (Wasabi FAQ, example rate); **1 TB minimum**; 90-day minimum storage on pay-go; egress free up to the stored volume | The 1 TB minimum makes it poor value for < 50 GB of backups |
 | Backblaze B2 | Canadian region [[UNVERIFIED]] | — | [[UNVERIFIED]] | Not checked (budget) |
@@ -424,8 +426,8 @@ Targets for the owner to approve: **RPO ≤ 15 min** once ordering is live; **RT
 
 | Provider | Data location | Price seen | Fit |
 |---|---|---|---|
-| **Amazon SES** | Choose `ca-central-1` (Montréal per plan v0a; [[VERIFY SES availability + location]]) | À la carte ≈ $0.10 per 1,000 (third-party, "uniform across regions"). Since 2026-07-21, bundled plans are reported: Essentials $0.16 per 1,000; Pro $0.22 + $105/mo; Enterprise $0.23 + $500/mo; new accounts start on Essentials, and you can switch back to à la carte (dev.to; third-party) [[VERIFY on aws.amazon.com/ses/pricing]] | **Best for Loi 25** if it stays in Canada. More setup: leaving the sandbox, bounce/complaint handling |
-| Postmark | [[UNVERIFIED]] | Basic **$15/mo for 10,000** emails, $1.80 per extra 1,000 (third-party). Plan structure reported as changed in 2026: conflicting | Simplest. Needs an s.17 assessment if outside Québec |
+| **Amazon SES** | Choose `ca-central-1` (Montréal per plan v0a; [[VERIFY SES availability + location]]) | **Plans confirmed on aws.amazon.com/ses/pricing (fact-check 2026-10-25, via search summary):** Essentials $0.16 per 1,000 (0–10 M/month); Pro $0.22 per 1,000 + **$105 per account per Region per month**; Enterprise $0.23 per 1,000 + **$500 per account per Region per month**. Still UNVERIFIED: the 2026-07-21 start date, "new accounts start on Essentials", the à la carte ≈ $0.10 per 1,000 option (secondary sources only), and whether ca-central-1 rates differ | **Best for Loi 25** if it stays in Canada. Use Essentials or à la carte: the Pro/Enterprise fixed fees are per Region. More setup: leaving the sandbox, bounce/complaint handling |
+| Postmark | [[UNVERIFIED: no data-location source found in the fact-check]] | Basic **$15/mo for 10,000** emails, $1.80 per extra 1,000; since 2026 three tiers share the 10,000-email base (automationatlas, July 2026, third-party). CostBench reports a 2026-02-04 change with **conflicting** top-tier figures. Confirm on postmarkapp.com | Simplest. Needs an s.17 assessment if outside Québec |
 | Resend | Sending regions: us-east-1, eu-west-1, sa-east-1, ap-northeast-1. **Account data, logs and metadata in the US regardless** (Resend docs) | Free: 3,000/mo, 100/day cap (third-party + pricing page) | Good DX; US data → assessment |
 
 Recommendation: **SES ca-central-1**, sent from the worker through its API with a send-only IAM key. Fallback: Postmark if SES setup stalls; record the assessment.
@@ -436,8 +438,8 @@ Recommendation: **SES ca-central-1**, sent from the worker through its API with 
 
 | Suite | Price seen (CAD per user per month) | Note |
 |---|---|---|
-| Microsoft 365 Business Basic | **C$9.50** (annual, + tax); a no-Teams SKU at C$6.00 | microsoft.com/en-ca. Canadian data residency [[UNVERIFIED: check Microsoft's data-residency page]] |
-| Google Workspace Business Starter | **C$9.20** annual / **C$11** flexible (read from a partly cut-off Google help table) | [[VERIFY on Google's Canadian pricing page]]. Data regions [[UNVERIFIED]] |
+| Microsoft 365 Business Basic | **C$9.50** (annual, + tax); a no-Teams SKU at C$6.00 (microsoft.com/en-ca, read earlier this session; CAD figure **not re-confirmed** by the fact-check) | Microsoft raised commercial list prices on **2026-07-01**: Business Basic US$6 → US$7; existing subscribers keep the old price until their first renewal after that date (Nasdaq, Office Watch, third-party). Check that the C$ price seen is post-increase. Canadian data residency [[UNVERIFIED: check Microsoft's data-residency page]] |
+| Google Workspace Business Starter | **C$9.20** annual / **C$11** flexible | **Confirmed** on Google's fr-CA Workspace page (prices in CAD; fact-check 2026-10-25). Data regions [[UNVERIFIED]] |
 
 One paid mailbox (`bonjour@`) + aliases (`commandes@`, `avis@`, `dmarc@`) is enough at launch. The GBP API application needs a mailbox on the website's domain (16b §5). Create it in **week 1**.
 
@@ -543,10 +545,10 @@ TTL 300 s during setup, 3600 s after.
 
 | Item | Choice | ≈ Monthly | Basis |
 |---|---|---|---|
-| VPS (production + staging) | OVH VPS-2, Beauharnois | **$11.64** (likely CAD) | OVH en-ca page; 2026 price changes reported: re-check |
+| VPS (production + staging) | OVH plan with 4 vCores / 8 GB / 75 GB NVMe (VPS-1 per third-party listings; this file earlier said VPS-2), Beauharnois | **≈ $11.64** (likely CAD) **UNVERIFIED** | Earlier read of the OVH en-ca page; a +55 % rise on 2026-04-01 is reported (§7.3): re-check at checkout |
 | (alt.) | Lightsail 4 GB, ca-central-1 | US$24 + a second small instance for staging | AWS list price |
 | Provider backup option | — | [[UNVERIFIED]] | — |
-| Off-site backups (≈ 20–50 GB × 2 providers) | S3 ca-central-1 + OVH Object Storage | ≈ $1–3 | OVH third-party per-GB price; S3 [[UNVERIFIED]] |
+| Off-site backups (≈ 20–50 GB × 2 providers) | S3 ca-central-1 (or a Lightsail 100 GB bucket, $3/mo) + OVH Object Storage | ≈ $1–3 | OVH third-party per-GB price; Lightsail buckets FAQ; S3 ca-central-1 [[UNVERIFIED]] |
 | Domains (.com + .ca + 1–2 defensive) | Registrar | ≈ $3–6 amortized | [[UNVERIFIED registrar prices]] |
 | DNS | Cloudflare DNS-only | $0 | [[UNVERIFIED]] |
 | Transactional email | SES (à la carte) | < $1 at bakery volume | Third-party rate |
@@ -556,7 +558,7 @@ TTL 300 s during setup, 3600 s after.
 | Errors | Sentry free tier | $0 | [[UNVERIFIED]] |
 | CI/CD + registry | GitHub Free | $0 | [[UNVERIFIED Actions minute / GHCR quotas for private repos]] |
 | CDN | none | $0 | §6 |
-| **Total** | | **≈ C$35–55/month** (≈ +US$15 with Postmark; ≈ +US$20–30 with Lightsail) | Excludes SMS, payments, AI APIs, SEO tools (plan v1 §15) |
+| **Total** | | **≈ C$25–55/month** (≈ +US$15 with Postmark; ≈ +US$20–30 with Lightsail). Fact-check: the lines above sum to ≈ C$25–47 at the prices seen (mixed USD/CAD, before tax); the earlier C$35 floor was not supported. The top of the range leaves room for the unconfirmed 2026 OVH price (est.) | Excludes SMS, payments, AI APIs, SEO tools (plan v1 §15) |
 
 Operator time (est.): about 30 min/week (Friday gate) + about 1 h/month (restore and logs review) + about 2 h/quarter (rotation, rebuild drill).
 
@@ -771,9 +773,10 @@ if (failures.length) { console.error(failures.join('\n')); process.exit(1); } //
 - Whether a defensive `.ca` registration is approved (the business's legal name and jurisdiction for CIRA).
 
 **[[VERIFY]] (search budget exhausted; check before the build)**
-- Exact prices and currency: OVH VPS (BHS) after the 2026 changes; Lightsail ca-central-1; DigitalOcean TOR1; Vultr Toronto; Linode Toronto.
-- AWS S3 ca-central-1 storage price; OVH Object Storage availability in BHS; Wasabi Toronto region; Backblaze B2 Canadian region.
-- SES availability and price in ca-central-1, and the 2026 plan structure; Postmark data location and current plans.
+- Exact prices and currency: OVH VPS (BHS) after the 2026 changes, **and which plan name has 4 vCores / 8 GB** (contested, §7.3), **and that the order lands in BHS, not the Toronto-area site**; Lightsail ca-central-1; DigitalOcean TOR1; Vultr Toronto; Linode Toronto.
+- AWS S3 ca-central-1 storage price; Lightsail bucket availability in ca-central-1; OVH Object Storage availability in BHS; Wasabi Toronto region and the $7.99/TB 2026-07-01 rate; Backblaze B2 Canadian region.
+- SES availability in ca-central-1 and whether its rates differ from the confirmed plan rates; the 2026-07-21 plan start date and à la carte option; Postmark data location (plan prices are third-party).
+- Microsoft 365 Business Basic CAD price after the 2026-07-01 increase.
 - Cloudflare: the current AI Crawl Control defaults on the Free plan, Bot Fight Mode behaviour, Cloudflare IP ranges (only if a CDN is adopted).
 - Bunny CDN pricing and bot defaults.
 - Next 16 specifics: standalone copy of `public/` and `.next/static`, `compress`, custom loader config, `revalidateTag` signature, route config for "no prerender at build" with Cache Components.
@@ -790,6 +793,38 @@ if (failures.length) { console.error(failures.join('\n')); process.exit(1); } //
 - CAI ÉFVP guide: https://www.cai.gouv.qc.ca/
 
 ---
+
+## Verification log (2026-10-25)
+
+Adversarial pass, 6 WebSearch calls (summaries, US-located; no page opened directly). Placed before Sources so the file still ends with "## Sources".
+
+| # | Claim (section) | Verdict | Source URL |
+|---|---|---|---|
+| 1 | OVH VPS-2 = 4 vCores / 8 GB / 75 GB NVMe; VPS-1 = 2 vCores / 4 GB / 40 GB (§7.3, §11) | **Contradicted (third-party).** Listings give VPS-1 = 4 vCores / 8 GB / 75 GB NVMe, VPS-2 = 6 vCores / 12 GB / 100 GB NVMe. Corrected to "pick by specs" | https://www.whtop.com/amp/plans/ovhcloud.com/137097 · https://www.whtop.com/amp/plans/ovhcloud.com/137098 |
+| 2 | OVH VPS-2 from $11.64/mo, VPS-1 from $6.20/mo (§7.3, §11) | **UNVERIFIED.** Third-party: US$4.20 / US$6.75 (Sept 2025), then +55 % on 2026-04-01 (VPS-1 $4.90 → $7.60). No official current price seen | https://agentdeals.dev/vendor/ovhcloud · https://www.whtop.com/amp/plans/ovhcloud.com/137097 |
+| 3 | OVH VPS price rise from 2026-04-01 (§7.3) | **Confirmed (secondary, two outlets)** | https://next.ink/225720/ovhcloud-augmente-fortement-le-prix-de-ses-vps-2026-et-ipv4/ · https://agentdeals.dev/vendor/ovhcloud |
+| 4 | OVHcloud Canada = Beauharnois, Québec (§0, §7.3) | **Partly.** BHS confirmed as OVH's first Canadian data centre (Jan 2012). OVH also has a Toronto-area site (Cambridge, ON, announced March 2024). VPS availability there not stated. Corrected: "pick BHS explicitly" | https://corporate.ovhcloud.com/en/newsroom/news/ovhcloud-10-year-anniversary-canada/ · https://www.ovhcloud.com/en-ca/lp/new-toronto-datacenter/ · https://www.datacenterdynamics.com/en/news/ovhcloud-takes-space-in-ascent-data-center-in-toronto-canada |
+| 5 | SES plans: Essentials $0.16 / 1,000; Pro $0.22 + $105/mo; Enterprise $0.23 + $500/mo (§9.1) | **Confirmed** on the official pricing page (0–10 M band). Detail added: the fixed fees are **per account per Region** | https://aws.amazon.com/ses/pricing/ |
+| 6 | SES plans start 2026-07-21; new accounts start on Essentials; à la carte ≈ $0.10 / 1,000 still available (§9.1) | **UNVERIFIED** (secondary sources only; the $0.10 figure appears in a 2026 blog) | https://leadhaste.com/blog/amazon-ses-pricing |
+| 7 | SES available in ca-central-1, same rates there (§9.1) | **UNVERIFIED** (not in results) | — |
+| 8 | AWS ca-central-1 is in Montréal (§0, §7.3, §9.1) | **UNVERIFIED** (not in results) | — |
+| 9 | Lightsail offered in ca-central-1 (§7.3) | **Partly** (third-party copy of the Lightsail endpoint table) | https://forum.ficusonline.com/t/topic/442 |
+| 10 | Lightsail 4 GB plan price in Canada; S3 Standard price in ca-central-1 (§7.3, §7.4) | **UNVERIFIED** (not found). Added: Lightsail buckets $1 / 5 GB, $3 / 100 GB, $5 / 250 GB, same in every Lightsail Region | https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-faq-buckets.html |
+| 11 | Microsoft 365 Business Basic C$9.50 (§9.2, §11) | **UNVERIFIED in CAD.** Context added: US list price $6 → $7 from 2026-07-01; existing subscribers keep the old price until their first renewal after that date | https://www.nasdaq.com/articles/microsoft-announces-worldwide-price-hike-microsoft-365-subscriptions · https://office-watch.com/2026/microsoft-365-business-price-increase-2026/ |
+| 12 | Google Workspace Business Starter C$9.20 annual / C$11 flexible (§9.2) | **Confirmed** (Google fr-CA page, CAD) | https://workspace.google.com/intl/fr_ca/lp/business/ |
+| 13 | Postmark Basic $15/mo for 10,000, $1.80 per extra 1,000; 2026 plan change conflicting (§9.1) | **Partly** (third-party only; CostBench entries for 2026-02-04 conflict with each other) | https://automationatlas.io/answers/postmark-pricing-explained-2026/ · https://costbench.com/changelog/postmark-price-decrease-2026-02/ |
+| 14 | Postmark data location (§7.2, §9.1) | **UNVERIFIED** (no result) | — |
+| 15 | Monthly total ≈ C$35–55 (§0, §11) | **Corrected** by arithmetic on the §11 lines: ≈ C$25–47; range now C$25–55 (est.) | via §11 of this file |
+| 16 | DigitalOcean 20 % Basic price cut "Jan 2026" (§7.3) | **UNVERIFIED month** (internal inconsistency: cited CostBench URL is dated 2026-02; not searched) | https://costbench.com/changelog/digitalocean-price-decrease-2026-02/ |
+
+### Search queue (not searched: cap reached)
+- Next.js 16 release date (2025-10-21) and current Next.js / Payload versions (16.4.x / 3.92.x from 16b).
+- Cloudflare: AI-crawler default block (2025-07-01), managed robots.txt `Content-Signal` values, current Free-plan AI Crawl Control defaults.
+- Wasabi $7.99/TB from 2026-07-01, 1 TB minimum, Toronto region.
+- Resend regions and free tier (3,000/mo, 100/day).
+- Search Console International Targeting removal date (2022-09-22); CAI PIA guide date (2023-09-22).
+- Vultr and Linode Toronto prices; Hetzner has no Canadian location; OVH Strasbourg fire (March 2021).
+- SES in ca-central-1; AWS ca-central-1 = Montréal; S3 ca-central-1 price; M365 CAD price after 2026-07-01; Postmark data location.
 
 ## Sources
 
@@ -894,3 +929,22 @@ Domain
 - CIRA — Canadian Presence Requirements for registrants — https://www.cira.ca/en/?p=45244 — seen 2026-10-25
 - A2 Hosting — Requirements for .ca domains — https://www.a2hosting.com/kb/getting-started-guide/registering-a-domain1/requirements-for-.ca-domains — seen 2026-10-25
 - Wikipedia — .ca — https://en.wikipedia.org/wiki/.ca — seen 2026-10-25
+
+Fact-check pass (2026-10-25, via WebSearch summaries)
+- whtop — OVH VPS-1 listing (Sept 2025) — https://www.whtop.com/amp/plans/ovhcloud.com/137097 — seen 2026-10-25
+- whtop — OVH VPS-2 listing (Sept 2025) — https://www.whtop.com/amp/plans/ovhcloud.com/137098 — seen 2026-10-25
+- agentdeals — OVHcloud pricing tracker (2026-04 increase) — https://agentdeals.dev/vendor/ovhcloud — seen 2026-10-25
+- OVHcloud newsroom — 10-year anniversary in Canada (Beauharnois, Jan 2012) — https://corporate.ovhcloud.com/en/newsroom/news/ovhcloud-10-year-anniversary-canada/ — seen 2026-10-25
+- OVHcloud — Toronto Data Center (en-ca) — https://www.ovhcloud.com/en-ca/lp/new-toronto-datacenter/ — seen 2026-10-25
+- DatacenterDynamics — OVHcloud takes space in Ascent data center, Toronto — https://www.datacenterdynamics.com/en/news/ovhcloud-takes-space-in-ascent-data-center-in-toronto-canada — seen 2026-10-25
+- AWS — Amazon SES pricing — https://aws.amazon.com/ses/pricing/ — seen 2026-10-25
+- LeadHaste — Amazon SES pricing (secondary) — https://leadhaste.com/blog/amazon-ses-pricing — seen 2026-10-25
+- AWS — Lightsail buckets FAQ — https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-faq-buckets.html — seen 2026-10-25
+- Ficus Online forum — Lightsail endpoint table (third-party) — https://forum.ficusonline.com/t/topic/442 — seen 2026-10-25
+- Upstash — AWS S3 pricing explained 2026 — https://upstash.com/blog/aws-s3-pricing-explained-2026.md — seen 2026-10-25
+- Nasdaq — Microsoft worldwide price hike for Microsoft 365 — https://www.nasdaq.com/articles/microsoft-announces-worldwide-price-hike-microsoft-365-subscriptions — seen 2026-10-25
+- Office Watch — Microsoft 365 business price increase 2026 — https://office-watch.com/2026/microsoft-365-business-price-increase-2026/ — seen 2026-10-25
+- Google Workspace — fr-CA business plans (CAD) — https://workspace.google.com/intl/fr_ca/lp/business/ — seen 2026-10-25
+- Automation Atlas — Postmark pricing 2026 — https://automationatlas.io/answers/postmark-pricing-explained-2026/ — seen 2026-10-25
+- CostBench — Postmark pricing change Feb 2026 — https://costbench.com/changelog/postmark-price-decrease-2026-02/ — seen 2026-10-25
+- CostBench — Postmark pricing change Feb 2026 (second entry) — https://costbench.com/changelog/postmark-price-decrease-2026-02-3/ — seen 2026-10-25

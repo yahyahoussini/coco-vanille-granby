@@ -12,17 +12,17 @@ How this was made, and its limits:
 
 ## 0. Bottom line (decision-relevant)
 
-1. **The legal entity is real and was active in 2026.** *Pâtisserie Coco Vanille inc.* has NEQ 1177082220. It was incorporated in November 2021, its activity code is 6013 "Boulangeries et pâtisseries", and its address is 3 rue Court, Granby J2G 4Y6. One aggregator reports it "not in liquidation as of 2026-05-31". (opengovca, b2bhint)
-2. **Nobody can confirm the shop is operating in October 2026 (critical).** The newest dated directory data is from 2025-08-20 (find-open). RestoMontreal flags "may be temporarily closed". The search found no 2026 post, review or news item. → **[[FACT NEEDED: confirm open, and check that the GBP is not set to "temporarily closed"]]** before any build work.
+1. **The legal entity is real and was active in 2026.** *Pâtisserie Coco Vanille inc.* has NEQ 1177082220. It was incorporated in November 2021, its activity code is 6013 "Boulangeries et pâtisseries", and its address is 3 rue Court, Granby J2G 4Y6. Its last annual update declaration was filed on **2026-01-24 (for 2025)**. One aggregator reports it "not in liquidation as of 2026-05-31". (opengovca, b2bhint; both are search summaries, and the REQ itself was not opened)
+2. **Nobody can confirm the shop is operating in October 2026 (critical).** The newest dated third-party data is a RestoMontreal snapshot from mid-2026 (FR page "as of 2026-07-15", EN page "as of 2026-08-01"). It shows Google 4.9 from 40+ reviews, and its review summary cites 2026 reviews, including a January 2026 complaint. That points to trading in early 2026 (unverified, search summary only). RestoMontreal still shows the "may be temporarily closed" flag. No 2026 owner post, news item or closure notice was found. → **[[FACT NEEDED: confirm open, and check that the GBP is not set to "temporarily closed"]]** before any build work.
 3. **The name is split between platforms.** Google Maps and every directory that mirrors it use "Pâtisserie **Cocovanille**". The registry, Facebook, Tripadvisor, Yellow Pages, the press and the Marché public use "Pâtisserie **Coco Vanille**". MapQuest has the typo "Coco Vanill". Address and phone are consistent everywhere, with one possible exception (§2).
 4. **Evidence shows a pastry shop, bakery and small café, not a custom-cake specialist.** Named products: almond croissants, Paris-Brest, tarts, breads and baguettes (also sold frozen), strawberry shortcake, raspberry cake, vol-au-vent and coffee. There are about 10 seats. "Custom cakes" and "made-to-order" each appear once. "Ready next day by phone" is documented. **There is zero evidence of wedding cakes.** The plan's category sentence (custom cakes for birthdays *and weddings*) is only partly supported (§11).
-5. **Reputation is strong but thin.** Google 4.9 per RestoMontreal (no count shown). Three Best Rated shows 4.8 from 115 ratings and ranks the shop #2 among Granby bakeries. RestoMontreal 4.8/22, Chamber of Commerce 5.0/11, Wanderlog 5.0/21. One public complaint: a cake order made wrong.
-6. **No owned web presence was found.** No website or domain, no email, no delivery-platform listing. Facebook has 605 likes (older snapshot) and 1,046 followers (later snapshot). The Instagram handle @coco_vanillegranby **was not surfaced by any search**.
+5. **Reputation is strong but thin.** Google 4.9 from "40+" reviews per RestoMontreal (mid-2026 snapshot; the exact count is unknown). Three Best Rated shows 4.8 from 115 ratings and ranks the shop #2 among Granby bakeries. RestoMontreal 4.8/22, Chamber of Commerce 5.0/11, Wanderlog 5.0/21. One public complaint: a cake order made wrong.
+6. **No owned web presence was found.** No website or domain, no email, no delivery-platform listing. Facebook has 605 likes (older snapshot) and 1,046 followers (later snapshot). The Instagram handle @coco_vanillegranby **was not surfaced by any search** (2 more searches on 2026-10-25 also failed).
 7. **Market facts:**
    - Granby: 72,078 residents (2026 decree), 69,025 at the 2021 census.
    - French is the mother tongue of 91.8% of residents. English is ~2%.
    - 535 Colombian-born immigrants (2021). Granby is one of 14 Québec destination cities for government-assisted refugees.
-   - Zoo de Granby draws ~620k–665k visitors a year (2024–2025, secondary sources).
+   - Zoo de Granby drew ~620k visitors in 2024. The ">665k in 2025" figure did **not** reproduce on re-search, so it is UNVERIFIED (secondary sources only).
 
 ---
 
@@ -34,10 +34,10 @@ How this was made, and its limits:
 | Trade name (registry, Facebook, Tripadvisor, press) | Pâtisserie Coco Vanille | verified | facebook, tripadvisor, radio-canada 2022, lavoixdelest 2022, marchepublicgranby |
 | Legal name | Pâtisserie Coco Vanille inc. | verified (aggregators citing REQ; REQ not opened) | opengovca, b2bhint |
 | NEQ | 1177082220 | verified (2 aggregators) | opengovca, b2bhint |
-| Legal form | Société par actions (Québec *Loi sur les sociétés par actions*) | unverified (1 aggregator summary) | opengovca |
+| Legal form | Société par actions (Québec *Loi sur les sociétés par actions*) | unverified (aggregator summaries; a 2026-10-25 re-search repeats "joint stock company or corporation"; REQ not opened) | opengovca |
 | Registration (immatriculation) | 2021-11-09 | verified | opengovca, b2bhint |
-| Incorporation (constitution) | 2021-11-08 (opengovca) vs 2021-11-09 (b2bhint) | conflict (1 day) | opengovca, b2bhint |
-| Registry status | "Immatriculée"; "not in liquidation as of 2026-05-31" | unverified (aggregators) | opengovca, b2bhint |
+| Incorporation (constitution) | 2021-11-08 (opengovca) vs 2021-11-09 (b2bhint) | conflict (1 day; the 2026-10-25 re-search reproduces it) | opengovca, b2bhint |
+| Registry status | "Immatriculée"; last annual update declaration filed 2026-01-24 (for 2025); "not in liquidation as of 2026-05-31" | unverified (aggregators; the summary does not say which one shows the 2026-01-24 filing) | opengovca, b2bhint |
 | Activity code (CAE) | 6013 – Boulangeries et pâtisseries | verified | opengovca, b2bhint |
 | Employees declared | "Aucun" (none declared) | unverified; likely a declaration artefact | opengovca |
 | Directors / shareholders | not surfaced | needed | — |
@@ -51,13 +51,13 @@ How this was made, and its limits:
 | Email | none found | needed | — |
 | Website / domain | none found (searched cocovanille.ca, patisseriecocovanille.com and the handles) | needed (does one exist or is one registered?) | — |
 | Hours | 6 different schedules (§3) | conflict | §3 |
-| Operating status Oct 2026 | Entity active; storefront unconfirmed; "may be temporarily closed" flag on RestoMontreal | conflict / needed | §4 |
+| Operating status Oct 2026 | Entity active (annual update 2026-01-24). Reviews dated 2026 appear in a RestoMontreal summary (mid-2026 snapshot). Storefront in Oct 2026 unconfirmed; the "may be temporarily closed" flag is still on RestoMontreal | conflict / needed | §4 |
 | Price range | "$ & $$" | unverified (1 directory) | restomontreal |
 | Seating | "only about ten seats" (reviewer) | unverified | restomontreal (review summary) |
 | Ordering | "order by phone, ready the next day" | unverified (1 directory, 2025) | threebestrated |
 | Delivery platforms | none found on Uber Eats, DoorDash, SkipTheDishes | unverified (absence of evidence) | ubereats, doordash, skipthedishes (generic Granby pages) |
 | Facebook | facebook.com/PatisserieCocoVanille: 605 likes (older) and 1,046 followers, 103 talking about this (later) | verified exists; counts snapshot-dated unknown | facebook |
-| Instagram | @coco_vanillegranby (from the brief) | unverified: not surfaced by any search | — |
+| Instagram | @coco_vanillegranby (from the brief) | unverified: not surfaced by any search (re-checked 2026-10-25, 2 queries) | — |
 | Tripadvisor | listing d27188801 "Pâtisserie Coco Vanille" | verified exists | tripadvisor |
 | Public market | listed as an exhibitor of the Marché public de Granby et région | verified exists (page undated) | marchepublicgranby.ca/exposants |
 
@@ -117,7 +117,7 @@ Fix list once the owner approves:
 
 Reading:
 - The **Thu–Fri 9:00–16:30, Sat 9:00–15:00** pattern appears on 4 sources, including the newest dated one (2025-08-20). It is the most probable recent GBP schedule (unverified).
-- The RestoMontreal schedule (8:30 opening, Sunday open) looks older.
+- The RestoMontreal schedule (8:30 opening, Sunday open) looks older. It still showed in RestoMontreal's mid-2026 snapshot, so the age of a page's snapshot says nothing about the age of its hours. The 2026-10-25 re-search found the same RestoMontreal vs Three Best Rated conflict and no owner-published hours.
 - A 3-day week is itself a business fact: it limits pickup slots for online ordering. **[[FACT NEEDED: current hours + holiday hours]]**
 
 ---
@@ -126,7 +126,9 @@ Reading:
 
 | Evidence | Points to | Date of evidence | Source |
 |---|---|---|---|
+| RestoMontreal snapshot: Google 4.9 (40+). The review summary cites a 2026 reviewer (almond croissants, warm owners) and a **January 2026** complaint (a chocolate cake order that arrived as vanilla with chocolate cream) | trading in early 2026 (unverified: search summary; review dates not seen directly) | page "as of 2026-07-15" (FR) / "2026-08-01" (EN) | restomontreal FR, EN |
 | Registry: "Immatriculée", not in liquidation | entity alive | 2026-05-31 | b2bhint (aggregator) |
+| Registry: last annual update declaration filed (for 2025) | entity maintained by its owner | 2026-01-24 | opengovca / b2bhint (search summary) |
 | Hours "set" on find-open | listing maintained | 2025-08-20 | find-open.ca |
 | Three Best Rated 2025 listing, #2 bakery, "order by phone, ready next day" | operating in 2025 | 2025 | threebestrated |
 | Facebook audience grew from 605 likes to 1,046 followers; "103 talking about this" | active page at snapshot time | snapshots undated | facebook |
@@ -134,11 +136,12 @@ Reading:
 | foodpages listing created/updated | listing exists | 2023-11-25 | foodpages.ca |
 | Chamber of Commerce reviews | operating | 2023 | chamberofcommerce.com |
 | Radio-Canada and La Voix de l'Est: sold through the public-market kiosk during rue Principale works | operating | 2022 (La Voix: 2022-10-23) | radio-canada, lavoixdelest |
-| **"Cette entreprise peut être temporairement fermée" / "may be temporarily closed"** | **possible closure** | undated | restomontreal (resto page FR, takeout list, bakeries list) |
-| No 2026 post, review, news or press item found | unknown | — | (absence across all searches) |
+| **"Cette entreprise peut être temporairement fermée" / "may be temporarily closed"** | **possible closure** | undated; still shown on the 2026-10-25 re-search | restomontreal (resto page FR, takeout list, bakeries list) |
+| RestoMontreal EN shows "CLOSED, next opening Wednesday 8:30 am" | **not** closure evidence: a time-of-day status computed from its listed hours | seen 2026-10-25 (search summary) | restomontreal EN |
+| No 2026 owner post (Facebook/Instagram), news item, press item or closure notice found; no permanent-closure notice anywhere | unknown | — | (absence across all searches, incl. 4 re-searches on 2026-10-25) |
 
 Verdict:
-- **Operating in 2025 is likely (unverified). October 2026 is unknown.**
+- **Operating in 2025 is likely, and in early 2026 probable (both unverified). October 2026 is unknown.**
 - RestoMontreal's flag usually mirrors a Google "temporarily closed" status (inference, unverified). If the GBP carries that status, it suppresses map-pack visibility. Fixing it is week-0 work.
 - Context: the downtown rue Principale works ran from Aug 2021 and closed the street for more than a year. Phase 2, between rues Gill and Court, cost $14,995,000. The City lists "Rue Principale, phase 2" sewer works for mid-Aug to mid-Oct 2025 and "Rue Principale, phase 3" in its 2026 road-works page. Whether these segments touch rue Court is unverified.
 
@@ -173,7 +176,7 @@ Directory categories in use:
 
 | Platform | Rating | Count | Date | Source |
 |---|---|---|---|---|
-| Google (as shown on RestoMontreal FR) | 4.9; 86% five-star | count not shown | undated | restomontreal FR |
+| Google (as shown on RestoMontreal FR/EN header) | 4.9; 86% five-star | "40+" (exact count not shown) | page "as of 2026-07-15" (FR) / "2026-08-01" (EN) | restomontreal FR, EN |
 | Three Best Rated (aggregated) | 4.8 | 115 ratings | 2025 | threebestrated |
 | RestoMontreal | 4.8 | 22 ratings | undated | restomontreal EN |
 | Chamber of Commerce | 5.0 | 11 | reviews from 2023 | chamberofcommerce |
@@ -182,11 +185,11 @@ Directory categories in use:
 | Tripadvisor .com / .co.za | — | 0 reviews | undated | tripadvisor |
 | Sluurpy | 3.5 | 0 reviews (artefact) | undated | sluurpy |
 
-The Google review count is **[[FACT NEEDED]]**. Search summaries suggested "22–40+" without a citable figure.
+The exact Google review count is **[[FACT NEEDED]]**. RestoMontreal's mid-2026 header shows "40+". Its own breakdown (4.8 from 22) counts RestoMontreal ratings, not Google reviews.
 
 Themes:
 - **Positive:** fresh pastries; almond croissants; Paris-Brest; custom cakes; strawberry shortcake; raspberry cake; vol-au-vent; friendly staff and owners; reasonable prices; cozy shop.
-- **Negative (1):** a cake order that did not match what was ordered (2 stars). This is a process risk the online-ordering spec must design out: written order confirmation, flavour recap and photo proof.
+- **Negative (1):** a cake order that did not match what was ordered (2 stars). A 2026-10-25 search summary dates it to January 2026: a chocolate cake was ordered and a vanilla cake with chocolate cream was received (unverified). This is a process risk the online-ordering spec must design out: written order confirmation, flavour recap and photo proof.
 - **Press:** Radio-Canada (2022) and La Voix de l'Est (2022-10-23) mention the shop only as a market-kiosk merchant.
 - **Awards:** none found.
 
@@ -296,14 +299,14 @@ Answer to the brief: **yes. Granby is documented as a long-standing destination 
 
 | Fact | Value | Status | Source |
 |---|---|---|---|
-| Zoo de Granby, 2025 | >665,000 visitors (+45,000 vs 2024) | unverified (search summary of local press; not re-confirmed) | granbyexpress / journalleguide "Bilan 2025" |
-| Zoo de Granby, 2024 | 620,000 (−25,000 vs 2023); lockout Jul 2024 – Feb 2025; loss of more than $1M | unverified (press) | journalleguide / laveniretdesrivieres, noovo |
+| Zoo de Granby, 2025 | >665,000 visitors (+45,000 vs 2024) | **UNVERIFIED**: a 2026-10-25 re-search found no source for 665,000. Do not use in copy until the zoo's own 2025 release is read | granbyexpress / journalleguide "Bilan 2025" |
+| Zoo de Granby, 2024 | 620,000 (−25,000 vs 2023); lockout Jul 2024 – Feb 2025; loss of more than $1M | 620k unverified (press); the deficit, the lockout and the >$1M loss are confirmed by Noovo on re-search | journalleguide / laveniretdesrivieres, noovo |
 | Zoo, summer 2025 | >500,000, +15% (zoo release). La Tribune (2025-08-23) cited a lower in-season projection (~450,000) | conflict (timing) | zoodegranby.com, latribune |
 | Zoo, summer 2024 | 446,000 (target 475,000) | unverified (Wikipedia) | wikipedia Granby Zoo |
 | Zoo "per year" (generic) | "over 650,000" | unverified (employer listing) | work.evolia.com |
 | Festival international de la chanson de Granby | 58th edition, 13–23 Aug 2026; attendance not found | unverified (event aggregator) | festapp.io |
 | Lac Boivin (CINLB) | 700 rue Drummond; ~10 km trails, 400 m+ boardwalks; ZICO bird site; free parking | verified (2 tourism listings) | quebecvacances, easterntownships |
-| Marché public de Granby et région | rue Principale (176 per one source, 160 per another); 2026: Saturdays 2 May – 7 Nov 9:00–14:00, Thursdays 18 Jun – 27 Aug 16:00–19:00; **Coco Vanille is an exhibitor** | conflict (address); unverified (dates) | bonjourquebec, marchepublicgranby.ca |
+| Marché public de Granby et région | **176 rue Principale** (place du Marché), J2G 2V6; 450-361-6076. The earlier "160" did not reproduce: the re-search of the Eastern Townships listing returned 176. Season per listings: Saturdays May–Oct 9:00–14:00 (Eastern Townships) vs June–Oct (another listing); in winter, monthly indoors at Centre Notre-Dame. 2026 dates (Sat 2 May – 7 Nov; Thu 18 Jun – 27 Aug 16:00–19:00) were **not reproduced**. Coco Vanille was named as an exhibitor on an undated page and was not named in the re-search results | address corrected to 176 (unverified, listings); 2026 dates UNVERIFIED; 2026 exhibitor status UNVERIFIED | bonjourquebec, easterntownships, sortirauquebec, marchepublicgranby.ca |
 | Downtown | Rue Court intersects rue Principale at the downtown core (revitalization phase 2: Gill → Court, then Court → Dufferin; $14,995,000) | verified (local press, undated) | granbyexpress |
 
 Walking distance from 3 rue Court to the market, the zoo or Lac Boivin: **[[FACT NEEDED]]** (no sourced measurement).
@@ -374,10 +377,51 @@ Language tiers:
 12. Delivery: offered? Radius, fee, days.
 13. Allergen policy (nuts, gluten). Permits: MAPAQ permit number/category.
 14. Seating count, Wi-Fi, parking (photos).
-15. Google review count today. Permission to reply to reviews. The story behind the cake-order complaint and its fix.
+15. Google review count today (RestoMontreal showed "40+" in mid-2026). Permission to reply to reviews. The story behind the cake-order complaint (reportedly January 2026: chocolate ordered, vanilla received) and its fix.
 16. Still an exhibitor at the Marché public de Granby in 2026?
 17. Spanish-speaking staff or customers (to justify the ES tier and any WhatsApp on ES pages).
 18. Directors and shareholders (from REQ) if a founder schema / Person entity is wanted.
+
+---
+
+## Verification log (2026-10-25)
+
+Adversarial re-check: 10 WebSearch queries (the cap). Results are US-located summaries; no page was opened. "Confirmed" means a fresh search reproduced the claim. It does **not** upgrade a claim's status above what its sources support.
+
+| Claim | Verdict | Source URL |
+|---|---|---|
+| Legal name "Pâtisserie Coco Vanille inc.", NEQ 1177082220, 3 rue Court, Granby J2G 4Y6 | Confirmed | https://opengovca.com/quebec-business/1177082220 ; https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220 |
+| Registration 2021-11-09; incorporation 2021-11-08 vs 2021-11-09 (1-day conflict) | Confirmed (the conflict persists) | https://opengovca.com/quebec-business/1177082220 ; https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220 |
+| Registry status "Immatriculée", not in liquidation as of 2026-05-31 | Confirmed (aggregator level; REQ not opened) | https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220 |
+| NEW: last annual update declaration filed 2026-01-24 (for 2025) | Corrected (added; unverified, aggregator summary) | https://opengovca.com/quebec-business/1177082220 |
+| Legal form: société par actions | Unverified (aggregator repeats "joint stock company or corporation"; REQ not opened) | https://opengovca.com/quebec-business/1177082220 |
+| CAE 6013 Boulangeries et pâtisseries; employees "Aucun" | Confirmed (aggregator level) | https://opengovca.com/quebec-business/1177082220 |
+| Name split: "Cocovanille" (RestoMontreal/Google mirrors) vs "Coco Vanille" (Three Best Rated, Tripadvisor, registry) | Confirmed | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/ ; https://threebestrated.ca/bakeries-in-granby-qc |
+| Phone (450) 372-7177 | Confirmed | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/ ; https://threebestrated.ca/bakeries-in-granby-qc |
+| Hours conflict (RestoMontreal Wed–Sat 8:30–17:30, Sun 9–17 vs Three Best Rated Thu–Fri 9–16:30, Sat 9–15) | Confirmed (still conflicting; no owner-published hours found) | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/ ; https://threebestrated.ca/fr-boulangeries-in-granby-qc |
+| "May be temporarily closed" flag on RestoMontreal | Confirmed (still shown; generic listing notice; no permanent-closure notice found anywhere) | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/ |
+| "No 2026 review found" | Corrected: a RestoMontreal summary (snapshot 2026-07-15 / 2026-08-01) cites 2026 reviews, incl. a January 2026 cake-order complaint (unverified, summary level) | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/ |
+| Google rating 4.9, "count not shown" | Corrected: 4.9 from "40+" per the RestoMontreal header, mid-2026; exact count still needed | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/ |
+| Shop operating in October 2026 | Unverified (no 2026 owner post, news or closure notice; latest third-party snapshot mid-2026) | https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/vote/ |
+| Instagram @coco_vanillegranby | Unverified (not surfaced by 2 more queries) | — |
+| Tripadvisor .ca 4.7 / 107 ratings with no written reviews; Wanderlog 5.0 / 21, mislabelled Magog | Confirmed | https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html ; https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille |
+| Zoo de Granby >665,000 visitors in 2025 | Unverified (not reproduced; no source found) | — |
+| Zoo 2024 deficit, 6-month lockout, >$1M loss | Confirmed | https://www.noovo.info/video/le-zoo-de-granby-tourne-la-page-sur-un-bilan-deficitaire-en-2024.html |
+| Marché public address "176 vs 160 rue Principale" | Corrected: 176 rue Principale (place du Marché), J2G 2V6 on the Eastern Townships listing; 160 not reproduced | https://www.easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region |
+| Marché public 2026 season dates (Sat 2 May – 7 Nov; Thu 18 Jun – 27 Aug) | Unverified (listings give May–Oct or June–Oct Saturdays, 9:00–14:00; no 2026 dates found) | https://sortirauquebec.com/en/listing/farmers-and-public-markets/marche-public-de-granby-et-region/ |
+| Coco Vanille is a 2026 Marché public exhibitor | Unverified (no exhibitor named in the re-search; exposants page undated) | https://marchepublicgranby.ca/exposants/ |
+
+### Search queue (not searched this turn: cap reached)
+1. Zoo de Granby 2025 annual attendance from the zoo's own release (zoodegranby.com salle de presse, "bilan 2025").
+2. Marché public de Granby 2026 season dates and 2026 exhibitor list (marchepublicgranby.ca).
+3. REQ direct record for NEQ 1177082220: legal form, exact constitution date, directors and shareholders, date of the latest annual declaration.
+4. Google Maps / GBP current status for CID 10789122976114705165 ("temporarily closed"?) and the exact review count. This likely needs a manual check by the owner.
+5. Facebook /PatisserieCocoVanille: date of the latest post in 2026.
+6. Yellow Pages 450-372-5917: does it still appear?
+7. Granby décret 2026 = 72,078 (re-check the Gazette PDF) and MRC total 98,146.
+8. StatCan 2021 Spanish mother tongue / home language for CSD 2447017; Granby Express 3,550 immigrants / 535 Colombians against the StatCan table.
+9. FICG 2026 (58th edition, 13–23 Aug 2026): dates on the festival's own site.
+10. Rue Principale phase 3 (2026) works: does the segment touch rue Court?
 
 ---
 
@@ -425,6 +469,8 @@ Business: press, partners, downtown
 - Exposants – Marché public de Granby — https://marchepublicgranby.ca/exposants/ — seen 2026-10-25
 - Marché public de Granby et région (Bonjour Québec) — https://www.bonjourquebec.com/en-us/listing/to-see-and-do/marche-public-de-granby-et-region/1dx2 — seen 2026-10-25
 - Marché public de Granby et région (Eastern Townships) — https://easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region — seen 2026-10-25
+- Marché public de Granby et région (Eastern Townships, www; re-search: 176 rue Principale, May–Oct) — https://www.easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region — seen 2026-10-25
+- Marché public de Granby et région (Sortir au Québec) — https://sortirauquebec.com/en/listing/farmers-and-public-markets/marche-public-de-granby-et-region/ — seen 2026-10-25
 - Centre-ville de Granby: la phase 2 des travaux de revitalisation est lancée (Granby Express) — https://www.granbyexpress.com/actualites/centre-ville-de-granby-la-phase-2-des-travaux-de-revitalisation-est-lancee/ — seen 2026-10-25
 - Travaux de voirie 2025 (Ville de Granby) — https://www.granby.ca/fr/ville/travaux-voirie-2025 — seen 2026-10-25
 - Travaux de voirie 2026 (Ville de Granby) — https://www.granby.ca/fr/travaux-voirie — seen 2026-10-25

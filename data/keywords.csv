@@ -44,17 +44,17 @@ custom-cakes,gâteau personnalisé cantons-de-l'est,fr,transactional,/gateaux-pe
 custom-cakes,custom cake granby,en,transactional,/en/custom-cakes-granby/,low,https://www.yelp.com/search?find_desc=Custom+Cakes&find_loc=Granby%2C+QC,Yelp custom-cakes list polluted by out-of-region entries
 custom-cakes,order custom cake online granby,en,transactional,/en/order/,low,UNVERIFIED,L9
 custom-cakes,pastel personalizado granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Mexican wording
-custom-cakes,torta personalizada granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
-birthday,gâteau de fête granby,fr,transactional,/gateaux-personnalises-granby/,high,UNVERIFIED,C2; QC term (owner plan); US-run search found no Granby page (03 §0.9); run overlap test vs « gâteau personnalisé » → /gateaux-de-fete/ if < 6/10 shared
+custom-cakes,torta personalizada granby,es,transactional,/es/pasteles-personalizados-granby/,low,https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel,Colombian wording (owner plan; UNVERIFIED); Evidence pass 2026-10-25: Colombian use of « torta » for celebration cakes: low-reliability sources only; Mexican readers read « torta » as sandwich
+birthday,gâteau de fête granby,fr,transactional,/gateaux-personnalises-granby/,high,https://fr.vikidia.org/wiki/G%C3%A2teau_d%27anniversaire,C2; QC term (owner plan); US-run search found no Granby page (03 §0.9); run overlap test vs « gâteau personnalisé » → /gateaux-de-fete/ if < 6/10 shared; Evidence pass 2026-10-25: WEAK term evidence: Vikidia (youth encyclopedia) says « fête » means birthday in Québec (page mapping between Vikidia's Gâteau d'anniversaire and Anniversaire articles UNVERIFIED). No OQLF/Usito entry found
 birthday,meilleur gâteau de fête granby,fr,commercial,/comparatif-gateau-de-fete-granby/,medium,UNVERIFIED,C2
 birthday,gâteau d'anniversaire granby,fr,transactional,/gateaux-personnalises-granby/,medium,https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507,QC retailer (Maxi) and Le Marmiton use « anniversaire »: real QC usage; body synonym
 birthday,gâteau de fête adulte granby,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Pillar section
 birthday,gâteau chiffre lettre granby,fr,transactional,/gateaux-enfants/,low,UNVERIFIED,Plan v0c spoke; product [[FACT NEEDED]]
 birthday,bento cake granby,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Plan v0b spoke; product [[FACT NEEDED]]
 birthday,birthday cake granby,en,transactional,/en/custom-cakes-granby/,low,https://www.walmart.ca/en/browse/grocery/bread-bakery/cakes-cupcakes/birthday-celebration-cake/10019_6000194327359_6000198840549_6000204016986,National chains rank for generic EN
-birthday,torta de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,L10
-birthday,pastel de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Mexican wording; H1 carries both « pasteles y tortas »
-birthday,ponqué de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
+birthday,torta de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel,"L10; Evidence pass 2026-10-25: « torta » = cake in most of Latin America incl. Colombia, but = sandwich in Mexico (SpanishDict forum + low-reliability Q&A; DLE not checked)"
+birthday,pastel de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel,Mexican wording; H1 carries both « pasteles y tortas »; Evidence pass 2026-10-25: Mexico says « pastel » for cake (« torta » = sandwich); pair both in H1 (SpanishDict forum; DLE not checked)
+birthday,ponqué de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED); Evidence pass 2026-10-25: « ponqué » as Colombia's standard celebration-cake word appears only on a low-reliability Q&A page citing es.wikipedia; keep UNVERIFIED until DLE / Diccionario de americanismos check
 birthday,gâteau de fête pas cher granby,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://traiteur.iga.net/categories/102/product/631?lang=fr,Supermarket floor $26.99 for 8–12 (IGA); answer honestly
 kids-cakes,gâteau de fête enfant granby,fr,transactional,/gateaux-enfants/,medium,UNVERIFIED,Plan cluster
 kids-cakes,gâteau thème enfant,fr,commercial,/gateaux-enfants/,low,https://cakegranby.ca/collections/gateau-perso-thematique,Licensed prints only; no trademark URLs
@@ -83,10 +83,10 @@ comparison,gâteau costco granby,fr,commercial,/comparatif-gateau-de-fete-granby
 comparison,gâteau maxi iga granby,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507,
 comparison,boulangère à domicile permis québec,fr,informational,/comparatif-gateau-de-fete-granby/,low,UNVERIFIED,[[FACT NEEDED: legal track — MAPAQ permit rules]] before publishing
 portions,quelle grosseur de gâteau pour 20 personnes,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,I3; server-rendered table
-portions,combien de portions gâteau 8 pouces,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,QC uses inches « 8 po » (owner plan)
+portions,combien de portions gâteau 8 pouces,fr,informational,/calculateur-portions-gateau/,medium,https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf,QC uses inches « 8 po » (owner plan); Evidence pass 2026-10-25: Fondation OLO (Québec) recipe: 20 cm (8 po) round pan = 8-10 portions (home recipe; search summary)
 portions,gâteau pour 50 personnes,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,
 portions,cake serving chart,en,informational,/en/cake-serving-calculator/,medium,UNVERIFIED,National competition; link-earning tool
-portions,how many servings in an 8 inch cake,en,informational,/en/cake-serving-calculator/,medium,UNVERIFIED,
+portions,how many servings in an 8 inch cake,en,informational,/en/cake-serving-calculator/,medium,https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf,"Evidence pass 2026-10-25: Fondation OLO (Québec, FR) recipe: 8-inch (20 cm) round = 8-10 portions; EN guides may differ"
 portions,cuántas porciones tiene un pastel,es,informational,/es/calculadora-porciones-pastel/,low,UNVERIFIED,Show inches and cm
 transport-storage,comment transporter un gâteau à étages,fr,informational,/transporter-conserver-gateau/,low,UNVERIFIED,I4; ordered list
 transport-storage,comment conserver un gâteau à la crème,fr,informational,/transporter-conserver-gateau/,medium,UNVERIFIED,I7; food-safety facts need a source (Health Canada/MAPAQ)
@@ -111,14 +111,14 @@ wedding,wedding cake eastern townships,en,commercial,/en/wedding-cakes/,low,http
 wedding,wedding cake granby,en,transactional,/en/wedding-cakes/,low,UNVERIFIED,
 wedding,pastel de boda granby,es,transactional,/es/pasteles-de-boda/,low,UNVERIFIED,Only if weddings offered
 wedding,torta de matrimonio,es,transactional,/es/pasteles-de-boda/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
-viennoiseries,chocolatine granby,fr,local,/viennoiseries/,medium,UNVERIFIED,L6; QC term (owner plan; UNVERIFIED this run); H1 term
+viennoiseries,chocolatine granby,fr,local,/viennoiseries/,medium,https://www.larousse.fr/dictionnaires/francais/chocolatine,"L6; QC term (owner plan; UNVERIFIED this run); H1 term; Evidence pass 2026-10-25: Larousse lists « chocolatine » as the SW-France and Québec word for pain au chocolat (term evidence, not supply; search summary). OQLF/Usito not checked"
 viennoiseries,croissant granby,fr,local,/viennoiseries/,medium,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Croissants named in listing description
 viennoiseries,croissant aux amandes granby,fr,local,/viennoiseries/,low,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Evidenced Coco Vanille item
-viennoiseries,pain au chocolat granby,fr,local,/viennoiseries/,low,UNVERIFIED,France-French synonym: body once
+viennoiseries,pain au chocolat granby,fr,local,/viennoiseries/,low,https://www.larousse.fr/dictionnaires/francais/chocolatine,France-French synonym: body once; Evidence pass 2026-10-25: Larousse confirms pain au chocolat is the standard (non-regional) term; keep as body synonym (term evidence)
 viennoiseries,viennoiseries granby,fr,local,/viennoiseries/,low,UNVERIFIED,Nav/category label
 viennoiseries,boîte de viennoiseries granby,fr,transactional,/boites-bureau-corporatif/,low,UNVERIFIED,L7 family
 viennoiseries,best croissant granby,en,local,/en/viennoiseries/,low,UNVERIFIED,
-viennoiseries,what is a chocolatine,en,informational,/en/viennoiseries/,low,UNVERIFIED,Visitor education; AEO definition
+viennoiseries,what is a chocolatine,en,informational,/en/viennoiseries/,low,https://www.larousse.fr/dictionnaires/francais/chocolatine,Visitor education; AEO definition; Evidence pass 2026-10-25: definition source for the AEO answer (Larousse: regional SW France + Québec)
 breads,pain artisanal granby,fr,local,/pains-baguettes/,medium,https://threebestrated.ca/bakeries-in-granby-qc,Pain-Pain closure (2026-06-16) frees bread demand
 breads,baguette granby,fr,local,/pains-baguettes/,low,https://threebestrated.ca/bakeries-in-granby-qc,Baguettes listed as specialty
 breads,pain congelé baguette congelée granby,fr,transactional,/pains-baguettes/,low,https://threebestrated.ca/bakeries-in-granby-qc,Frozen bread listed (TBR)
@@ -180,11 +180,11 @@ traiteur,catering granby,en,transactional,/en/catering-ready-meals/,low,"https:/
 gifting,carte-cadeau pâtisserie granby,fr,transactional,/carte-cadeau/,low,https://www.lescrudelices.ca/boutique/p/cartecadeau,Rival sells gift cards online
 gifting,boîte-cadeau sucrée granby,fr,transactional,/boites-cadeaux/,low,UNVERIFIED,CONDITIONAL
 gifting,bakery gift card granby,en,transactional,/en/gift-card/,low,UNVERIFIED,
-dietary,gâteau sans gluten granby,fr,transactional,/sans-gluten-allergies/,medium,UNVERIFIED,C6; no Granby page surfaced (03 §0.9); claim rules [[FACT NEEDED: legal track CFIA/Health Canada]]
+dietary,gâteau sans gluten granby,fr,transactional,/sans-gluten-allergies/,medium,https://nutrisci.med.utoronto.ca/news/uoftgrad17-joseph-jamnik-getting-grip-gluten,"C6; no Granby page surfaced (03 §0.9); claim rules [[FACT NEEDED: legal track CFIA/Health Canada]]; Evidence pass 2026-10-25: demand context, not supply: celiac ~1% of adults in a Toronto serology study (2017), most undiagnosed; CCA 2013: ~1% (via trade press)"
 dietary,pâtisserie sans gluten granby,fr,local,/sans-gluten-allergies/,medium,UNVERIFIED,
 dietary,gâteau sans lactose granby,fr,transactional,/sans-gluten-allergies/,low,UNVERIFIED,
 dietary,gâteau végane granby,fr,transactional,/sans-gluten-allergies/,low,https://www.lescrudelices.ca/menu,Les Crudélices owns raw vegan: do not fight there
-dietary,gâteau sans noix sans arachides granby,fr,transactional,/sans-gluten-allergies/,low,UNVERIFIED,Allergy families; cross-contamination policy in plain words
+dietary,gâteau sans noix sans arachides granby,fr,transactional,/sans-gluten-allergies/,low,https://cdn.dal.ca/content/dam/dalhousie/pdf/sites/agri-food/Dal%20Report%20Allergies%20EN%20(Oct%2020%202021).pdf,"Allergy families; cross-contamination policy in plain words; Evidence pass 2026-10-25: demand context, not supply: 2.5-3.1 million Canadians with at least one food allergy (Food Allergy Canada + Dalhousie, Oct 2021, preliminary)"
 dietary,gâteau sans arachides pour l'école,fr,informational,/sans-gluten-allergies/,low,UNVERIFIED,
 dietary,gluten-free bakery granby,en,local,/en/gluten-free-allergies/,low,UNVERIFIED,
 dietary,pastel sin gluten granby,es,transactional,/es/sin-gluten-alergias/,low,UNVERIFIED,
@@ -207,11 +207,11 @@ delivery,cake delivery granby,en,transactional,/en/order/,low,UNVERIFIED,
 reviews,pâtisserie granby avis,fr,commercial,/,medium,https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html,Review count + date in key-facts block
 reviews,avis pâtisserie coco vanille,fr,navigational,/a-propos/,low,https://threebestrated.ca/bakeries-in-granby-qc,B1
 latino,torta de quinceañera granby,es,transactional,/es/quinceanera/,low,https://www.ledevoir.com/actualites/societe/763253/immigration-de-refugies-colombiens-a-entrepreneurs-granbyiens,CONDITIONAL; Colombian community documented (Le Devoir)
-latino,pastel de quince años,es,transactional,/es/quinceanera/,low,UNVERIFIED,
+latino,pastel de quince años,es,transactional,/es/quinceanera/,low,https://www.lensculture.com/projects/383035-quinceaneras-in-colombia,"Evidence pass 2026-10-25: practice evidence only (quinceañera parties are common in Colombia; search summary), not supply or demand volume"
 latino,cuánto cuesta una torta de quinceañera en quebec,es,informational,/es/quinceanera/,low,UNVERIFIED,I10
 latino,torta tres leches granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Product idea only [[FACT NEEDED: owner]]
-latino,ponqué granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,
-latino,bizcocho de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Regional variant: body once
+latino,ponqué granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Evidence pass 2026-10-25: see « ponqué de cumpleaños »; still UNVERIFIED
+latino,bizcocho de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,"Regional variant: body once; Evidence pass 2026-10-25: « bizcocho » is a broad term whose meaning varies by country (search summary, low-reliability source); body once at most"
 latino,postres para la novena de aguinaldos,es,transactional,/es/navidad/,low,https://www.granbyexpress.com/actualites/plus-de-3500-immigrants-adoptent-granby/,"16–24 Dec; 535 Colombian-born residents (2021, press)"
 latino,día de las velitas postres,es,informational,/es/navidad/,low,UNVERIFIED,7 Dec
 latino,torta amor y amistad,es,transactional,/es/,low,UNVERIFIED,3rd Saturday of Sept (owner plan)

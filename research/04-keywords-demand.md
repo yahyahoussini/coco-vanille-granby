@@ -12,7 +12,7 @@ Inputs: `research/plan-v1-ranking-stack.md` (backbone: §5 prompts, §6 page tre
   2. The owner's plans (v0a/v0b/v0c/v1). These are labelled "owner plan" and count as UNVERIFIED for facts.
   3. Dates computed in JavaScript (§7). The algorithm is deterministic; the rule it applies (for example "2nd Sunday of May") is sourced or marked.
 - **No search volumes anywhere.** `relative_demand` is a **prior** (high / medium / low) that sets build order. It follows the rubric in §1. Replace it with Keyword Planner ranges, Search Console and a Granby PAA/autocomplete harvest in the baseline week.
-- `evidence_url` in `keywords.csv` proves **supply**: an aggregator, competitor or retailer page exists for the term or product, or Coco Vanille is documented selling the item. It does **not** prove demand. 86 of 220 rows have a URL. The other 134 say `UNVERIFIED`.
+- `evidence_url` in `keywords.csv` proves **supply**: an aggregator, competitor or retailer page exists for the term or product, or Coco Vanille is documented selling the item. It does **not** prove demand. After the evidence pass, 98 of 220 rows have a URL (86 before) and 122 say `UNVERIFIED`. The evidence pass also added two other kinds of URL, tagged in `notes`: **term evidence** (a dictionary or usage source for the word) and **demand context** (prevalence or population). Neither proves search demand.
 - The question bank (§5) is a **seed written from the category, not a PAA harvest**. Keep the IDs and replace the wording with what Google shows from Granby (rank-first 04 §4.3).
 
 ## 0. Decision-relevant findings
@@ -20,11 +20,11 @@ Inputs: `research/plan-v1-ranking-stack.md` (backbone: §5 prompts, §6 page tre
 1. **The products that have evidence are viennoiseries, bread and pastries, not weddings.** Sources document croissants (almond included), Paris-Brest, tarts, bread and baguettes (also frozen), strawberry shortcake, a raspberry cake, vol-au-vent, coffee and ready meals ([RestoMontreal](https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/), [Three Best Rated](https://threebestrated.ca/bakeries-in-granby-qc), [Wanderlog](https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille), [La Voix de l'Est 2022](https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/)). There is no evidence of weddings, macarons, bûches, gluten-free products, corporate boxes or delivery (01-business-facts §5). **10 of the 38 pages in §2 are CONDITIONAL, and 2 more (P09 smash cake, P11 bûches) wait on product confirmation.** Build them only after the owner confirms the product.
 2. **Two NEW pages protect the position the shop already holds.** Coco Vanille is #2 on Three Best Rated's *bakery* list but absent from its FR « pâtisseries » (cakes) list ([TBR bakeries](https://threebestrated.ca/bakeries-in-granby-qc), [TBR FR pâtisseries](https://threebestrated.ca/fr-gâteaux-in-granby-qc)). `/viennoiseries/` and `/pains-baguettes/` defend « boulangerie Granby », where it is the incumbent. The pillar attacks « gâteau personnalisé », where Cake Design, Avec un Grand A and Rose Gâteaux are already online.
 3. **The bread slot is open.** Pain-Pain, #1 on the bakery lists, closed on 2026-06-16 ([La Voix de l'Est](https://www.lavoixdelest.ca/affaires/affaires-locales/2026/06/16/les-proprios-de-la-boulangerie-pain-pain-tournent-la-page-BGIVLUIEIRCHHJX6KZ5J2RWZZQ/)). « pain artisanal / boulangerie Granby » therefore gets a medium-to-high prior.
-4. **Québec retailers use both birthday terms.** Maxi's category is « Gâteaux d'anniversaire et de célébration » ([Maxi](https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507)), and Le Marmiton (Granby) writes « gâteau d'anniversaire … personnalisé » ([Le Marmiton](https://lemarmiton.ca/dessert-choco-vanille/)). « Gâteau de fête » rests on the owner plan and was not verified in this run. Rule: « gâteau de fête » in the H1, « anniversaire » in the body and the meta description. After 8 weeks of impressions, Search Console decides.
+4. **Québec retailers use both birthday terms.** Maxi's category is « Gâteaux d'anniversaire et de célébration » ([Maxi](https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507)), and Le Marmiton (Granby) writes « gâteau d'anniversaire … personnalisé » ([Le Marmiton](https://lemarmiton.ca/dessert-choco-vanille/)). « Gâteau de fête » was searched in the evidence pass. Only one weak source supports it: Vikidia says « fête » means birthday in Québec ([Vikidia](https://fr.vikidia.org/wiki/G%C3%A2teau_d%27anniversaire)). A Québec foundation's recipe file is named « recette-gateau-fete » ([Fondation OLO](https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf)), and the OQLF « fête » record does not cover the birthday sense ([GDT](https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/8360365/fete)). Rule: « gâteau de fête » in the H1, « anniversaire » in the body and the meta description. After 8 weeks of impressions, Search Console decides.
 5. **Easter 2027 falls on 28 March (computed, §7).** It overlaps the temps des sucres. Publish `/paques/` by **2027-01-31** and run one combined maple-and-Easter push in February.
 6. **Noël 2026 cannot be won organically by the new site.** The content site goes live in plan weeks 3–6, after the 1 November pre-order date (plan §14). For 2026, use GBP products and posts plus Facebook. Optional: put the evergreen `/buches-de-noel/` URL on the holding page now, so it already has a history for 2027 (hypothesis; Google guarantees no indexing time, rank-first 08 §1). **Dec 2027 is the first holiday season the site can compete for.**
 7. **The bare brand term is ambiguous.** "Coco Vanille" is also a Mancera perfume and a bakery in Bras-Panon, Réunion. Montréal has an unrelated "Pâtisserie Coco" ([Alshaya](https://alshayaperfumes.com/en/products/mancera-coco-vanille-edp-120-ml), [Facebook Bras-Panon](https://www.facebook.com/CocoVanille97412/), [Tastet](https://tastet.ca/critiques/patisserie-coco-quartier-chinois/)). Every brand sentence, title and bio says "Coco Vanille" **plus "Granby"**. Track "Cocovanille" (the Maps spelling) as a variant.
-8. **Spanish is a subset, split by country.** The Spanish-speaking population is about 1% scale: 965 Spanish mother-tongue speakers in the Granby CA in 2011 ([StatCan 2011](https://www12.statcan.gc.ca/census-recensement/2011/as-sa/fogs-spg/Facts-cma-fra.cfm?LANG=Fra&GK=CMA&GC=450)), and 535 Colombian-born residents in 2021 (press, [Granby Express](https://www.granbyexpress.com/actualites/plus-de-3500-immigrants-adoptent-granby/)). Every ES row is rated low. ES H1s pair Colombian « torta » with Mexican « pastel »: « Pasteles y tortas … ». That split comes from the owner plan and is UNVERIFIED.
+8. **Spanish is a subset, split by country.** The Spanish-speaking population is about 1% scale: 965 Spanish mother-tongue speakers in the Granby CA in 2011 ([StatCan 2011](https://www12.statcan.gc.ca/census-recensement/2011/as-sa/fogs-spg/Facts-cma-fra.cfm?LANG=Fra&GK=CMA&GC=450)), and 535 Colombian-born residents in 2021 (press, [Granby Express](https://www.granbyexpress.com/actualites/plus-de-3500-immigrants-adoptent-granby/)). Every ES row is rated low. ES H1s pair Colombian « torta » with Mexican « pastel »: « Pasteles y tortas … ». The evidence pass **partly confirmed** the split. In Mexico « torta » means a sandwich and cake is « pastel » ([SpanishDict](https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel)). Colombian « torta » / « ponqué » rests on low-reliability Q&A pages only. The pairing stays, and « torta » never appears alone on copy that Mexican readers will see.
 9. **Three terms to exclude.** Ice-cream cakes belong to Maître Glacier (head office in Granby). Raw vegan cakes belong to Les Crudélices. Beignes belong to Tim Hortons. These keywords stay in the CSV under the `exclude` cluster so nobody writes pages for them.
 10. **Cross-check with track 05 (`research/05-serp-baseline.md`, US-run proxy).**
     - Québec food media also write « gâteaux d'anniversaire » ([Tastet](https://tastet.ca/listes/ou-trouver-les-meilleurs-gateaux-danniversaire-a-montreal-nos-suggestions/)), which supports rule 3.1 (both terms).
@@ -101,9 +101,9 @@ Rules carried from rank-first 06:
 
 | Concept | H1 / title (fr-CA) | Body synonym (≥ 1 natural use) | Avoid | EN | ES | Evidence | Status |
 |---|---|---|---|---|---|---|---|
-| Birthday cake | gâteau de fête | gâteau d'anniversaire (one H2 or paragraph, plus meta description) | — | birthday cake | H1 « Pasteles y tortas de cumpleaños »; body: ponqué, bizcocho (once each) | « anniversaire »: [Maxi](https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507), [Le Marmiton](https://lemarmiton.ca/dessert-choco-vanille/). « de fête »: owner plan | the GSC split decides after 8 weeks |
+| Birthday cake | gâteau de fête | gâteau d'anniversaire (one H2 or paragraph, plus meta description) | — | birthday cake | H1 « Pasteles y tortas de cumpleaños »; body: ponqué, bizcocho (once each; « bizcocho » varies by country) | « anniversaire »: [Maxi](https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507), [Le Marmiton](https://lemarmiton.ca/dessert-choco-vanille/), [Tastet](https://tastet.ca/listes/ou-trouver-les-meilleurs-gateaux-danniversaire-a-montreal-nos-suggestions/). « de fête »: owner plan + weak usage evidence ([Vikidia](https://fr.vikidia.org/wiki/G%C3%A2teau_d%27anniversaire); [Fondation OLO](https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf) file name). ES: « torta » = sandwich in Mexico ([SpanishDict](https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel)) | weak evidence for « de fête »; the GSC split decides after 8 weeks |
 | Custom cake | gâteau personnalisé | sur mesure | "design cake" in an FR H1 | custom cake | pastel / torta personalizada | « sur mesure »: [Cake Design](https://cakegranby.ca/products/gateau-sur-mesure); « personnalisés »: [IGA Gazaille](https://www.iga.net/fr/recherche_de_magasin/magasin/8212-marche-gazaille) | evidenced |
-| Pain au chocolat | chocolatine | pain au chocolat (once, for France-French speakers and visitors) | — | chocolatine (chocolate croissant) | — | owner plan; UNVERIFIED this run | check OQLF BDL / Usito |
+| Pain au chocolat | chocolatine | pain au chocolat (once, for France-French speakers and visitors) | — | chocolatine (chocolate croissant) | — | [Larousse](https://www.larousse.fr/dictionnaires/francais/chocolatine): regional word for SW France **and Québec**. A usage survey reported via search summary: « chocolatine » dominates across Québec; « croissant au chocolat » is used in the neighbouring English-majority provinces (source page not isolated: [Slate.fr](https://www.slate.fr/story/152828/chocolatine-ou-pain-au-chocolat-la-science-sen-mele) or [Wikipedia](https://en.wikipedia.org/wiki/Pain_au_chocolat)). OQLF attestation from 1935: secondary blog only | **evidenced** (dictionary); OQLF / Usito still unchecked |
 | Croissant | croissant; croissant aux amandes | — | — | croissant; almond croissant | cruasán? UNVERIFIED → keep "croissant" | almond croissants: [RestoMontreal](https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/) | evidenced product |
 | Viennoiseries | H1 « Croissants, chocolatines et viennoiseries à Granby »; nav label « Viennoiseries » | viennoiseries | trade jargon as the only H1 word | viennoiseries / croissants | — | — | hypothesis |
 | Pickup | cueillette (en boutique) | — | mixing « cueillette » and « ramassage » | pickup | recoger en tienda | owner plan vs 16b Studio | `[[FACT NEEDED]]` |
@@ -122,7 +122,7 @@ Rules carried from rank-first 06:
 | Size | 8 po + portions | — | sizes without portions | 8-inch | « 20 cm (8 pulgadas) » (8 in = 20.32 cm) | owner plan §13 | rule |
 | Prices | « à partir de 45 $ »; 12,50 $ | — | « prix sur demande » | $12.50 | always add "CAD" (pesos in Colombia and Mexico also use "$"; common knowledge) | plan §13–14 | rule |
 | Time | 14 h | — | 2pm in FR | 2 p.m. | 14:00 | plan §13 | rule |
-| Holiday names | Saint-Valentin · Pâques · Action de grâce · temps des Fêtes | — | inconsistent capitals | — | — | `[[FACT NEEDED: OQLF BDL typography, e.g. « fête des Mères »]]` | check |
+| Holiday names | Saint-Valentin · Pâques · Action de grâce · temps des Fêtes · fête nationale (lower-case « f ») | fête-surprise (hyphen) | inconsistent capitals; « surprise-partie » (European, per OQLF) | — | — | « fête nationale » in lower case, per the OQLF as cited by the Québec government ([Cadre de référence, PDF](https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/culture-communications/Aides-financieres/Fete-nationale/Cadre-reference-celebrations-fete-nationale.pdf)); « fête-surprise » with a hyphen (OQLF GDT, via search summary; record is [8360365](https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/8360365/fete) or [8360368](https://vitrinelinguistique.oqlf.gouv.qc.ca/redirection/ficheuid/8360368), mapping UNVERIFIED). Others: `[[FACT NEEDED: OQLF BDL typography, e.g. « fête des Mères »]]` | partly checked |
 
 ### 3.2 Writing rules
 
@@ -132,7 +132,7 @@ Rules carried from rank-first 06:
 4. URLs are ASCII French words, never with a year: `/buches-de-noel/`, not `/buches-2026/` (v0c Layer 3).
 5. Register: standard written French with Québec vocabulary. Colloquial phrasing appears only in FAQ questions, such as « C'est-tu possible d'avoir un gâteau pour demain? » (plan §7), and the first sentence of the answer is standard French.
 6. EN pages use Canadian spelling: flavour, colour, centre (v0b §A2). Keep FR product names (chocolatine, bûche, galette, tarte au sucre) and add a gloss.
-7. ES pages: « pasteles y tortas » in H1s, and « Hablamos español » only if staff really speak it (v0b). `[[FACT NEEDED: tú vs usted preference]]`.
+7. ES pages: « pasteles y tortas » in H1s, and « Hablamos español » only if staff really speak it (v0b). Never use « torta » alone where Mexican readers will see it: there it means a sandwich (SpanishDict, evidence pass). `[[FACT NEEDED: tú vs usted preference]]`.
 8. Kids' themes: say « thèmes ». No trademark pages (Pat' Patrouille, Bluey…) (v0c).
 9. Brand: « Pâtisserie Coco Vanille » + « Granby » in every entity sentence. Keep « Cocovanille » for `alternateName` only (entity track).
 
@@ -322,20 +322,42 @@ The rules behind the computed dates (2nd Sunday of May, 3rd Sunday of June, 2nd 
 
 | # | Query / check | Resolves |
 |---|---|---|
-| V1 | OQLF Banque de dépannage linguistique + Usito: « chocolatine », « gâteau de fête », « cupcake », « shower de bébé », « cueillette / ramassage », « carte-cadeau », holiday-name capitals | §3 statuses |
-| V2 | Reddit r/Quebec and r/montreal threads on « chocolatine » vs « pain au chocolat » and « gâteau de fête » | real usage |
+| V1 | **[partly done 2026-10-25: chocolatine (Larousse), fête nationale lower case, fête-surprise; no OQLF/Usito entry surfaced for « gâteau de fête » or « chocolatine »]** OQLF Banque de dépannage linguistique + Usito: « chocolatine », « gâteau de fête », « cupcake », « shower de bébé », « cueillette / ramassage », « carte-cadeau », holiday-name capitals | §3 statuses |
+| V2 | **[partly: survey via search summary says « chocolatine » dominates in Québec]** Reddit r/Quebec and r/montreal threads on « chocolatine » vs « pain au chocolat » and « gâteau de fête » | real usage |
 | V3 | Google Trends, region Québec, 5 years: bûche de Noël, galette des rois, gâteau de fête vs gâteau d'anniversaire, chocolatine vs pain au chocolat, smash cake | seasonality + term split |
 | V4 | Keyword Planner (Canada / Québec, FR + EN): ranges for the 8 high and 55 medium rows | replaces the priors |
 | V5 | PAA + autocomplete harvest from a Granby location (SerpApi or a phone), 3 levels deep, for C1, C2, C4, L1–L3, I1–I3 | replaces the §5 seed wording |
 | V6 | Zoo de Granby 2027 season dates; FICG 2027 dates; Marché public 2027 season; Ville de Granby event calendar | calendar placeholders |
 | V7 | CNESST 2027 statutory holidays; CCQ vacances de la construction 2027; Granby school calendar 2027–28 | calendar placeholders |
 | V8 | Health Canada / CFIA conditions for « sans gluten » and allergen-free claims; MAPAQ home-baker permit rules | P12, P04 (legal track) |
-| V9 | RAE/ASALE (DLE, Diccionario de americanismos): torta, ponqué, pastel, bizcocho by country; Colombian dates (Velitas, Novena, Amor y Amistad 2027) | §3 ES rules, ES calendar rows |
+| V9 | **[partly: Mexico « pastel » / « torta » = sandwich (SpanishDict); Colombia « ponqué » low-reliability only; DLE not checked]** RAE/ASALE (DLE, Diccionario de americanismos): torta, ponqué, pastel, bizcocho by country; Colombian dates (Velitas, Novena, Amor y Amistad 2027) | §3 ES rules, ES calendar rows |
 | V10 | Eid al-Fitr 2027 date + any local demand signal (only if the owner wants it) | optional calendar row |
+
+## Evidence pass (2026-10-25)
+
+This pass shared 16 WebSearch calls with track 02 (US-located, summaries only, no page opened). No search volumes were collected, so `relative_demand` priors are unchanged.
+
+| Item | Before | After | Change to rules |
+|---|---|---|---|
+| « chocolatine » in Québec | owner plan, UNVERIFIED | **Larousse: the regional word for SW France and Québec.** A survey (via summary) says it dominates in Québec | H1 « chocolatines » confirmed; « pain au chocolat » once in body. OQLF/Usito still unchecked |
+| « gâteau de fête » vs « gâteau d'anniversaire » | « de fête » unverified | Weak support only: Vikidia ("in Québec « fête » = birthday") and a Fondation OLO file name. No OQLF/Usito entry surfaced. « anniversaire » stays evidenced (Maxi, Le Marmiton, Tastet) | Rule unchanged: « de fête » in H1, « anniversaire » in body and meta. The GSC split decides; run the §2 overlap test |
+| Holiday typography | needed | « fête nationale » lower case (OQLF, cited by the Québec government); « fête-surprise » hyphenated | §3.1 holiday row updated |
+| ES cake words | owner plan | Mexico: « pastel », « torta » = sandwich (SpanishDict). Colombia: « torta » / « ponqué » low-reliability only. « bizcocho » varies by country | §3.2 rule 7: never « torta » alone for Mexican readers |
+| Portion grid | none | 20 cm (8 po) round = 8–10 portions (Fondation OLO, home recipe) | One data point for F04/E06; the shop's own grid still decides |
+| Demand context | none | Celiac ~1%; 2.5–3.1 M Canadians with food allergies; Québec marriages 23,049 (2024, ISQ). Details in 02 §1 | Dietary rows stay medium/low (claim legal-gated); wedding rows stay CONDITIONAL |
+
+`keywords.csv`: 15 rows edited (12 evidence URLs added, 3 notes-only). Headers kept.
+- term evidence: chocolatine ×3, gâteau de fête, torta/pastel ×3
+- portion grid ×2
+- quinceañera practice ×1
+- demand context: sans gluten, sans noix
+- notes only (still UNVERIFIED): ponqué ×2, bizcocho
+
+Search queue (not run, carry forward): V1 OQLF BDL/Usito direct entries (gâteau de fête, cupcake, shower de bébé, cueillette/ramassage, carte-cadeau); V3 Trends; V4 Keyword Planner; V5 PAA harvest; V6–V8; V9 DLE / Diccionario de americanismos for « ponqué »; V10.
 
 ## Sources
 
-Seen 2026-10-25. Because of the exhausted search budget, every URL below was surfaced by tracks 01/03/05 (US-run WebSearch summaries) and recorded in `research/01-business-facts.md`, `research/03-competitors.md` or `research/05-serp-baseline.md`. This track did not reopen them.
+Seen 2026-10-25. Except for the evidence-pass group at the end, every URL below was surfaced by tracks 01/03/05 (US-run WebSearch summaries) and recorded in `research/01-business-facts.md`, `research/03-competitors.md` or `research/05-serp-baseline.md`. This track did not reopen them.
 
 Client and entity
 - Pâtisserie Cocovanille Granby (RestoMontreal, EN) — https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/ — seen 2026-10-25
@@ -403,5 +425,22 @@ Granby market and calendar
 - Une saison estivale couronnée de succès au Zoo de Granby — https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby — seen 2026-10-25
 - Montreal to Granby Zoo (travelprofy) — https://www.travelprofy.com/montreal/granby-zoo — seen 2026-10-25
 - FICG 2026 (festapp) — https://festapp.io/festivals/festival-international-de-la-chanson-de-granby/2026 — seen 2026-10-25
+
+Evidence pass (WebSearch summaries, seen 2026-10-25; pages not opened)
+- Chocolatine (Larousse) — https://www.larousse.fr/dictionnaires/francais/chocolatine — seen 2026-10-25
+- « Chocolatine » ou « pain au chocolat » ? La science s'en mêle (Slate.fr) — https://www.slate.fr/story/152828/chocolatine-ou-pain-au-chocolat-la-science-sen-mele — seen 2026-10-25
+- Pain au chocolat (Wikipedia) — https://en.wikipedia.org/wiki/Pain_au_chocolat — seen 2026-10-25
+- Pain au chocolat ou chocolatine : origine et débat (Du Boca à l'Assiette; secondary source for the 1935 OQLF attestation claim) — https://dubocalalassiette.fr/blog/doit-on-dire-pain-au-chocolat-ou-chocolatine/ — seen 2026-10-25
+- Fête (OQLF, Grand dictionnaire terminologique) — https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/8360365/fete — seen 2026-10-25
+- OQLF GDT record 8360368 (redirect; likely « fête-surprise », UNVERIFIED) — https://vitrinelinguistique.oqlf.gouv.qc.ca/redirection/ficheuid/8360368 — seen 2026-10-25
+- Cadre de référence, célébrations de la fête nationale (Gouvernement du Québec, PDF) — https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/culture-communications/Aides-financieres/Fete-nationale/Cadre-reference-celebrations-fete-nationale.pdf — seen 2026-10-25
+- Gâteau d'anniversaire (Vikidia) — https://fr.vikidia.org/wiki/G%C3%A2teau_d%27anniversaire — seen 2026-10-25
+- Anniversaire (Vikidia) — https://fr.vikidia.org/wiki/Anniversaire — seen 2026-10-25
+- Recette gâteau (Fondation OLO, PDF; date not captured) — https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf — seen 2026-10-25
+- What is the difference between una torta and pastel (SpanishDict answers) — https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel — seen 2026-10-25
+- Quinceañeras in Colombia (LensCulture) — https://www.lensculture.com/projects/383035-quinceaneras-in-colombia — seen 2026-10-25
+- #UofTGrad17: Joseph Jamnik, getting a grip on gluten (U of T Nutritional Sciences, 2017-06-09) — https://nutrisci.med.utoronto.ca/news/uoftgrad17-joseph-jamnik-getting-grip-gluten — seen 2026-10-25
+- A new report suggests 3.1 million Canadians have food allergies (Dalhousie Agri-Food Analytics Lab, 2021-10-20) — https://cdn.dal.ca/content/dam/dalhousie/pdf/sites/agri-food/Dal%20Report%20Allergies%20EN%20(Oct%2020%202021).pdf — seen 2026-10-25
+- Nuptiality 2024: marriage numbers remain low (ISQ, Sept 2025) — https://statistique.quebec.ca/en/communique/nuptiality-2024-marriage-numbers-remain-low — seen 2026-10-25
 
 Internal (not web sources): `research/plan-v1-ranking-stack.md`, `plan-v0b-multilingual-local-domination.md`, `plan-v0c-site-ux-ordering.md`, `01-business-facts.md`, `03-competitors.md`, `05-serp-baseline.md`, `16b-admin-tech-subdomain.md`; rank-first `references/04-research-prompts.md`, `06-architecture.md`, `08-aeo-geo.md`, `15-sources.md`, `17-advanced-playbook.md`.

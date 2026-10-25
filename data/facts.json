@@ -21,7 +21,7 @@
     "email": "[[FACT NEEDED: email]]",
     "url": "[[FACT NEEDED: domain — none found]]",
     "openingHours": "[[FACT NEEDED: current hours — 6 conflicting schedules, see fact hours.*]]",
-    "operatingStatus": "[[FACT NEEDED: confirm open in Oct 2026; RestoMontreal flags 'may be temporarily closed']]",
+    "operatingStatus": "[[FACT NEEDED: confirm open in Oct 2026; RestoMontreal still flags 'may be temporarily closed'; latest evidence = 2026 reviews cited in a RestoMontreal summary (snapshot 2026-07-15/2026-08-01) + REQ annual update filed 2026-01-24]]",
     "foundingDate": "[[FACT NEEDED: shop opening date — corporation registered 2021-11-09]]",
     "founder": "[[FACT NEEDED: owner/chef name, role, background]]",
     "priceRange": "[[FACT NEEDED: owner price range — directory shows '$ & $$' (unverified)]]",
@@ -93,7 +93,7 @@
       "sources": [
         { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Joint stock corporation under Quebec's Loi sur les sociétés par actions (per search summary)", "date": "undated" }
       ],
-      "notes": "Confirm on REQ."
+      "notes": "Confirm on REQ. Re-search 2026-10-25 repeats 'joint stock company or corporation' (aggregator, not attributable to one page)."
     },
     {
       "id": "legal.registration_date",
@@ -113,17 +113,17 @@
         { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Incorporation date 2021-11-08", "date": "undated" },
         { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Incorporation date 2021-11-09", "date": "data as of 2026-05-31" }
       ],
-      "notes": "Resolve on REQ."
+      "notes": "Resolve on REQ. Re-search 2026-10-25 reproduces the 1-day conflict."
     },
     {
       "id": "legal.status",
-      "value": "Immatriculée; not in liquidation as of 2026-05-31",
+      "value": "Immatriculée; last annual update declaration filed 2026-01-24 (for 2025); not in liquidation as of 2026-05-31",
       "status": "unverified",
       "sources": [
-        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Status Registered / Immatriculée", "date": "undated" },
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Status Registered / Immatriculée; last annual update declaration filed 2026-01-24 (for year 2025) (2026-10-25 search summary; it does not say which of opengovca/b2bhint shows the filing)", "date": "2026-01-24" },
         { "url": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220", "says": "Not in liquidation as of May 31, 2026", "date": "2026-05-31" }
       ],
-      "notes": "Most recent dated evidence of entity activity. Says nothing about the storefront."
+      "notes": "Most recent dated evidence of entity activity. The 2026-01-24 annual update shows the owner maintained the entity in 2026. Says nothing about the storefront."
     },
     {
       "id": "legal.activity_code",
@@ -238,7 +238,7 @@
         { "url": "https://www.restomontreal.ca/restaurants/takeout-granby/en/?f=33&d=103", "says": "May be temporarily closed", "date": "undated" },
         { "url": "https://www.restomontreal.ca/restaurants/bakeries-granby/en/?c=338&d=103", "says": "This business may be temporarily closed", "date": "undated" }
       ],
-      "notes": "Only RestoMontreal carries the flag; may mirror a GBP status. Critical to check."
+      "notes": "Only RestoMontreal carries the flag; may mirror a GBP status. Critical to check. Still shown on the 2026-10-25 re-search. The EN page's 'CLOSED, next opening Wednesday 8:30 am' is a time-of-day status computed from listed hours, not closure evidence. No permanent-closure notice found anywhere."
     },
     {
       "id": "status.operating_2025",
@@ -248,7 +248,18 @@
         { "url": "https://threebestrated.ca/bakeries-in-granby-qc", "says": "Listed #2 of 3 best bakeries in Granby; 4.8 from 115 ratings; order by phone, ready next day", "date": "2025" },
         { "url": "https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027", "says": "Hours set 20.08.2025", "date": "2025-08-20" }
       ],
-      "notes": "No 2026 post, review or news found. October 2026 status = needed."
+      "notes": "No 2026 owner post or news found; 2026 reviews appear only via a RestoMontreal summary (see status.evidence_2026). October 2026 status = needed."
+    },
+    {
+      "id": "status.evidence_2026",
+      "value": "Probably trading in early 2026: a RestoMontreal snapshot (FR 'as of 2026-07-15', EN 'as of 2026-08-01') shows Google 4.9 (40+), and its review summary cites a 2026 review and a January 2026 cake-order complaint; the REQ annual update was filed 2026-01-24",
+      "status": "unverified",
+      "sources": [
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Google 4.9 (40+); review summary: a 2026 reviewer praised almond croissants and warm owners; January 2026 complaint: chocolate cake order arrived as vanilla with chocolate cream (search summary)", "date": "2026-08-01 (page as-of)" },
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Google 4.9 (40+); reviewers mention gâteaux and framboisier (search summary)", "date": "2026-07-15 (page as-of)" },
+        { "url": "https://opengovca.com/quebec-business/1177082220", "says": "Last annual update declaration filed 2026-01-24 (for 2025) (search summary)", "date": "2026-01-24" }
+      ],
+      "notes": "Review dates come from a search summary; the reviews were not seen directly. Nothing dated after 2026-08-01 found. October 2026 storefront status = needed."
     },
     {
       "id": "history.rue_principale_merchant_2022",
@@ -339,12 +350,13 @@
     },
     {
       "id": "reviews.google",
-      "value": "4.9 (86% five-star); count not shown",
+      "value": "4.9 (86% five-star); '40+' reviews",
       "status": "unverified",
       "sources": [
-        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Google 4.9; 86% 5-star", "date": "undated" }
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/", "says": "Google 4.9 (40+); 86% 5-star", "date": "2026-07-15 (page as-of, per search summary)" },
+        { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "on Google 4.9 (40+); RestoMontreal's own breakdown 4.8 from 22", "date": "2026-08-01 (page as-of, per search summary)" }
       ],
-      "notes": "Google review count = needed."
+      "notes": "Exact Google review count = needed (RestoMontreal shows only '40+')."
     },
     {
       "id": "reviews.threebestrated",
@@ -394,7 +406,7 @@
     },
     {
       "id": "reviews.themes",
-      "value": "Positive: fresh pastries, almond croissants, Paris-Brest, custom cakes, strawberry shortcake, raspberry cake, vol-au-vent, friendly staff/owners, reasonable prices, cozy. Negative (1): cake order not as ordered (2 stars).",
+      "value": "Positive: fresh pastries, almond croissants, Paris-Brest, custom cakes, strawberry shortcake, raspberry cake, vol-au-vent, friendly staff/owners, reasonable prices, cozy. Negative (1): cake order not as ordered (2 stars); per a 2026-10-25 search summary, January 2026, chocolate cake ordered, vanilla with chocolate cream received (unverified).",
       "status": "unverified",
       "sources": [
         { "url": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/", "says": "Praise for pastries, almond croissants, Paris-Brest, custom cakes, staff, prices; one cake-order error", "date": "undated" },
@@ -417,7 +429,7 @@
       "value": "@coco_vanillegranby",
       "status": "unverified",
       "sources": [],
-      "notes": "From the brief; not surfaced by any search (exact-handle search returned nothing)."
+      "notes": "From the brief; not surfaced by any search (exact-handle search returned nothing; 2 more queries on 2026-10-25 also returned nothing)."
     },
     {
       "id": "press.mentions",
@@ -588,7 +600,7 @@
         { "url": "https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby", "says": "Plus de 500 000 visiteurs cet été, hausse de 15 %", "date": "not shown" },
         { "url": "https://en.wikipedia.org/wiki/Granby_Zoo", "says": "Summer attendance 446,000, ~4,000 fewer than 2023, below target 475,000", "date": "undated" }
       ],
-      "notes": "Annual figures not re-confirmed by a second search; cite only after opening the primary release."
+      "notes": "Annual figures not re-confirmed by a second search; cite only after opening the primary release. 2026-10-25 re-search found NO source for 665,000 (2025) = UNVERIFIED. Noovo confirms the 2024 deficit, the 6-month lockout and the >$1M loss."
     },
     {
       "id": "tourism.ficg.2026",
@@ -611,14 +623,15 @@
     },
     {
       "id": "tourism.marche_public",
-      "value": "Marché public de Granby et région, rue Principale (176 vs 160); 2026 season Saturdays 2 May–7 Nov 9:00–14:00, Thursdays 18 Jun–27 Aug 16:00–19:00",
-      "status": "conflict",
+      "value": "Marché public de Granby et région, 176 rue Principale (place du Marché), Granby J2G 2V6; 450-361-6076; Saturdays May–Oct 9:00–14:00 (one listing: June–Oct); winter: monthly indoors at Centre Notre-Dame. 2026 dates (Sat 2 May–7 Nov; Thu 18 Jun–27 Aug 16:00–19:00) not reproduced",
+      "status": "unverified",
       "sources": [
         { "url": "https://www.bonjourquebec.com/en-us/listing/to-see-and-do/marche-public-de-granby-et-region/1dx2", "says": "Marché public de Granby et région listing", "date": "undated" },
-        { "url": "https://easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region", "says": "160, rue Principale; Saturdays June to October", "date": "undated" },
+        { "url": "https://www.easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region", "says": "176, rue Principale (place du Marché), Granby J2G 2V6; every Saturday May to October 9 a.m.–2 p.m.; winter monthly indoors at Centre Notre-Dame (2026-10-25 search summary; an earlier summary of the same listing said 160 and June–October)", "date": "undated" },
+        { "url": "https://sortirauquebec.com/en/listing/farmers-and-public-markets/marche-public-de-granby-et-region/", "says": "Market listing; Saturdays June to October (search summary, attribution uncertain)", "date": "undated" },
         { "url": "https://marchepublicgranby.ca/exposants/", "says": "Exhibitors list (season dates per search summary)", "date": "undated" }
       ],
-      "notes": "Address conflict 176 vs 160; season dates from a search summary only."
+      "notes": "Address corrected to 176 on 2026-10-25 (160 not reproduced). 2026 season dates and Coco Vanille's 2026 exhibitor status are UNVERIFIED."
     },
     {
       "id": "downtown.works",
@@ -688,12 +701,50 @@
     "Delivery offered? radius, fee, days",
     "Allergen policy (nuts, gluten); MAPAQ permit number/category",
     "Seating count, Wi-Fi, parking (with photos)",
-    "Current Google review count; context and fix for the cake-order complaint",
+    "Current exact Google review count (RestoMontreal showed '40+' in mid-2026); context and fix for the cake-order complaint (reportedly Jan 2026: chocolate ordered, vanilla received)",
     "2026 participation at the Marché public de Granby",
     "Spanish-speaking staff/customers (justifies ES tier and WhatsApp on ES pages)",
     "Directors/shareholders from REQ (if a Person/founder entity is wanted)",
     "Granby 2021 Spanish mother-tongue and home-language counts (StatCan detailed table, CSD 2447017)",
     "Road distances from 3 rue Court to Shefford, Saint-Alphonse-de-Granby, Roxton Pond, Saint-Paul-d'Abbotsford, Sainte-Cécile-de-Milton, Waterloo (compute from verified geo)",
     "Walking distance from 3 rue Court to the Marché public, Zoo de Granby and Lac Boivin"
+  ],
+  "verification_log": {
+    "date": "2026-10-25",
+    "method": "Adversarial re-check, 10 WebSearch queries (cap); US-located result summaries; no page opened. 'Confirmed' = reproduced by a fresh search; it does not raise a claim's status.",
+    "entries": [
+      { "claim": "Legal name, NEQ 1177082220, 3 rue Court Granby J2G 4Y6", "verdict": "Confirmed", "source": "https://opengovca.com/quebec-business/1177082220" },
+      { "claim": "Incorporation 2021-11-08 vs 2021-11-09; registration 2021-11-09", "verdict": "Confirmed (conflict persists)", "source": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220" },
+      { "claim": "Registry status Immatriculée; not in liquidation as of 2026-05-31", "verdict": "Confirmed (aggregator level)", "source": "https://b2bhint.com/en/company/ca-qc/patisserie-coco-vanille-inc--1177082220" },
+      { "claim": "Last annual update declaration filed 2026-01-24 (for 2025)", "verdict": "Corrected (added; unverified)", "source": "https://opengovca.com/quebec-business/1177082220" },
+      { "claim": "Legal form société par actions", "verdict": "Unverified (REQ not opened)", "source": "https://opengovca.com/quebec-business/1177082220" },
+      { "claim": "CAE 6013; employees 'Aucun'", "verdict": "Confirmed (aggregator level)", "source": "https://opengovca.com/quebec-business/1177082220" },
+      { "claim": "Name split Cocovanille (Google mirrors) vs Coco Vanille (registry, Three Best Rated, Tripadvisor)", "verdict": "Confirmed", "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/" },
+      { "claim": "Phone (450) 372-7177", "verdict": "Confirmed", "source": "https://threebestrated.ca/bakeries-in-granby-qc" },
+      { "claim": "Hours conflict RestoMontreal vs Three Best Rated", "verdict": "Confirmed (no owner hours found)", "source": "https://threebestrated.ca/fr-boulangeries-in-granby-qc" },
+      { "claim": "RestoMontreal 'may be temporarily closed' flag", "verdict": "Confirmed (still shown; no permanent-closure notice found)", "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/" },
+      { "claim": "No 2026 review found", "verdict": "Corrected (RestoMontreal summary cites 2026 reviews incl. Jan 2026 complaint; unverified)", "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/" },
+      { "claim": "Google 4.9, count not shown", "verdict": "Corrected (4.9 from '40+', page as-of 2026-07-15 / 2026-08-01)", "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/" },
+      { "claim": "Shop operating in October 2026", "verdict": "Unverified", "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/vote/" },
+      { "claim": "Instagram @coco_vanillegranby", "verdict": "Unverified (not surfaced)", "source": "" },
+      { "claim": "Tripadvisor .ca 4.7/107 with no written reviews; Wanderlog 5.0/21 mislabelled Magog", "verdict": "Confirmed", "source": "https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html" },
+      { "claim": "Zoo de Granby >665,000 visitors in 2025", "verdict": "Unverified (not reproduced)", "source": "" },
+      { "claim": "Zoo 2024 deficit, lockout, >$1M loss", "verdict": "Confirmed", "source": "https://www.noovo.info/video/le-zoo-de-granby-tourne-la-page-sur-un-bilan-deficitaire-en-2024.html" },
+      { "claim": "Marché public address 176 vs 160 rue Principale", "verdict": "Corrected (176)", "source": "https://www.easterntownships.org/things-to-do/4349/marche-public-de-granby-et-region" },
+      { "claim": "Marché public 2026 season dates", "verdict": "Unverified", "source": "https://sortirauquebec.com/en/listing/farmers-and-public-markets/marche-public-de-granby-et-region/" },
+      { "claim": "Coco Vanille is a 2026 Marché public exhibitor", "verdict": "Unverified", "source": "https://marchepublicgranby.ca/exposants/" }
+    ]
+  },
+  "search_queue": [
+    "Zoo de Granby 2025 annual attendance (zoo's own 'bilan 2025' release)",
+    "Marché public de Granby 2026 season dates and 2026 exhibitor list",
+    "REQ direct record for NEQ 1177082220: legal form, constitution date, directors/shareholders, latest annual declaration",
+    "GBP status for CID 10789122976114705165 ('temporarily closed'?) and exact review count (likely an owner check)",
+    "Facebook /PatisserieCocoVanille: date of the latest 2026 post",
+    "Yellow Pages 450-372-5917: still listed?",
+    "Granby décret 2026 = 72,078 and MRC total 98,146 (re-check Gazette PDF)",
+    "StatCan 2021 Spanish mother tongue/home language for CSD 2447017; 3,550 immigrants / 535 Colombians vs StatCan table",
+    "FICG 2026 (58th edition, 13–23 Aug 2026) on the festival's own site",
+    "Rue Principale phase 3 (2026) works: does the segment touch rue Court?"
   ]
 }

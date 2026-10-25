@@ -1,7 +1,7 @@
 # 02 · Customers, jobs-to-be-done, decision journeys, price benchmarks
 
 As of 2026-10-25 (ISO week 2026-W43). Track: personas, jobs-to-be-done (JTBD), journeys, objections → FAQ, price landscape.
-Machine-readable twin: `data/price-benchmarks.csv` (34 rows).
+Machine-readable twin: `data/price-benchmarks.csv` (35 rows after the evidence pass).
 
 > **READ FIRST: how this file was made, and its limits**
 > - **This track ran zero web searches.** All agents share one WebSearch budget (200 calls per turn), and it was used up before this track's first query. WebFetch and curl are blocked.
@@ -20,6 +20,14 @@ Machine-readable twin: `data/price-benchmarks.csv` (34 rows).
 >   - croissant and macaron prices
 
 >   Each one is marked `[[FACT NEEDED]]` and listed in the search queue (§10). Run that queue in a follow-up turn.
+> - **Evidence pass, same day (16 WebSearch calls, summaries only).** Now sourced:
+>   - Québec marriage counts (ISQ)
+>   - wedding-spend ranges (press, undated)
+>   - food-allergy and celiac prevalence
+>   - quinceañera practice in Colombia
+>   - Spanish cake words by country
+>
+>   Searched but **not found**: Granby's large employers, Zoo visitor origin, and any published Montréal or Estrie pâtisserie price. Details are in "Evidence pass (2026-10-25)" at the end of this file.
 > - WebSearch runs from the US and returns summaries. The tracks it came from did **not** see a Granby-localized results page.
 
 ---
@@ -49,6 +57,9 @@ Machine-readable twin: `data/price-benchmarks.csv` (34 rows).
 
    So an artisan portion costs **1.3× to 3.0×** a supermarket portion. A real, dated price table with a $/portion column lets buyers judge value themselves. Only one rival (Cake Design) publishes a per-portion price.
 5. **The only Québec wedding per-portion figure is from 2014:** Desjardins, $5–7 per portion, ~$600 cake (via 05). Nobody publishes a fresh one. If weddings are offered, this is the data-study gap to fill. If not, leave weddings frozen, as tracks 03 and 05 recommend.
+   - The market is small and flat. Québec had 23,049 marriages in 2024 (provisional) and 22,711 in 2023 ([ISQ](https://statistique.quebec.ca/en/communique/nuptiality-2024-marriage-numbers-remain-low)).
+   - At the provincial rate, Granby would see roughly 180–185 marriages a year. This is computed, and the Québec population used (~9.0–9.1 M) is UNVERIFIED (model knowledge).
+   - So the freeze stands.
 6. **Anxiety order (inferred from the evidence; to validate with real order data):** design accuracy (proven failure) > lead time (L3 "gâteau pour demain" scores 19/20, via 05) > price per guest > allergens > transport > freshness. Every product page must answer all six above the fold.
 7. **Where these buyers search:**
    - The only third-party surfaces that name the shop today are directories (RestoMontreal, Three Best Rated). Facebook, Instagram and YouTube carried **0 of 17** proxy prompts (via 05).
@@ -61,7 +72,7 @@ Machine-readable twin: `data/price-benchmarks.csv` (34 rows).
    - Serve it through WhatsApp and native-written ES pages. Add a quinceañera page only if it is offered.
 9. **The Zoo brings volume, not certainty.**
    - Visitors: 620,000 (2024) and >665,000 (2025) per local press, unverified (via 01).
-   - Visitor origin: `[[FACT NEEDED]]`.
+   - Visitor origin: `[[FACT NEEDED]]`. The evidence pass searched for it and found no published breakdown. Ask the Zoo or Tourisme Granby région.
    - Distance from 3 rue Court to the Zoo: `[[FACT NEEDED]]`.
    - So the visitor page is a supporting page, not the beachhead.
 10. **Persuasion stays inside the law and the platforms' rules.** All of these come from live data or not at all:
@@ -89,19 +100,19 @@ Status: **verified** = official or 2+ sources (as judged by the source track) ·
 | Spanish mother tongue, Granby CA, 2011 | 965 (1.3%) | verified | [StatCan 2011](https://www12.statcan.gc.ca/census-recensement/2011/as-sa/fogs-spg/Facts-cma-fra.cfm?LANG=Fra&GK=CMA&GC=450) (via 01); the 2021 figure is `[[FACT NEEDED]]` |
 | Zoo de Granby visitors | 620,000 (2024); >665,000 (2025) | unverified (press) | [Le Guide 2024](https://www.journalleguide.com/infolettre/un-bilan-2024-en-demi-teinte-pour-le-zoo/), [Granby Express 2025](https://www.granbyexpress.com/actualites/bilan-2025-le-zoo-de-granby-rebondit-apres-une-annee-en-demi-teinte/) (via 01) |
 | Zoo, summer 2025 | >500,000, +15% (zoo release) vs a ~450,000 in-season projection | conflict (timing) | [Zoo de Granby](https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby), [La Tribune 2025-08-23](https://www.latribune.ca/affaires/affaires-locales/2025/08/23/le-zoo-et-le-parc-aquatique-de-bromont-font-le-plein-ERMIHVGPSJFZTKLR5WRXWYRHGI/) (via 01) |
-| Zoo visitor origin (Montréal / Ontario / US) | — | **needed** | the plan's "Montréal, Ontario, Vermont" is unsourced |
+| Zoo visitor origin (Montréal / Ontario / US) | — | **needed** (searched in the evidence pass; nothing found) | The plan's "Montréal, Ontario, Vermont" is unsourced. A Wikipedia citation title points to 2024 press saying a labour dispute hurt the Zoo's results ([Wikipedia](https://en.wikipedia.org/wiki/Granby_Zoo)), which fits the 2024 « demi-teinte » report |
 | Montréal → Granby | ~80 km | unverified (travel site) | [travelprofy](https://www.travelprofy.com/montreal/granby-zoo) (via 01) |
 | Festival international de la chanson de Granby | 58th edition, 13–23 Aug 2026 | unverified | [festapp](https://festapp.io/festivals/festival-international-de-la-chanson-de-granby/2026) (via 01) |
 | Marché public de Granby, 2026 | Sat 2 May – 7 Nov, 9:00–14:00; Thu 18 Jun – 27 Aug, 16:00–19:00; **Coco Vanille is listed as an exhibitor** | dates unverified | [marchepublicgranby.ca exposants](https://marchepublicgranby.ca/exposants/), [Bonjour Québec](https://www.bonjourquebec.com/en-us/listing/to-see-and-do/marche-public-de-granby-et-region/1dx2) (via 01) |
 | La Haute-Yamaska is in Estrie (Cantons-de-l'Est) | since 2021-07-28 | verified (official) | [ISQ](https://statistique.quebec.ca/fr/actualite/modification-decoupages-regions-administratives-estrie-et-monteregie) (via 01/03) |
 | Wedding-cake vendors on WeddingWire.ca, Estrie | Sherbrooke page shows 2 results (Extra Cakes); no Granby, Bromont or Magog vendor | unverified (snapshot) | [WeddingWire Sherbrooke](https://www.weddingwire.ca/wedding-cakes/quebec/sherbrooke) (via 03) |
-| Québec marriages per year | — | **needed** (ISQ) | — |
-| Average wedding spend, Québec/Canada | — | **needed** | [MTL Blog wedding cost Québec](https://www.mtlblog.com/wedding-cost-quebec-canada) surfaced in 05, but no figure was captured |
+| Québec marriages per year | 22,908 (2022); 22,711 (2023, revised); 23,049 (2024, provisional). Range 22,000–23,500 since the early 2000s. Same-gender marriages: 730 in 2023, a record (previous high 708 in 2018) | **verified (official; read via search summary)** | ISQ: [2023 release (Sept 2024)](https://statistique.quebec.ca/fr/communique/nombre-mariages-2023), [2024 release (Sept 2025)](https://statistique.quebec.ca/en/communique/nuptiality-2024-marriage-numbers-remain-low), [2024 bulletin PDF](https://statistique.quebec.ca/en/fichier/mariages-quebec-2024.pdf). A 2025 release exists ([ISQ](https://statistique.quebec.ca/fr/communique/nombre-mariages-celebres-demeure-faible-2025)), but its figure was not captured. Estrie and Granby counts: `[[FACT NEEDED]]` |
+| Average wedding spend, Québec/Canada | Québec median for recently married couples: $10,000–19,999 (rest of Canada: $20,000–29,999), Wealthsimple survey. Canada: planned ~$15,000 vs ~$25,000 actually spent (Wealthsimple). Canadians *estimate* $19,000 (BMO survey). Planners: $20,000–25,000 for ~120 guests (Québec). Desjardins 2014: $17,060 for ~100 guests | **unverified** (press; survey years not captured except Desjardins 2014) | [Narcity FR (Wealthsimple)](https://www.narcity.com/fr/cout-mariage-quebec-invites-wealthsimple), [Noovo (BMO)](https://www.noovo.info/jour-de-paye/article/mariage-et-divorce-les-canadiens-sous-estiment-la-facture-selon-bmo/), [Noovo Moi](https://www.noovomoi.ca/style-et-maison/finances/article.gerer-budget-mariage.1.8982668.html), [Desjardins](https://www.desjardins.com/fr/conseils/cout-mariage.html). [MTL Blog](https://www.mtlblog.com/wedding-cost-quebec-canada) surfaced in 05; no figure captured |
 | Wedding cake per portion, Québec | $5–7; ~$600 cake | unverified, **2014 (stale)** | [Desjardins](https://www.desjardins.com/fr/conseils/cout-mariage.html) (via 05) |
 | Wedding cake, 2 tiers, Canada | CA$350–900 | unverified (guide; page date unknown) | [Bridebook CA](https://app.bridebook.com/ca-en/article/how-much-does-a-wedding-cake-cost-in-canada) (via 05) |
-| Granby's large employers | — | **needed** | Zoo de Granby is an employer ([Evolia listing](https://work.evolia.com/en/shifts/details/646e1d323d61aa0baea42dd9), via 01); no ranked list collected |
-| Celiac disease prevalence, Canada | about 1% | **UNVERIFIED (model knowledge)** | `[[FACT NEEDED: Celiac Canada / Health Canada page + date]]` |
-| Food allergy prevalence, Canada | about 3 million Canadians self-report (Food Allergy Canada figure) | **UNVERIFIED (model knowledge)** | `[[FACT NEEDED: Food Allergy Canada page + date]]` |
+| Granby's large employers | — | **needed** (searched in the evidence pass; no current list found) | Zoo de Granby is an employer ([Evolia listing](https://work.evolia.com/en/shifts/details/646e1d323d61aa0baea42dd9), via 01). Only stale or partial hits came back: an undated BAnQ scan naming Bombardier (4,000 staff) as the region's top employer, and a 2018 Granby Industriel report saying metal products employ the most people (sector context only). **Do not use the Bombardier figure.** Next: Granby Industriel's annual report, Ville de Granby, Registraire des entreprises |
+| Celiac disease prevalence, Canada | about 1% (≈350,000 people in 2013), plus ~6% gluten-sensitive. Toronto adult serology study (2017): ~1% positive, about 90% undiagnosed (lead researcher, per U of T) | **sourced, not official** (association figure via trade press + one city-level study). No Health Canada or Celiac Canada page surfaced | [Baking Business (Canadian Celiac Association, 2013)](https://bakingbusiness.com/articles/28802-canada-approves-gluten-free-claim-for-specially-produced-oats), [U of T Nutritional Sciences (2017)](https://nutrisci.med.utoronto.ca/news/uoftgrad17-joseph-jamnik-getting-grip-gluten) |
+| Food allergy prevalence, Canada | 2.5–3.1 million Canadians with at least one food allergy (Food Allergy Canada + Dalhousie survey, Oct 2021, preliminary). SPAACE (2016): 6.1% *probable* food allergy (5.9% in 2010); 9.3% self-reported (7.1% in 2010) | **sourced** (2021 survey + 2016 national study; read via search summaries) | [Dalhousie Agri-Food Analytics Lab report (2021-10-20)](https://cdn.dal.ca/content/dam/dalhousie/pdf/sites/agri-food/Dal%20Report%20Allergies%20EN%20(Oct%2020%202021).pdf), [Health Canada research summary (2020)](https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-allergies-intolerances/food-allergen-research-program/research-related-prevalence-food-allergies-intolerances.html), [JCI reference to the SPAACE paper](https://www.jci.org/references/scholar/39113/B6). Which of the last two URLs carries the SPAACE numbers: UNVERIFIED |
 | Health Canada priority food allergens | eggs, milk, mustard, peanuts, crustaceans and molluscs, fish, sesame, soy, sulphites, tree nuts, wheat and triticale (+ gluten sources) | **UNVERIFIED (model knowledge)** | the Health Canada allergen Q&A and CFIA pages are on file in 16a ([Health Canada](https://www.canada.ca/en/health-canada/services/food-nutrition/food-labelling/allergen-labelling/questions-answers-about-new-regulations-enhance-labelling-food-allergens-gluten-added-sulphites.html), [CFIA](https://inspection.canada.ca/en/food-labels/labelling/industry/list-ingredients-and-allergens)), but their content was not read |
 | Bread packed on retail premises from bulk | exempt from the *list of ingredients* | per 16a (search summary) | [CFIA](https://inspection.canada.ca/en/food-labels/labelling/industry/list-ingredients-and-allergens) (via 16a). Allergen rules for exempt items: `[[FACT NEEDED]]` |
 | Coco Vanille reviews | Google 4.9 (count conflicts: "40+" as of 2026-08-01 per 03; not shown per 01); Three Best Rated 4.8 (115, 2025) | conflict on count | [RestoMontreal](https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/), [Three Best Rated](https://threebestrated.ca/bakeries-in-granby-qc) (via 01/03) |
@@ -146,7 +157,7 @@ Copy examples:
 | Field | Content |
 |---|---|
 | Offer status | **No evidence** that Coco Vanille makes wedding cakes (via 01). Tracks 03 and 05 freeze the wedding prompt set (I5, I9, C3, C7, C9). |
-| Segment evidence | Québec marriages per year: `[[FACT NEEDED: ISQ]]`. Average spend: `[[FACT NEEDED]]`. Wedding-cake trends 2025–2026: `[[FACT NEEDED]]`. Price: Desjardins 2014 ($5–7/portion) is the only Québec figure. Bridebook Canada gives 2 tiers at CA$350–900 (via 05). |
+| Segment evidence | Québec marriages: 23,049 in 2024 (provisional), flat at 22,000–23,500 a year since the early 2000s (ISQ, §1). Granby at the provincial rate: ~180–185 a year (computed; the Québec population input is UNVERIFIED). Spend: the Québec median is $10,000–19,999 per wedding, below the rest of Canada (Wealthsimple via Narcity, undated). Wedding-cake trends 2025–2026: `[[FACT NEEDED]]` (not searched). Price: Desjardins 2014 ($5–7/portion) is the only Québec figure. Bridebook Canada gives 2 tiers at CA$350–900 (via 05). |
 | Region | La Haute-Yamaska is in Estrie / Cantons-de-l'Est (ISQ). The regional wedding-cake board is near empty: WeddingWire Sherbrooke shows 2 results, and there is no Granby, Bromont or Magog vendor (via 03). Rose Gâteaux is the only Granby wedding specialist surfaced: tastings, a service area naming Bromont and Saint-Hyacinthe (via 03). Mlles Gâteaux (Montréal) surfaced for Bromont and Sherbrooke wedding searches (via 03). "Montréal couples search by region, not by town" is a plan hypothesis, **UNVERIFIED**. |
 | JTBD | Functional: a cake that tastes right, matches the theme, and is delivered and set up at the venue on time, within a per-guest budget. Emotional: one less thing to worry about on the day. Social: the photo moment; guests talk about it. |
 | Triggers | Venue booked. Planning season (the plan says January–March; unsourced). Tasting invitations. |
@@ -162,7 +173,7 @@ Copy examples:
 | Field | Content |
 |---|---|
 | Offer status | **No evidence** of corporate boxes (via 01). |
-| Segment evidence | List of Granby's large employers: `[[FACT NEEDED: sourced list, e.g. Ville de Granby economic development, CLD / Granby Industriel, Chamber of commerce]]`. The Zoo de Granby is an employer (Evolia listing, via 01). Public-sector and industrial employers are likely buyers: **UNVERIFIED**. |
+| Segment evidence | List of Granby's large employers: `[[FACT NEEDED: sourced list, e.g. Ville de Granby economic development, CLD / Granby Industriel, Chamber of commerce]]`. The evidence pass found no current list (§1). The Zoo de Granby is an employer (Evolia listing, via 01). Public-sector and industrial employers are likely buyers: **UNVERIFIED**. |
 | Rivals | Le Marmiton (caterer): cupcake box of 6 $17.25, box of 12 $35.00 (via 03). L7 « boîte de pâtisseries pour réunion Granby » scores 16, gated (via 05). Costco is under construction in Saint-Alphonse-de-Granby, targeting 2027 ([Le Nouvelliste 2026-10-02](https://www.lenouvelliste.ca/affaires/2026/10/02/futur-costco-le-chantier-de-construction-va-bon-train-a-saint-alphonse-de-granby-D4EBZTIGJ5A4HN2OF6BTYAAK5M/), via 03). It will lower the bulk price floor for office buyers. |
 | JTBD | Functional: the right quantity, ready or delivered at a fixed time, with a compliant invoice. Emotional: no risk of embarrassment in front of the boss or a client. Social: "the person who brought the good croissants". |
 | Triggers | A meeting booked. A retirement or work anniversary. The holiday party. Client gifts in December. The September rentrée (plan calendar). |
@@ -178,7 +189,7 @@ Copy examples:
 | Field | Content |
 |---|---|
 | Offer status | **Inferred.** Walk-in products and ~10 seats (via 01). Picnic boxes, pre-order on arrival and foreign cards: `[[FACT NEEDED]]` (plan ideas). |
-| Segment evidence | Zoo: 620k (2024), >665k (2025), unverified (§1). Origin: `[[FACT NEEDED]]`. English is ~2–3% of residents, so EN demand is mostly visitors (inference, via 01). The festival runs 13–23 Aug 2026 (unverified). US "Granby" pages appeared in 4 of 17 proxy runs (via 05). |
+| Segment evidence | Zoo: 620k (2024), >665k (2025), unverified (§1). Origin: `[[FACT NEEDED]]` (searched; no published breakdown). English is ~2–3% of residents, so EN demand is mostly visitors (inference, via 01). The festival runs 13–23 Aug 2026 (unverified). US "Granby" pages appeared in 4 of 17 proxy runs (via 05). |
 | JTBD | Functional: good coffee and pastries, or a picnic, close to the day's route, fast. Emotional: a "local find" that makes the trip. Social: the story and photo of a "real Québec pâtisserie". |
 | Triggers | Trip planning the night before. Morning on the road. After the Zoo. Rain. |
 | Anxieties | **Open right now?** (6 conflicting schedules, via 01). Parking downtown (rue Principale works, [Granby Express](https://www.granbyexpress.com/actualites/centre-ville-de-granby-la-phase-2-des-travaux-de-revitalisation-est-lancee/), via 01). Distance from the Zoo `[[FACT NEEDED]]`. Language. Payment. Seats. |
@@ -196,7 +207,7 @@ Copy example: EN "Pâtisserie Coco Vanille is downtown Granby, Québec, [[N]] mi
 |---|---|
 | Offer status | Birthday cakes: same product as P1 (partly evidenced). **Quinceañera: no evidence** (via 01). |
 | Segment evidence | 535 Colombian-born; 1,105 born in the Americas (2021, Granby Express). Refugee destination city (SERY, M105). 965 Spanish mother-tongue speakers in 2011 (StatCan). Order of magnitude ~1% (via 01). |
-| Culture (UNVERIFIED, model knowledge, not searched) | A quinceañera marks a girl's 15th birthday in many Latin-American cultures. Often a large party with many guests and a showpiece, sometimes tiered, cake matching the dress colours. Colombian words « torta » and « ponqué » for cake: hypothesis (via 05). Guest counts, flavours (e.g. tres leches) and cake conventions: `[[FACT NEEDED: sources]]`. |
+| Culture (evidence pass; search summaries, mapping of each claim to one URL not isolated) | **Sourced:**<br>• The fiesta de quince is "very traditional and common" in Colombia. It marks the girl's passage to womanhood ([Reach the World](https://www.reachtheworld.org/la-fiesta-de-quince-images-0), [LensCulture](https://www.lensculture.com/projects/383035-quinceaneras-in-colombia)).<br>• Typical elements: a large, brightly coloured dress with décor to match; a waltz with the father; a shoe-change or ring ritual.<br>• Parents invite "a great many people": family, friends, neighbours, teachers. Families of modest means borrow to pay for it.<br>• Recent parties are less traditional and fit the girl's personality ([Boston Globe, 2026-09-11](https://www.bostonglobe.com/2026/09/11/magazine/jovenes-latinas-cambian-tradicion-quinceanera/)). One source says the ribbon-cutting of the « torta » is no longer usual ([Diario de Cuyo](https://www.diariodecuyo.com.ar/noticias/quinceaneras-una-noche-a-medida-803806.html); it is Argentine, so do not apply it to Colombia).<br>**Words:** in Mexico « torta » means a sandwich and cake is « pastel » ([SpanishDict](https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel)). For Colombia, « ponqué » (also « torta ») appears only on low-reliability Q&A pages.<br>**Still `[[FACT NEEDED]]`:** guest counts, cake size and flavour conventions (e.g. tres leches). |
 | JTBD | Functional: a large, elegant cake for many guests, ordered in Spanish. Emotional: honour the daughter and the family's culture far from home. Social: the community sees a proper celebration. |
 | Triggers | The event date (planned months ahead). Venue rented. Community dates listed in the plan: Amor y Amistad (3rd Saturday of September), Novena (Dec 16–24). Demand is **UNVERIFIED** (plan). |
 | Anxieties | Being understood (language). Price for many guests. Tiered-cake transport. The deposit. Flavour authenticity. |
@@ -211,7 +222,7 @@ Copy example: EN "Pâtisserie Coco Vanille is downtown Granby, Québec, [[N]] mi
 | Field | Content |
 |---|---|
 | Offer status | **No evidence** of gluten-free or allergen-controlled products (via 01). A « sans gluten » claim needs a controlled process and a labelling review (05: "gated + legal"). |
-| Segment evidence | Canada prevalence (celiac ~1%, ~3 million with food allergies): **UNVERIFIED (model knowledge)**, `[[FACT NEEDED]]`. Granby: no gluten-free bakery surfaced. Les Crudélices sells raw vegan cakes, gluten-free per 03. Sherbrooke's Extra Cakes lists gluten-, lactose- and nut-free options (via 03). |
+| Segment evidence | Canada prevalence (sourced in the evidence pass, §1):<br>• celiac ~1%, most cases undiagnosed (Canadian Celiac Association 2013; Toronto study 2017)<br>• 2.5–3.1 million people with at least one food allergy (Food Allergy Canada + Dalhousie, 2021, preliminary)<br>• 6.1% probable food allergy (SPAACE 2016)<br><br>Applied to Granby's 72,078 residents (computed; assumes the national rates hold locally): ~720 celiac residents and ~4,400 with a probable food allergy. Granby: no gluten-free bakery surfaced. Les Crudélices sells raw vegan cakes, gluten-free per 03. Sherbrooke's Extra Cakes lists gluten-, lactose- and nut-free options (via 03). |
 | JTBD | Functional: know exactly what is in the cake and the cross-contact risk. Emotional: the child eats like the others, safely. Social: not "the difficult parent". |
 | Triggers | A party invitation. A diagnosis. A school rule (nut-free classes: **UNVERIFIED**). |
 | Anxieties | Cross-contact. Staff knowledge. Label accuracy. Whether the claim is true. |
@@ -267,9 +278,9 @@ Prompt scores (/20) from 05; "gated" = blocked on an owner fact.
 | 3 | P4 Visitors | inferred | Zoo 620k–665k/yr (unverified) | L5 15, L8 15 | Supporting: `/en/visit/` |
 | 4 | P8 Gift buyers | unknown | calendar only | C4 19 (conditional), C5 17 (gated) | Conditional: bûche page only if confirmed by 2026-11-01 |
 | 5 | P5 Latin-American | birthday yes; quince no | 535 Colombian-born | I10 17, C10 18, L10 19 (low volume) | ES core pages + WhatsApp; quinceañera gated |
-| 6 | P3 Corporate | none | employers needed | L7 16 (gated) | After ordering ships; quote + reorder |
-| 7 | P6 Allergy / GF | none; legal | prevalence unverified | C6 17 (gated + legal) | Allergen transparency page only |
-| 8 | P2 Couples | none | needed | I5 15, C3 17, C7 18, C9 17 (gated) | **Frozen** |
+| 6 | P3 Corporate | none | employers needed (searched; no current list) | L7 16 (gated) | After ordering ships; quote + reorder |
+| 7 | P6 Allergy / GF | none; legal | celiac ~1%; 6.1% probable food allergy (sourced) | C6 17 (gated + legal) | Allergen transparency page only |
+| 8 | P2 Couples | none | ~23,000 Québec marriages/yr, flat (ISQ); Granby ~180–185 (computed) | I5 15, C3 17, C7 18, C9 17 (gated) | **Frozen** |
 
 ---
 
@@ -339,7 +350,8 @@ All prices were seen 2026-10-25 by other tracks via search summaries. $/portion 
 | Cupcakes | Le Marmiton $3.45 each, box of 6 $17.25, box of 12 $35.00; Cake Design from $35/dozen; Émotions Gâteaux from $8 (city unverified) | 2.88–3.45 each (Granby) | corporate and party add-on |
 | Wedding (guides) | Desjardins 2014: $5–7/portion, ~$600 cake (Québec); Bridebook: 2 tiers $350–900 (Canada) | 5–7 (stale) | no live Estrie price captured |
 | Viennoiseries (croissant, chocolatine), macarons | — | — | **none captured** `[[FACT NEEDED]]` |
-| Montréal and Estrie pâtisseries (celebration cakes) | — | — | **none captured** `[[FACT NEEDED]]`; France €-priced pages (e.g. €7.50/part, [dish.co PDF](https://cdn.website.dish.co/media/f4/69/9546646/Gateaux-personnalises.pdf), via 05) are not comparable |
+| Montréal and Estrie pâtisseries (celebration cakes) | Evidence pass searched Sherbrooke, Saint-Hyacinthe, Bromont, Magog, Montréal, Longueuil and Première Moisson. Named shops with **no price in any result**: Pâtisserie Duquette (Sherbrooke), Extra Cakes (Sherbrooke), La Demi-Calorie (Saint-Hyacinthe), Rhubarbe (Montréal), Géraldine Gâteau (Longueuil) | — | **none captured** `[[FACT NEEDED]]`. In these summaries, Québec pâtisseries rarely publish celebration-cake prices, so a dated price table is rare in the region (information gain). The data study needs direct collection (phone or email). France €-priced pages (e.g. €7.50/part, [dish.co PDF](https://cdn.website.dish.co/media/f4/69/9546646/Gateaux-personnalises.pdf), via 05) are not comparable |
+| Home-bake floor (reference only) | Fondation OLO recipe sheet: 20 cm (8 po) round cake, 8–10 portions, ingredients $0.54/portion | 0.54 (ingredients, not retail) | sheet date not captured ([PDF](https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf)). Use it on the comparison page for « faire soi-même », never as a price tier |
 
 Readings:
 - The artisan band runs at 1.3× to 3.0× the supermarket portion (computed: 4.43 ÷ 3.37 to 6.67 ÷ 2.25). The comparison page must say what the difference buys: customisation, design, freshness, local and allergen answers. Give a verdict per use case: « Pour un gâteau dans 2 heures, le supermarché est votre meilleure option » (plan §6).
@@ -348,14 +360,14 @@ Readings:
 - Granby rivals state sizes in inches ("1 tier, 7 in", via 03). Publish **inches + cm + portions** (I3 answers came in cm from France and in inches from EN guides, via 05).
 
 Q1 2027 data study (« Prix des gâteaux de fête au Québec », plan §8). Method draft:
-- **Scope:** published prices only. Target N ≥ 30 businesses across Granby, Estrie, Montérégie and Montréal. Current N is 7 Granby businesses + 3 chains + 3 guides, not yet enough.
+- **Scope:** published prices only. Target N ≥ 30 businesses across Granby, Estrie, Montérégie and Montréal. Current N is 7 Granby businesses + 3 chains + 3 guides (+ 1 home-bake reference row), not yet enough. The evidence pass found no published price outside Granby.
 - **Per row:** business, city, product, size, portions, price, tax status, date seen, URL, and a screenshot archived in Studio.
 - **Output:** the median and interquartile range of $/portion by region and tier.
 - **Rules:** no ranking of named rivals, a one-line credit line, the method published.
 
 ```js
 // scripts/price-per-portion.mjs: $/portion from data/price-benchmarks.csv
-// Uses only rows priced "per cake" with "N portions" or "N-M portions". Tested on the 34-row file (10 rows qualify).
+// Uses only rows priced "per cake" with "N portions" or "N-M portions". Re-tested 2026-10-25 on the 35-row file (10 rows qualify).
 import { readFileSync } from 'node:fs';
 
 function parseCsv(text) {
@@ -530,26 +542,58 @@ export function slotLabel({ capacity, booked, cutoff }, { now = new Date(), lang
 
 ### 10.2 Search queue: run when the WebSearch budget is available (one line each)
 
-- ISQ: « nombre de mariages Québec 2024 Institut de la statistique » and « mariages par région administrative Estrie »
-- « coût moyen mariage Québec 2025 sondage » · "average wedding cost Canada 2025 survey"
+- **[done 2026-10-25: Québec totals]** ISQ: « nombre de mariages Québec 2024 Institut de la statistique »; still open: « mariages par région administrative Estrie » and the 2025 figure
+- **[partly: ranges found, no dated 2025 survey]** « coût moyen mariage Québec 2025 sondage » · "average wedding cost Canada 2025 survey" (next: the Wealthsimple report itself)
 - « tendances gâteau de mariage 2026 Québec » · "wedding cake trends 2026"
 - « gâteau de mariage prix par portion Montréal 2026 » · « gâteau de mariage Cantons-de-l'Est prix »
 - « salles de réception mariage Cantons-de-l'Est » (venue partners) · « Tourisme Cantons-de-l'Est mariage »
-- « principaux employeurs Granby » · « Granby Industriel entreprises » · « Technum Québec Granby employeurs »
-- « provenance des visiteurs Zoo de Granby » · « Zoo de Granby clientèle Ontario États-Unis »
-- « Celiac Canada prevalence » · « Food Allergy Canada statistics » · « Santé Canada allergènes prioritaires liste »
+- **[searched, not found]** « principaux employeurs Granby »; still to run: « Granby Industriel entreprises » · « Technum Québec Granby employeurs »
+- **[searched, not found]** « provenance des visiteurs Zoo de Granby »; next: Tourisme Granby région or Tourisme Cantons-de-l'Est visitor studies, or ask the Zoo
+- **[done: prevalence]** « Celiac Canada prevalence » · « Food Allergy Canada statistics »; still open: « Santé Canada allergènes prioritaires liste »
 - « MAPAQ conservation gâteau à la crème » (I7) · « Santé Canada allégation sans gluten exigences »
-- "quinceañera cake traditions" · « torta de quince años Colombia tradición » · « fiesta de quince Colombia ponqué »
+- **[partly: practice sourced; cake conventions open]** "quinceañera cake traditions" · « torta de quince años Colombia tradición » · « fiesta de quince Colombia ponqué »
 - « gâteau smash cake Québec prix » · « smash cake Granby »
-- « prix gâteau personnalisé 8 pouces Montréal pâtisserie » · « prix gâteau anniversaire Sherbrooke pâtisserie » · « prix gâteau Bromont pâtisserie »
+- **[searched: no published prices]** « prix gâteau personnalisé 8 pouces Montréal pâtisserie » · « prix gâteau anniversaire Sherbrooke pâtisserie » · « prix gâteau Bromont pâtisserie »; next: specific shop sites (e.g. Rhubarbe, Duquette, La Demi-Calorie) or phone collection
 - « prix croissant pâtisserie Montréal 2026 » · « prix chocolatine Québec 2026 » · « prix boîte 6 macarons Montréal »
-- « prix cupcakes douzaine Sherbrooke » · « Première Moisson gâteau prix »
+- « prix cupcakes douzaine Sherbrooke » · **[searched, not found]** « Première Moisson gâteau prix »
 - « NETendances 2025 réseaux sociaux Québec » · « NETendances intelligence artificielle 2025 » (where Québécois search and use AI)
 - « groupe Facebook parents Granby » · « groupe Facebook mariage Estrie »
 - « dépenses Saint-Valentin Canada 2026 sondage » · « Fête des mères dépenses Canada sondage » · « bûche de Noël prix Québec 2025 »
 - « Loi sur la concurrence indication de prix partiel » · « Bureau de la concurrence faux avis en ligne »
 - « Loi sur la protection du consommateur article 224 prix » · « OPC pourboire calcul avant taxes 2025 »
 - « Google avis politique incitatifs » (review incentives policy)
+
+---
+
+## Evidence pass (2026-10-25)
+
+16 WebSearch calls (US-located, summaries only; no page opened). Searches covered tracks 02 and 04 together. Pages were read through search summaries, so "verified" means the official source's own summary, not a page read.
+
+| Item | Before | After | Decision impact |
+|---|---|---|---|
+| Québec marriages per year | needed | **23,049 (2024, provisional); 22,711 (2023)**; flat since the early 2000s (ISQ) | Confirms the wedding freeze: Granby ≈ 180–185 marriages a year at the provincial rate (computed; population input UNVERIFIED) |
+| Wedding spend | needed | Ranges only: Québec median $10,000–19,999 (Wealthsimple via Narcity); planners $20,000–25,000; BMO estimate $19,000; all undated | Québec couples spend less than the rest of Canada → any wedding offer needs a clear $/portion entry point |
+| Celiac prevalence | UNVERIFIED (model) | ~1% (Canadian Celiac Association 2013 via trade press; Toronto study 2017). No Health Canada page found | ≈ 720 Granby residents (computed). A real but small segment, and the claim stays legal-gated |
+| Food-allergy prevalence | UNVERIFIED (model) | 2.5–3.1 M Canadians (Food Allergy Canada + Dalhousie 2021, preliminary); SPAACE 2016: 6.1% probable | ≈ 4,400 Granby residents (computed). Supports an allergen list on every product page as a core feature |
+| Granby's large employers | needed | **still needed** (only an undated Bombardier figure and a 2018 sector note) | P3 corporate stays last; get the list from Granby Industriel |
+| Zoo visitor origin | needed | **still needed** (no breakdown published in results) | `/en/visit/` copy must not claim "Ontario / US visitors" |
+| Quinceañera in Colombia | UNVERIFIED (model) | Practice sourced: common in Colombia; many guests; dress-matched décor; recent shift to personalised parties | ES quinceañera page stays gated on the offer. The "many guests" point supports a large-format option, if one exists |
+| ES cake words | hypothesis | Mexico: « pastel » (« torta » = sandwich); Colombia: « torta » / « ponqué » on low-reliability sources only | Keep « Pasteles y tortas » in ES H1s; never « torta » alone on Mexican-facing copy |
+| Pâtisserie price lists (Montréal, Estrie, Montérégie) | none | **none found** in 4 searches; 5 shops named in §6 with no published price | The dated `/prix/` table is rare in the region (strong information gain); the data study must collect prices directly |
+| Price CSV | 34 rows | 35 rows (+ Fondation OLO home-bake reference, $0.54/portion in ingredients; excluded from tiers) | Comparison page « faire soi-même » row |
+
+Edits made: header row count; READ FIRST note; §0 items 5 and 9; §1 rows for Zoo origin, marriages, spend, employers, celiac, food allergy; P2, P3, P4, P5 and P6 segment rows; §3 priority table; §6 pricing rows, data-study N and the code comment; §10.2 queue statuses. Nothing was deleted except replaced UNVERIFIED or `[[FACT NEEDED]]` markers.
+
+Search queue (unsearched or failed, carry forward):
+- ISQ marriages by region (Estrie), plus the 2025 figure from the ISQ 2025 release
+- Granby Industriel annual report: top employers
+- Tourisme Granby région / Zoo: visitor origin
+- Health Canada priority allergens list (canada.ca)
+- Celiac Canada's own prevalence page
+- Quinceañera cake conventions (size, guests, flavours) from Colombian sources
+- Shop-specific price pages: Rhubarbe, Duquette, La Demi-Calorie, Première Moisson
+- Croissant, chocolatine and macaron prices
+- Wedding-cake trends 2026
 
 ---
 
@@ -625,6 +669,33 @@ Regional, wedding and guide sources
 Food labelling (listed by 16a; content not read)
 - Questions and Answers About the New Regulations to Enhance the Labelling of Food Allergens (Health Canada) — https://www.canada.ca/en/health-canada/services/food-nutrition/food-labelling/allergen-labelling/questions-answers-about-new-regulations-enhance-labelling-food-allergens-gluten-added-sulphites.html — seen 2026-10-25
 - List of ingredients and allergens on food labels (CFIA) — https://inspection.canada.ca/en/food-labels/labelling/industry/list-ingredients-and-allergens — seen 2026-10-25
+
+Evidence pass (WebSearch summaries, seen 2026-10-25; pages not opened)
+- Nombre de mariages en 2023 (ISQ, communiqué, Sept 2024) — https://statistique.quebec.ca/fr/communique/nombre-mariages-2023 — seen 2026-10-25
+- Nuptiality 2024: marriage numbers remain low (ISQ, Sept 2025) — https://statistique.quebec.ca/en/communique/nuptiality-2024-marriage-numbers-remain-low — seen 2026-10-25
+- Marriages in Québec 2024 (ISQ bulletin PDF) — https://statistique.quebec.ca/en/fichier/mariages-quebec-2024.pdf — seen 2026-10-25
+- Le nombre de mariages célébrés demeure faible en 2025 (ISQ; figure not captured) — https://statistique.quebec.ca/fr/communique/nombre-mariages-celebres-demeure-faible-2025 — seen 2026-10-25
+- Voici combien un mariage vide les poches des Québécois (Narcity FR, Wealthsimple survey; undated) — https://www.narcity.com/fr/cout-mariage-quebec-invites-wealthsimple — seen 2026-10-25
+- Mariage et divorce : les Canadiens sous-estiment la facture, selon BMO (Noovo; undated) — https://www.noovo.info/jour-de-paye/article/mariage-et-divorce-les-canadiens-sous-estiment-la-facture-selon-bmo/ — seen 2026-10-25
+- Gérer le budget de son mariage (Noovo Moi; undated) — https://www.noovomoi.ca/style-et-maison/finances/article.gerer-budget-mariage.1.8982668.html — seen 2026-10-25
+- A new report suggests 3.1 million Canadians have food allergies (Dalhousie Agri-Food Analytics Lab, 2021-10-20) — https://cdn.dal.ca/content/dam/dalhousie/pdf/sites/agri-food/Dal%20Report%20Allergies%20EN%20(Oct%2020%202021).pdf — seen 2026-10-25
+- 2020: Research related to the prevalence of food allergies and intolerances (Health Canada) — https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-allergies-intolerances/food-allergen-research-program/research-related-prevalence-food-allergies-intolerances.html — seen 2026-10-25
+- Overall prevalence of self-reported food allergy in Canada (JCI reference entry) — https://www.jci.org/references/scholar/39113/B6 — seen 2026-10-25
+- One in 13 Canadians live with a food allergy (CTV; title only) — https://vancouverisland.ctvnews.ca/health/article/one-in-13-canadians-live-with-a-food-allergy-study — seen 2026-10-25
+- Canada approves gluten-free claim for specially produced oats (Baking Business; cites the Canadian Celiac Association, 2013) — https://bakingbusiness.com/articles/28802-canada-approves-gluten-free-claim-for-specially-produced-oats — seen 2026-10-25
+- #UofTGrad17: Joseph Jamnik, getting a grip on gluten (U of T Nutritional Sciences, 2017-06-09) — https://nutrisci.med.utoronto.ca/news/uoftgrad17-joseph-jamnik-getting-grip-gluten — seen 2026-10-25
+- Granby Zoo (Wikipedia; citation to 2024 labour-dispute article) — https://en.wikipedia.org/wiki/Granby_Zoo — seen 2026-10-25
+- La fiesta de Quince (Reach the World) — https://www.reachtheworld.org/la-fiesta-de-quince-images-0 — seen 2026-10-25
+- Quinceañeras in Colombia (LensCulture) — https://www.lensculture.com/projects/383035-quinceaneras-in-colombia — seen 2026-10-25
+- Jóvenes latinas cambian la tradición de la quinceañera (Boston Globe, 2026-09-11) — https://www.bostonglobe.com/2026/09/11/magazine/jovenes-latinas-cambian-tradicion-quinceanera/ — seen 2026-10-25
+- Quinceañeras, una noche a medida (Diario de Cuyo, Argentina) — https://www.diariodecuyo.com.ar/noticias/quinceaneras-una-noche-a-medida-803806.html — seen 2026-10-25
+- abceconomia.co (quinceañera cost article; title not captured) — https://abceconomia.co/?p=33934 — seen 2026-10-25
+- What is the difference between una torta and pastel (SpanishDict answers) — https://www.spanishdict.com/answers/210408/what-is-the-difference-between-una-torta-and-pastel — seen 2026-10-25
+- Recette gâteau (Fondation OLO, PDF; date not captured) — https://fondationolo.ca/media/mdebhwtk/fondation-olo-recette-gateau-fete-v2.pdf — seen 2026-10-25
+- 3 Meilleurs Pâtisseries à Sherbrooke (Three Best Rated) — https://threebestrated.ca/fr-gâteaux-in-sherbrooke-qc — seen 2026-10-25
+- Pâtisserie Duquette (circulaire-en-ligne) — https://www.circulaire-en-ligne.ca/patisserie-duquette — seen 2026-10-25
+- 3 Meilleurs Pâtisseries à Saint-Hyacinthe (Three Best Rated) — https://threebestrated.ca/fr-gâteaux-in-saint-hyacinthe-qc — seen 2026-10-25
+- Première Moisson (RestoMontreal) — https://www.restomontreal.ca/resto/premiere-moisson-montreal/17355/fr/ — seen 2026-10-25
 
 Internal references (repo and skill files, not web sources)
 - research/01-business-facts.md, research/03-competitors.md, research/05-serp-baseline.md, research/16a-admin-ux-inspiration.md
