@@ -1,0 +1,148 @@
+id,epic,item,layer,phase_week,seo_value,conversion_value,delight,effort,depends_on,gate,notes
+LOC-01,local,Confirm shop open in Oct 2026; GBP not 'temporarily closed'; who holds GBP owner access,L12,W0,5,5,1,S,,G0 go/no-go,01 §4; 12 A1. Default if unanswered: no build
+LOC-02,local,Storefront-sign photo decides the name spelling; approve the NAP source file (3 rue Court J2G 4Y6 · 450-372-7177),L8,W0,5,2,1,S,LOC-01,G0 go/no-go,01 §2.3; 12 A2. Rename the GBP only to match the sign
+LOC-03,local,Owner-confirmed weekly hours set on the GBP first; copies follow,L12,W0,5,4,2,S,LOC-01,G0 go/no-go,01 §3 (6 schedules); 05 §0.3 wrong hours already repeated by an AI answer
+LOC-04,local,Holiday hours Dec 24 – Jan 2 collected and pushed to GBP + Apple + Bing + Facebook,L12,W0;W5,4,4,2,S,LOC-03,G6 holiday hours live everywhere (deadline 2026-12-01),12 E9; 04 §6.2
+LOC-05,local,GBP: primary category from the live picklist; description; products with prices; photos; weekly post,L12,W1,5,4,2,S,LOC-02;CON-02,G1 GBP = Apple = Bing = Facebook,06 (d): category names and 750-char limit not found; self-test T2
+LOC-06,local,Self-test T2: is a Food Ordering section offered for this category?,L12,W1,3,5,1,S,LOC-01,—,06 (d) T2; decides F25
+LOC-07,local,Claim Apple Business; hours; 'Commander' action test with UTM (T3); Showcase per season later,L12,W1,4,3,1,S,LOC-05,G1,06 (c); 11 §1.1; iOS 64.87 % of Canadian mobile (06 b)
+LOC-08,local,Bing Places import from the finished GBP (bing.com/forbusiness),L12,W1,4,2,1,S,LOC-05,G1,06 (c): the import copies errors; Bing ≈ 10 % (06 b)
+LOC-09,local,"Facebook and Instagram name/hours/link aligned; confirm IG handle, professional + public, search-engine toggle (self-test 5)",L8,W1,3,2,1,S,LOC-02,G1,01 §7 (handle never surfaced); R18 #5
+LOC-10,local,"Claim or create Foursquare, Yelp (claim only, never solicit), Tripadvisor; fix PagesJaunes name and phone",L12,W2,4,2,1,S,LOC-05,—,11 §1.1; 06 (o) AI local feeds
+LOC-11,local,Correction requests: RestoMontreal flag + hours; TBR (Pain-Pain closed; apply to cakes list); Wanderlog city; MapQuest typo; find-open; chamberofcommerce mirror,L12,W3,4,2,1,S,LOC-03,—,11 §1.1; 03 §4
+LOC-12,local,"Listings: local chamber, Tourisme Granby région, Tourisme Cantons-de-l'Est/Bonjour Québec, Haltes gourmandes (if eligible), Marché public website link",L15,W4-6,4,2,1,M,CON-01,—,"11 §0.3, §1.1; fees [[FACT NEEDED]]"
+LOC-13,local,QR review card in every box → /avis 302 to the GBP review link; one spoken counter line,L12,W3-4,4,2,2,S,TSE-13;DES-09,—,"11 §4.2; M23. No stars, products or staff names"
+LOC-14,local,"Review replies within 24 h, closed days included (GBP app until Studio)",L12,W1+,4,3,2,S,LOC-01,weekly 24 h log,M1 (11 §4.1's 48 h superseded); 12 F11
+LOC-15,local,Review velocity: measure trailing 8-week rate; shop-level target = 2× that rate,L12,W2-6,3,2,1,S,LOC-14,G6 review,12 F5; never per staff (M2)
+LOC-16,local,GBP API Basic Access application (live site + @cocovanillegranby.com mailbox),L12,W6,2,1,1,S,CON-05;HOS-08,G6 spec + API filed,12 D4; 16b §5. Studio must work without it
+LOC-17,local,Monthly NAP diff of every live listing against the master record,L12,W5+,4,2,1,S,LOC-11,—,11 §1; 16 §4.4 hours card
+LOC-18,local,"Noël 2026 bridge on GBP + Facebook (products, posts) if bûches are confirmed",L12,W0-1,3,5,2,S,CON-03,—,12 B5; 05 §6; pre-orders open 2026-11-01
+LOC-19,local,Self-tests 18 (Apple Maps rating source) and 19 (Ask Maps FR/EN),L14,W1,2,1,1,S,,—,R18 §2
+LOC-20,local,GBP Food Ordering custom link to /commander/ preferred for pickup (only if self-test T2 shows the section),L12,W11-12,4,5,2,S,LOC-06;ORD-15,G12 launch,06 (d); 00 §6 F25 and §13 W11–12
+CON-01,content,"Static FR holding page: NAP, hours, phone, holiday orders if offered",L5,W1,4,3,1,S,HOS-03;LOC-02,G1 holding page 200 to every crawler,12 §6 week 1
+CON-02,content,"Owner product list: prices, sizes, portions, lead times, next-day cut-off, unit weights (g), revenue mix",L10,W0-2,5,5,2,M,LOC-01,G0 / G2,02 §10.1; 10 §14 #5; weights feed the 230 g tax line (07 S9)
+CON-03,content,Bûches yes/no by 2026-11-01; if yes /buches-de-noel/ on the holding page with request form + payment link,L19,W0-1,3,4,3,S,CON-01;ORD-02,—,04 §0.6 (no 2026 organic win; URL history for 2027 is a hypothesis); 05 §6
+CON-04,content,"Category sentence A or B chosen in FR/EN/ES (no adjectives, no weddings)",L1,W0,5,3,1,S,CON-02,G0,01 §11; M15; 03 §7 competitor test
+CON-05,content,"FR home: category sentence, answer block, key facts, hours, proof",L10,W3-4,5,4,3,M,CON-04;DES-04,G4 content gate,v1 §7; 12 §6
+CON-06,content,"/carte/ HTML menu: prices, portions, allergens, vitrine du jour block",L10,W3-4,5,4,3,M,CON-02;LEG-07,G4,12 E1; no PDF or image menu
+CON-07,content,/commander/ interim: phone + labelled request form + written recap + photo approval + deposit link; pickup only,L19,W3-4,3,5,3,M,ORD-02;LEG-03,G4,"12 §6; 10 §13 option D; 12 E3, E11"
+CON-08,content,"/nous-trouver/ + /en/visit/: address, parking photos, directions from landmarks, hours table, visitor section",L12,W3-4,5,4,2,S,LOC-03,G4,v1 §6; distance to the Zoo [[FACT NEEDED]]
+CON-09,content,/a-propos/ entity home with the « Coco Vanille en bref » facts box; chef page only with consent,L8,W3-4,4,1,2,S,LOC-02,G4,v0c §4; 12 E14
+CON-10,content,/prix/ dated price table with a $/portion column (if a grid exists),L10,W3-4,5,4,2,S,CON-02,G4,v1 §6; 03 §6; all-in price 07 C-9
+CON-11,content,"Cake page: /gateau-pour-demain/ if next-day confirmed, else /gateaux-personnalises-granby/ after the overlap test",L10,W3-4,5,5,3,M,CON-02;MEA-02,G4,05 §6 (L3 19/20); v1 §6 overlap test
+CON-12,content,"EN pages: home, menu, order, visit (FR parity guard)",L9,W3-4,3,3,2,M,CON-05;CON-06;CON-07;CON-08,G4 parity,M10; 07 F-2
+CON-13,content,EN pillar + EN about,L9,W5,3,3,2,S,CON-11;CON-09,—,12 §6 week 5
+CON-14,content,"Portion calculator, server-rendered, inches + cm, works without JS (if portion standards exist)",L11,W5,5,4,4,M,CON-02,—,v1 §6; 05 I3 17/20
+CON-15,content,FAQ in <details> from the 02 §5 bank; 5–8 per page; FAQPage markup optional,L13,W5,4,3,2,S,CON-05,never a gate,M17; R18 #1
+CON-16,content,"ES 3 pages (/es/, /es/pedidos/, /es/pasteles-personalizados-granby/) only if Spanish service is confirmed",L9,W5,2,2,2,S,CON-02,M10 met,M10; M11 no WhatsApp; native writer
+CON-17,content,/allergenes/ policy page + « Contient : … » block on every product,L19,W3-4,3,3,2,S,LEG-07,G4,"12 B2; 07 A-3, A-6"
+CON-18,content,Saint-Valentin page (if products confirmed),L10,W7,3,4,3,S,CON-02,publish by 2026-12-20,04 §6.2; first season on the engine (10 §13)
+CON-19,content,Pâques page (Easter Sun 2027-03-28),L10,W13,4,4,3,S,CON-02,publish by 2027-01-31,04 §0.5; pre-orders 2027-03-01
+CON-20,content,/viennoiseries/ and /pains-baguettes/ defend pages,L9,W7-10 or W13-14,5,3,3,M,CON-06,—,04 §0.2–0.3 (bread slot open after Pain-Pain closed)
+CON-21,content,"Transport + storage guide (I4, I7) with the shop's own method",L13,W13+,4,2,3,S,CON-02,food-safety source [[FACT NEEDED]],04 P15; 05 I7
+CON-22,content,"1 page a week FR + EN (agency Tue–Wed, 3 h)",L21,W13+,4,3,2,M,ORD-15,rhythm 4 weeks in a row,v1 §9; 12 F4
+CON-23,content,"Comparison page by category of option (supermarket, ice-cream cake, artisan, home baker)",L14,W15+,4,3,3,M,LEG-10,counsel sign-off,v1 §6; 12 §5.1; 02 §9.10
+TSE-01,technical SEO,Half-day Payload 3 plain-JS spike (create-payload-app → .js config + collections → build → jobs worker),ops,W1,2,1,1,S,HOS-02,spike pass/fail → owner decision within 2 days,12 D5
+TSE-02,technical SEO,robots.txt from the crawler table; Disallow /boite/ /en/box/ /es/caja/ /compte/ /recherche /svc/; no /studio/ or /api/ lines,L5,W1,5,1,1,S,HOS-03,crawler-access 200 on key pages,"06 (n); 12 C7, C21; Content-Signal optional (06 i)"
+TSE-03,technical SEO,Search Console Domain property owned by the bakery; 'Search generative AI' = Include; GenAI report baseline (T4),L5,W1,5,1,1,S,HOS-04,monthly Include check,06 (e)
+TSE-04,technical SEO,Bing Webmaster Tools + IndexNow key; AI Performance report visible (T5),L5,W1,4,1,1,S,TSE-03,—,06 (f)(h)
+TSE-05,technical SEO,Sitemap from real pages with real lastmod and hreflang,L5,W1;W5,4,1,1,S,TSE-02,—,v1 L5
+TSE-06,technical SEO,"CI gate: audit, links, images, render-diff, schema, hreflang (existing-equivalents rule), axe",L2,W2,5,2,1,M,TSE-01,G2,v1 §12; M9; 12 E6
+TSE-07,technical SEO,"Page template contract: head (lang, title, description, canonical, robots max-snippet, OG, one @graph); data-nosnippet only on consent/legal",L2,W2,5,2,1,M,TSE-06,G4 audit 0 failures,v1 L2; 06 (m)
+TSE-08,technical SEO,"Publish guard: FR parity, no [[FACT NEEDED]], no placeholders, allergens human-verified, free-from text scan",L10,W2,4,2,1,M,TSE-06;LEG-07,G2,v1 §10; 16 G1–G4
+TSE-09,technical SEO,"Entity JSON-LD from the NAP file: Bakery @id, legalName, NEQ identifier, alternateName = other spelling only, hasMap CID, sameAs Facebook + kgmid (IG after confirm); no areaServed, no aggregateRating",L8,W2-5,5,1,1,S,LOC-02,schema valid,"12 A2, A4; v0b B1 (kgmid effect UNVERIFIED); requirements IDs"
+TSE-10,technical SEO,Product/Offer markup with one availability state: InStock / SoldOut / BackOrder + date / PreOrder + date / Discontinued,L19,W11-12,4,3,1,M,ORD-05,schema gate,06 (k); 10 §8.1; M21
+TSE-11,technical SEO,"CWV budget: AVIF hero ≤ 200 KB, 2 subset variable fonts, reserved consent space, static map image, click-to-load YouTube",L3,W3-4,4,3,3,M,DES-04,G4 CWV green on home + /carte/,v1 L3; 06 (p)
+TSE-12,technical SEO,On publish: IndexNow for every language URL + revalidation of the live public process (/svc/revalidate),L5,W3-4,3,1,1,S,TSE-04;HOS-05,—,v1 §12; 17 §13; 16b §7 (public host constant)
+TSE-13,technical SEO,"One host, trailing slash on every URL, single 301 hops, 404/410 for removed pages; /avis redirect",L5,W1,3,1,1,S,HOS-03,check-urls,v1 L5; 17 §10.2
+TSE-14,technical SEO,crawler-access.mjs after every deploy and on Fridays,L5,W2+,4,1,1,S,TSE-02,crawler-access gate (v1 §12 gate 5),06 practice 6; 17 §6
+TSE-15,technical SEO,Request indexing of key pages in Google and Bing,L5,W5,4,1,1,S,CON-05;CON-06;CON-08,G5 key pages indexed,12 §6 week 5
+TSE-16,technical SEO,llms.txt generated from the same facts (optional),L14,W13+,1,1,1,S,TSE-09,never a gate,M16; 06 (j)
+OFF-01,off-site,Prompt swap (gated prompts → X candidates) and freeze before the W1 run; B1–B3 in both spellings,L7,W0,4,1,1,S,CON-02,IDs frozen,12 G3; 05 §8
+OFF-02,off-site,Battle map for the 10 priority prompts as a script report,L7,W1-2,4,1,1,S,MEA-02,—,v1 L7; 05 §6
+OFF-03,off-site,"Newsroom contacts: La Voix de l'Est, Granby Express, M105, Tastet, ICI Estrie, La Tribune, Narcity",L15,W4-6,3,1,1,S,,contacts [[FACT NEEDED]],11 §2; data/pitch-list.csv
+OFF-04,off-site,"Q1 2027 data study « Prix des gâteaux de fête à Granby »: collect prices directly, method, chart, one-line credit",L15,W10-16,5,2,2,M,CON-10,re-verify seeds on the study date,11 §2; 03 §2b; 02 evidence pass
+OFF-05,off-site,Pitch the data study to 3 names,L15,W16-18,4,1,1,S,OFF-04;OFF-03,—,12 F6
+OFF-06,off-site,"Partner asks: Marché public link, Haltes gourmandes, Zoo visitor material (if offer), Cégep, SERY (only with an ES offer)",L15,W6+,3,2,1,S,CON-01,—,11 §3
+OFF-07,off-site,Fix wrong AI facts at their source (hours first),L14,W1+,5,2,1,S,LOC-03;MEA-03,next run correct,05 §0.3; 16 §4.4
+OFF-08,off-site,"Video from month 4, 1 a month (order 1, 3, 4, 14, 10, 15); transcript on the target page",L15,W17+,4,2,3,M,CON-14;CON-10,—,11 §5; 12 F6
+OFF-09,off-site,"Communities: manual Facebook group check; answer only real questions, affiliation disclosed",L15,W13+,2,1,1,S,,—,11 §6; v1 §10
+OFF-10,off-site,Monthly unlinked-mention sweep + 2 link requests,L11,W13+,3,1,1,S,OFF-03,—,v1 L11
+OFF-11,off-site,Refused-tactics clause signed by the owner,L16,W0,3,1,1,S,,G0,v1 §10
+ORD-01,ordering,"POS fact (brand, plan, terminals, printers) → processor decision Square vs Stripe",L19,W0-2,1,4,1,S,,G2,"10 §0, §1.3; 12 E10. Default: Stripe + Studio printer"
+ORD-02,ordering,Bridge: Stripe or Square payment links + request form (Noël 2026),L19,W0-1,1,5,2,S,ORD-01,—,10 §13 option D
+ORD-03,ordering,"Ordering spec frozen: capacity per category × day, 15-min windows, cut-off, deposit %, cancellation, quote validity, tax classes, CASL boxes",L19,W6,2,5,2,M,ORD-01;LEG-04;LEG-03,G6 spec signed,12 §6 week 6; 10 §14
+ORD-04,ordering,"Payload domain model (Product, Variant, DailyStock, Season, CapacityRule, Order, Payment, Refund, CakeRequest, AllergyNote, Consent, NotificationLog)",L19,W2;W7-10,2,3,1,L,TSE-01,—,10 §2; 12 §6 week 2
+ORD-05,ordering,"Capacity engine: atomic reserve, 10-min hold, pickup windows, blackouts « à confirmer »",L19,W7-10,2,5,4,L,ORD-04;ORD-03,load test,10 §3
+ORD-06,ordering,"Checkout: review step, unticked conditions box, amount on button, EN/ES binding-language box, no fee lines, no tip, hosted fields (SAQ A, no tags on /commander/paiement/)",L19,W7-10,2,5,3,L,ORD-05;LEG-03,counsel sign-off,"07 §4 O1–O5, O11; 10 §1.4, §4"
+ORD-07,ordering,Confirmation = contract copy (French first) + .ics + 4-digit pickup code + QR,L19,W7-10,1,3,4,S,ORD-06,—,07 O6; 10 §4
+ORD-08,ordering,Custom-cake request → quote within 24 h → deposit link → recap with reference photo,L19,W7-10,2,5,4,M,ORD-04,—,M24; 10 §5.2; 16a move 5
+ORD-09,ordering,Date-first season mode; Saint-Valentin 2027 configured,L19,W10-11,3,4,3,M,ORD-05,—,"10 §3.2, §13"
+ORD-10,ordering,Vitrine reservation from DailyStock (only if the owner wants it),L19,W11-12,2,4,3,M,ORD-05,owner yes,02 P7; 10 §2
+ORD-11,ordering,In-app browser detection + /boite/<token>/ hand-off to Safari,L19,W7-10,1,5,3,M,ORD-06,test from the IG bio link,"08 §0.5, §8; 10 §4"
+ORD-12,ordering,"Transactional SMS/email templates: GSM-7 one segment, sender + STOP; CI segment test",L19,W7-10,1,3,4,S,HOS-08,AC12,10 §6; 07 E-2
+ORD-13,ordering,Webhook-only 'paid'; nightly payment reconciliation,L19,W7-10,1,3,1,S,ORD-06,—,10 §4
+ORD-14,ordering,"Load test of a season opening; fair queue (10-min holds, visible remaining count)",L19,W10,2,4,3,S,ORD-09,G10 pre-launch,08 move 5; 10 §13
+ORD-15,ordering,Ordering engine live (2027-01-11 → 01-24),L19,W11-12,3,5,4,M,ORD-14;STU-10;LEG-08,G12 launch,M20; 12 §6
+ORD-16,ordering,Merchant Center free local listings: 5-product test (pickup today / pickup later),L19,W15-18,4,3,1,M,ORD-15;TSE-10,food approval,06 (q); 10 §8.1
+ORD-17,ordering,"Cake builder (2.5D SVG, live price + earliest date, indexable twin)",L19,gated (≥ 3 months of request data),3,4,5,L,ORD-08,request volume known,M24; 10 §5; 12 B6
+ORD-18,ordering,"Gift cards online: no expiry, no fees, no GST at sale",L19,gated (after the engine),2,3,3,M,ORD-15;LEG-04,accountant QST answer,"07 C-11, T-4; 12 E4"
+ORD-19,ordering,Pâques 2027 season in date-first mode; pre-orders open 2027-03-01,L19,W17,3,4,3,S,ORD-09;CON-19,load test (ORD-14),04 §6.2; 10 §13; 00 §13 W17–18
+STU-01,Studio,"Shell: PWA install, offline outbox, roles, passkey + PIN, audit log, French UI, noindex",ops,W7-10,1,3,4,L,ORD-04;HOS-11,"AC5, AC7, AC9, AC10","16 §3.0, §7"
+STU-02,Studio,"Aujourd'hui + Commandes: Prête, Remettre, bulk ready, phone order, production sheet + print/PDF, new-slot proposal, owner refund",ops,W7-10,1,4,5,L,STU-01,AC1–AC2,16 §3.1–3.2
+STU-03,Studio,"Vitrine: photo of the day, « Épuisé » with durations, « Reprendre hier »",ops,W7-10,3,4,4,M,STU-01,owner test T1,16 §3.3
+STU-04,Studio,"Demandes: card, price, deposit link, other date, refuse, recap with photo",ops,W7-10,1,5,4,M,ORD-08;STU-01,owner test T3,16 §3.4
+STU-05,Studio,"Avis: drafts in the reviewer's language, 24 h timer; without the API: copy + « J'ai répondu »",L12,W7-10,3,3,3,M,LEG-09;STU-01,owner test T5,16 §3.5; 16 AC15
+STU-06,Studio,"Boutique & heures: hours, special hours, holiday planner, Fermeture, busy mode, pause, capacity ±, NAP lock",L12,W7-10,4,3,4,M,STU-01,AC13 snowstorm drill,16 §3.6; 16a move 4
+STU-07,Studio,"Cette semaine + Monday email: 5 numbers, ≤ 3 cards, Système tile",L21,W11-12,2,2,3,M,MEA-10,—,16 §4.2
+STU-08,Studio,"Agence read-only: Gates, Scoreboard, Intégrations, Système",L17,W11-12,2,1,1,S,MEA-03,—,16 §4.7
+STU-09,Studio,"Notifications: 4 urgent push types, SSE + LISTEN/NOTIFY, SMS backstop",ops,W7-10,1,3,3,M,STU-01,AC11,16 §6.1; 16b §3
+STU-10,Studio,"Ease-of-use tests: owner T1–T5 (5/5) + staff T1, in the shop",ops,W10,1,3,4,S,STU-02;STU-03;STU-04;STU-05;STU-06,G10 pre-launch,16 §8.3; 16a §11
+STU-11,Studio,"Studio v1.1: Recherche, Visibilité IA, Mentions, Analytique; vitrine post drafts; presence score only if kept (session 1)",L17,W15-20,2,1,2,M,STU-08,—,16 §8.1; 12 G9 vs 16 §4.6
+DES-01,design,Judge the 3 directions (A/B/C) against the owner's Instagram and logo,—,W1-2,2,3,5,S,LOC-09,owner pick,v0c §7; 08 §6 (not done yet)
+DES-02,design,"Design tokens v0: palette vs logo, type pair, spacing; contrast checked by tooling",—,W2,2,3,4,M,DES-01,axe contrast,12 §6 week 2; v0c §7
+DES-03,design,"Half-day photo shoot: window light, cross-sections, confirmed products only",L19,W2,3,4,5,M,CON-02,real photos only,12 E5; v1 L19
+DES-04,design,"Mobile-first templates: sticky bottom bar (Commander · Itinéraire · Appeler), day chips, WCAG 2.2 AA",L10,W3-4,3,5,4,M,DES-02,axe 0 violations,v0c §7; 07 S14
+DES-05,design,"Poster-first hero still (AVIF); cut-cake loop later, after load",L3,W3-4,3,3,5,S,DES-03,LCP ≤ 2.5 s,08 P10–P11; v1 L3
+DES-06,design,"Product card: « Prête dès … », all-in price, portions, allergens, real photo",L19,W7-10,3,5,4,M,ORD-05,—,08 moves 1–2; v0c §7
+DES-07,design,"Studio UI kit: ≥ 48 px targets, ≥ 64 px primaries, status = icon + word + colour",ops,W7,1,3,4,M,DES-02,AC3,16 §3.0; 16a §0.4
+DES-08,design,"Microcopy in Québec French; tu/vous, cueillette/ramassage, acompte/dépôt decided",—,W2,2,3,4,S,,owner choice,16 §9; 04 §0.11; 12 C22
+DES-09,design,Box QR card and sticker design,L12,W3,2,2,3,S,DES-02,"no stars, product or staff name",11 §4.4; 07 §7
+LEG-01,legal,Engage lawyer + accountant with the 07 §8 question lists,—,W0-2,1,3,1,S,,—,07 §8
+LEG-02,legal,Person in charge of personal information named; title + email in the footer,—,W2,1,1,1,S,,before the first form,"07 P1, S5"
+LEG-03,legal,"Conditions de vente (deposit, refunds within 15 days, pre-orders, perishables), French first; EN/ES with a French-prevails clause",L19,W3-6,2,4,1,M,LEG-01,counsel,"07 C-2–C-14, F-3, S15"
+LEG-04,legal,Tax class per product with the accountant's stamp; read Revenu Québec's 2026-08-07 « Précisions »,L19,W4-6,1,4,1,M,CON-02;LEG-01,G6,"07 §6, T-3; class 'ask' blocks online sale"
+LEG-05,legal,"Consent banner (equal buttons, data-nosnippet, reserved space) + Consent Mode basic",L17,W3-4,2,2,2,S,,no Google tag before opt-in,07 S6–S7
+LEG-06,legal,"Privacy policy, cookies (témoins) and accessibility pages",—,W3-4,2,1,1,S,LEG-02,G4,"07 S5, S14; 12 §6"
+LEG-07,legal,"Allergen list per product + cross-contact practice, human-verified; no free-from claims",L19,W2,2,3,2,M,CON-02,publish guard,"07 A-3–A-8; 12 E2, §5.2"
+LEG-08,legal,"ÉFVP + written agreements: processor, Twilio, GA4, Claude API, Sentry, mailbox; vendor register in Studio",—,W6-10,1,1,1,M,HOS-01;ORD-01,G10 pre-launch,"07 §2, A3"
+LEG-09,legal,"CASL: unticked consent boxes, templates tagged transactionnel/commercial, consent ledger",L12,W7-10,1,2,1,S,ORD-06,—,"07 E-1–E-5, O10, A4–A5"
+LEG-10,legal,"Legal check of the comparison page (Competition Act, LPC)",L14,W14+,3,2,1,S,,counsel,03 §6; 12 §5.1
+LEG-11,legal,CIPO trademark search: COCO VANILLE / COCOVANILLE,L16,W1-4,2,1,1,S,,before printing boxes,07 X-2
+LEG-12,legal,MAPAQ permit number and category; coverage of online pickup orders,—,W0-2,1,3,1,S,,G6,07 A-2
+MEA-01,measurement,Name who runs the weekly Granby phone check (fallback: SERP API + monthly owner check),L17,W0,3,1,1,S,,named,12 E12; 05 §9
+MEA-02,measurement,Monday baseline: 33 prompts + candidates from a phone in Granby + SERP API (Granby) + 5 AI engines,L7,W1,5,1,1,M,OFF-01;MEA-01,baseline file saved,05 §9 (proxy covered 17 of 33; no AI baseline yet)
+MEA-03,measurement,"Weekly runs: 3 per prompt × engine, majority rule; sponsored-competitor column",L17,W1+,4,1,1,M,MEA-02,4 consecutive Mondays,"12 §4, G6; R18 #13; ≈ 540 AI calls/week (36 prompts × 5 engines × 3 runs, computed; 12 G6's 495 counts 33), cost [[FACT NEEDED]]"
+MEA-04,measurement,"GA4 basic consent + key events phone_click, directions_click, order_click, generate_lead; AI Assistant channel + regex",L17,W5,3,2,1,S,LEG-05,events fire only after consent,v1 §11; 06 (g)
+MEA-05,measurement,"Server-side purchase via Measurement Protocol, only when the stored consent allows",L17,W11-12,1,2,1,S,ORD-13,no browser purchase,10 §10
+MEA-06,measurement,GBP website link with UTM (?utm_source=google&utm_medium=organic&utm_campaign=business_profile),L17,W5,2,1,1,S,CON-05,—,v1 §11; 17 §10.2
+MEA-07,measurement,Weekly Bing AI Performance CSV upload; Search Console GenAI impressions trend,L17,W5+,3,1,1,S,TSE-03;TSE-04,—,"06 (e)(f): sampled, CSV only; impressions only"
+MEA-08,measurement,"Monthly log-bots on the pillar: Googlebot (reverse DNS), Bingbot, ≥ 2 AI crawlers",L17,W6+,3,1,1,S,HOS-03,—,v1 L17; 17 §8.3
+MEA-09,measurement,« Comment avez-vous entendu parler de nous ? » at checkout,L17,W11-12,1,1,1,S,ORD-06,—,v0a §7.4
+MEA-10,measurement,"weekly.mjs Monday report in orders, quotes, calls, directions, citations (email; no AI summary)",L21,W5+,2,2,1,S,MEA-03,—,12 §5.1; 16 §4.2
+MEA-11,measurement,Re-baseline vs W1 + 8-week rule check (early signals vs leads),L17,W13-14,4,2,1,S,MEA-03,G14,v1 §3 weeks 11–12 gate moved; v1 §11 rule
+MEA-12,measurement,"Self-test 16 (AlsoAsked, Ahrefs Webmaster Tools, Screaming Frog prices) before any tool spend",L17,W6,1,1,1,S,,—,"R18 §2, #16"
+HOS-01,hosting,VPS provider + data-centre city + spec confirmed (Québec; ≥ 4 vCPU / 8 GB / 75 GB NVMe),L5,W0,2,1,1,S,,G0,"17 §0, §7.3; requirements"
+HOS-02,hosting,"Day-0 hardening: 2FA, SSH keys only, ufw, fail2ban, unattended-upgrades, 2 GB swap",ops,W1,1,1,1,M,HOS-01,runbook day 0,17 §8.1
+HOS-03,hosting,"nginx + certbot: host routing, 444 default server, three log files, HSTS ramp",L5,W1,3,1,1,M,HOS-02,—,"17 §1, §10.4"
+HOS-04,hosting,"DNS: records, CAA, apex canonical, www → 301; DNSSEC after one stable week",L5,W1,3,1,1,S,HOS-13,—,17 §10
+HOS-05,hosting,Docker Compose web/studio/worker/db + blue/green deploys from GitHub Actions,ops,W2,2,1,1,L,HOS-03;TSE-01,health check + warm-up,"17 §1.1, §4"
+HOS-06,hosting,Backups: pg_dump + age → two Québec buckets at two providers; monthly automated restore test,ops,W2,1,2,1,M,HOS-05,G2 restore test logged,17 §8.4
+HOS-07,hosting,WAL archiving / PITR from the ordering week (RPO ≤ 15 min target),ops,W11,1,3,1,M,HOS-06,—,17 §8.4
+HOS-08,hosting,Mailbox on the domain (bonjour@ + aliases); SES ca-central-1; SPF + DKIM + DMARC ramp,ops,W1,1,2,1,M,HOS-04,DMARC p=none → reject,17 §9; GBP API needs the domain mailbox (16b §5)
+HOS-09,hosting,Uptime + heartbeats outside the VPS; Sentry with PII scrubbed; Système tile,ops,W2,1,1,1,S,HOS-05,—,17 §8.2
+HOS-10,hosting,Staging hosts: basic auth + noindex + test keys + no IndexNow,ops,W2,1,1,1,S,HOS-05,—,17 §5
+HOS-11,hosting,Admin host: X-Robots-Tag with 'always' on every response; public host 404 for /admin /studio /api,L5,W7,2,1,1,S,HOS-03,AC10,"16b §2, verification #21"
+HOS-12,hosting,Defensive cocovanillegranby.ca in the legal name (CIRA) → 301,ops,W0-2,1,1,1,S,HOS-13,owner approval,17 §10.1
+HOS-13,hosting,"Domain ownership: registrar, registrant, 2FA, auto-renew, registrar lock",ops,W0,1,1,1,S,,G0,17 §14; 12 E13
+HOS-14,hosting,Pin Payload/Next/Node from npm view; Friday advisories check,ops,W2+,1,1,1,S,TSE-01,—,"16b §0, §4 (versions UNVERIFIED (FC))"
