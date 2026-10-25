@@ -1,0 +1,221 @@
+cluster,keyword,lang,intent,target_page,relative_demand,evidence_url,notes
+brand,pâtisserie coco vanille granby,fr,navigational,/,medium,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,B1/B2 family; always pair the brand with Granby (entity disambiguation)
+brand,cocovanille granby,fr,navigational,/,medium,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Google Maps spelling (one word); use as schema alternateName (entity track decides)
+brand,coco vanille granby avis,fr,navigational,/a-propos/,low,https://threebestrated.ca/bakeries-in-granby-qc,B1; reviews live on GBP; no self-serving review markup
+brand,coco vanille granby heures,fr,navigational,/nous-trouver/,medium,https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027,B2; hours conflict across directories; GBP is master record [[FACT NEEDED: hours]]
+brand,coco vanille rue court granby,fr,navigational,/nous-trouver/,low,https://opengovca.com/quebec-business/1177082220,Address query; 3 rue Court per registry
+brand,coco vanille granby menu,fr,navigational,/commander/,low,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Answer with HTML catalogue; never a PDF or image menu
+brand,coco vanille bakery granby,en,navigational,/en/,low,https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html,EN visitors; Tripadvisor listing exists
+brand,pastelería coco vanille granby,es,navigational,/es/,low,UNVERIFIED,Brand + ES category word
+brand,coco vanille,fr,navigational,none,low,https://alshayaperfumes.com/en/products/mancera-coco-vanille-edp-120-ml,AMBIGUOUS: Mancera perfume and a Réunion bakery share the name; never target the bare term
+brand,pâtisserie coco,fr,navigational,none,low,https://tastet.ca/critiques/patisserie-coco-quartier-chinois/,DISAMBIGUATION: Pâtisserie Coco in Montréal Chinatown is unrelated; do not target
+category,pâtisserie granby,fr,local,/,high,https://threebestrated.ca/fr-gâteaux-in-granby-qc,Head term; TBR FR « Meilleurs Pâtisseries » list excludes Coco Vanille; map pack + listicles expected (verify from Granby)
+category,meilleure pâtisserie granby,fr,commercial,/comparatif-gateau-de-fete-granby/,high,https://www.restomontreal.ca/restaurants/patisseries-granby/fr/?c=332&d=103,C1; listicle-format SERP likely: honest comparison page + home answer block
+category,boulangerie granby,fr,local,/pains-baguettes/,high,https://threebestrated.ca/fr-boulangeries-in-granby-qc,Coco Vanille #2 on TBR bakeries; defend; home also targets
+category,meilleure boulangerie granby,fr,commercial,/,medium,https://www.lavoixdelest.ca/affaires/affaires-locales/2026/06/16/les-proprios-de-la-boulangerie-pain-pain-tournent-la-page-BGIVLUIEIRCHHJX6KZ5J2RWZZQ/,TBR/Yelp #1 Pain-Pain closed 2026-06-16: open slot
+category,boulangerie pâtisserie granby,fr,local,/,medium,https://www.restomontreal.ca/restaurants/the-best-bakeries-eastern-townships/en/?c=338&d=eastern+townships&sort=best,Combined category; matches evidenced product mix
+category,pâtisserie centre-ville granby,fr,local,/nous-trouver/,low,https://www.granbyexpress.com/actualites/centre-ville-de-granby-la-phase-2-des-travaux-de-revitalisation-est-lancee/,rue Court is downtown; downtown works context
+category,pâtisserie cantons-de-l'est,fr,commercial,/,low,https://www.restomontreal.ca/restaurants/the-best-bakeries-eastern-townships/en/?c=338&d=eastern+townships&sort=best,Regional widen step only after Granby held
+category,pâtisserie haute-yamaska,fr,local,/,low,UNVERIFIED,RCM name; low consumer usage (hypothesis)
+category,bakery granby,en,local,/en/,medium,https://threebestrated.ca/bakeries-in-granby-qc,C8 family; Zoo visitors + anglophones (~2% mother tongue)
+category,best bakery in granby quebec,en,commercial,/en/,medium,https://threebestrated.ca/bakeries-in-granby-qc,C8
+category,pastry shop granby,en,local,/en/,low,https://www.restomontreal.ca/restaurants/pastries-granby/en/?c=332&d=103,
+category,best bakeries eastern townships,en,commercial,/en/,low,https://www.restomontreal.ca/restaurants/the-best-bakeries-eastern-townships/en/?c=338&d=eastern+townships&sort=best,Regional listicle exists (RestoMontreal 2026)
+category,pastelería en granby,es,local,/es/,low,UNVERIFIED,C10 family; Spanish ~1% scale (StatCan 2011: 965 mother-tongue speakers CA)
+category,mejor pastelería en granby quebec,es,commercial,/es/,low,UNVERIFIED,C10
+category,panadería en granby,es,local,/es/panaderia/,low,UNVERIFIED,Bread intent in ES
+near-me,pâtisserie près de moi,fr,local,/nous-trouver/,high,UNVERIFIED,L1; proximity-driven map pack: GBP wins it; never write « près de moi » in copy
+near-me,boulangerie près de moi,fr,local,/pains-baguettes/,high,UNVERIFIED,GBP categories + bread products with prices
+near-me,gâteau près de moi,fr,local,/gateaux-personnalises-granby/,medium,UNVERIFIED,GBP products with prices
+near-me,bakery near me,en,local,/en/visit/,medium,UNVERIFIED,Visitors on phones; Apple Maps/Bing Places matter
+near-me,pastelería cerca de mí,es,local,/es/como-llegar/,low,UNVERIFIED,
+near-me,café pâtisserie granby,fr,local,/nous-trouver/,medium,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,~10 seats + coffee per reviews (secondary source)
+near-me,café déjeuner granby,fr,local,/nous-trouver/,low,UNVERIFIED,Only if morning café service confirmed [[FACT NEEDED]]
+hours,pâtisserie ouverte dimanche granby,fr,local,/nous-trouver/,medium,https://find-open.ca/granby/p%C3%A2tisserie-cocovanille-1781027,L4; directories conflict on Sunday hours; claim only if true
+hours,pâtisserie ouverte lundi granby,fr,local,/nous-trouver/,low,UNVERIFIED,Several rivals closed Sun–Mon (03 §1)
+hours,bakery open sunday granby,en,local,/en/visit/,low,UNVERIFIED,Zoo weekend visitors
+hours,heures d'ouverture pâtisserie granby,fr,local,/nous-trouver/,low,UNVERIFIED,Hours table in HTML + openingHoursSpecification
+hours,pâtisserie ouverte 24 décembre granby,fr,local,/nous-trouver/,medium,UNVERIFIED,Seasonal; GBP special hours by 1 Dec
+custom-cakes,gâteau personnalisé granby,fr,transactional,/gateaux-personnalises-granby/,high,https://www.iga.net/fr/recherche_de_magasin/magasin/8212-marche-gazaille,Beachhead; IGA Gazaille lists « gâteaux personnalisés » as a service; rivals: Cake Design / Avec un Grand A / Rose Gâteaux
+custom-cakes,gâteau sur mesure granby,fr,transactional,/gateaux-personnalises-granby/,medium,https://cakegranby.ca/products/gateau-sur-mesure,Competitor wording (Cake Design); use as body synonym
+custom-cakes,gâteau personnalisé prix,fr,commercial,/prix/,medium,https://www.cakegranby.com/saveurs_tarifs.php,Cake Design publishes $5/portion
+custom-cakes,gâteau thématique granby,fr,transactional,/gateaux-personnalises-granby/,low,https://cakegranby.ca/collections/gateau-perso-thematique,Say « thèmes »; no trademark pages
+custom-cakes,gâteau personnalisé cantons-de-l'est,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Regional modifier
+custom-cakes,custom cake granby,en,transactional,/en/custom-cakes-granby/,low,https://www.yelp.com/search?find_desc=Custom+Cakes&find_loc=Granby%2C+QC,Yelp custom-cakes list polluted by out-of-region entries
+custom-cakes,order custom cake online granby,en,transactional,/en/order/,low,UNVERIFIED,L9
+custom-cakes,pastel personalizado granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Mexican wording
+custom-cakes,torta personalizada granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
+birthday,gâteau de fête granby,fr,transactional,/gateaux-personnalises-granby/,high,UNVERIFIED,C2; QC term (owner plan); US-run search found no Granby page (03 §0.9); run overlap test vs « gâteau personnalisé » → /gateaux-de-fete/ if < 6/10 shared
+birthday,meilleur gâteau de fête granby,fr,commercial,/comparatif-gateau-de-fete-granby/,medium,UNVERIFIED,C2
+birthday,gâteau d'anniversaire granby,fr,transactional,/gateaux-personnalises-granby/,medium,https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507,QC retailer (Maxi) and Le Marmiton use « anniversaire »: real QC usage; body synonym
+birthday,gâteau de fête adulte granby,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Pillar section
+birthday,gâteau chiffre lettre granby,fr,transactional,/gateaux-enfants/,low,UNVERIFIED,Plan v0c spoke; product [[FACT NEEDED]]
+birthday,bento cake granby,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Plan v0b spoke; product [[FACT NEEDED]]
+birthday,birthday cake granby,en,transactional,/en/custom-cakes-granby/,low,https://www.walmart.ca/en/browse/grocery/bread-bakery/cakes-cupcakes/birthday-celebration-cake/10019_6000194327359_6000198840549_6000204016986,National chains rank for generic EN
+birthday,torta de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,L10
+birthday,pastel de cumpleaños granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Mexican wording; H1 carries both « pasteles y tortas »
+birthday,ponqué de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
+birthday,gâteau de fête pas cher granby,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://traiteur.iga.net/categories/102/product/631?lang=fr,Supermarket floor $26.99 for 8–12 (IGA); answer honestly
+kids-cakes,gâteau de fête enfant granby,fr,transactional,/gateaux-enfants/,medium,UNVERIFIED,Plan cluster
+kids-cakes,gâteau thème enfant,fr,commercial,/gateaux-enfants/,low,https://cakegranby.ca/collections/gateau-perso-thematique,Licensed prints only; no trademark URLs
+kids-cakes,kids birthday cake granby,en,transactional,/en/kids-birthday-cakes/,low,UNVERIFIED,
+kids-cakes,pastel infantil granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,"Section, not a page"
+smash-cake,smash cake granby,fr,transactional,/smash-cake/,low,UNVERIFIED,Plan cluster; QC parents use the English term (hypothesis); product [[FACT NEEDED]]
+smash-cake,smash cake 1 an,fr,informational,/smash-cake/,low,UNVERIFIED,
+smash-cake,smash cake granby,en,transactional,/en/smash-cake/,low,UNVERIFIED,
+cake-tomorrow,gâteau pour demain granby,fr,transactional,/gateau-pour-demain/,medium,https://threebestrated.ca/bakeries-in-granby-qc,"L3; « order by phone, ready next day » (TBR 2025 listing); publish only with a real cut-off hour"
+cake-tomorrow,gâteau dernière minute granby,fr,transactional,/gateau-pour-demain/,low,https://delicessucresgranby.my.canva.site/,Home baker promises last-minute orders
+cake-tomorrow,gâteau rapide granby,fr,transactional,/gateau-pour-demain/,low,UNVERIFIED,
+cake-tomorrow,last minute cake granby,en,transactional,/en/cake-for-tomorrow/,low,UNVERIFIED,
+order-online,commander gâteau en ligne granby,fr,transactional,/commander/,medium,https://www.avecungranda.com/commande-en-ligne,L2; Avec un Grand A and Cake Design already sell online
+order-online,commande en ligne pâtisserie granby,fr,transactional,/commander/,low,https://www.avecungranda.com/commande-en-ligne,Competitor nav label « Commande en ligne »
+order-online,pâtisserie cueillette granby,fr,transactional,/commander/,low,UNVERIFIED,« cueillette » vs « ramassage »: pick one sitewide [[FACT NEEDED: OQLF check]]
+order-online,order pastries online granby,en,transactional,/en/order/,low,UNVERIFIED,
+order-online,pedir pastel en línea granby,es,transactional,/es/pedidos/,low,UNVERIFIED,WhatsApp CTA on ES pages (plan)
+prices,prix gâteau personnalisé granby,fr,commercial,/prix/,medium,https://www.cakegranby.com/saveurs_tarifs.php,I1; dated price table; prices as text
+prices,combien coûte un gâteau de fête,fr,informational,/prix/,medium,https://traiteur.iga.net/categories/102/product/631?lang=fr,I1; province-wide query; AEO table
+prices,prix gâteau par portion,fr,informational,/prix/,medium,https://www.cakegranby.com/saveurs_tarifs.php,"Granby anchors $2.25–6.70/portion (03 §2b, computed)"
+prices,prix bûche de noël,fr,commercial,/prix/,medium,UNVERIFIED,Seasonal Nov–Dec; also on /buches-de-noel/
+prices,how much does a custom birthday cake cost in quebec,en,informational,/en/prices/,low,https://www.cakegranby.com/saveurs_tarifs.php,I8
+prices,precio torta personalizada quebec,es,informational,/es/precios/,low,UNVERIFIED,
+comparison,gâteau épicerie ou pâtisserie,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://traiteur.iga.net/categories/102/product/631?lang=fr,Honest verdict per use case
+comparison,gâteau costco granby,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://www.lenouvelliste.ca/affaires/2026/10/02/futur-costco-le-chantier-de-construction-va-bon-train-a-saint-alphonse-de-granby-D4EBZTIGJ5A4HN2OF6BTYAAK5M/,Costco Saint-Alphonse targeted 2027 (mayor: maybe 2028): add a row when it opens
+comparison,gâteau maxi iga granby,fr,commercial,/comparatif-gateau-de-fete-granby/,low,https://www.maxi.ca/fr/alimentation/boulangerie/g-teaux/g-teaux-d-anniversaire-et-de-c-l-bration/c/59507,
+comparison,boulangère à domicile permis québec,fr,informational,/comparatif-gateau-de-fete-granby/,low,UNVERIFIED,[[FACT NEEDED: legal track — MAPAQ permit rules]] before publishing
+portions,quelle grosseur de gâteau pour 20 personnes,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,I3; server-rendered table
+portions,combien de portions gâteau 8 pouces,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,QC uses inches « 8 po » (owner plan)
+portions,gâteau pour 50 personnes,fr,informational,/calculateur-portions-gateau/,medium,UNVERIFIED,
+portions,cake serving chart,en,informational,/en/cake-serving-calculator/,medium,UNVERIFIED,National competition; link-earning tool
+portions,how many servings in an 8 inch cake,en,informational,/en/cake-serving-calculator/,medium,UNVERIFIED,
+portions,cuántas porciones tiene un pastel,es,informational,/es/calculadora-porciones-pastel/,low,UNVERIFIED,Show inches and cm
+transport-storage,comment transporter un gâteau à étages,fr,informational,/transporter-conserver-gateau/,low,UNVERIFIED,I4; ordered list
+transport-storage,comment conserver un gâteau à la crème,fr,informational,/transporter-conserver-gateau/,medium,UNVERIFIED,I7; food-safety facts need a source (Health Canada/MAPAQ)
+transport-storage,gâteau au frigo combien de temps,fr,informational,/transporter-conserver-gateau/,medium,UNVERIFIED,
+transport-storage,how to transport a tiered cake,en,informational,/en/cake-transport-storage/,low,UNVERIFIED,
+transport-storage,how to store a buttercream cake overnight,en,informational,/en/cake-transport-storage/,low,UNVERIFIED,
+flavours-finishes,différence crème au beurre ganache,fr,informational,/journal/glossaire-patisserie/,low,UNVERIFIED,I6; table
+flavours-finishes,fondant ou crème au beurre,fr,informational,/journal/glossaire-patisserie/,low,https://www.cakegranby.com/saveurs_tarifs.php,Fondant priced per portion by Cake Design
+menu-cakes,gâteau mousse granby,fr,transactional,/gateaux/,low,UNVERIFIED,Customer term vs trade term « entremets » (hypothesis)
+menu-cakes,entremets granby,fr,transactional,/gateaux/,low,UNVERIFIED,Body synonym only
+menu-cakes,gâteau boston granby,fr,transactional,/gateaux/,low,https://www.avecungranda.com/product/gateau-boston-cream-pie/,Rival sells it; ours [[FACT NEEDED]]
+menu-cakes,shortcake aux fraises granby,fr,transactional,/gateaux/,low,https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille,Evidenced Coco Vanille item (review summary)
+menu-cakes,gâteau aux framboises granby,fr,transactional,/gateaux/,low,https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille,Evidenced Coco Vanille item (review summary)
+wedding,gâteau de mariage granby,fr,transactional,/gateaux-de-mariage/,medium,https://rosegateaux.com/,CONDITIONAL: zero evidence Coco Vanille makes wedding cakes [[FACT NEEDED]]
+wedding,gâteau de mariage cantons-de-l'est,fr,commercial,/gateaux-de-mariage/,medium,https://www.weddingwire.ca/wedding-cakes/quebec/sherbrooke,C3; couples search by region (plan); WeddingWire board nearly empty
+wedding,prix gâteau de mariage granby,fr,commercial,/gateaux-de-mariage/,medium,https://rosegateaux.com/,C7
+wedding,prix gâteau de mariage par portion québec,fr,informational,/gateaux-de-mariage/,medium,https://www.cakegranby.com/saveurs_tarifs.php,I5; price per portion on first screen
+wedding,gâteau à étages granby,fr,transactional,/gateaux-de-mariage/,low,https://www.cakegranby.com/saveurs_tarifs.php,Cake Design: 25+ portions on 2+ tiers
+wedding,pièce montée croquembouche granby,fr,transactional,/journal/glossaire-patisserie/,low,UNVERIFIED,Define before using as synonym
+wedding,dégustation gâteau de mariage,fr,commercial,/gateaux-de-mariage/,low,https://rosegateaux.com/,Rose Gâteaux offers tastings
+wedding,wedding cake eastern townships,en,commercial,/en/wedding-cakes/,low,https://www.weddingwire.ca/wedding-cakes/quebec/sherbrooke,C9
+wedding,wedding cake granby,en,transactional,/en/wedding-cakes/,low,UNVERIFIED,
+wedding,pastel de boda granby,es,transactional,/es/pasteles-de-boda/,low,UNVERIFIED,Only if weddings offered
+wedding,torta de matrimonio,es,transactional,/es/pasteles-de-boda/,low,UNVERIFIED,Colombian wording (owner plan; UNVERIFIED)
+viennoiseries,chocolatine granby,fr,local,/viennoiseries/,medium,UNVERIFIED,L6; QC term (owner plan; UNVERIFIED this run); H1 term
+viennoiseries,croissant granby,fr,local,/viennoiseries/,medium,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Croissants named in listing description
+viennoiseries,croissant aux amandes granby,fr,local,/viennoiseries/,low,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Evidenced Coco Vanille item
+viennoiseries,pain au chocolat granby,fr,local,/viennoiseries/,low,UNVERIFIED,France-French synonym: body once
+viennoiseries,viennoiseries granby,fr,local,/viennoiseries/,low,UNVERIFIED,Nav/category label
+viennoiseries,boîte de viennoiseries granby,fr,transactional,/boites-bureau-corporatif/,low,UNVERIFIED,L7 family
+viennoiseries,best croissant granby,en,local,/en/viennoiseries/,low,UNVERIFIED,
+viennoiseries,what is a chocolatine,en,informational,/en/viennoiseries/,low,UNVERIFIED,Visitor education; AEO definition
+breads,pain artisanal granby,fr,local,/pains-baguettes/,medium,https://threebestrated.ca/bakeries-in-granby-qc,Pain-Pain closure (2026-06-16) frees bread demand
+breads,baguette granby,fr,local,/pains-baguettes/,low,https://threebestrated.ca/bakeries-in-granby-qc,Baguettes listed as specialty
+breads,pain congelé baguette congelée granby,fr,transactional,/pains-baguettes/,low,https://threebestrated.ca/bakeries-in-granby-qc,Frozen bread listed (TBR)
+breads,artisan bread granby,en,local,/en/bread/,low,UNVERIFIED,
+pastries,paris-brest granby,fr,local,/patisseries/,low,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Evidenced item (review summary)
+pastries,tarte au chocolat granby,fr,local,/patisseries/,low,https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/,Evidenced item
+pastries,éclairs granby,fr,local,/patisseries/,low,UNVERIFIED,Product [[FACT NEEDED]]
+pastries,pâtisseries françaises granby,fr,local,/patisseries/,low,UNVERIFIED,
+pastries,vol-au-vent granby,fr,transactional,/traiteur-pret-a-manger/,low,https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille,Evidenced: order by phone ahead (review tip)
+macarons,macarons granby,fr,local,/macarons/,low,https://granbyregion.com/quoi_faire/gateaux-duvoquic/,C5; CONDITIONAL product; Duvoquic (Waterloo) sells macarons
+macarons,macarons granby avis,fr,commercial,/macarons/,low,UNVERIFIED,C5
+macarons,boîte de macarons cadeau,fr,transactional,/macarons/,low,UNVERIFIED,Gift cross-link
+macarons,macarons granby,en,local,/en/macarons/,low,UNVERIFIED,
+cupcakes,cupcakes granby,fr,local,/gateaux/,low,https://www.facebook.com/cakedesigncupcakerie/,Cake Design brands itself « Cupcakerie »: rival-owned; section not page
+cupcakes,boîte de cupcakes,fr,transactional,/gateaux/,low,https://lemarmiton.ca/menuitems/cupcake-individuel-saveur-du-jour/,Le Marmiton sells boxes of 6/12
+quebec-desserts,tarte au sucre granby,fr,transactional,/tartes-desserts-quebecois/,low,UNVERIFIED,Peaks Fêtes/temps des sucres (hypothesis); product [[FACT NEEDED]]
+quebec-desserts,sucre à la crème granby,fr,transactional,/tartes-desserts-quebecois/,low,UNVERIFIED,Gift-box item (hypothesis)
+quebec-desserts,pouding chômeur,fr,informational,/tartes-desserts-quebecois/,low,UNVERIFIED,Recipe SERP likely; local-buy angle only
+quebec-desserts,tarte aux pommes granby,fr,transactional,/tartes-desserts-quebecois/,low,https://www.ubereats.com/ca/dish/granby-qc/apple-pie,Uber Eats has an apple-pie dish page for Granby
+quebec-desserts,sugar pie quebec,en,informational,/en/quebec-desserts/,low,UNVERIFIED,Visitor curiosity
+buche-noel,bûche de noël granby,fr,transactional,/buches-de-noel/,high,UNVERIFIED,C4; Nov–Dec only; US-run search found no Granby page (03 §0.9); product [[FACT NEEDED]]
+buche-noel,commander bûche de noël,fr,transactional,/buches-de-noel/,medium,UNVERIFIED,Pre-orders Nov 1 (plan)
+buche-noel,bûche de noël artisanale,fr,commercial,/buches-de-noel/,medium,UNVERIFIED,
+buche-noel,bûche glacée granby,fr,transactional,none,low,https://granby.maitreglacier.com/categorie-produit/gateaux-2/,Ice-cream logs = Maître Glacier territory (inferred); do not target unless we sell one
+buche-noel,buche de noel granby,en,transactional,/en/yule-logs/,low,UNVERIFIED,EN speakers may type the FR term (hypothesis): use both in EN title
+buche-noel,yule log cake granby,en,transactional,/en/yule-logs/,low,UNVERIFIED,
+buche-noel,tronco de navidad granby,es,transactional,/es/tronco-de-navidad/,low,UNVERIFIED,Owner plan uses « tronco navideño »
+galette-rois,galette des rois granby,fr,transactional,/galette-des-rois/,medium,UNVERIFIED,Late Dec–Jan (hypothesis); product [[FACT NEEDED]]
+galette-rois,galette des rois fève,fr,informational,/galette-des-rois/,low,UNVERIFIED,Definition passage
+galette-rois,rosca de reyes granby,es,transactional,/es/galette-des-rois/,low,UNVERIFIED,"Different product (Mexican bread ring): compare, never rename"
+galette-rois,king cake granby,en,transactional,/en/king-cake/,low,UNVERIFIED,US « king cake » differs (UNVERIFIED): EN H1 keeps « Galette des rois »
+saint-valentin,gâteau saint-valentin granby,fr,transactional,/saint-valentin/,medium,UNVERIFIED,Seasonal Jan–Feb
+saint-valentin,gâteau coeur saint-valentin,fr,transactional,/saint-valentin/,low,UNVERIFIED,
+saint-valentin,valentine's day cake granby,en,transactional,/en/valentines-day/,low,UNVERIFIED,
+saint-valentin,torta de san valentín,es,transactional,/es/san-valentin/,low,UNVERIFIED,
+paques,gâteau de pâques granby,fr,transactional,/paques/,medium,UNVERIFIED,Easter 2027 = 28 Mar (computed)
+paques,chocolat de pâques granby,fr,transactional,/paques/,medium,https://www.narcity.com/fr/montreal/cette-chaine-de-cremerie-au-quebec-fait-des-desserts-aux-oeufs-cadbury,Maître Glacier ran Cadbury-egg desserts (Narcity): rival seasonal play
+paques,easter dessert granby,en,transactional,/en/easter/,low,UNVERIFIED,
+temps-des-sucres,pâtisserie érable granby,fr,transactional,/temps-des-sucres/,low,UNVERIFIED,Mar–Apr (owner plan)
+temps-des-sucres,tarte à l'érable,fr,transactional,/temps-des-sucres/,low,UNVERIFIED,
+temps-des-sucres,maple pastries eastern townships,en,transactional,/en/maple-season/,low,UNVERIFIED,Visitors
+fete-des-meres,gâteau fête des mères granby,fr,transactional,/fete-des-meres/,medium,UNVERIFIED,2027-05-09 (computed)
+fete-des-meres,cadeau gourmand fête des mères,fr,commercial,/fete-des-meres/,low,UNVERIFIED,Cross-link gift boxes
+fete-des-peres,gâteau fête des pères,fr,transactional,/fete-des-peres/,low,UNVERIFIED,2027-06-20 (computed)
+fete-des-meres,torta día de la madre granby,es,transactional,/es/dia-de-la-madre/,low,UNVERIFIED,Colombia same Sunday; Mexico 10 May (owner plan; UNVERIFIED)
+summer-holidays,dessert fête nationale,fr,transactional,/saisons/,low,UNVERIFIED,"Section of /saisons/, not a page"
+summer-holidays,boîte pique-nique granby,fr,transactional,/boites-pique-nique/,low,UNVERIFIED,CONDITIONAL; plan: Zoo/Fête nationale/construction holiday
+summer-holidays,canada day cake,en,transactional,/en/seasons/,low,UNVERIFIED,
+fall-holidays,dessert halloween granby,fr,transactional,/saisons/,low,UNVERIFIED,
+fall-holidays,dessert action de grâce,fr,transactional,/tartes-desserts-quebecois/,low,UNVERIFIED,2027-10-11 (computed)
+corporate,party des fêtes bureau dessert granby,fr,transactional,/boites-bureau-corporatif/,medium,UNVERIFIED,Nov–Dec; corporate offer [[FACT NEEDED]]
+corporate,boîte de pâtisseries pour réunion granby,fr,transactional,/boites-bureau-corporatif/,medium,UNVERIFIED,L7
+corporate,cadeaux corporatifs gourmands granby,fr,transactional,/boites-cadeaux/,low,UNVERIFIED,
+corporate,office pastry box granby,en,transactional,/en/corporate/,low,UNVERIFIED,
+traiteur,traiteur granby,fr,transactional,/traiteur-pret-a-manger/,medium,"https://www.yelp.com/search?cflt=catering&find_loc=Granby,+QC",Contested by full caterers (e.g. Le Marmiton); win only the bakery-traiteur slice
+traiteur,prêt-à-manger granby,fr,transactional,/traiteur-pret-a-manger/,low,https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/,Ready meals sold at the public market (2022 article)
+traiteur,boîte à lunch traiteur granby,fr,transactional,/traiteur-pret-a-manger/,low,UNVERIFIED,CONDITIONAL
+traiteur,catering granby,en,transactional,/en/catering-ready-meals/,low,"https://www.yelp.com/search?cflt=catering&find_loc=Granby,+QC",
+gifting,carte-cadeau pâtisserie granby,fr,transactional,/carte-cadeau/,low,https://www.lescrudelices.ca/boutique/p/cartecadeau,Rival sells gift cards online
+gifting,boîte-cadeau sucrée granby,fr,transactional,/boites-cadeaux/,low,UNVERIFIED,CONDITIONAL
+gifting,bakery gift card granby,en,transactional,/en/gift-card/,low,UNVERIFIED,
+dietary,gâteau sans gluten granby,fr,transactional,/sans-gluten-allergies/,medium,UNVERIFIED,C6; no Granby page surfaced (03 §0.9); claim rules [[FACT NEEDED: legal track CFIA/Health Canada]]
+dietary,pâtisserie sans gluten granby,fr,local,/sans-gluten-allergies/,medium,UNVERIFIED,
+dietary,gâteau sans lactose granby,fr,transactional,/sans-gluten-allergies/,low,UNVERIFIED,
+dietary,gâteau végane granby,fr,transactional,/sans-gluten-allergies/,low,https://www.lescrudelices.ca/menu,Les Crudélices owns raw vegan: do not fight there
+dietary,gâteau sans noix sans arachides granby,fr,transactional,/sans-gluten-allergies/,low,UNVERIFIED,Allergy families; cross-contamination policy in plain words
+dietary,gâteau sans arachides pour l'école,fr,informational,/sans-gluten-allergies/,low,UNVERIFIED,
+dietary,gluten-free bakery granby,en,local,/en/gluten-free-allergies/,low,UNVERIFIED,
+dietary,pastel sin gluten granby,es,transactional,/es/sin-gluten-alergias/,low,UNVERIFIED,
+milestones,gâteau baptême granby,fr,transactional,/gateaux-personnalises-granby/,low,https://rosegateaux.com/,Pillar section
+milestones,gâteau première communion,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Apr–May (owner plan)
+milestones,gâteau shower de bébé granby,fr,transactional,/gateaux-personnalises-granby/,low,https://www.rosegateaux.com/shower-de-bebe.html,Rival uses « shower de bébé »
+milestones,gâteau dévoilement sexe bébé,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,Plan v0b spoke
+milestones,gâteau retraite,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,
+milestones,gâteau bal des finissants,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,May–June
+milestones,torta de bautizo primera comunión,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,
+visitors,café et pâtisserie près du zoo de granby,fr,local,/en-visite-a-granby/,medium,https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby,"L5; seasonal; Zoo >500k summer visitors (Zoo release, undated)"
+visitors,bakery near granby zoo,en,local,/en/visiting-granby/,medium,https://www.travelprofy.com/montreal/granby-zoo,L8; Montréal→Zoo ~1 h 12 min
+visitors,where to eat near granby zoo,en,local,/en/visiting-granby/,medium,UNVERIFIED,
+visitors,dónde comer cerca del zoo de granby,es,local,/es/visita-granby/,low,UNVERIFIED,
+visitors,pique-nique zoo de granby,fr,informational,/en-visite-a-granby/,low,UNVERIFIED,Picnic boxes only if offered
+delivery,livraison gâteau granby,fr,transactional,/commander/,medium,https://www.ubereats.com/ca/category/granby-qc/bakery,CONDITIONAL: no delivery evidence for Coco Vanille; answer in FAQ either way
+delivery,livraison pâtisserie granby,fr,transactional,/commander/,low,https://www.ubereats.com/ca/category/granby-qc/dessert,
+delivery,livraison gâteau bromont,fr,transactional,/commander/,low,https://rosegateaux.com/,City pages only with real delivery + local proof
+delivery,cake delivery granby,en,transactional,/en/order/,low,UNVERIFIED,
+reviews,pâtisserie granby avis,fr,commercial,/,medium,https://www.tripadvisor.ca/Restaurant_Review-g182165-d27188801-Reviews-Patisserie_Coco_Vanille-Granby_Quebec.html,Review count + date in key-facts block
+reviews,avis pâtisserie coco vanille,fr,navigational,/a-propos/,low,https://threebestrated.ca/bakeries-in-granby-qc,B1
+latino,torta de quinceañera granby,es,transactional,/es/quinceanera/,low,https://www.ledevoir.com/actualites/societe/763253/immigration-de-refugies-colombiens-a-entrepreneurs-granbyiens,CONDITIONAL; Colombian community documented (Le Devoir)
+latino,pastel de quince años,es,transactional,/es/quinceanera/,low,UNVERIFIED,
+latino,cuánto cuesta una torta de quinceañera en quebec,es,informational,/es/quinceanera/,low,UNVERIFIED,I10
+latino,torta tres leches granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Product idea only [[FACT NEEDED: owner]]
+latino,ponqué granby,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,
+latino,bizcocho de cumpleaños,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,Regional variant: body once
+latino,postres para la novena de aguinaldos,es,transactional,/es/navidad/,low,https://www.granbyexpress.com/actualites/plus-de-3500-immigrants-adoptent-granby/,"16–24 Dec; 535 Colombian-born residents (2021, press)"
+latino,día de las velitas postres,es,informational,/es/navidad/,low,UNVERIFIED,7 Dec
+latino,torta amor y amistad,es,transactional,/es/,low,UNVERIFIED,3rd Saturday of Sept (owner plan)
+exclude,gâteau crème glacée granby,fr,transactional,none,medium,https://granby.maitreglacier.com/categorie-produit/gateaux-2/,Maître Glacier (Granby HQ) owns it; not our product
+exclude,gâteau cru végane granby,fr,transactional,none,low,https://www.lescrudelices.ca/menu,Les Crudélices niche
+exclude,beignes granby,fr,local,none,low,https://www.pagesjaunes.ca/bus/Quebec/Granby/Tim-Hortons/101552414.html,Tim Hortons territory
+brand-vanilla,vanille de madagascar ou tahiti,fr,informational,/journal/tout-sur-la-vanille/,low,UNVERIFIED,Optional brand pillar (plan v0b); GEO association with the name
