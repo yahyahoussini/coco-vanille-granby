@@ -53,6 +53,7 @@ Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in
 | `16b-admin-tech-subdomain.md` | Admin stack options A–G (Option B recommended), subdomain routing, noindex, real time, PWA, printing, security checklist, integration surfaces, JavaScript sketches | first search refused · Verification log (3 confirmed, 3 corrected, 16 unverified) |
 | `17-vps-self-hosting-and-domain.md` | VPS architecture and sizing, nginx, blue/green deploys, staging, CDN decision, Loi 25 data location, Canadian providers, backups, operations, email, domain and DNS, monthly cost | ~30 + 6 · Verification log |
 | `18-dated-claims-verification.md` | 22 dated or risky plan claims with verdicts, owner self-tests, required plan changes | 18 + 12 · adversarial pass + Completion pass |
+| `research/19-build-workflow-and-requirements.md` | How the build runs (repo → CI → staging → VPS), the build phases W0–W18, and everything required from Yahya by week |
 | `plan-v1-ranking-stack.md` | Main owner plan: the 21-layer Ranking Stack adapted to Coco Vanille, 30-prompt set, gates, timeline | owner input |
 | `plan-v0a-master-plan.md` | Owner master plan: build, local dominance, ads-ready signals, social, Coco Studio | owner input |
 | `plan-v0b-multilingual-local-domination.md` | Owner plan: multilingual layer and the 8 foundations of local domination | owner input |
