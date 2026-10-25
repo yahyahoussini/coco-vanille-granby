@@ -25,13 +25,13 @@ WORKDIR /app
 # only what the standalone trace keeps. The swc compilers are build-only (the trace drops them).
 FROM base AS prod-deps
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,target=/root/.npm,sharing=locked \
     npm ci --omit=dev --no-audit --no-fund \
  && rm -rf node_modules/@next/swc-*
 
 FROM base AS build
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,target=/root/.npm,sharing=locked \
     npm ci --no-audit --no-fund
 COPY . .
 ARG BUILD_DATABASE_URI=""
