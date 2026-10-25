@@ -1,6 +1,6 @@
 # Coco Vanille × The Ranking Stack — Integrated Build and SEO · AEO · GEO Plan (v1, owner's research)
 
-> Stored as provided by Yahya on 2026-10-25. Only fixes: words split by copy-paste were rejoined, and the `||` operators lost in the JavaScript snippet were restored. The snippet was truncated in the original; the cut point is marked. Everything else is verbatim in substance. Review and corrections live in `research/12-plan-review.md`.
+> Stored as provided by Yahya on 2026-10-25. Formatting only; content unchanged. Claims are reviewed in research/12-plan-review.md and research/18-dated-claims-verification.md.
 
 The Ranking Stack is now the backbone of the plan. Each of its 21 layers gets:
 
@@ -515,6 +515,235 @@ document.addEventListener("click", (event) => {
     language: document.documentElement.lang,
   });
 });
-// Internal buttons declare their event: <a href="/commander/" data-event="order_
-// [snippet truncated here in the original paste; sections §12–§16 referenced above were not included]
+// Internal buttons declare their event: <a href="/commander/" data-event="order_click">
 ```
+
+## 12. rank-first × the build: CI, jobs and new Studio modules
+
+CI pipeline:
+
+- On every pull request: next build → preview deploy → `npm run gate` against the preview → Lighthouse CI → Playwright end-to-end tests. Merge only when green. `npm run gate` runs:
+  - generate
+  - audit
+  - links
+  - images
+  - render-diff
+  - schema
+  - hreflang
+- On every deploy: `npm run check`, `npm run crawlers`.
+- On every publish: a Payload hook pings IndexNow and refreshes the cached pages.
+
+```js
+// Payload collection hook — on publish: IndexNow for every language version + refresh the cache
+hooks: {
+  afterChange: [async ({ doc }) => {
+    if (doc._status !== 'published') return;
+    const urls = await translationGroupUrls(doc); // fr/en/es URLs that actually exist
+    await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ host: HOST, key: KEY, keyLocation: `https://${HOST}/${KEY}.txt`, urlList: urls }),
+    });
+    await revalidateUrls(urls);
+  }],
+},
+```
+
+| rank-first command | Runs | Shows up in Studio |
+|---|---|---|
+| `init.mjs --brand "Pâtisserie Coco Vanille" --service pâtisserie --city Granby --domain …` | Once | — |
+| `npm run gate` | CI, every pull request | Gates |
+| check · crawlers · indexnow | Every deploy / publish | Gates, Intégrations |
+| cwv | Nightly (plus our own real-user data) | Recherche › Technique |
+| serp · ai · crawl · gap · market | Monday 6 a.m. | Scoreboard, Battle map, Snippet loop |
+| gsc -- striking / cannibal / ctr / links | Weekly | Striking-distance queue |
+| ga4 -- ai / leads · weekly · dashboard | Monday | Monday report, Analytique |
+| fresh | Weekly | Refresh queue (pages > 180 days old or with stale facts) |
+| study | Quarterly | Own data |
+| gsc-diff.mjs + DROP mode | On alert | Diagnostics |
+| feed.mjs · programmatic.mjs | When catalogue or pages change | Publicité (feeds), page-creation guardrail |
+| log-bots.mjs | Monthly | Visibilité IA › crawler log |
+
+Seven Studio modules taken from the stack:
+
+- Gates: all 21 layers, with pass/fail status, last run, evidence and owner.
+- Scoreboard: the definition of first, one row per week, with the 4-week trend.
+- Battle map: each prompt → who currently owns the result, snippet, AI citation and map pack → our counter-move → status.
+- Snippet loop: the 10 targets, with day-7 and day-14 results.
+- Mentions: mention counts, "best of" list coverage, pitches, videos.
+- Own data (« Données maison »): statistics from orders for the "Ce qu'on a mesuré" sections and the data studies.
+- Diagnostics:
+  - the one-hour protocol and DROP mode
+  - a log of reporting changes
+  - a "rollout in progress, don't draw conclusions" banner during Google core or spam updates
+  - an experiments log (one change at a time, 14-day wait, comparison pages)
+
+```json
+{ "layer": 5, "gate": "Every crawler in the stack table gets 200 on key pages",
+  "check": "crawler-access.mjs", "schedule": "after each deploy + Fridays",
+  "status": "pass", "lastRun": "2026-10-23T06:00:00-04:00",
+  "evidence": "reports/crawler-access/2026-10-23.json" }
+```
+
+If your agency will reuse Studio for other clients (Layer 20), add a `tenant_id` to the data model now. It's cheap today and expensive later.
+
+## 13. rank-first localization patch for Québec
+
+| Area | Stack default (Morocco) | Coco Vanille setting |
+|---|---|---|
+| Languages | fr-MA, ar-MA (right-to-left), Darija | fr-CA at the root, /en/, /es/; Québécois phrasing in prompts and FAQs |
+| Templates | FR + AR (right-to-left) | FR, EN, ES (left-to-right); keep CSS logical properties |
+| Primary action | WhatsApp | Order online or « Créer mon gâteau », then phone; WhatsApp on Spanish pages only |
+| Law | 09-08 (CNDP), 31-08 | Loi 25 (CAI), LPC, Competition Act, CASL, Loi 96 |
+| Trademark | OMPIC | CIPO |
+| Currency / formats | MAD | CAD; 12,50 $ / $12.50; 14 h / 2 p.m. |
+| Google profile name rule | One script | One language: no "Pâtisserie Coco Vanille – Coco Vanille Bakery" |
+| Directories | Telecontact, Charika, Avito | See below |
+| Media | Hespress, Le360… | La Voix de l'Est, La Tribune, ICI Estrie, Narcity Québec, Tastet, Caribou, Bonjour Québec |
+| Calendar | Ramadan, Eids, summer return of Moroccans abroad | Québec calendar (§14) + Latin American moments (+ Eid only if demand is confirmed) |
+| Market facts | StatCounter Morocco | StatCounter Canada [verify-CA]; AI Overviews / AI Mode in French and English [verify-CA] |
+| Grid location | Casablanca | Granby, centred on the shop; extra checks from Montréal, Sherbrooke, Bromont, Burlington VT |
+| Schema type | AutoRental | Bakery (+ Product/Offer, Person) |
+| New audit.mjs rules | — | See below |
+| Docs kit | FR/AR | Localize 03 review messages (FR/EN/ES), 04 media pitch, 05 Google profile checklist (Québec holidays), 06 directories and lists, content calendar, contract clauses |
+
+Québec directories:
+
+- PagesJaunes, Yelp, TripAdvisor, Foursquare
+- Apple Business, Bing Places, Facebook
+- Le Panier Bleu, Tourisme Cantons-de-l'Est, Chambre de commerce Haute-Yamaska
+- wedding vendor directories, and delivery apps if used
+
+Confirm the list against the actual top-30 results.
+
+New audit.mjs rules:
+
+- Loi 96 French parity
+- allergen block present on every product page
+- prices written as text
+- hreflang trio (fr/en/es)
+- no PDF or image-only menus
+- no [[FACT NEEDED]] marker left
+
+## 14. Playbooks: Québec, the bakery trade, visitors, calendar
+
+Country row (stack format):
+
+- Search engines: Google dominant; Bing a stronger second than in Morocco [verify-CA].
+- AI answers: AI Overviews and AI Mode [verify-CA: French and English].
+- Ads inside AI answers: [verify-CA, re-check quarterly].
+- Platforms that matter:
+  - Google Maps; Apple Maps (iPhone-heavy market)
+  - Facebook (very high use in Québec), Instagram
+  - TikTok [regulatory status]
+  - Yelp (feeds Apple Maps), TripAdvisor (visitors), PagesJaunes
+  - Pinterest; delivery apps
+- Rules:
+  - Loi 25, Loi 96, LPC, CASL
+  - Competition Act (fake reviews, hidden fees)
+  - Ad Standards influencer disclosure
+
+| Industry | Money queries | Be present on | The page that wins | The trick |
+|---|---|---|---|---|
+| Pâtisserie | pâtisserie Granby · gâteau de fête Granby · gâteau personnalisé Granby · bûche de Noël Granby · bakery Granby · torta de cumpleaños Granby | Google profile (products with prices, weekly photos), Apple Business, Facebook, Instagram, TripAdvisor, Yelp | Products in HTML with prices, sizes, portions, lead times and allergens; dated price page; portion calculator | Publish prices (never "prix sur demande"); ask for the review the day after the party; name items the way people search ("gâteau de fête", "chocolatine") |
+| Wedding cakes | gâteau de mariage Cantons-de-l'Est · prix par portion · wedding cake Eastern Townships | Google profile, Instagram, Pinterest, wedding vendor lists that rank, venue partner pages | Packages with price per portion, tasting process, booking lead time, real weddings | Price per portion on the first screen; wedding page refreshed by January; real-wedding stories credited to venues and photographers |
+| Online shop (pickup / local delivery) | commander gâteau en ligne Granby · boîte de pâtisseries livraison Granby | Merchant Center (when eligible), Instagram, Facebook | Product pages with price, availability, zones and lead times, perishable no-return policy, terms of sale (LPC) | Answer "for when?" and "for how many people?" on every product page; keep feed availability in sync with real capacity |
+
+Visitors searching from elsewhere (the stack's "cross-border" section, adapted):
+
+- Zoo families from Montréal, Ontario and Vermont plan ahead.
+- Check rankings from Montréal, Toronto and Burlington VT, not only from Granby.
+- Publish a « En visite à Granby / Visiting Granby » page:
+  - distance from the Zoo and parking
+  - pre-order for pickup on arrival
+  - foreign cards accepted
+  - picnic boxes
+- Refresh it in spring.
+- Wedding couples from Montréal search by region ("Cantons-de-l'Est"), not by town.
+
+Demand calendar. Compare each month with the same month last year before calling it a ranking drop.
+
+| Period | Demand that peaks | Get ready by |
+|---|---|---|
+| Galette des rois (Jan 6) | Galettes | Early December |
+| Saint-Valentin | Heart-shaped cakes, macarons | Early January |
+| Temps des sucres (Mar–Apr) | Maple pastries | February |
+| Pâques · Fête des Mères (2nd Sunday of May) | Chocolate, cakes, boxes | 6–8 weeks before |
+| Wedding season (June–Sept) | Wedding cakes | Planning season, January–March |
+| Fête nationale, construction holiday, Zoo season | Picnic boxes, visitors | May |
+| Rentrée · corporate (September) | Office boxes | August |
+| Action de grâce · Halloween | Pies, themed treats | September |
+| Noël & Fêtes | Bûches | October (pre-orders Nov 1) |
+| Community moments | Quinceañera (year-round), Amor y Amistad (3rd Saturday of September), Novena (Dec 16–24), Eid al-Fitr ≈ Mar 10, 2027 [validate demand] | 3–4 weeks before |
+
+## 15. Tools and cost for this project (stack prices as of Sep 28, 2026, USD)
+
+| Stage | Add | ≈ Monthly |
+|---|---|---|
+| Weeks 1–6 | Free core stack (see below) + rank-first in manual mode | $0 |
+| From week 7 | SerpApi Starter ($25) + AI API keys (pay per use) + Local Falcon ($24.99) + AlsoAsked ($12) | ≈ $62 + AI usage |
+| Optional | Otterly.AI ($29, covers 15 prompts, as a second opinion); Screaming Frog licence (£199/yr; the free 500-URL version is enough for this site) | + $29–50 |
+
+Free core stack:
+
+- Search Console, Bing Webmaster Tools, GA4, Clarity, Data Studio
+- PageSpeed Insights / Lighthouse, Rich Results Test
+- Google profile, Apple Business, Bing Places
+- Keyword Planner, Google Trends
+- Ahrefs Webmaster Tools, Screaming Frog (free up to 500 URLs)
+- Google Alerts, Merchant Center
+
+The stack's rule still applies: tools don't rank sites; the weekly rhythm does.
+
+## 16. Corrections applied to our earlier plan
+
+| Earlier plan | Now |
+|---|---|
+| "Definition of done" based on grid % and AI mention % | The stack's definition of first on 30 prompts over 4 weekly runs; the grid stays as the Layer 12 gate |
+| AI prompt panel run monthly | Weekly runs, judged on 4-week trends |
+| FAQ rich results limited to government and health sites | Not shown at all since May 7, 2026; keep FAQ content in `<details>`, skip the markup effort |
+| Apple Business Connect | Apple Business (since April 14, 2026) |
+| Looker Studio | Data Studio |
+| llms.txt as a launch item | Optional, lowest priority (Google ignores it) |
+| AI traffic tracked with a custom regex | GA4 "AI Assistant" channel, with the regex as a backstop |
+| Review replies within 48 h | Within 24 h |
+| Weekly review count posted on the kitchen board | Removed: no staff review targets or quotas (policy since April 2026) |
+| robots.txt "allow all" | Plus a Content-Signal line; firewall/CDN checked against the crawler table; never block "Training" where it also blocks Googlebot |
+| Positioning sentence with adjectives | Category sentence with no adjectives; qualities are proven on the page, not claimed |
+| Agentic checkout as a near-term horizon | Instant Checkout limited to approved partners; Google's commerce protocol is US-first with Canada next: keep product data clean, watch, don't build yet |
+| "ChatGPT search uses Bing" | Third-party search providers (Microsoft among them) + OpenAI's own crawler, OAI-SearchBot |
+| Primary category "Pastry shop" by default | Chosen from a competitor category audit, then tested |
+| Full build launches at week 12 | Content site by week 6; ordering + Studio by weeks 12–14 |
+| Heavy emphasis on structured data | Lean, valid and true; every value visible on the page |
+| "Seed the 3 attributes everywhere" | Authentic only, through our own channels and earned media (Google warns against inauthentic mentions) |
+
+## 17. Verify for Canada before the baseline week
+
+- StatCounter Canada: Google and Bing shares.
+- AI Overviews and AI Mode availability in Canada, in French and English.
+- Whether ChatGPT ads or AI Overviews ads run in Canada.
+- Apple Business and Bing Places features for Canada.
+- TikTok's regulatory status in Canada.
+- Timing of Google's commerce protocol rollout in Canada.
+- Which crawlers our host's firewall currently challenges (Vercel or Cloudflare).
+
+## Next steps
+
+Owner decisions:
+
+- the core business behind the category sentence
+- the name spelling (Coco Vanille or Cocovanille)
+- the beachhead category
+
+Then:
+
+- Start weeks 1–2: baseline, consoles, battle map, NAP unification, refused-tactics clause.
+- Apply the rank-first Québec patch.
+- Add the Gates and Scoreboard collections to Payload.
+
+I can generate any of these next:
+
+- prompts.csv with the scoring sheet
+- the 21-gate register as JSON for Studio
+- the Québec directory and media lists
+- the FR/EN/ES page templates that pass audit.mjs
