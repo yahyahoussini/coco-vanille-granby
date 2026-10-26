@@ -1,6 +1,6 @@
 // Studio login, roles and the shared-tablet PIN switch (16 §1.1, §2.2, §3.0; 16b §2, §4).
 // Prerequisites (dev database): npm run seed, SEED_DEMO=true npm run seed:demo, then
-//   SEED_DEMO=true PAYLOAD_CONFIG_PATH=src/payload.config.js npx payload run src/seed/studio-demo.js
+//   SEED_DEMO=true npm run seed:studio-demo   (SEED_DEMO=clean for both demo seeds removes them)
 // Run: npx playwright test --project=admin
 import { test, expect } from '@playwright/test'
 import { raw, PUBLIC_URL, ADMIN_URL } from '../support/site.js'
