@@ -45,6 +45,10 @@ test('public host: apex canonical in one hop, private paths 404, long cache on /
   const statics = blocks.find((b) => b.match === '^~ /_next/static/')
   assert.match(statics.body, /max-age=31536000, immutable/)
   assert.match(conf, /proxy_pass http:\/\/coco_production_web;/)
+  // Uploads straight from disk, but never the customers' request photos (Loi 25).
+  const media = blocks.find((b) => b.match === '^~ /media/')
+  assert.match(media.body, /alias \/opt\/coco\/production\/media\/;/)
+  assert.match(blocks.find((b) => b.match === '^~ /media/demandes/').body, /return 404;/)
   assert.match(nginx('snippets/coco-proxy.conf'), /proxy_set_header Host \$host;/)
   assert.match(nginx('snippets/coco-proxy.conf'), /proxy_set_header X-Real-IP \$remote_addr;/)
 })
@@ -74,6 +78,7 @@ test('staging pair: basic auth and noindex on both hosts', () => {
   const conf = nginx('sites/staging.cocovanillegranby.com.conf')
   assert.equal((conf.match(/auth_basic_user_file \/etc\/nginx\/coco\/staging\.htpasswd;/g) || []).length, 2)
   assert.equal((conf.match(/add_header X-Robots-Tag "noindex, nofollow, noarchive" always;/g) || []).length, 2)
+  assert.match(locations(conf).find((b) => b.match === '^~ /media/demandes/').body, /return 404;/)
 })
 
 test('unknown hosts and the raw IP get nothing', () => {

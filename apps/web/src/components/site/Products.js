@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { t, money, longDate } from '@/lib/i18n'
 import { containsMarker } from '@/lib/facts'
+import { mediaFile } from '@/lib/media'
 import { getOfferStates, getShop } from '@/lib/data'
 import { Fact } from './Fact'
 import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, offerBadge } from './offer'
@@ -11,17 +12,18 @@ export const colon = (locale) => (locale === 'fr' ? '\u00a0:' : ':')
 export const productPath = (p, locale) => (p?.category?.slug && p?.slug ? `${prefixFor(locale)}/${p.category.slug}/${p.slug}/` : null)
 
 // Real photos only (v1 L19): alt from the media record, intrinsic size always set (no layout shift).
-export function Photo({ media, size = 'card', priority = false, className }) {
-  if (!media || typeof media !== 'object' || !media.url) return null
-  const variant = media.sizes?.[size]?.url ? media.sizes[size] : media
-  if (!variant.width || !variant.height) return null
+// Served from /media/<file> on the public host (lib/media.js), never Payload's /api URL.
+export function Photo({ media, size = 'card', priority = false, className, lang }) {
+  const file = mediaFile(media, size)
+  if (!file?.width || !file?.height) return null
   return (
     <img
       className={className}
-      src={variant.url}
+      src={file.path}
       alt={media.alt || ''}
-      width={variant.width}
-      height={variant.height}
+      lang={lang}
+      width={file.width}
+      height={file.height}
       loading={priority ? 'eager' : 'lazy'}
       fetchPriority={priority ? 'high' : undefined}
       decoding="async"
@@ -32,7 +34,7 @@ export function Photo({ media, size = 'card', priority = false, className }) {
 // « La coupe »: the whole cake, then the cross-section on hover or keyboard focus. Pure CSS, ready for
 // the owner's photos (first = outside, second = the cut). One photo → a plain figure.
 export function LaCoupe({ photos = [], caption, locale }) {
-  const [outside, inside] = photos.filter((p) => p && typeof p === 'object' && p.url)
+  const [outside, inside] = photos.filter((p) => mediaFile(p))
   if (!outside) return null
   if (!inside) {
     return (

@@ -65,3 +65,20 @@ test.describe('health check on both hosts (17 §12.2)', () => {
     })
   }
 })
+
+test.describe('uploads on the public host (/media/)', () => {
+  test('request photos and anything outside the media folder answer 404', async () => {
+    for (const path of ['/media/demandes/demande-1.jpg', '/media/%2e%2e/.env', '/media/..%2fpackage.json', '/media/.cache.png', '/media/notes.txt']) {
+      const res = await raw(`${PUBLIC_URL}${path}`)
+      expect(res.status, path).toBe(404)
+    }
+  })
+
+  test('public pages reference uploads as /media/<file>, never through /api', async () => {
+    for (const path of ['/', '/carte/', '/gateaux/']) {
+      const res = await raw(`${PUBLIC_URL}${path}`)
+      expect(res.body, path).not.toMatch(/\/api\/media\//)
+      for (const m of res.body.matchAll(/<img[^>]+src="([^"]+)"/g)) expect(m[1], path).toMatch(/^\/media\/[^/]+$/)
+    }
+  })
+})

@@ -22,7 +22,7 @@ VPS (Québec) · nginx :80/:443 ──► 127.0.0.1:3001|3011 web-blue|green   (
 | `apps/web/scripts/rank-config.mjs` | `site.config.json` for the rank-first tools, from `src/lib/routes.js` and `data/facts.json` |
 | `infra/docker-compose.yml` | One environment: db, migrate, web/studio × blue/green, worker |
 | `infra/.env.example` | Every variable, commented. Copied to `/opt/coco/<env>/.env` |
-| `infra/nginx/` | `conf.d/coco.conf` (log format, rate limits, gzip), `snippets/` (TLS, HSTS, proxy), `sites/` (public, admin, staging pair, 444 default), `html/50x.html` |
+| `infra/nginx/` | `conf.d/coco.conf` (log format, rate limits, gzip), `snippets/` (TLS, HSTS, proxy), `sites/` (public, admin, staging pair, 444 default), `html/50x.html`. The public host serves uploads from `MEDIA_DIR` at `/media/<file>` (the URLs the templates write, `src/lib/media.js`) and 404s `/media/demandes/` (customer request photos, Studio only); `src/app/media/[...file]/route.js` does the same when Node serves it (dev, standalone) |
 | `infra/scripts/` | `harden-vps.sh`, `install-nginx.sh`, `deploy.sh`, `rollback.sh`, `retire.sh`, `backup.sh`, `restore-test.sh`, `nginx-test.sh`, `lib.sh` |
 | `infra/systemd/` | `coco-backup@`, `coco-restore-test@`, `coco-image-prune`, `coco-reboot-window` (service + timer) |
 | `.github/workflows/` | `ci.yml`, `deploy-staging.yml`, `deploy-prod.yml`, `weekly.yml` |
@@ -196,6 +196,5 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 
 - The worker is a stub that exits after start-up, so Docker restarts it in a loop until the M2 worker keeps running.
 - `/svc/revalidate` (17 §12.3) does not exist yet; nginx already restricts it to local callers.
-- Public pages must reference uploads as `https://cocovanillegranby.com/media/<file>`: the public host serves `/media/` from disk and 404s `/api`.
 - `next.config.mjs` still has Next's compression on; nginx asks Node for plain bodies and compresses itself, so nothing is compressed twice. `deploymentId` and a shared `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (17 §2) are not wired into the build yet.
 - `apps/web/reports/` (gate output, default `--out`) is not in `apps/web/.gitignore` yet.

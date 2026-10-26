@@ -3,6 +3,7 @@ import { t, clock, longDate } from '@/lib/i18n'
 import { pathFor, SITE_ORIGIN } from '@/lib/routes'
 import { getProducts, getCategories, getAllergens, payloadClient } from '@/lib/data'
 import { productNode } from '@/lib/schema'
+import { mediaUrl } from '@/lib/media'
 import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
@@ -540,7 +541,7 @@ function ProductTemplate({ product, offer, shop, locale, business }) {
     </article>
   )
 }
-ProductTemplate.schema = async ({ product, offer, url }) => [productNode({ product, offer, url })]
+ProductTemplate.schema = async ({ product, offer, url }) => [productNode({ product, offer, url, imageUrls: (product.photos || []).map((p) => mediaUrl(p, 'hero')).filter(Boolean) })]
 
 // ---------- Legal: identity boxes from the business global; translations say French prevails ----------
 const LEGAL_LABELS = {

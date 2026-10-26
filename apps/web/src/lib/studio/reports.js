@@ -4,11 +4,12 @@
 import { readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 
-export const reportsDir = () => resolve(process.env.REPORTS_DIR || join(process.cwd(), '..', '..', 'reports'))
+// turbopackIgnore: read at run time, never traced into the build output.
+export const reportsDir = () => resolve(/* turbopackIgnore: true */ process.env.REPORTS_DIR || join(/* turbopackIgnore: true */ process.cwd(), '..', '..', 'reports'))
 
 export async function readReport(name) {
   try {
-    const data = JSON.parse(await readFile(join(reportsDir(), name), 'utf8'))
+    const data = JSON.parse(await readFile(/* turbopackIgnore: true */ join(/* turbopackIgnore: true */ reportsDir(), name), 'utf8'))
     return Array.isArray(data) ? data : null
   } catch {
     return null
