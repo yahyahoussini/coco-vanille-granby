@@ -39,6 +39,8 @@ export function proxy(req) {
     }
     res.headers.set('X-Robots-Tag', NOINDEX)
     res.headers.set('Cache-Control', 'no-store, private')
+    // Studio and « Avancé » are never framed by another site (16b §4 #10).
+    res.headers.set('Content-Security-Policy', "frame-ancestors 'none'")
     return res
   }
 
