@@ -285,6 +285,14 @@ body.studio {
   background: var(--s-paper-sunk);
 }
 
+.btn[aria-current],
+.btn[aria-pressed='true'] {
+  background: var(--s-paper-dark);
+  border-color: var(--s-paper-dark);
+  color: var(--s-ink-on-dark);
+  text-decoration: none;
+}
+
 .btn-primary {
   inline-size: 100%;
   min-block-size: var(--s-tap-primary);
@@ -912,6 +920,11 @@ fieldset.field {
   inline-size: 100%;
   min-block-size: 80px;
   font-size: 1.125rem;
+}
+
+.file-input:focus-visible + label {
+  outline: 3px solid var(--s-focus);
+  outline-offset: 3px;
 }
 
 .photo-day img,

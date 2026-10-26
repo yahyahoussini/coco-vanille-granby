@@ -1,5 +1,32 @@
 // Studio e2e helpers. Needs the ordering demo and the Studio demo seeds (SEED_DEMO=true), see auth.spec.js.
 import { expect } from '@playwright/test'
+import { mkdirSync, rmSync, statSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
+// Payload adds a session to the user with a read-modify-write: two logins of the same account at the same
+// instant can drop one session. Real shops rarely do that; parallel test workers do, so sign-ins take turns.
+const LOCK = join(tmpdir(), 'coco-studio-e2e-signin.lock')
+export async function signInTurn(fn) {
+  for (let i = 0; i < 400; i++) {
+    try {
+      mkdirSync(LOCK)
+      break
+    } catch {
+      try {
+        if (Date.now() - statSync(LOCK).mtimeMs > 15_000) rmSync(LOCK, { recursive: true, force: true })
+      } catch {
+        // gone already
+      }
+      await new Promise((r) => setTimeout(r, 50))
+    }
+  }
+  try {
+    return await fn()
+  } finally {
+    rmSync(LOCK, { recursive: true, force: true })
+  }
+}
 
 export const OWNER = { email: 'proprio@exemple.test', password: 'coco-dev-only', pin: '0000' }
 export const LEA = { name: 'Léa (démo)', email: 'lea.demo@comptoir.invalid', password: 'lea-demo-only', pin: '1111' }
@@ -11,8 +38,10 @@ export async function login(page, who = OWNER, device = 'telephone') {
   await page.getByLabel('Courriel').fill(who.email)
   await page.getByLabel('Mot de passe').fill(who.password)
   await page.locator(`input[name="appareil"][value="${device}"]`).check({ force: true })
-  await page.getByRole('button', { name: 'Se connecter' }).click()
-  await page.waitForURL((url) => !url.pathname.startsWith('/connexion'))
+  await signInTurn(async () => {
+    await page.getByRole('button', { name: 'Se connecter' }).click()
+    await page.waitForURL((url) => !url.pathname.startsWith('/connexion'))
+  })
   await expect(page.locator('h1')).not.toHaveText('Coco Studio')
 }
 

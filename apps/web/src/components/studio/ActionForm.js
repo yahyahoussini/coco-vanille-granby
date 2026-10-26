@@ -32,7 +32,7 @@ export function ActionForm({ type, fields = {}, back = '/', pending = null, clas
     setBusy(false)
     if (r.code === 'step_up') return router.push(`/verifier/?retour=${encodeURIComponent(back)}`)
     if (r.code === 'login') return router.push(`/connexion/?retour=${encodeURIComponent(back)}`)
-    snack({ message: r.ok ? r.message : `Pas appliqué : ${r.message}`, tone: r.ok ? 'ok' : 'bad', undo: r.undo || null })
+    snack({ message: r.ok ? r.message : `Pas appliqué : ${r.message}`, tone: r.ok ? 'ok' : 'bad', undo: r.undo || null, link: r.data?.link || null })
     if (r.ok && r.data?.redirect) router.push(r.data.redirect)
     else router.refresh()
   }

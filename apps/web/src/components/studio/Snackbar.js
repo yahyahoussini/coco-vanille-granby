@@ -56,7 +56,11 @@ export function Snackbar() {
           Annuler
         </button>
       )}
-      {snack?.extra}
+      {snack?.link && (
+        <a className="btn" href={snack.link.href} onClick={() => setSnack(null)}>
+          {snack.link.label}
+        </a>
+      )}
     </div>
   )
 }

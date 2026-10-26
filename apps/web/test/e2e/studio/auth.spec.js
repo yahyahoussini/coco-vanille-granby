@@ -4,7 +4,7 @@
 // Run: npx playwright test --project=admin
 import { test, expect } from '@playwright/test'
 import { raw, PUBLIC_URL, ADMIN_URL } from '../support/site.js'
-import { OWNER, LEA, MARC, AGENCY, login, action, stepUp } from './support.js'
+import { OWNER, LEA, MARC, AGENCY, login, action, stepUp, signInTurn } from './support.js'
 
 test.describe('admin host', () => {
   test('every Studio response is noindex and never cached, error pages included', async () => {
@@ -92,7 +92,10 @@ test.describe('shared tablet', () => {
     await page.getByLabel('NIP à 4 chiffres').fill('9999')
     await page.getByRole('button', { name: 'Valider' }).click()
     await expect(page.locator('.error-summary')).toContainText('NIP incorrect')
-    await page.getByLabel('NIP à 4 chiffres').fill(LEA.pin)
+    await signInTurn(async () => {
+      await page.getByLabel('NIP à 4 chiffres').fill(LEA.pin)
+      await page.waitForURL((url) => !url.pathname.startsWith('/qui'))
+    })
     await expect(page.locator('h1')).toHaveText('Aujourd’hui')
     await expect(page.locator('.st-top')).toContainText(LEA.name)
     await expect(page.getByRole('navigation', { name: 'Écrans' })).toContainText('Vitrine')
