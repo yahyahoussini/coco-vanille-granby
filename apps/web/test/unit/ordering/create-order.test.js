@@ -157,7 +157,7 @@ describe('sendQuote', () => {
     assert.deepEqual([q.subtotalCents, q.gstCents, q.qstCents, q.totalCents, q.depositCents, q.balanceCents], [18000, 0, 0, 18000, 5400, 12600])
     assert.equal(new Date(q.validUntil).getTime() - NOW.getTime(), 72 * 3600 * 1000)
     assert.equal(r.request.status, 'quoted')
-    assert.match(r.paymentLink, /^http:\/\/localhost:3000\/svc\/p\/[\w-]{16}\/$/)
+    assert.match(r.paymentLink, /^http:\/\/localhost:3000\/svc\/p\/[\w-]{12}\/$/)
   })
 
   test('no deposit percent anywhere → refused (no default, 10 §1.2); no tax class → refused', async () => {

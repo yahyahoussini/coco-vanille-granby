@@ -236,7 +236,7 @@ export async function sendQuote(payload, { requestId, totalCents, depositPercent
       if (used + units > limit) return fail('day_full', { date: day, category, limit, used })
     }
     const totals = orderTotals([{ cents: totalCents, qty: 1, taxClass: cls }], { supplyDate: day, depositPercent: pct >= 100 ? null : pct })
-    const accessToken = request.accessToken || newToken(12)
+    const accessToken = request.accessToken || newToken(9)
     const paymentLink = `${publicOrigin()}/svc/p/${accessToken}/`
     const validUntil = new Date(new Date(now).getTime() + hours * 3600 * 1000).toISOString()
     const timeline = [...(Array.isArray(request.timeline) ? request.timeline : []), timelineEntry('quoted', { by: req?.user?.id ?? null, at: now, note: `Soumission ${totalCents} ¢ avant taxes, acompte ${pct} %` })]

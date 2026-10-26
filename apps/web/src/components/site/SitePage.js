@@ -154,7 +154,7 @@ export async function SitePage({ locale, segments = [], query }) {
 }
 
 // Templates that read the query string have their own dynamic route (src/app/(site-*)/…/calculateur…/page.js).
-export const DYNAMIC_TEMPLATES = ['calculator']
+export const DYNAMIC_TEMPLATES = ['calculator', 'order', 'box', 'checkout', 'thanks']
 
 export function staticParamsFor(locale) {
   if (!localeEnabled(locale)) return []

@@ -1,0 +1,623 @@
+/* Ordering pages: /commander/, « Ma boîte », checkout, payment, thanks. Same tokens as site.css (contrast-checked
+   pairs only), targets of 48 px or more, visible focus, chips instead of a tiny calendar (08 P14–P16). */
+
+.ordering .answer {
+  max-inline-size: var(--measure);
+}
+
+/* ---------- Forms ---------- */
+.order-form,
+.checkout-form {
+  max-inline-size: 44rem;
+  display: grid;
+  gap: var(--space-3);
+  margin-block: var(--space-3) var(--space-4);
+}
+
+.order-form fieldset,
+.checkout-form fieldset {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  padding: var(--space-3);
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.order-form legend,
+.checkout-form legend {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  font-weight: 560;
+  padding-inline: 0.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-inline-size: 0;
+}
+
+.field label {
+  font-weight: 650;
+}
+
+.field-optional {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.field-hint {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.field-error {
+  margin: 0;
+  color: var(--ink-fact);
+  font-weight: 650;
+}
+
+.field-error::before {
+  content: '⚠ ';
+}
+
+.field input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.field select,
+.field textarea {
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding: 0.6rem var(--space-2);
+  font: inherit;
+  font-size: max(16px, var(--step-0));
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--control-border);
+  border-radius: var(--radius-small);
+}
+
+.field textarea {
+  min-block-size: 7rem;
+  resize: vertical;
+}
+
+.field input[type='file'] {
+  min-block-size: var(--target);
+  font: inherit;
+}
+
+.field input[type='file']::file-selector-button {
+  min-block-size: var(--target);
+  margin-inline-end: var(--space-2);
+  padding-inline: var(--space-2);
+  font: inherit;
+  font-weight: 650;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.field .input-short {
+  inline-size: 9rem;
+}
+
+.field .input-date {
+  inline-size: min(100%, 14rem);
+}
+
+.has-error input,
+.has-error select,
+.has-error textarea,
+.field [aria-invalid='true'] {
+  border-color: var(--ink-fact) !important;
+}
+
+.field-row {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  align-items: start;
+}
+
+.check input {
+  inline-size: 28px;
+  block-size: 28px;
+  margin: 10px 0;
+  accent-color: var(--accent);
+}
+
+.check label {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target);
+  font-weight: 560;
+}
+
+.check .field-hint,
+.check .field-error {
+  grid-column: 2;
+}
+
+/* Honeypot: off screen, out of the tab order and of the accessibility tree. */
+.hp {
+  position: absolute;
+  inset-inline-start: -10000px;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+}
+
+.error-summary {
+  border: 2px solid var(--ink-fact);
+  background: var(--paper-notice);
+  border-radius: var(--radius-small);
+  padding: var(--space-2);
+}
+
+.error-summary-title {
+  font-weight: 700;
+  color: var(--ink-fact);
+  margin-block-end: 0.4rem;
+}
+
+.error-summary ul {
+  margin: 0;
+  padding-inline-start: 1.2rem;
+}
+
+.error-summary a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  color: var(--ink-fact);
+  font-weight: 650;
+}
+
+.order-form > .btn,
+.checkout-form > .btn,
+.pay-panel .btn {
+  justify-self: start;
+}
+
+.order-call {
+  margin: 0;
+}
+
+.order-call a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target);
+  font-weight: 650;
+}
+
+/* Live cake-message preview (decorative; the input holds the text). */
+.field-with-preview {
+  display: grid;
+  gap: var(--space-2);
+  align-items: end;
+}
+
+.cake-preview {
+  margin: 0;
+  max-inline-size: 240px;
+}
+
+.cake-preview svg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* ---------- Products ---------- */
+.order-products {
+  margin-block: var(--space-4);
+}
+
+.order-cutoff {
+  display: inline-flex;
+}
+
+.order-grid {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.order-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.order-card img {
+  border-radius: var(--radius-small);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.order-card-title {
+  margin: 0;
+}
+
+.order-card-title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.order-card-title a:hover {
+  text-decoration: underline;
+}
+
+.order-ready {
+  margin: 0;
+  font-weight: 650;
+}
+
+.order-ready.is-ready {
+  color: var(--ink-ok);
+}
+
+.order-add {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.order-add .field-qty input {
+  inline-size: 7rem;
+}
+
+.order-add .btn,
+.box-line .btn {
+  min-block-size: 52px;
+  padding-inline: var(--space-3);
+}
+
+/* ---------- « Ma boîte » ---------- */
+.box-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: 44rem;
+}
+
+.box-line {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+  display: grid;
+  gap: 0.6rem;
+}
+
+.box-line-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-weight: 650;
+}
+
+.box-line-forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+.box-line-forms form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+.box-line-forms .field input {
+  inline-size: 6.5rem;
+}
+
+.box-line .message-form {
+  display: grid;
+  gap: 0.6rem;
+  inline-size: 100%;
+}
+
+.box-line .message-form .field input {
+  inline-size: 100%;
+}
+
+.link-button {
+  min-block-size: var(--target);
+  padding-inline: 0.5rem;
+  font: inherit;
+  font-weight: 650;
+  color: var(--ink-link);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+/* Day and window chips: real links/radios, 48 px targets, the chosen one marked in text and shape. */
+.chips {
+  list-style: none;
+  margin: var(--space-2) 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: 56px;
+  min-inline-size: 7.5rem;
+  padding: 0.35rem 1rem;
+  border: 2px solid var(--control-border);
+  border-radius: 14px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.chip:hover {
+  border-color: var(--ink);
+}
+
+.chip .small {
+  font-weight: 400;
+}
+
+.chip[aria-current='true'] {
+  background: var(--paper-dark);
+  border-color: var(--paper-dark);
+  color: var(--ink-on-dark);
+}
+
+.chip[aria-current='true'] .small {
+  color: var(--ink-on-dark);
+}
+
+.chip[aria-current='true']::after {
+  content: '✓';
+  position: absolute;
+  inset-inline-end: 0.5rem;
+}
+
+.window-chips label.chip {
+  position: relative;
+  cursor: pointer;
+}
+
+.window-chips input {
+  position: absolute;
+  opacity: 0;
+  inline-size: 1px;
+  block-size: 1px;
+}
+
+.window-chips input:checked + label.chip {
+  background: var(--paper-dark);
+  border-color: var(--paper-dark);
+  color: var(--ink-on-dark);
+}
+
+.window-chips input:checked + label.chip .small {
+  color: var(--ink-on-dark);
+}
+
+.window-chips input:focus-visible + label.chip {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.window-chips fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.window-chips legend {
+  font-weight: 650;
+}
+
+/* ---------- Totals, summary, pickup code ---------- */
+.totals {
+  inline-size: min(100%, 26rem);
+  margin-block: var(--space-2);
+}
+
+.totals th,
+.totals td {
+  padding: 0.5rem 0;
+  border-block-start: 1px solid var(--line);
+  text-align: start;
+  font-weight: 500;
+}
+
+.totals td {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.totals .totals-total th,
+.totals .totals-total td {
+  font-weight: 750;
+  font-size: var(--step-1);
+}
+
+.summary-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-inline-size: 30rem;
+}
+
+.summary-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block: 0.5rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.summary-list {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.summary-list div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) 1fr;
+  gap: var(--space-2);
+}
+
+.summary-list dt {
+  font-weight: 650;
+}
+
+.summary-list dd {
+  margin: 0;
+}
+
+.review {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+
+.review h2 {
+  margin-block-start: 0;
+}
+
+.review a.edit {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target);
+}
+
+.pickup-code {
+  display: inline-grid;
+  justify-items: center;
+  background: var(--paper-raised);
+  border: 2px dashed var(--caramel);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+  margin-block: var(--space-2);
+}
+
+.pickup-code-label {
+  margin: 0;
+  font-weight: 650;
+}
+
+.pickup-code-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+/* ---------- In-app browser notice, payment ---------- */
+.iab-notice {
+  background: var(--paper-pistache);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  padding: var(--space-2);
+  max-inline-size: 44rem;
+  margin-block: var(--space-2);
+}
+
+.iab-notice p {
+  margin-block-end: 0.5rem;
+}
+
+.iab-notice .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.share-box {
+  max-inline-size: 44rem;
+}
+
+.share-box code {
+  overflow-wrap: anywhere;
+  font-size: var(--step--1);
+}
+
+.pay-panel {
+  max-inline-size: 36rem;
+  display: grid;
+  gap: var(--space-2);
+  margin-block: var(--space-3);
+}
+
+.pay-amount {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  margin: 0;
+}
+
+#payment-element {
+  min-block-size: 220px;
+}
+
+.pay-status {
+  min-block-size: 1.6em;
+}
+
+@media (min-width: 40rem) {
+  .field-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field-with-preview {
+    grid-template-columns: 1fr 240px;
+  }
+}
+
+@media (forced-colors: active) {
+  .chip,
+  .order-card,
+  .box-line,
+  .pickup-code {
+    border: 1px solid CanvasText;
+  }
+
+  .chip[aria-current='true'],
+  .window-chips input:checked + label.chip {
+    outline: 3px solid Highlight;
+  }
+}
