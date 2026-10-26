@@ -80,6 +80,16 @@ function InAppNotice({ iab, ua, url, locale }) {
   )
 }
 
+// Windows grouped by part of the day, so 30-odd chips stay scannable.
+function partsOfDay(windows) {
+  const groups = { morning: [], afternoon: [], evening: [] }
+  windows.forEach((w, i) => {
+    const h = Number(w.start.slice(0, 2))
+    groups[h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening'].push({ w, i })
+  })
+  return Object.entries(groups).filter(([, list]) => list.length)
+}
+
 function Hidden({ fields }) {
   return Object.entries(fields)
     .filter(([, v]) => v !== undefined && v !== null && v !== '')
@@ -200,7 +210,7 @@ export async function BoxTemplate({ locale, shop, query = {} }) {
                 <li key={d.date}>
                   <a className="chip" href={`${boxPath(locale, token)}?${Q.day}=${d.date}${all ? '&toutes=1' : ''}#boite-heure`} aria-current={selected?.date === d.date ? 'true' : undefined}>
                     {dayLabel(d.date, locale)}
-                    <span className="small">{c.left(d.windows.reduce((n, w) => n + w.remaining, 0))}</span>
+                    <span className="small">{c.slots(d.windows.length)}</span>
                   </a>
                 </li>
               ))}
@@ -226,17 +236,25 @@ export async function BoxTemplate({ locale, shop, query = {} }) {
             <input type="hidden" name={Q.day} value={selected.date} />
             <fieldset>
               <legend className="field-hint">{c.windowHint}</legend>
-              <ul className="chips">
-                {selected.windows.map((w, i) => (
-                  <li key={w.start}>
-                    <input type="radio" id={`plage-${i}`} name={Q.window} value={w.start} required defaultChecked={i === 0} />
-                    <label className="chip" htmlFor={`plage-${i}`}>
-                      {clock(w.start, locale)}
-                      <span className="small">{c.left(w.remaining)}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
+              {partsOfDay(selected.windows).map(([part, list]) => (
+                <div key={part}>
+                  <p className="chip-group-title" id={`plages-${part}`}>
+                    {c.parts[part]}
+                  </p>
+                  <ul className="chips" aria-labelledby={`plages-${part}`}>
+                    {list.map(({ w, i }) => (
+                      <li key={w.start}>
+                        <input type="radio" id={`plage-${i}`} name={Q.window} value={w.start} required defaultChecked={i === 0} />
+                        <label className="chip" htmlFor={`plage-${i}`}>
+                          {clock(w.start, locale)}
+                          {/* Scarcity only when it is real and close (02 §7): live count, last places only. */}
+                          {w.remaining <= 2 && <span className="small">{c.left(w.remaining)}</span>}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </fieldset>
             <button type="submit" className="btn btn-primary">
               {c.continue}
@@ -345,34 +363,6 @@ async function ReviewStep({ locale, business, box, day, start }) {
       {slot && totals && (
         <form method="post" action="/svc/commande/" className="checkout-form">
           <Hidden fields={{ locale, boite: box, jour: day, plage: slot.start }} />
-          <fieldset>
-            <legend>{c.you}</legend>
-            <div className="field-row">
-              <Field id="c-firstName" label={c.firstName} error={err('firstName')}>
-                <input id="c-firstName" name="firstName" type="text" required maxLength={60} autoComplete="given-name" defaultValue={values.firstName || ''} aria-invalid={err('firstName') ? 'true' : undefined} aria-describedby={describedBy('c-firstName', { error: err('firstName') })} />
-              </Field>
-              <Field id="c-lastName" label={c.lastName} optional optionalLabel={optionalLabel(locale)}>
-                <input id="c-lastName" name="lastName" type="text" maxLength={60} autoComplete="family-name" defaultValue={values.lastName || ''} />
-              </Field>
-            </div>
-            <div className="field-row">
-              <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')}>
-                <input id="c-email" name="email" type="email" required maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
-              </Field>
-              <Field id="c-phone" label={c.phone} hint={c.phoneHint} error={err('phone')}>
-                <input id="c-phone" name="phone" type="tel" required maxLength={30} autoComplete="tel" inputMode="tel" defaultValue={values.phone || ''} aria-invalid={err('phone') ? 'true' : undefined} aria-describedby={describedBy('c-phone', { hint: true, error: err('phone') })} />
-              </Field>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>{c.allergyTitle}</legend>
-            <Field id="c-allergyNote" label={c.allergy} hint={c.allergyHint} error={err('allergyNote')}>
-              <textarea id="c-allergyNote" name="allergyNote" rows={3} maxLength={500} aria-describedby={describedBy('c-allergyNote', { hint: true, error: err('allergyNote') })} />
-            </Field>
-            <p className="small">{c.allergyCall(business?.phoneDisplay)}</p>
-          </fieldset>
-
           <section className="review" aria-labelledby="recapitulatif">
             <h2 id="recapitulatif">{c.reviewTitle}</h2>
             <dl className="summary-list">
@@ -420,6 +410,35 @@ async function ReviewStep({ locale, business, box, day, start }) {
             <p>{c.cancelText(business?.phoneDisplay)}</p>
             <p className="small">{[facts.legalName || facts.name, facts.neq ? `NEQ ${facts.neq}` : null, facts.addressLine.fr, facts.phone, facts.email].filter(Boolean).join(' · ')}</p>
           </section>
+
+          <fieldset>
+            <legend>{c.you}</legend>
+            <div className="field-row">
+              <Field id="c-firstName" label={c.firstName} error={err('firstName')}>
+                <input id="c-firstName" name="firstName" type="text" required maxLength={60} autoComplete="given-name" defaultValue={values.firstName || ''} aria-invalid={err('firstName') ? 'true' : undefined} aria-describedby={describedBy('c-firstName', { error: err('firstName') })} />
+              </Field>
+              <Field id="c-lastName" label={c.lastName} optional optionalLabel={optionalLabel(locale)}>
+                <input id="c-lastName" name="lastName" type="text" maxLength={60} autoComplete="family-name" defaultValue={values.lastName || ''} />
+              </Field>
+            </div>
+            <div className="field-row">
+              <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')}>
+                <input id="c-email" name="email" type="email" required maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
+              </Field>
+              <Field id="c-phone" label={c.phone} hint={c.phoneHint} error={err('phone')}>
+                <input id="c-phone" name="phone" type="tel" required maxLength={30} autoComplete="tel" inputMode="tel" defaultValue={values.phone || ''} aria-invalid={err('phone') ? 'true' : undefined} aria-describedby={describedBy('c-phone', { hint: true, error: err('phone') })} />
+              </Field>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>{c.allergyTitle}</legend>
+            <Field id="c-allergyNote" label={c.allergy} hint={c.allergyHint} error={err('allergyNote')}>
+              <textarea id="c-allergyNote" name="allergyNote" rows={3} maxLength={500} aria-describedby={describedBy('c-allergyNote', { hint: true, error: err('allergyNote') })} />
+            </Field>
+            <p className="small">{c.allergyCall(business?.phoneDisplay)}</p>
+          </fieldset>
+
 
           <fieldset>
             <legend>{c.consentTitle}</legend>

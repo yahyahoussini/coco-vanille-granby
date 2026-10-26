@@ -37,6 +37,7 @@
 
 .field {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.3rem;
   min-inline-size: 0;
 }
@@ -66,9 +67,8 @@
   content: '⚠ ';
 }
 
-.field input:not([type='checkbox']):not([type='radio']):not([type='file']),
-.field select,
-.field textarea {
+/* :where() keeps this base rule at one class of specificity, so narrower inputs below can override it. */
+.field :where(input:not([type='checkbox'], [type='radio'], [type='file']), select, textarea) {
   inline-size: 100%;
   min-block-size: 52px;
   padding: 0.6rem var(--space-2);
@@ -86,6 +86,8 @@
 }
 
 .field input[type='file'] {
+  inline-size: 100%;
+  max-inline-size: 100%;
   min-block-size: var(--target);
   font: inherit;
 }
@@ -111,11 +113,9 @@
   inline-size: min(100%, 14rem);
 }
 
-.has-error input,
-.has-error select,
-.has-error textarea,
+.has-error :where(input, select, textarea),
 .field [aria-invalid='true'] {
-  border-color: var(--ink-fact) !important;
+  border-color: var(--ink-fact);
 }
 
 .field-row {
@@ -138,8 +138,8 @@
 }
 
 .check label {
-  display: flex;
-  align-items: center;
+  display: block;
+  padding-block: 0.7rem;
   min-block-size: var(--target);
   font-weight: 560;
 }
@@ -277,11 +277,18 @@
 
 .order-add {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 0.6rem;
+  align-items: end;
 }
 
-.order-add .field-qty input {
-  inline-size: 7rem;
+.order-add > .field:not(.field-qty) {
+  grid-column: 1 / -1;
+}
+
+.order-add .field.field-qty input,
+.box-line-forms .field input[type='number'] {
+  inline-size: 6.5rem;
 }
 
 .order-add .btn,
@@ -329,10 +336,6 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   align-items: end;
-}
-
-.box-line-forms .field input {
-  inline-size: 6.5rem;
 }
 
 .box-line .message-form {
@@ -394,6 +397,7 @@
 }
 
 .chip[aria-current='true'] {
+  padding-inline-end: 2rem;
   background: var(--paper-dark);
   border-color: var(--paper-dark);
   color: var(--ink-on-dark);
@@ -440,6 +444,24 @@
   border: 0;
   padding: 0;
   margin: 0;
+  min-inline-size: 0;
+}
+
+.window-chips .chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+}
+
+.window-chips .chip {
+  min-inline-size: 0;
+  inline-size: 100%;
+  align-items: flex-start;
+}
+
+.chip-group-title {
+  margin: var(--space-2) 0 0;
+  font-weight: 650;
+  color: var(--ink-soft);
 }
 
 .window-chips legend {
@@ -494,8 +516,7 @@
 
 .summary-list div {
   display: grid;
-  grid-template-columns: minmax(8rem, 12rem) 1fr;
-  gap: var(--space-2);
+  gap: 0.15rem;
 }
 
 .summary-list dt {
@@ -601,6 +622,11 @@
 @media (min-width: 40rem) {
   .field-row {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-list div {
+    grid-template-columns: minmax(8rem, 12rem) 1fr;
+    gap: var(--space-2);
   }
 
   .field-with-preview {
