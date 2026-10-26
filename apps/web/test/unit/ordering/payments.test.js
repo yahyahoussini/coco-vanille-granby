@@ -144,3 +144,18 @@ describe('Stripe webhook signature', () => {
     assert.throws(() => verifyWebhook(body, header, ''), { code: 'not_configured' })
   })
 })
+
+describe('Studio helpers', () => {
+  test('capacityOn and recordCounterPayment for a phone order', async () => {
+    const { capacityOn } = await import('../../../src/lib/ordering/create-order.js')
+    const { recordCounterPayment } = await import('../../../src/lib/payments/settle.js')
+    const NOW = local('2026-10-27', '10:00')
+    const payload = fakePayload({ globals: { shop: shop({ ordering: { enabled: false } }), business: {} }, collections: { products: [cake()], 'capacity-pools': pools(), orders: [], requests: [], messages: [] } })
+    const { order } = await createOrder(payload, { source: 'phone', items: [{ productId: 11, qty: 2 }], pickup: { date: '2026-10-31', windowStart: '11:00' }, customer: { firstName: 'Marc', phone: '4505550199' }, payment: { provider: 'counter' }, now: NOW })
+    assert.deepEqual(await capacityOn(payload, { date: '2026-10-31', category: 'gateaux', now: NOW }), { date: '2026-10-31', category: 'gateaux', limit: 6, used: 2 })
+    assert.ok(payload.store.messages.some((m) => m.template === 'order_confirmed' && m.channel === 'sms'))
+    const r = await recordCounterPayment(payload, { orderId: order.id, now: NOW })
+    assert.deepEqual([r.order.totals.balanceCents, r.order.payment.status, r.order.status], [0, 'paid', 'paid'])
+    assert.equal((await recordCounterPayment(payload, { orderId: order.id, now: NOW })).already, true)
+  })
+})

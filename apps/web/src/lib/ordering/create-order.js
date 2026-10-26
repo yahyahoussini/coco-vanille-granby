@@ -13,7 +13,7 @@ import { hasRole } from '../access.js'
 import { productLine, lineBlockers } from './lines.js'
 import { onlineState, earliestReady, dayAvailability, bookableDays, productOfferState } from './availability.js'
 import { closestWindows, isWithinHorizon } from './slots.js'
-import { productionDay, HOLD_MINUTES, capacityLimit, usedUnits } from './capacity.js'
+import { productionDay, HOLD_MINUTES, capacityLimit, usedUnits, capacitySummary } from './capacity.js'
 import { orderTotals } from './totals.js'
 import { taxBlocker } from './tax.js'
 import { cleanCustomer } from './customer.js'
@@ -207,6 +207,14 @@ export async function availableDays(payload, { items = [], now = new Date(), sou
 export async function offerStates(payload, products, { locale = 'fr', now = new Date(), source = 'web' } = {}) {
   const ctx = await engineContext(payload, { now })
   return new Map(products.map((p) => [p.id, productOfferState(p, ctx.shop, now, { locale, pools: ctx.pools, usage: ctx.usage, source })]))
+}
+
+// Studio « Capacité du 8 nov. : 2/6 gâteaux » (16 §3.4): { date, category, limit (null = not set), used }.
+export async function capacityOn(payload, { date, category = 'gateaux', now = new Date() } = {}) {
+  if (!ISO_DAY.test(date || '')) return { date, category, limit: null, used: 0 }
+  const pools = await getPools(payload)
+  const { usage } = await getUsage(payload, { now, fromISO: date, toISO: date })
+  return capacitySummary(pools, usage, date, category)
 }
 
 // Studio « Chiffrer et envoyer » (16 §3.4). Prices are before taxes; taxes come from the tax engine (07 §6).

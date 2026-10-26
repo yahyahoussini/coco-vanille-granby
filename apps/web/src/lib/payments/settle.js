@@ -146,3 +146,24 @@ export async function markDepositPaid(payload, { requestId, provider, reference 
   })
 }
 
+
+// Studio, at hand-over: the balance (or the whole amount of a phone order) was paid at the counter (POS).
+// Money only: the order's flow status (ready → picked_up) stays Studio's transition.
+export async function recordCounterPayment(payload, { orderId, by = null, now = new Date() }) {
+  const order = await payload.findByID({ collection: 'orders', id: orderId, ...SYS, disableErrors: true }).catch(() => null)
+  if (!order) return { ok: false, code: 'order_missing' }
+  if (!(order.totals?.balanceCents > 0)) return { ok: true, already: true, order }
+  const timeline = [...(order.timeline || []), { ...entry(order.status, `Solde de ${order.totals.balanceCents} ¢ payé au comptoir`, { at: now }), by }]
+  const full = order.payment?.provider === 'counter'
+  const updated = await payload.update({
+    collection: 'orders',
+    id: order.id,
+    data: {
+      totals: { balanceCents: 0 },
+      payment: full ? { status: 'paid', paidAt: new Date(now).toISOString(), amountCents: order.totals.totalCents } : {},
+      timeline,
+    },
+    ...SYS,
+  })
+  return { ok: true, order: updated }
+}
