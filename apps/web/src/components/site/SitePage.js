@@ -10,6 +10,7 @@ import { StickyBar } from './StickyBar'
 import { JsonLd } from './JsonLd'
 import { Breadcrumb } from './Contract'
 import { TEMPLATES } from '../templates'
+import { ogPath } from './og-path'
 
 // Resolves "/<locale>/<segments>/" to a registry page or a product page.
 async function resolve(locale, segments) {
@@ -59,13 +60,20 @@ export async function buildMetadata(locale, segments) {
   const hit = await resolve(locale, segments)
   if (!hit) return { title: t(locale).notFoundTitle, robots: { index: false } }
   const robotsIndex = { index: true, follow: true, googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 } }
+  const ogLocale = locale === 'en' ? 'en_CA' : locale === 'es' ? 'es_ES' : 'fr_CA'
+  // Typographic OG card per page (src/components/site/og.js), absolute URL as crawlers expect.
+  const social = ({ title, description, name, alt }) => {
+    const image = { url: `${SITE_ORIGIN}${ogPath(locale, name)}`, width: 1200, height: 630, alt }
+    return {
+      openGraph: { title, description, url: `${SITE_ORIGIN}${hit.path}`, siteName: 'Pâtisserie Coco Vanille', locale: ogLocale, type: 'website', images: [image] },
+      twitter: { card: 'summary_large_image', title, description, images: [image.url] },
+    }
+  }
   if (hit.kind === 'product') {
     const p = hit.product
-    return {
-      title: `${p.title} · Coco Vanille, Granby`,
-      description: p.summary?.slice(0, 160),
-      robots: robotsIndex,
-    }
+    const title = `${p.title} · Coco Vanille, Granby`
+    const description = p.summary?.slice(0, 160)
+    return { title, description, robots: robotsIndex, ...social({ title, description, name: `p-${p.id}`, alt: p.title }) }
   }
   const doc = await getPageDoc(hit.page.key, locale)
   const indexable = isIndexable(hit.page) && doc && !(publishGuard() === 'show' && containsMarker(doc))
@@ -73,7 +81,7 @@ export async function buildMetadata(locale, segments) {
     title: doc?.title || 'Pâtisserie Coco Vanille · Granby',
     description: doc?.description,
     robots: indexable ? robotsIndex : { index: false, follow: true },
-    openGraph: { title: doc?.title, description: doc?.description, url: `${SITE_ORIGIN}${hit.path}`, siteName: 'Pâtisserie Coco Vanille', locale: locale === 'en' ? 'en_CA' : locale === 'es' ? 'es_ES' : 'fr_CA', type: 'website' },
+    ...social({ title: doc?.title, description: doc?.description, name: hit.page.key, alt: doc?.h1 || doc?.title || 'Pâtisserie Coco Vanille' }),
   }
 }
 
