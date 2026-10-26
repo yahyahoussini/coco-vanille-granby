@@ -48,6 +48,8 @@ async function removeDemoTraffic() {
     }
   }
   await payload.delete({ collection: 'reviews', where: { author: { contains: DEMO } }, ...SYS })
+  // Display-case photos taken during walkthroughs and tests (this script never runs in production).
+  await payload.delete({ collection: 'media', where: { credit: { equals: 'Vitrine du jour' } }, ...SYS })
   await payload.delete({ collection: 'questions', where: { text: { contains: DEMO } }, ...SYS })
 }
 

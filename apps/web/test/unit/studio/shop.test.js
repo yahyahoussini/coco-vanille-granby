@@ -119,3 +119,18 @@ describe('busy mode, special days, hours, capacity', () => {
     assert.equal(none.code, 'capacity_missing')
   })
 })
+
+describe('public closure notice (FR/EN/ES)', async () => {
+  const { closureNotice } = await import('../../../src/lib/studio/closure.js')
+  test('active closure: when it reopens, in each language', () => {
+    const s = shop({ closure: { active: true, until: new Date('2026-10-31T09:00:00-04:00').toISOString() } })
+    assert.equal(closureNotice(s, 'fr', fri).text, 'Fermeture exceptionnelle : la boutique rouvre le samedi 31 octobre à 9 h.')
+    assert.match(closureNotice(s, 'en', fri).text, /^Temporarily closed: the shop reopens on Saturday, October 31 at 9/)
+    assert.equal(closureNotice(s, 'es', fri).text, 'Cierre excepcional: la tienda reabre el sábado, 31 de octubre a las 09:00.')
+  })
+  test('« Demain » closure: the closed day within a week; nothing otherwise', () => {
+    const s = shop({ specialDays: [{ date: '2026-10-31T12:00:00.000Z', state: 'closed', label: 'Fermeture exceptionnelle' }] })
+    assert.equal(closureNotice(s, 'fr', fri).text, 'Fermeture exceptionnelle le samedi 31 octobre.')
+    assert.equal(closureNotice(shop(), 'fr', fri), null)
+  })
+})
