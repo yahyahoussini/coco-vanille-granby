@@ -199,4 +199,4 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 - `/svc/revalidate` (17 §12.3) does not exist yet; nginx already restricts it to local callers.
 - Public pages must reference uploads as `https://cocovanillegranby.com/media/<file>`: the public host serves `/media/` from disk and 404s `/api`.
 - `next.config.mjs` still has Next's compression on; nginx asks Node for plain bodies and compresses itself, so nothing is compressed twice. `deploymentId` and a shared `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (17 §2) are not wired into the build yet.
-- `apps/web/reports/`, `test-results/` and `playwright-report/` are not in `.gitignore` yet.
+- `apps/web/reports/` (gate output, default `--out`) is not in `apps/web/.gitignore` yet.
