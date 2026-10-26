@@ -114,6 +114,19 @@ body.studio {
   background: var(--s-paper-card);
   border-block-end: 1px solid var(--s-line);
   min-block-size: 56px;
+  /* 320 px wide (or 400 % zoom): the bar wraps and the name shortens, never a sideways scroll (WCAG 1.4.10). */
+  flex-wrap: wrap;
+}
+
+.st-user {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.st-user-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .st-brand {
@@ -962,6 +975,12 @@ table.st-table {
   inline-size: 100%;
   border-collapse: collapse;
   background: var(--s-paper-card);
+}
+
+/* A table wider than a 320 px screen scrolls inside its own box, the page itself never does. */
+.st-scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
 }
 
 table.st-table th,

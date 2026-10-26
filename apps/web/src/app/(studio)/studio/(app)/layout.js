@@ -24,8 +24,8 @@ export default async function StudioShell({ children }) {
           Coco Studio
         </Link>
         <SyncChip />
-        <Link className="st-chip" href={device?.shared ? '/qui/' : '/plus/reglages/'} aria-label={`${user.name}, ${ROLE_LABELS[user.role]}${device?.shared ? ' · changer de personne' : ' · réglages'}`}>
-          <span aria-hidden="true">{device?.shared ? '⇄' : '◍'}</span> {user.name}
+        <Link className="st-chip st-user" href={device?.shared ? '/qui/' : '/plus/reglages/'} aria-label={`${user.name}, ${ROLE_LABELS[user.role]}${device?.shared ? ' · changer de personne' : ' · réglages'}`}>
+          <span aria-hidden="true">{device?.shared ? '⇄' : '◍'}</span> <span className="st-user-name">{user.name}</span>
         </Link>
       </header>
       <main className="st-main" id="contenu" tabIndex={-1}>

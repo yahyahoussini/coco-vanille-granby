@@ -123,3 +123,28 @@ test.describe('templates', () => {
     }
   })
 })
+
+// WCAG 2.2 2.4.11 Focus Not Obscured: on a phone, the fixed « Commander · Itinéraire · Appeler » bar never
+// covers the field, button or link that has the keyboard focus (axe does not test this criterion).
+test.describe('sticky bar and keyboard focus', () => {
+  test.use({ viewport: { width: 375, height: 700 } })
+  for (const path of ['/', '/commander/', '/faq/', '/prix/']) {
+    test(`${path}: no focused element hides under the bar`, async ({ page }) => {
+      await page.goto(`${PUBLIC_URL}${path}`)
+      const bar = await page.locator('.sticky-bar').boundingBox()
+      test.skip(!bar, 'no sticky bar on this page')
+      const hidden = []
+      for (let i = 0; i < 80; i++) {
+        await page.keyboard.press('Tab')
+        const r = await page.evaluate(() => {
+          const el = document.activeElement
+          if (!el || el === document.body || el.closest('.sticky-bar')) return null
+          const b = el.getBoundingClientRect()
+          return { top: b.top, bottom: b.bottom, name: `${el.tagName} ${(el.textContent || el.getAttribute('name') || '').trim().slice(0, 40)}` }
+        })
+        if (r && r.top >= bar.y - 1 && r.bottom > bar.y) hidden.push(r.name)
+      }
+      expect(hidden, hidden.join('\n')).toEqual([])
+    })
+  }
+})

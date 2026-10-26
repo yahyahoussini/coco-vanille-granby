@@ -1,7 +1,7 @@
 // WCAG 2.2 AA on the Studio screens (16 AC3): axe with the 2.2 rules, target size included, at phone width.
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { OWNER, login } from './support.js'
+import { OWNER, login, sql } from './support.js'
 
 const SCREENS = ['/', '/commandes/', '/commandes/?onglet=production', '/commandes/telephone/', '/vitrine/', '/demandes/', '/avis/', '/boutique/', '/semaine/', '/plus/', '/plus/produits/', '/plus/reglages/', '/plus/question/', '/agence/']
 
@@ -46,4 +46,20 @@ test('targets: buttons and tabs ≥ 48 × 48 px, primary buttons ≥ 64 px tall 
     }
   }
   expect(small, small.join('\n')).toEqual([])
+})
+
+// WCAG 1.4.10 Reflow: 320 CSS px (a small phone, or 400 % zoom) never scrolls sideways, with a long name too.
+test.describe('reflow at 320 px', () => {
+  test.use({ viewport: { width: 320, height: 640 } })
+  test('no screen scrolls horizontally', async ({ page }) => {
+    await login(page, OWNER)
+    const [product] = await sql('select id from products order by id limit 1')
+    const wide = []
+    for (const path of [...SCREENS, `/plus/produits/${product.id}/`]) {
+      await page.goto(path)
+      const r = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }))
+      if (r.scroll > r.client) wide.push(`${path} ${r.scroll} > ${r.client}`)
+    }
+    expect(wide, wide.join('\n')).toEqual([])
+  })
 })

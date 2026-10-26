@@ -117,6 +117,7 @@ export default async function Produit({ params, searchParams }) {
         </p>
         {ctx.can('product.allergens') ? (
           <ActionForm type="product.allergens" fields={{ productId: p.id }} back={back} needsNetwork>
+            <div className="st-scroll">
             <table className="st-table">
               <thead>
                 <tr>
@@ -141,6 +142,7 @@ export default async function Produit({ params, searchParams }) {
                 ))}
               </tbody>
             </table>
+            </div>
             <label className="check">
               <input type="checkbox" name="confirm" value="true" required />
               <span>J’ai vérifié la recette et les étiquettes des ingrédients.</span>

@@ -1281,6 +1281,12 @@ th a {
 }
 
 /* ---------- Sticky action bar (thumb zone, phones only) ---------- */
+/* A focused field, button or link scrolled into view stops above the bar, never under it
+   (WCAG 2.2 2.4.11 Focus Not Obscured); removed with the bar on larger screens. */
+html {
+  scroll-padding-block-end: calc(var(--bar-height) + env(safe-area-inset-bottom) + 0.5rem);
+}
+
 .sticky-bar {
   position: fixed;
   inset-inline: 0;
@@ -1344,6 +1350,10 @@ th a {
 }
 
 @media (min-width: 60rem) {
+  html {
+    scroll-padding-block-end: 0;
+  }
+
   body {
     padding-block-end: 0;
   }
