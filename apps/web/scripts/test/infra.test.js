@@ -2,7 +2,7 @@
 // Run: node --test 'scripts/test/*.test.js'  (CI also runs nginx -t and shellcheck on the same files)
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { readFileSync, readdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -108,7 +108,7 @@ test('.env.example documents every variable the compose file interpolates', () =
   const used = new Set([...read('docker-compose.yml').matchAll(/\$\{([A-Z0-9_]+)[:?}-]/g)].map((m) => m[1]))
   const state = new Set(['BLUE_TAG', 'GREEN_TAG', 'WORKER_TAG', 'DEPLOY_TAG']) // written by deploy.sh
   for (const k of used) if (!state.has(k)) assert.ok(keys.has(k), `${k} missing from infra/.env.example`)
-  for (const k of ['PUBLISH_GUARD', 'ENABLE_ES', 'APP_ROLE', 'STRIPE_SECRET_KEY', 'TWILIO_AUTH_TOKEN', 'SES_ACCESS_KEY_ID', 'VAPID_PRIVATE_KEY']) assert.ok(keys.has(k), k)
+  for (const k of ['PUBLISH_GUARD', 'ENABLE_ES', 'APP_ROLE', 'STRIPE_SECRET_KEY', 'TWILIO_AUTH_TOKEN', 'AWS_ACCESS_KEY_ID', 'EMAIL_PROVIDER', 'MAIL_FROM', 'REVALIDATE_SECRET', 'VAPID_PRIVATE_KEY']) assert.ok(keys.has(k), k)
   assert.match(env, /^PUBLISH_GUARD=strict$/m)
   assert.match(env, /^ENABLE_ES=false$/m)
   // Every variable carries a comment above it (or in its section).
@@ -116,6 +116,41 @@ test('.env.example documents every variable the compose file interpolates', () =
   lines.forEach((line, i) => {
     if (/^[A-Z0-9_]+=/.test(line)) assert.ok(lines.slice(Math.max(0, i - 6), i).some((l) => l.startsWith('#')), `${line} has no comment`)
   })
+})
+
+// Every variable the app reads (process.env.X, or env.X in the adapters that take env as a parameter).
+function appEnvVars() {
+  const src = resolve(infra, '../apps/web/src')
+  const out = new Set()
+  const walk = (dir) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, e.name)
+      if (e.isDirectory()) walk(full)
+      else if (/\.m?js$/.test(e.name)) for (const m of readFileSync(full, 'utf8').matchAll(/\b(?:process\.env|env)\.([A-Z][A-Z0-9_]{2,})\b/g)) out.add(m[1])
+    }
+  }
+  walk(src)
+  return out
+}
+const envKeys = (file) => new Set([...readFileSync(file, 'utf8').matchAll(/^([A-Z0-9_]+)=/gm)].map((m) => m[1]))
+// Set by the platform, the image or Compose, never by hand.
+const PLATFORM = new Set(['NODE_ENV'])
+// Development and CI only: not on a server.
+const DEV_ONLY = new Set(['SEED_DEV_USER', 'MESSAGE_LOG_FILE', 'WORKER_ONCE', 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY', 'SES_REGION', 'AWS_SESSION_TOKEN', 'APP_VERSION', 'GIT_SHA', 'PORT', 'DATABASE_URI', 'PAYLOAD_CONFIG_PATH'])
+
+test('both .env.example files document every variable the app reads', () => {
+  const used = appEnvVars()
+  assert.ok(used.size > 40, `found ${used.size} variables`)
+  const dev = envKeys(resolve(infra, '../apps/web/.env.example'))
+  const server = envKeys(join(infra, '.env.example'))
+  for (const k of used) {
+    if (PLATFORM.has(k)) continue
+    assert.ok(dev.has(k), `${k} missing from apps/web/.env.example`)
+    if (!DEV_ONLY.has(k)) assert.ok(server.has(k), `${k} missing from infra/.env.example`)
+  }
+  // Same names on both sides: nothing documented that the app does not read (beyond the infra-only block).
+  const INFRA_ONLY = /^(APP_ENV|IMAGE|WEB_|STUDIO_|MEDIA_DIR|TZ|POSTGRES_|PUBLIC_HOST|ADMIN_HOST|BACKUP_|AGE_|HEARTBEAT_|INDEXNOW_KEY|SENTRY_DSN|VAPID_SUBJECT|NEXT_SERVER_ACTIONS_ENCRYPTION_KEY|REVALIDATE_URL)/
+  for (const k of server) if (!INFRA_ONLY.test(k)) assert.ok(used.has(k), `${k} is in infra/.env.example but the app never reads it`)
 })
 
 const bash = (script) => execFileSync('bash', ['-c', `set -euo pipefail; . "${join(infra, 'scripts/lib.sh')}"; ${script}`], { encoding: 'utf8' })

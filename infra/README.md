@@ -121,7 +121,7 @@ DNS-only (no CDN proxying) at launch (17 §6). DNSSEC after a stable week; turn 
 
 ## Environment variables
 
-All of them are in `infra/.env.example`, one comment each. Compose builds `DATABASE_URI` from `POSTGRES_*`. `deploy.sh` writes `state.env` next to `.env` (`LIVE_COLOR`, `PREVIOUS_COLOR`, `BLUE_TAG`, `GREEN_TAG`, `WORKER_TAG`, `DEPLOYED_TAG`, `DEPLOYED_AT`); never edit it by hand during a deploy. Manual Compose commands:
+All of them are in `infra/.env.example`, one comment each, under the names the app reads (`apps/web/.env.example` is the development twin; `apps/web/scripts/test/infra.test.js` fails when the code reads a variable that neither file documents). Email uses `EMAIL_PROVIDER=ses` with `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_REGION` and `MAIL_FROM`; text messages `SMS_PROVIDER=twilio` with the `TWILIO_*` keys; without them the log sender writes to the container log and nothing leaves. Compose builds `DATABASE_URI` from `POSTGRES_*`. `deploy.sh` writes `state.env` next to `.env` (`LIVE_COLOR`, `PREVIOUS_COLOR`, `BLUE_TAG`, `GREEN_TAG`, `WORKER_TAG`, `DEPLOYED_TAG`, `DEPLOYED_AT`); never edit it by hand during a deploy. Manual Compose commands:
 
 ```sh
 cd /opt/coco/production
@@ -198,6 +198,4 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 
 ## Open points for integration
 
-- The worker is a stub that exits after start-up, so Docker restarts it in a loop until the M2 worker keeps running.
 - `next.config.mjs` still has Next's compression on; nginx asks Node for plain bodies and compresses itself, so nothing is compressed twice. `deploymentId` and a shared `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (17 §2) are not wired into the build yet.
-- `apps/web/reports/` (gate output, default `--out`) is not in `apps/web/.gitignore` yet.
