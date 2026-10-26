@@ -1,0 +1,9 @@
+# Removes images no container uses any more and older than two weeks. The live and previous colours'
+# images are in use (running or stopped containers), so a rollback target is never pruned.
+[Unit]
+Description=Coco Vanille Docker image prune
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker image prune --all --force --filter until=336h

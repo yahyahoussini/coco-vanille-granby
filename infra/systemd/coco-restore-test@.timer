@@ -1,0 +1,9 @@
+[Unit]
+Description=Coco Vanille restore test (%i), first Monday of the month at 03:30
+
+[Timer]
+OnCalendar=Mon *-*-01..07 03:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

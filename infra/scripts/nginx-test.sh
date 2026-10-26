@@ -45,6 +45,8 @@ openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj '/CN=cocovanillegranby.t
 if [ -n "${HTPASSWD_FILE:-}" ]; then
   cp "$HTPASSWD_FILE" "$tmp/coco/staging.htpasswd"
 else
+  # A literal apr1 hash (not a shell expansion).
+  # shellcheck disable=SC2016
   printf 'agence:$apr1$test$0000000000000000000000\n' >"$tmp/coco/staging.htpasswd"
 fi
 for env in production staging; do
@@ -66,6 +68,11 @@ events { worker_connections 64; }
 http {
   include $tmp/mime.types;
   access_log $tmp/log/access.log;
+  client_body_temp_path $tmp/run/body;
+  proxy_temp_path $tmp/run/proxy;
+  fastcgi_temp_path $tmp/run/fastcgi;
+  uwsgi_temp_path $tmp/run/uwsgi;
+  scgi_temp_path $tmp/run/scgi;
   include $tmp/conf.d/*.conf;
   include $tmp/sites/*.conf;
 }
