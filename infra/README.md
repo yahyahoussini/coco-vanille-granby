@@ -75,7 +75,7 @@ VPS (Québec) · nginx :80/:443 ──► 127.0.0.1:3001|3011 web-blue|green   (
    ```
 7. **Backups.** As deploy: `rclone config` (two remotes, e.g. `s3ca` and `ovhbhs`), then in production's `.env`: `BACKUP_REMOTES="s3ca:coco-backups ovhbhs:coco-backups"`. Put the age **public** key in `/opt/coco/age-recipients.txt`. Heartbeat URLs in `HEARTBEAT_BACKUP_URL` / `HEARTBEAT_RESTORE_TEST_URL`.
 8. **GitHub.** Environments `staging` and `production`; on `production` add **required reviewers** (owner or agency). Secrets and variables: table below.
-9. **Initial migration (integrator, once, after merging the modules).** Production never pushes the schema (`push` is off when `NODE_ENV=production`), so the first `deploy.sh` needs a migration in the repo: `cd apps/web && npm run migrate:create` against a database seeded in dev, commit `src/migrations/`. Every later schema change gets its own migration, **expand-only** (below).
+9. **Migrations are in the repo.** Production never pushes the schema (`push` is off when `NODE_ENV=production`): the first `deploy.sh` runs `src/migrations/<stamp>_initial.js` (every table) and `<stamp>_orders_notify.js` (the Postgres trigger behind Studio's live screens) on the empty database, then `docker compose … run --rm migrate npm run seed` loads the verified facts. Every later schema change gets its own migration, **expand-only** (below).
 10. **Staging.** Push to `main` (or run *Deploy staging* by hand). Check `https://staging.cocovanillegranby.com` on a phone, and the gate's owner to-do list in the run summary.
 11. **Production.** *Actions › Deploy production › Run workflow*, paste the full SHA running on staging, approve. The run ends with `check-urls` and `crawler-access` from outside.
 12. **After the first production deploy.** Enable the timers, then run a backup and a restore test by hand. **The first restore test must pass before launch** (17 §8.5):
@@ -149,7 +149,9 @@ Public pages are static with a 5-minute ISR period. A write that the site shows 
 
 ## Migrations
 
-- Generated with `cd apps/web && npm run migrate:create` (Payload), committed under `apps/web/src/migrations/`, run by the `migrate` service before the new colour starts.
+- Generated with `cd apps/web && npm run migrate:create -- <name>` against a database at the previous migration (`scripts/migrate-create.mjs`: Payload's generator with `NODE_ENV=production`, so it never pushes, then the file is rewritten as JavaScript and Payload's `index.ts` dropped). Commit the `.js` and its `.json` snapshot under `apps/web/src/migrations/`; the `migrate` service runs them before the new colour starts.
+- Proof that the migrations match the code: on a migrated database, a development `npm run seed` (schema push on) changes nothing. CI migrates an empty database and seeds it with `NODE_ENV=production` on every run.
+- Hand-written SQL (triggers, functions) goes in its own migration with `sql.raw` (see `_orders_notify.js`); the app runs no DDL on a migrated database (`src/lib/studio/live.js` only installs its trigger on a pushed development database).
 - **Expand-only**: add tables, columns and indexes; never rename or drop in the same release. The old colour keeps serving during the switch and after a rollback, so it must still work on the new schema. Remove old columns in a later release, once no live code reads them.
 - Every production migration is preceded by a dump (`/opt/coco/production/backups/*-pre-<sha>.dump`).
 

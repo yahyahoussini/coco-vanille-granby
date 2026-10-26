@@ -18,7 +18,7 @@
     "seed:studio-demo": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/studio-demo.js",
     "test": "node --test test/unit",
     "lint:contract": "node ../../tools/audit.mjs .next/server/app --quiet",
-    "migrate:create": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload migrate:create",
+    "migrate:create": "node scripts/migrate-create.mjs",
     "worker": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/worker/index.js",
     "test:e2e": "playwright test"
   },

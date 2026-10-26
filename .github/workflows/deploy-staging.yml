@@ -57,12 +57,13 @@ jobs:
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
 
-      # next build prerenders pages from Postgres: give it the seeded schema (verified facts only).
-      - name: Seed the build database
+      # next build prerenders pages from Postgres: give it the migrated schema and the verified facts only.
+      - name: Migrate and seed the build database
         working-directory: apps/web
         run: |
           npm ci --no-audit --no-fund
-          npm run seed
+          NODE_ENV=production npm run migrate
+          NODE_ENV=production npm run seed
 
       - uses: docker/login-action@v3
         with:

@@ -63,11 +63,17 @@ export async function revalidatePublic(job, { env = process.env, fetchImpl = fet
   }
 }
 
+// One warning per process: a seed run without a server would otherwise log every write.
+let warned = false
+
 const run = async (kind, doc, previousDoc, req) => {
   const job = affected(kind, doc)
   if (!job.all && previousDoc?.key && previousDoc.key !== doc?.key) Object.assign(job, { all: true })
   const r = await revalidatePublic(job)
-  if (!r.ok && !r.skipped) req?.payload?.logger?.warn?.({ kind, ...r }, 'public pages not refreshed (they renew within 5 minutes)')
+  if (!r.ok && !r.skipped && !warned) {
+    warned = true
+    req?.payload?.logger?.warn?.(`public pages not refreshed (${r.error || `HTTP ${r.status}`}): they renew within 5 minutes; further failures in this process are not logged`)
+  }
 }
 
 // Payload hooks for a collection or a global that the public site shows.

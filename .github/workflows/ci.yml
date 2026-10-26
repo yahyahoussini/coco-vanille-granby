@@ -1,5 +1,6 @@
 # CI · every pull request and every push to main (plan v1 §12, research/19 §1.2). Red = no merge.
-# app:   Postgres → npm ci → seed → build → unit tests → server (APP_ROLE=all) → Playwright (public)
+# app:   Postgres → npm ci → migrate (empty database) → seed → build → unit tests → server (APP_ROLE=all)
+#        → Playwright (public) → demo seeds → Playwright (ordering flow, admin) → demo data removed
 #        → rank-first gate (audit + links; only [[FACT NEEDED]] markers may fail) → reports
 # infra: shellcheck, nginx -t on infra/nginx, docker compose config, Dockerfile checks
 name: CI
@@ -51,6 +52,8 @@ jobs:
       # show: markers render (pages stay noindex), so the gate can list every missing fact.
       PUBLISH_GUARD: show
       ENABLE_ES: 'false'
+      # Seeds and Studio writes refresh the running server's ISR pages through /svc/revalidate/.
+      REVALIDATE_SECRET: ci-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
 
@@ -63,8 +66,12 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Seed the CI database (schema push + verified facts only)
-        run: npm run seed
+      # Production semantics: the committed migrations build the schema, nothing is pushed.
+      - name: Migrate the empty database
+        run: NODE_ENV=production npm run migrate
+
+      - name: Seed the CI database (verified facts only, no schema push)
+        run: NODE_ENV=production npm run seed
 
       - name: Build
         run: npx next build
@@ -90,6 +97,26 @@ jobs:
 
       - name: Playwright (public project)
         run: npx playwright test --project=public
+
+      # Invented demo data (labelled « démo ») so the box → checkout flow and Studio can be exercised; the
+      # development seed adds the dev owner account Studio's tests sign in with. Removed before the gate.
+      - name: Demo data (ordering + Studio)
+        run: |
+          npm run seed
+          SEED_DEMO=true npm run seed:demo
+          SEED_DEMO=true npm run seed:studio-demo
+
+      - name: Playwright (ordering flow with demo data, then the admin project)
+        run: |
+          npx playwright test --project=public test/e2e/ordering.spec.js
+          npx playwright test --project=admin
+
+      - name: Remove the demo data, re-seed the verified facts
+        if: always()
+        run: |
+          SEED_DEMO=clean npm run seed:studio-demo
+          SEED_DEMO=clean npm run seed:demo
+          NODE_ENV=production npm run seed
 
       - name: rank-first gate (audit + links)
         run: node scripts/gate.mjs --base http://localhost:3000 --out reports/gate
