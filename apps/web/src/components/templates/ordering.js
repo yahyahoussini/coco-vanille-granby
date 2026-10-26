@@ -214,6 +214,20 @@ async function ThanksTemplate({ locale, business, query = {} }) {
   }
   if (requestToken && /^[\w-]{10,64}$/.test(requestToken)) {
     const request = (await payload.find({ collection: 'requests', where: { accessToken: { equals: requestToken } }, limit: 1, ...SYS })).docs[0]
+    // Deposit paid → the order it became. Back from Stripe before the webhook → waiting state.
+    if (request?.order) {
+      const order = await payload.findByID({ collection: 'orders', id: request.order, ...SYS, disableErrors: true }).catch(() => null)
+      if (order) return <OrderThanks order={order} locale={locale} business={business} />
+    }
+    if (request && request.status === 'quoted' && one(query.payment_intent)) {
+      return (
+        <article className="wrap page ordering thanks">
+          <h1>{s.pageTitles.pending}</h1>
+          <p className="answer">{s.thanks.pendingText}</p>
+          <AutoRefresh />
+        </article>
+      )
+    }
     if (request) return <RequestThanks request={request} locale={locale} business={business} />
   }
   if (!orderToken && !requestToken) notFound()

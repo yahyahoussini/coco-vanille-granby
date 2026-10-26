@@ -51,6 +51,16 @@ export const Requests = {
         { name: 'paidAt', type: 'date' },
       ],
     },
+    // Express acceptance of the conditions on the deposit page (07 O2, O3).
+    {
+      name: 'consent',
+      type: 'group',
+      fields: [
+        { name: 'termsAcceptedAt', type: 'date' },
+        { name: 'termsVersion', type: 'text' },
+        { name: 'bindingLanguage', type: 'select', options: ['fr', 'en', 'es'] },
+      ],
+    },
     // Opaque token for the customer's links (thanks page, deposit payment).
     { name: 'accessToken', type: 'text', index: true, admin: { readOnly: true } },
     { name: 'order', type: 'relationship', relationTo: 'orders' },

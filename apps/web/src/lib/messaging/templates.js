@@ -63,9 +63,9 @@ const SMS = {
     es: (d) => `Coco Vanille: ya tiene su presupuesto. Anticipo ${d.deposit}: ${d.link} ${STOP.es}`,
   },
   order_confirmed: {
-    fr: (d) => `Coco Vanille : commande ${d.number} confirmée, cueillette le ${d.day} entre ${d.start} et ${d.end}, ${d.street}. Code ${d.code}. ${STOP.fr}`,
-    en: (d) => `Coco Vanille: order ${d.number} confirmed, pickup ${d.day} ${d.start}-${d.end}, ${d.street}. Code ${d.code}. ${STOP.en}`,
-    es: (d) => `Coco Vanille: pedido ${d.number} confirmado, recogida el ${d.day} ${d.start}-${d.end}, ${d.street}. Clave ${d.code}. ${STOP.es}`,
+    fr: (d) => `Coco Vanille : commande ${d.number} confirmée, cueillette le ${d.day} ${d.start ? `entre ${d.start} et ${d.end}` : 'heure à convenir'}, ${d.street}. Code ${d.code}. ${STOP.fr}`,
+    en: (d) => `Coco Vanille: order ${d.number} confirmed, pickup ${d.day} ${d.start ? `${d.start}-${d.end}` : 'time to be agreed'}, ${d.street}. Code ${d.code}. ${STOP.en}`,
+    es: (d) => `Coco Vanille: pedido ${d.number} confirmado, recogida el ${d.day} ${d.start ? `${d.start}-${d.end}` : 'hora por acordar'}, ${d.street}. Clave ${d.code}. ${STOP.es}`,
   },
   order_ready: {
     fr: (d) => `Coco Vanille : votre commande ${d.number} vous attend au comptoir${d.closes ? ` jusqu'à ${d.closes}` : ''}. ${d.street}, ${d.city}. ${STOP.fr}`,
@@ -106,8 +106,8 @@ export function smsData(template, { order, request, facts, closes, link }) {
     number: order.number,
     day: shortDay(order.pickupDate, l),
     weekday: weekdayShort(order.pickupDate, l),
-    start: time(order.pickupWindowStart, l),
-    end: time(order.pickupWindowEnd, l),
+    start: order.pickupWindowStart ? time(order.pickupWindowStart, l) : '',
+    end: order.pickupWindowEnd ? time(order.pickupWindowEnd, l) : '',
     code: order.pickupCode,
     street: facts.street[l] || facts.street.fr,
     city: facts.city,
@@ -281,7 +281,13 @@ function paymentLine(order, l) {
   return c.paidOnline(order.payment?.paidAt ? longDate(order.payment.paidAt, l) : '', total)
 }
 
-const whenText = (order, l) => `${longDayLabel(dayOf(order.pickupDate), l)}, ${l === 'en' ? `${clock(order.pickupWindowStart, 'en')}–${clock(order.pickupWindowEnd, 'en')}` : l === 'es' ? `${order.pickupWindowStart}–${order.pickupWindowEnd}` : `${clock(order.pickupWindowStart)} à ${clock(order.pickupWindowEnd)}`}`
+const TIME_TBD = { fr: 'heure à convenir avec la boutique', en: 'time to be agreed with the shop', es: 'hora por acordar con la tienda' }
+const whenText = (order, l) => {
+  const day = longDayLabel(dayOf(order.pickupDate), l)
+  if (!order.pickupWindowStart) return `${day}, ${TIME_TBD[l]}`
+  const end = order.pickupWindowEnd || order.pickupWindowStart
+  return `${day}, ${l === 'en' ? `${clock(order.pickupWindowStart, 'en')}–${clock(end, 'en')}` : l === 'es' ? `${order.pickupWindowStart}–${end}` : `${clock(order.pickupWindowStart)} à ${clock(end)}`}`
+}
 
 // Order confirmation = contract copy (07 O6): everything shown at review + merchant identity + conditions.
 export function orderConfirmedEmail(order, facts) {

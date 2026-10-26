@@ -159,7 +159,7 @@ export async function createOrder(payload, args = {}) {
       consent: {
         termsAcceptedAt: source === 'web' ? new Date(now).toISOString() : null,
         termsVersion: source === 'web' ? termsVersion : null,
-        bindingLanguage: source === 'web' ? locale : null,
+        bindingLanguage: source === 'web' ? (locale === 'en' ? 'en' : 'fr') : null,
         reviewRequest: consent.reviewRequest === true,
         marketing: consent.marketing === true,
         birthdayReminder: consent.birthdayReminder === true,
