@@ -55,6 +55,15 @@ test('public host: apex canonical in one hop, private paths 404, long cache on /
   assert.match(blocks.find((b) => b.match === '^~ /media/demandes/').body, /return 404;/)
   assert.match(nginx('snippets/coco-proxy.conf'), /proxy_set_header Host \$host;/)
   assert.match(nginx('snippets/coco-proxy.conf'), /proxy_set_header X-Real-IP \$remote_addr;/)
+  // The app's throttles and audit IPs read the connection's address; a client-sent X-Forwarded-For never survives.
+  assert.match(nginx('snippets/coco-proxy.conf'), /proxy_set_header X-Forwarded-For \$remote_addr;/)
+  assert.doesNotMatch(nginx('snippets/coco-proxy.conf'), /proxy_add_x_forwarded_for/)
+  // Each cake request or checkout queues a text or an email: both forms are rate-limited per IP by nginx too.
+  assert.match(nginx('conf.d/coco.conf'), /limit_req_zone \$binary_remote_addr zone=coco_forms:/)
+  for (const site of ['cocovanillegranby.com.conf', 'staging.cocovanillegranby.com.conf']) {
+    const all = locations(nginx(`sites/${site}`))
+    for (const path of ['= /svc/demande/', '= /svc/commande/']) assert.match(all.find((b) => b.match === path)?.body || '', /limit_req zone=coco_forms/, `${site} ${path}`)
+  }
 })
 
 test('an add_header inside a location drops the server ones: every such location repeats HSTS', () => {

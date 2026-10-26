@@ -2,7 +2,7 @@ import { studioAuth, stepUpCookie, sameOrigin, safeBack, seeOther } from '@/lib/
 import { checkPassword } from '@/lib/studio/password'
 import { useBackupCode } from '@/lib/studio/pin'
 import { writeAudit, ipOf, sentence } from '@/lib/studio/audit'
-import { tooMany, failed } from '@/lib/studio/throttle'
+import { attempt, forgive } from '@/lib/studio/throttle'
 
 // POST /svc/verifier: step-up before money, prices, allergens, taxes and people (16b §4 #4).
 // Password (Payload's own PBKDF2 hash, no extra session) or a one-time backup code.
@@ -20,7 +20,8 @@ export async function POST(request) {
   const { payload, user, device } = await studioAuth(request.headers)
   if (!user) return seeOther(`/connexion/?retour=${encodeURIComponent(back)}`)
   const ip = ipOf(request.headers) || 'local'
-  if (tooMany(`studio-verif:${user.id}`, { max: 10 })) return again('trop')
+  const throttleKey = `studio-verif:${user.id}`
+  if (!attempt(throttleKey, { max: 10 })) return again('trop')
 
   let ok = false
   let how = 'mot de passe'
@@ -38,9 +39,7 @@ export async function POST(request) {
     ok = await checkPassword(payload, user.id, password)
   }
   await writeAudit(payload, { user, device, ip, action: ok ? 'session.step_up' : 'session.step_up_failed', entity: 'users', entityId: user.id, summary: sentence(user, device, ok ? `a confirmé son identité (${how})` : `a échoué la vérification (${how})`) }).catch(() => null)
-  if (!ok) {
-    failed(`studio-verif:${user.id}`)
-    return again(code ? 'code' : 'mot-de-passe')
-  }
+  if (!ok) return again(code ? 'code' : 'mot-de-passe')
+  forgive(throttleKey)
   return seeOther(back, [stepUpCookie(payload, user)])
 }

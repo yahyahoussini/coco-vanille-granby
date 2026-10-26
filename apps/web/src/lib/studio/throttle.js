@@ -16,3 +16,16 @@ export function failed(key, { windowMs = 10 * 60 * 1000, now = Date.now() } = {}
   fails.set(key, list)
   if (fails.size > 5000) for (const k of [...fails.keys()].slice(0, 1000)) fails.delete(k)
 }
+
+// Check and record in the same synchronous step, before any await: parallel requests can't all slip past a
+// check that only counts once each of them has finished (a burst of PIN guesses). A success hands its slot back.
+export function attempt(key, { max = 20, windowMs = 10 * 60 * 1000, now = Date.now() } = {}) {
+  if (tooMany(key, { max, windowMs, now })) return false
+  failed(key, { windowMs, now })
+  return true
+}
+
+export function forgive(key) {
+  const list = fails.get(key)
+  if (list?.length) list.pop()
+}

@@ -13,4 +13,5 @@ export function allow(key, { max = 5, windowMs = 10 * 60 * 1000, now = Date.now(
   return true
 }
 
-export const clientIp = (request) => (request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || request.headers.get('x-real-ip') || 'local'
+// X-Real-IP is set by nginx from the connection; X-Forwarded-For can be typed by the client (audit.js ipOf).
+export const clientIp = (request) => String(request.headers.get('x-real-ip') || '').trim() || 'local'

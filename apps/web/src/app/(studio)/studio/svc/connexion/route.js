@@ -4,7 +4,7 @@ import { roleOf, homeFor } from '@/lib/studio/roles'
 import { useBackupCode } from '@/lib/studio/pin'
 import { PASSKEY_ROLES } from '@/lib/studio/passkey'
 import { writeAudit, ipOf, sentence } from '@/lib/studio/audit'
-import { tooMany, failed } from '@/lib/studio/throttle'
+import { attempt, forgive } from '@/lib/studio/throttle'
 
 // POST /svc/connexion: email + password (Payload login, 12 h session, 5 attempts then a 15-minute lock), or
 // email + a one-time backup code when the passkey is lost. Also records what this device is: own phone,
@@ -30,7 +30,9 @@ export async function POST(request) {
   const fail = (code) => seeOther(`/connexion/?erreur=${code}${back ? `&retour=${encodeURIComponent(back)}` : ''}`)
   if (!form || !sameOrigin(request.headers)) return fail('origine')
   const ip = ipOf(request.headers) || 'local'
-  if (tooMany(`studio-login:${ip}`)) return fail('trop')
+  // Counted before the password or code is checked; a success gives its slot back.
+  const throttleKey = `studio-login:${ip}`
+  if (!attempt(throttleKey)) return fail('trop')
   const email = get('email').toLowerCase()
   const password = form.get('password')
   const code = get('code')
@@ -39,10 +41,8 @@ export async function POST(request) {
 
   if (email && code && !password) {
     const r = await withBackupCode(payload, email, code)
-    if (!r) {
-      failed(`studio-login:${ip}`)
-      return fail('code')
-    }
+    if (!r) return fail('code')
+    forgive(throttleKey)
     const device = { id: previous?.id, kind: previous?.kind || 'telephone', shared: Boolean(previous?.shared) }
     await writeAudit(payload, { user: r.user, device, ip, action: 'session.backup_code', entity: 'users', entityId: r.user.id, summary: sentence(r.user, device, `s’est connecté·e avec un code de secours (${r.remaining} restants)`) }).catch(() => null)
     return seeOther('/plus/reglages/#cles', [r.cookie, deviceCookie(payload, device)])
@@ -53,7 +53,6 @@ export async function POST(request) {
   try {
     result = await payload.login({ collection: 'users', data: { email, password } })
   } catch (e) {
-    failed(`studio-login:${ip}`)
     return fail(e?.name === 'LockedAuth' ? 'verrouille' : 'identifiants')
   }
   const user = result.user
@@ -62,6 +61,7 @@ export async function POST(request) {
     return fail(user?.active === false ? 'inactif' : 'role')
   }
 
+  forgive(throttleKey)
   const collectionAuthConfig = payload.collections.users.config.auth
   const cookies = [generatePayloadCookie({ collectionAuthConfig, cookiePrefix: payload.config.cookiePrefix || 'payload', token: result.token })]
   const device = { id: previous?.id, kind, shared: kind === 'tablette' }

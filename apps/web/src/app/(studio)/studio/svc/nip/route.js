@@ -1,11 +1,13 @@
 import { studioAuth, issueSession, revokeCurrent, clearStepUp, sameOrigin, seeOther } from '@/lib/studio/session'
-import { verifyPin, pinLocked, afterPinFailure, validPin } from '@/lib/studio/pin'
-import { roleOf, homeFor, BAKERY_ROLES } from '@/lib/studio/roles'
+import { verifyPin, validPin } from '@/lib/studio/pin'
+import { claimPinAttempt, clearPinFailures, poolQuery } from '@/lib/studio/pin-lock'
+import { roleOf, homeFor, PIN_ROLES } from '@/lib/studio/roles'
 import { writeAudit, ipOf, sentence } from '@/lib/studio/audit'
-import { tooMany, failed } from '@/lib/studio/throttle'
+import { attempt, forgive } from '@/lib/studio/throttle'
 
 // POST /svc/nip: « Qui utilise la tablette? » → 4-digit PIN → a fresh 12 h session for that person.
-// Only on a device marked as the shop's shared tablet; 5 wrong PINs lock that person for 15 minutes.
+// Only on a device marked as the shop's shared tablet, only for staff (the owner uses a passkey or the
+// password); 5 wrong PINs lock that person for 15 minutes. Each guess is counted before the PIN is checked.
 export const dynamic = 'force-dynamic'
 
 const SYS = { overrideAccess: true, depth: 0, showHiddenFields: true }
@@ -20,20 +22,21 @@ export async function POST(request) {
   const { payload, user: current, device } = await studioAuth(request.headers)
   if (!device?.shared) return seeOther('/connexion/?erreur=appareil')
   const ip = ipOf(request.headers) || 'local'
-  if (tooMany(`studio-pin:${ip}`, { max: 30 })) return back('trop')
   if (!validPin(pin)) return back('format')
+  const throttleKey = `studio-pin:${ip}`
+  if (!attempt(throttleKey, { max: 30 })) return back('trop')
 
   const person = await payload.findByID({ collection: 'users', id, ...SYS, disableErrors: true }).catch(() => null)
-  if (!person || !BAKERY_ROLES.includes(roleOf(person)) || !person.pinHash) return seeOther('/qui/?erreur=personne')
-  if (pinLocked(person)) return back('verrouille')
+  if (!person || !PIN_ROLES.includes(roleOf(person)) || !person.pinHash) return seeOther('/qui/?erreur=personne')
+  const query = poolQuery(payload)
+  const claim = await claimPinAttempt(query, person.id)
+  if (!claim.ok) return back('verrouille')
   if (!(await verifyPin(pin, person.pinHash))) {
-    failed(`studio-pin:${ip}`)
-    const next = afterPinFailure(person)
-    await payload.update({ collection: 'users', id: person.id, data: next, ...SYS, context: { studioAudited: true } })
     await writeAudit(payload, { user: person, device, ip, action: 'session.pin_failed', entity: 'users', entityId: person.id, summary: sentence(person, device, 'a entré un mauvais NIP') }).catch(() => null)
-    return back(next.pinLockedUntil ? 'verrouille' : 'nip')
+    return back(claim.lastTry ? 'verrouille' : 'nip')
   }
-  if (person.pinFailures) await payload.update({ collection: 'users', id: person.id, data: { pinFailures: 0, pinLockedUntil: null }, ...SYS, context: { studioAudited: true } })
+  forgive(throttleKey)
+  await clearPinFailures(query, person.id)
   // The previous person's session ends: one person per tablet at a time, so the audit log names the right one.
   if (current) await revokeCurrent(payload, request.headers).catch(() => null)
   const { cookie } = await issueSession(payload, person.id)
