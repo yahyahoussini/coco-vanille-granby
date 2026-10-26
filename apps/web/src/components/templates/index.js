@@ -7,9 +7,9 @@ import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
-import { ProductGrid, SizesTable, AllergenBlock, LaCoupe, AvailabilityBadge, productPath } from '../site/Products'
+import { ProductGrid, SizesTable, AllergenBlock, LaCoupe, OfferBadge, productPath } from '../site/Products'
 import { hoursSummary } from '../site/hours'
-import { parseGuests, matchSizes, seasonState, monthYear, leadTimeText, fromPriceCents, sizeText, portionsText, priceText, perPortionText } from '../site/offer'
+import { parseGuests, matchSizes, seasonState, monthYear, leadTimeText, fromPriceCents, sizeText, portionsText, priceText, perPortionText, offerBadge } from '../site/offer'
 import { orderingTemplates } from './ordering'
 
 // Every template receives { locale, business, shop, page, doc, conditionNotice } from SitePage (product pages: { product }).
@@ -498,13 +498,15 @@ async function SeasonalTemplate(props) {
   )
 }
 
-// ---------- Product: sizes table, verified allergens, lead time, availability with its date line ----------
-function ProductTemplate({ product, locale, business }) {
+// ---------- Product: sizes table, verified allergens, lead time, the engine's availability (« Prête dès … ») ----------
+function ProductTemplate({ product, offer, shop, locale, business }) {
   const s = t(locale)
   const o = s.offer
   const lead = leadTimeText(product.leadTimeHours, locale)
   const from = fromPriceCents(product)
   const first = (product.variants || [])[0] || {}
+  const orderingEnabled = Boolean(shop?.ordering?.enabled)
+  const ready = offerBadge(offer, { orderingEnabled })?.tone === 'ready'
   return (
     <article className="wrap page product">
       <div className="product-head">
@@ -519,7 +521,7 @@ function ProductTemplate({ product, locale, business }) {
             {from !== null ? `${s.priceFrom} ${priceText({ priceCents: from }, locale)} (${s.taxesExtra})` : <Fact value={null} label={`prix — ${product.title}`} />}
             {portionsText(first, locale) && <span className="small"> · {portionsText(first, locale)} {s.portions}</span>}
           </p>
-          <AvailabilityBadge product={product} locale={locale} />
+          <OfferBadge state={offer} orderingEnabled={orderingEnabled} skip={['ready']} />
         </div>
         <LaCoupe photos={product.photos} caption={product.title} locale={locale} />
       </div>
@@ -529,6 +531,7 @@ function ProductTemplate({ product, locale, business }) {
       </section>
       <section aria-labelledby="product-ready">
         <h2 id="product-ready">{o.readyTitle}</h2>
+        {ready && <OfferBadge state={offer} orderingEnabled={orderingEnabled} />}
         <p>{lead ? o.leadTime(lead) : <Fact value={null} label="délai de préparation" id="leadTimeHours" />}</p>
       </section>
       <AllergenBlock product={product} business={business} locale={locale} />
@@ -537,7 +540,7 @@ function ProductTemplate({ product, locale, business }) {
     </article>
   )
 }
-ProductTemplate.schema = async ({ product, url }) => [productNode({ product, url })]
+ProductTemplate.schema = async ({ product, offer, url }) => [productNode({ product, offer, url })]
 
 // ---------- Legal: identity boxes from the business global; translations say French prevails ----------
 const LEGAL_LABELS = {

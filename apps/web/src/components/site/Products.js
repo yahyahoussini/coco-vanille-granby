@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { t, money, longDate } from '@/lib/i18n'
+import { containsMarker } from '@/lib/facts'
+import { getOfferStates, getShop } from '@/lib/data'
 import { Fact } from './Fact'
-import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, availabilityLine } from './offer'
+import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, offerBadge } from './offer'
 
 const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
 // « Contient : » (fr, non-breaking space) · "Contains:" (en, es)
@@ -54,19 +56,25 @@ export function LaCoupe({ photos = [], caption, locale }) {
   )
 }
 
-export function AvailabilityBadge({ product, locale }) {
-  const o = t(locale).offer
-  const line = availabilityLine(product, o, locale)
-  if (!line || line.tone === 'instock') return null
+// The engine's availability line (« Prête dès … », « Épuisé », « De retour le … »); a missing fact stays a marker.
+export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
+  const badge = offerBadge(state, { orderingEnabled })
+  if (!badge || skip.includes(badge.tone)) return null
   return (
-    <p className={`badge badge-${line.tone}`}>
-      {line.text || <Fact value={null} label="date de retour ou de mise en vente" />}
+    <p className={`badge badge-${badge.tone}`} data-fact="availability">
+      {containsMarker(badge.text) ? (
+        <span className="fact-needed" data-nosnippet="">
+          {badge.text}
+        </span>
+      ) : (
+        badge.text
+      )}
     </p>
   )
 }
 
 // Card for category, menu and vitrine lists: title link (whole card clickable), price as text, servings, lead time.
-export function ProductCard({ product, locale, showPlanned = false, level = 3 }) {
+export function ProductCard({ product, locale, state, orderingEnabled, showPlanned = false, level = 3 }) {
   const Heading = `h${level}`
   const s = t(locale)
   const href = productPath(product, locale)
@@ -95,16 +103,18 @@ export function ProductCard({ product, locale, showPlanned = false, level = 3 })
           {product.vitrinePlanned} {s.home.planned}
         </p>
       )}
-      <AvailabilityBadge product={product} locale={locale} />
+      <OfferBadge state={state} orderingEnabled={orderingEnabled} />
     </li>
   )
 }
 
-export function ProductGrid({ products, locale, showPlanned, level }) {
+export async function ProductGrid({ products, locale, showPlanned, level }) {
+  const [states, shop] = await Promise.all([getOfferStates(products, locale), getShop(locale)])
+  const orderingEnabled = Boolean(shop?.ordering?.enabled)
   return (
     <ul className="product-grid">
       {products.map((p) => (
-        <ProductCard key={p.id} product={p} locale={locale} showPlanned={showPlanned} level={level} />
+        <ProductCard key={p.id} product={p} locale={locale} state={states.get(p.id)} orderingEnabled={orderingEnabled} showPlanned={showPlanned} level={level} />
       ))}
     </ul>
   )

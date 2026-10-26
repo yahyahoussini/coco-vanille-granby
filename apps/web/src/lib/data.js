@@ -2,6 +2,8 @@ import 'server-only'
 import { cache } from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { engineContext } from '@/lib/ordering/context'
+import { productOfferState } from '@/lib/ordering/availability'
 
 export const payloadClient = cache(async () => getPayload({ config }))
 
@@ -60,3 +62,14 @@ export const getAllergens = cache(async (locale = 'fr') => {
   const res = await payload.find({ collection: 'allergens', locale, limit: 50, depth: 0, sort: 'code' })
   return res.docs
 })
+
+// Shop, capacity pools and bookings read once per render, so every card, the product page and its JSON-LD
+// get the same engine answer (06 k). Checkout checks capacity again under the lock.
+const getEngine = cache(async () => engineContext(await payloadClient()))
+
+export async function getOfferStates(products = [], locale = 'fr') {
+  if (!products.length) return new Map()
+  const { shop, pools, usage } = await getEngine()
+  const now = new Date()
+  return new Map(products.map((p) => [p.id, productOfferState(p, shop, now, { locale, pools, usage })]))
+}

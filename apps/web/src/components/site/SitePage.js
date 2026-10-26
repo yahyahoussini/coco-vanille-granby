@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { PAGES, resolvePath, pathFor, alternatesFor, isIndexable, SITE_ORIGIN, LOCALES, localeEnabled, pageByKey } from '@/lib/routes'
-import { getBusiness, getShop, getPageDoc, getProductBySlugs, payloadClient } from '@/lib/data'
+import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard, marker } from '@/lib/facts'
 import { t } from '@/lib/i18n'
 import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode } from '@/lib/schema'
@@ -102,6 +102,7 @@ export async function SitePage({ locale, segments = [], query }) {
   if (hit.kind === 'product') {
     Template = TEMPLATES.product
     props.product = hit.product
+    props.offer = (await getOfferStates([hit.product], locale)).get(hit.product.id)
     pageKey = null
     pageName = hit.product.title
     crumbs = crumbsFor('carte', locale)

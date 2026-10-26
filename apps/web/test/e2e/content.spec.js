@@ -99,4 +99,27 @@ test.describe('templates', () => {
     await expect(page.locator('#product-allergens')).toBeVisible()
     await expect(page.locator('#product-ready')).toBeVisible()
   })
+
+  test('product: the card, the page and the Offer JSON-LD give the same engine answer (06 k)', async ({ page }) => {
+    const card = await inspect(page, (await raw(`${PUBLIC_URL}/gateaux/`)).body)
+    const path = card.links.find((h) => /^\/gateaux\/[a-z0-9-]+\/$/.test(h))
+    expect(path, 'a product link on /gateaux/').toBeTruthy()
+    const html = (await raw(`${PUBLIC_URL}${path}`)).body
+    const product = ldNodes((await inspect(page, html)).jsonld.map((j) => JSON.parse(j))).find((n) => hasType(n, 'Product'))
+    expect(product, `${path} Product node`).toBeTruthy()
+    await page.setContent(html)
+    const ready = await page.locator('#product-ready .badge-ready').count()
+    const soldOut = await page.locator('.badge-soldout').count()
+    for (const offer of product.offers || []) {
+      if (ready) expect(offer.availability).toBe('https://schema.org/InStock')
+      if (soldOut) expect(offer.availability).toBe('https://schema.org/SoldOut')
+      if (/BackOrder|PreOrder/.test(offer.availability)) expect(offer.availabilityStarts).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    }
+    if (ready) {
+      // « Prête dès … » on the card too: same words as the page.
+      await page.setContent((await raw(`${PUBLIC_URL}/gateaux/`)).body)
+      const text = (await page.locator(`li.product-card:has(a[href="${path}"]) .badge`).first().textContent()) || ''
+      expect(text).toMatch(/^Prête dès /)
+    }
+  })
 })

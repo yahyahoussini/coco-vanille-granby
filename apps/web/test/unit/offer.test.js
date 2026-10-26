@@ -1,7 +1,10 @@
 // Pure template logic: portions, price per serving, calculator matching, seasonal state, hours summary.
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { servings, portionsText, inchesText, perPortionText, fromPriceCents, leadTimeText, parseGuests, matchSizes, seasonState, monthYear, availabilityLine } from '../../src/components/site/offer.js'
+import { servings, portionsText, inchesText, perPortionText, fromPriceCents, leadTimeText, parseGuests, matchSizes, seasonState, monthYear, offerBadge } from '../../src/components/site/offer.js'
+import { productOfferState } from '../../src/lib/ordering/availability.js'
+import { productNode } from '../../src/lib/schema.js'
+import { shop, pools, cake, local } from './ordering/fixtures.js'
 import { hoursSummary } from '../../src/components/site/hours.js'
 
 const nb = (s) => s.replace(/ | /g, ' ')
@@ -105,14 +108,59 @@ describe('seasonal state machine', () => {
   })
 })
 
-describe('availability date line (06 k)', () => {
-  const labels = { soldOut: 'Épuisé aujourd’hui', backOn: 'De retour le', preorderFrom: 'Précommande · prêt dès le', inStock: 'En vente' }
+describe('availability badge and Offer from the ordering engine (06 k)', () => {
+  const now = local('2026-10-27', '10:00')
+  const url = 'https://cocovanillegranby.com/gateaux/gateau-aux-framboises/'
+  const both = (product, sh = shop(), opts = { pools: pools() }) => {
+    const state = productOfferState(product, sh, now, opts)
+    return { badge: offerBadge(state, { orderingEnabled: Boolean(sh.ordering?.enabled) }), offer: productNode({ product, url, offer: state }).offers[0] }
+  }
 
-  test('BackOrder and PreOrder carry their date, or ask for it', () => {
-    assert.match(availabilityLine({ availability: 'backorder', availabilityDate: '2026-11-20T12:00:00Z' }, labels, 'fr').text, /^De retour le 20 novembre 2026$/)
-    assert.match(availabilityLine({ availability: 'preorder', availabilityDate: '2026-11-20T12:00:00Z' }, labels, 'fr').text, /^Précommande · prêt dès le 20 novembre 2026$/)
-    assert.equal(availabilityLine({ availability: 'backorder' }, labels, 'fr').missing, true)
-    assert.equal(availabilityLine({ availability: 'soldout' }, labels, 'fr').text, 'Épuisé aujourd’hui')
+  test('bookable online → « Prête dès … » and InStock', () => {
+    const { badge, offer } = both(cake())
+    assert.deepEqual(badge, { tone: 'ready', text: 'Prête dès jeudi 29 oct.' })
+    assert.equal(offer.availability, 'https://schema.org/InStock')
+    assert.equal(offer.availabilityStarts, undefined)
+  })
+
+  test('BackOrder and PreOrder carry their date on the badge and in availabilityStarts', () => {
+    const back = both(cake({ availability: 'backorder', availabilityDate: '2026-12-19T12:00:00.000Z', everSold: true }))
+    assert.deepEqual(back.badge, { tone: 'later', text: 'De retour le samedi 19 déc.' })
+    assert.deepEqual([back.offer.availability, back.offer.availabilityStarts], ['https://schema.org/BackOrder', '2026-12-19'])
+    const fresh = both(cake({ availability: 'preorder', availabilityDate: '2026-12-19T12:00:00.000Z' }))
+    assert.equal(fresh.badge.text, 'Précommande · prête dès le samedi 19 déc.')
+    assert.deepEqual([fresh.offer.availability, fresh.offer.availabilityStarts], ['https://schema.org/PreOrder', '2026-12-19'])
+  })
+
+  test('a dated state without its date asks for it and never dates the Offer', () => {
+    const { badge, offer } = both(cake({ availability: 'backorder', everSold: true }))
+    assert.equal(badge.tone, 'later')
+    assert.match(badge.text, /^\[\[FACT NEEDED: date de retour/)
+    assert.equal(offer.availabilityStarts, undefined)
+  })
+
+  test('« Épuisé » → SoldOut, the badge says until when', () => {
+    const { badge, offer } = both(cake({ availability: 'soldout', soldOutUntil: '2026-10-29T12:00:00.000Z' }))
+    assert.deepEqual(badge, { tone: 'soldout', text: 'Épuisé · De retour le jeudi 29 oct.' })
+    assert.equal(offer.availability, 'https://schema.org/SoldOut')
+  })
+
+  test('the capacity pools decide: a full pool gives no « Prête dès », a missing pool asks for it', () => {
+    assert.equal(offerBadge(productOfferState(cake(), shop(), now, { pools: pools({ gateaux: { defaultPerDay: 0 } }) })), null)
+    assert.match(offerBadge(productOfferState(cake(), shop(), now, { pools: [] })).text, /^\[\[FACT NEEDED: capacité de production/)
+  })
+
+  test('« En boutique seulement » only while online ordering is on; nothing when it is off', () => {
+    const state = productOfferState(cake({ onlineOrderable: false }), shop(), now)
+    assert.deepEqual(offerBadge(state, { orderingEnabled: true }), { tone: 'instore', text: 'En boutique seulement' })
+    assert.equal(offerBadge(state, { orderingEnabled: false }), null)
+    assert.equal(offerBadge(productOfferState(cake(), shop({ ordering: { enabled: false } }), now, { pools: pools() })), null)
+  })
+
+  test('missing hours with ordering on → the marker shows (owner to-do), the Offer stays InStock', () => {
+    const { badge, offer } = both(cake(), shop({ hours: [] }))
+    assert.match(badge.text, /\[\[FACT NEEDED: heures/)
+    assert.equal(offer.availability, 'https://schema.org/InStock')
   })
 })
 

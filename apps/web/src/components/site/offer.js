@@ -1,7 +1,7 @@
 // Pure offer logic shared by the product, prices, calculator and seasonal templates.
 // No React and relative imports only, so node --test can load it. Missing facts return null:
 // the caller renders a marker, never a guess.
-import { money, longDate } from '../../lib/i18n.js'
+import { money } from '../../lib/i18n.js'
 
 const positive = (n) => typeof n === 'number' && Number.isFinite(n) && n > 0
 
@@ -119,18 +119,22 @@ export function monthYear(date, locale = 'fr') {
   return new Intl.DateTimeFormat(tag, { month: 'long', year: 'numeric', timeZone: 'America/Toronto' }).format(date)
 }
 
-// Date line for returning (BackOrder) and new (PreOrder) products (06 k).
-export function availabilityLine(product = {}, labels, locale = 'fr') {
-  const date = product.availabilityDate ? longDate(product.availabilityDate, locale) : null
-  switch (product.availability) {
-    case 'soldout':
-      return { tone: 'soldout', text: product.soldOutUntil ? `${labels.soldOut} · ${labels.backOn} ${longDate(product.soldOutUntil, locale)}` : labels.soldOut }
-    case 'backorder':
-      return { tone: 'later', text: date ? `${labels.backOn} ${date}` : null, missing: !date }
-    case 'preorder':
-      return { tone: 'later', text: date ? `${labels.preorderFrom} ${date}` : null, missing: !date }
-    case 'instock':
-      return { tone: 'instock', text: labels.inStock }
+// Badge for one engine state (productOfferState in lib/ordering/availability.js, 06 k): the card, the product
+// page and the Offer JSON-LD read the same answer. « Prête dès … » only when it can really be booked online;
+// « En boutique seulement » only while online ordering is on (otherwise every product would say it).
+export function offerBadge(state, { orderingEnabled = false } = {}) {
+  if (!state?.label) return null
+  switch (state.state) {
+    case 'epuise_du_jour':
+      return { tone: 'soldout', text: state.label }
+    case 'retour_saison':
+    case 'nouveaute':
+      return { tone: 'later', text: state.label }
+    case 'disponible':
+      if (state.orderable) return { tone: 'ready', text: state.label }
+      if (state.missing?.length) return { tone: 'later', text: state.label }
+      if (state.reason === 'not_online' && orderingEnabled) return { tone: 'instore', text: state.label }
+      return null
     default:
       return null
   }

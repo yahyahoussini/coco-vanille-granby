@@ -700,6 +700,17 @@ th a {
   color: var(--ink);
 }
 
+/* « Prête dès … »: bookable online now. */
+.badge-ready {
+  background: var(--paper-pistache);
+  color: var(--ink-ok);
+}
+
+.badge-instore {
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+}
+
 /* « Coco Joyeux »: a festive touch reserved for cake and birthday moments. */
 .badge-best {
   background: var(--paper-blush);

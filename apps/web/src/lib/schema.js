@@ -93,7 +93,13 @@ const AVAILABILITY = {
   discontinued: 'https://schema.org/Discontinued',
 }
 
-export function productNode({ product, url, imageUrls = [] }) {
+// `offer` is the ordering engine's state (productOfferState): the same answer as the badge on the page.
+// Without it (tests, feeds built elsewhere) the catalogue field decides.
+const DATED = ['https://schema.org/BackOrder', 'https://schema.org/PreOrder']
+
+export function productNode({ product, url, imageUrls = [], offer = null }) {
+  const availability = offer?.schemaAvailability || AVAILABILITY[product.availability] || AVAILABILITY.instock
+  const starts = offer ? (DATED.includes(availability) && offer.availabilityDate) || undefined : ['backorder', 'preorder'].includes(product.availability) ? product.availabilityDate : undefined
   const offers = (product.variants || [])
     .filter((v) => !isMissing(v.priceCents))
     .map((v) => ({
@@ -101,8 +107,8 @@ export function productNode({ product, url, imageUrls = [] }) {
       name: v.label,
       price: (v.priceCents / 100).toFixed(2),
       priceCurrency: 'CAD',
-      availability: AVAILABILITY[product.availability] || AVAILABILITY.instock,
-      availabilityStarts: ['backorder', 'preorder'].includes(product.availability) ? product.availabilityDate : undefined,
+      availability,
+      availabilityStarts: starts,
       url,
       seller: { '@id': BAKERY_ID },
     }))
