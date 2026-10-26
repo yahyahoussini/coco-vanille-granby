@@ -79,6 +79,8 @@ export function fakePayload({ globals = {}, collections = {} } = {}) {
       return clone(doc)
     },
     async create({ collection, data }) {
+      // The unique index on the audit log's idempotency key, as in Postgres.
+      if (collection === 'audit-log' && data?.key && list(collection).some((d) => d.key === data.key)) throw new Error('Le champ suivant n’est pas valide : key')
       const doc = { id: nextId(collection), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), ...clone(data) }
       list(collection).push(doc)
       return clone(doc)

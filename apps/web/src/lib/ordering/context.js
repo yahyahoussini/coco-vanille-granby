@@ -1,6 +1,7 @@
 // Database side of the engine: shop settings, capacity pools, bookings, the capacity lock, tokens.
 // Every read uses the Local API with overrideAccess (callers check who may act before calling).
 import { randomBytes, randomInt } from 'node:crypto'
+import { AsyncLocalStorage } from 'node:async_hooks'
 import { addDays, localParts, dayBounds } from '../studio/time.js'
 import { COMMITTED_STATUSES, usageFrom } from './capacity.js'
 import { windowSettings } from './slots.js'
@@ -48,17 +49,38 @@ export async function engineContext(payload, { now = new Date(), shop } = {}) {
 
 // One writer at a time for bookings (web checkout, Studio phone orders, quotes, payment webhooks):
 // a Postgres advisory lock, so a window or a pool can never be sold twice. No database pool → runs as is.
-const LOCK_KEY = 4503727177
-export async function withCapacityLock(payload, fn) {
+// Inside one process the callers queue in memory first, so at most one pool connection per process waits
+// on the lock: a burst of bookings can never hold every connection while the holder needs one for its own
+// queries (pool exhaustion). Across processes (web, studio, worker) each waits with a single connection,
+// and never longer than LOCK_WAIT. A call made while already holding the lock runs at once.
+export const LOCK_KEY = 4503727177
+const LOCK_WAIT = '20s'
+const holding = new AsyncLocalStorage()
+const queues = new WeakMap()
+
+export function withCapacityLock(payload, fn) {
   const pool = payload?.db?.pool
   if (!pool?.connect) return fn()
+  if (holding.getStore() === pool) return fn()
+  const run = (queues.get(pool) || Promise.resolve()).then(() => lockedRun(pool, fn))
+  queues.set(pool, run.catch(() => {}))
+  return run
+}
+
+async function lockedRun(pool, fn) {
   const client = await pool.connect()
+  let locked = false
+  let broken = false
   try {
+    await client.query(`set lock_timeout = '${LOCK_WAIT}'`)
     await client.query('select pg_advisory_lock($1)', [LOCK_KEY])
-    return await fn()
+    locked = true
+    return await holding.run(pool, fn)
   } finally {
-    await client.query('select pg_advisory_unlock($1)', [LOCK_KEY]).catch(() => {})
-    client.release()
+    if (locked) await client.query('select pg_advisory_unlock($1)', [LOCK_KEY]).catch(() => (broken = true))
+    await client.query('reset lock_timeout').catch(() => (broken = true))
+    // A connection that could not unlock is closed, which frees the lock in Postgres.
+    client.release(broken || undefined)
   }
 }
 

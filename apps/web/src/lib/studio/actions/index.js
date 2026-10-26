@@ -2,7 +2,7 @@
 // matrix, replayed safely by its idempotency key (offline outbox), written to the audit log with before/after,
 // and, when it can be undone, given an undo window. Side effects (textos) are held until that window closes.
 import { can, needsStepUp } from '../roles.js'
-import { writeAudit, findByKey } from '../audit.js'
+import { writeAudit, findByKey, reserveKey, finishAudit, releaseKey } from '../audit.js'
 import { orderActions } from './orders.js'
 import { catalogActions } from './catalog.js'
 import { shopActions } from './shop.js'
@@ -27,15 +27,24 @@ export const writeAs = (user) => ({ user, overrideAccess: true, context: { studi
 
 const undoInfo = (entry) => (entry?.undoUntil && !entry.undoneAt ? { id: entry.id, until: entry.undoUntil, visible: UNDO_VISIBLE_SECONDS } : null)
 
-export async function perform(payload, { user, device = null, ip = null, stepUp = false, type, input = {}, key = null, now = new Date() }) {
+export async function perform(payload, args) {
+  const { user, device = null, ip = null, stepUp = false, type, input = {}, key = null, now = new Date() } = args
   // The role matrix first: a refused role learns nothing about what exists.
   if (!can(user, type)) return fail('forbidden', 'Pas permis pour votre rôle. Rien n’a changé.', 403)
   if (needsStepUp(type) && !stepUp) return fail('step_up', 'Confirmez que c’est vous pour continuer.', 401)
   const def = REGISTRY[type]
   if (!def) return fail('unknown', 'Action inconnue.', 400)
+  let reserved = null
   if (key) {
     const prev = await findByKey(payload, key)
-    if (prev) return { ...(prev.result || { ok: true }), replay: true, undo: undoInfo(prev) }
+    const replay = prev && (await replayOf(payload, prev))
+    if (replay) return replay
+    if (!prev) reserved = await reserveKey(payload, { user, device, ip, action: type, key })
+    if (!reserved) {
+      // Taken by a request running right now: its result, or a fresh try if it was refused and freed the key.
+      const again = await replayOf(payload, await findByKey(payload, key))
+      return again || perform(payload, args)
+    }
   }
   const t = new Date(now).getTime()
   const undoSeconds = def.undo ? (typeof def.undoSeconds === 'function' ? def.undoSeconds(input) : def.undoSeconds ?? UNDO_SECONDS) : 0
@@ -44,11 +53,17 @@ export async function perform(payload, { user, device = null, ip = null, stepUp 
   try {
     r = await def.run(ctx, input || {})
   } catch (e) {
-    if (e instanceof Refusal) return fail(e.code, e.message, e.status, e.extra)
+    // A refusal changed nothing: the key is free again. Anything else may have half-applied (an order made,
+    // then a texto failed): the key keeps that outcome, so a replay never runs the action a second time.
+    if (e instanceof Refusal) {
+      if (reserved) await releaseKey(payload, reserved.id).catch(() => null)
+      return fail(e.code, e.message, e.status, e.extra)
+    }
+    if (reserved) await finishAudit(payload, reserved.id, { user, device, ip, action: type, key, summary: `${user?.name || 'Quelqu’un'} : ${type} interrompu`, result: INTERRUPTED }).catch(() => null)
     throw e
   }
   const result = { ok: true, message: r.message || 'Fait.', data: r.data ?? null }
-  const entry = await writeAudit(payload, {
+  const fields = {
     user,
     device,
     ip,
@@ -61,8 +76,26 @@ export async function perform(payload, { user, device = null, ip = null, stepUp 
     key,
     undoUntil: r.noUndo ? null : ctx.undoUntil,
     result,
-  })
+  }
+  const entry = reserved ? await finishAudit(payload, reserved.id, fields) : await writeAudit(payload, fields)
   return { ...result, undo: r.noUndo ? null : undoInfo(entry), auditId: entry.id }
+}
+
+const INTERRUPTED = { ok: false, code: 'interrupted', message: 'L’envoi a été interrompu : vérifiez à l’écran avant de recommencer.', status: 409 }
+const KEY_WAIT_MS = 10_000
+
+// The first result for this key. While the first request is still running, wait for it (a few seconds).
+// null: the key is free again (that request was refused and changed nothing).
+async function replayOf(payload, entry, { waitMs = KEY_WAIT_MS } = {}) {
+  let e = entry
+  const until = Date.now() + waitMs
+  while (e && !e.result && Date.now() < until) {
+    await new Promise((r) => setTimeout(r, 100))
+    e = await findByKey(payload, e.key)
+  }
+  if (!e) return null
+  if (!e.result) return { ok: false, code: 'in_progress', message: 'Déjà envoyé · le résultat arrive, vérifiez l’écran dans un instant.', status: 409, replay: true }
+  return { ...e.result, replay: true, undo: undoInfo(e) }
 }
 
 // « Annuler »: same person (or the owner), inside the window, once.

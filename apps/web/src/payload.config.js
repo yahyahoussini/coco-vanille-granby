@@ -41,7 +41,9 @@ export default buildConfig({
   i18n: { supportedLanguages: { fr, en }, fallbackLanguage: 'fr' },
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI || '' },
+    // Explicit size, and a wait that ends: a query that cannot get a connection in 15 s fails instead of
+    // hanging the process (ordering/context.js keeps the booking lock from holding more than one).
+    pool: { connectionString: process.env.DATABASE_URI || '', max: 10, connectionTimeoutMillis: 15_000 },
     // Dev pushes schema automatically; production uses committed migrations.
     push: process.env.NODE_ENV !== 'production',
     migrationDir: path.resolve(dirname, 'migrations'),

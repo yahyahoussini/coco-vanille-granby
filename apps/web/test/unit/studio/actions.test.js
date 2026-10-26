@@ -53,6 +53,47 @@ describe('perform', () => {
     assert.equal(payload.store.questions.length, 1)
     assert.equal(payload.store['audit-log'].length, 1)
   })
+
+  // One tap posted twice at the same instant (act() and flush() after the call screen): the key is
+  // reserved before the action runs, so the second request waits for the first result.
+  test('two requests with the same key at the same time: the action runs once', async () => {
+    const payload = fakePayload()
+    const create = payload.create.bind(payload)
+    payload.create = async (args) => {
+      if (args.collection === 'questions') await new Promise((r) => setTimeout(r, 50))
+      return create(args)
+    }
+    const tap = () => perform(payload, { user: lea, device, type: 'question.create', input: { text: 'Avez-vous du sans gluten?' }, key: 'twice' })
+    const [a, b] = await Promise.all([tap(), tap()])
+    assert.ok(a.ok && b.ok)
+    assert.equal([a, b].filter((r) => r.replay).length, 1)
+    assert.equal(payload.store.questions.length, 1)
+    assert.equal(payload.store['audit-log'].length, 1)
+    assert.ok(payload.store['audit-log'][0].result.ok)
+  })
+
+  test('a refusal frees the key; a crash half-way keeps it, so a replay never runs the action again', async () => {
+    const payload = fakePayload()
+    const refused = await perform(payload, { user: lea, device, type: 'question.create', input: { text: '' }, key: 'k-r' })
+    assert.equal(refused.code, 'text_required')
+    assert.equal((payload.store['audit-log'] || []).length, 0)
+    assert.ok((await perform(payload, { user: lea, device, type: 'question.create', input: { text: 'Une vraie question' }, key: 'k-r' })).ok)
+
+    const create = payload.create.bind(payload)
+    payload.create = async (args) => {
+      if (args.collection === 'questions') {
+        await create(args)
+        throw new Error('texto: réseau')
+      }
+      return create(args)
+    }
+    await assert.rejects(perform(payload, { user: lea, device, type: 'question.create', input: { text: 'Question deux' }, key: 'k-x' }))
+    payload.create = create
+    const replay = await perform(payload, { user: lea, device, type: 'question.create', input: { text: 'Question deux' }, key: 'k-x' })
+    assert.equal(replay.ok, false)
+    assert.equal(replay.code, 'interrupted')
+    assert.equal(payload.store.questions.filter((q) => q.text === 'Question deux').length, 1)
+  })
 })
 
 describe('undo', () => {

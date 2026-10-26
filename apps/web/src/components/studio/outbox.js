@@ -60,12 +60,17 @@ async function post(action) {
   return { status: res.status, body }
 }
 
+// Taps being posted right now by act(): flush() (screen back, online, the sync chip) leaves them alone, so
+// one tap is never posted twice at the same time. The server's key reservation is the second guard.
+const inFlight = new Set()
+
 let flushing = null
 export function flush() {
   flushing ||= (async () => {
     try {
       if (typeof navigator !== 'undefined' && navigator.onLine === false) return
       for (const action of await pending()) {
+        if (inFlight.has(action.id)) continue
         let r
         try {
           r = await post(action)
@@ -99,6 +104,7 @@ export async function act(type, input = {}) {
     emit('studio:outbox', { count: await count() })
     return { ok: true, queued: true, message: 'Hors ligne · gardé, envoi automatique au retour du réseau.' }
   }
+  inFlight.add(action.id)
   try {
     const r = await post(action)
     if (queueable && r.status < 500 && r.body.code !== 'login') await remove(action.id)
@@ -113,6 +119,8 @@ export async function act(type, input = {}) {
       return { ok: true, queued: true, message: 'Hors ligne · gardé, envoi automatique au retour du réseau.' }
     }
     return { ok: false, code: 'offline', message: 'Cette action a besoin du réseau. Rien n’a été envoyé.' }
+  } finally {
+    inFlight.delete(action.id)
   }
 }
 

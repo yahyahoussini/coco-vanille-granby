@@ -53,29 +53,24 @@ export function ipOf(headers) {
   return String(get('x-real-ip') || '').trim() || null
 }
 
-export async function writeAudit(payload, { user = null, device = null, ip = null, action, entity = null, entityId = null, before = null, after = null, summary = null, key = null, undoOf = null, undoUntil = null, result = null, req = null }) {
-  return payload.create({
-    collection: 'audit-log',
-    data: {
-      actor: user?.id ?? null,
-      device: device ? [device.kind, device.id].filter(Boolean).join(' · ') : null,
-      ip,
-      action,
-      entity,
-      entityId: entityId === null || entityId === undefined ? null : String(entityId),
-      before: scrub(before),
-      after: scrub(after),
-      summary,
-      key,
-      undoOf,
-      undoUntil: undoUntil ? new Date(undoUntil).toISOString() : null,
-      result: scrub(result),
-    },
-    overrideAccess: true,
-    depth: 0,
-    req: req || undefined,
-    context: { studioAudited: true },
-  })
+const auditData = ({ user = null, device = null, ip = null, action, entity = null, entityId = null, before = null, after = null, summary = null, key = null, undoOf = null, undoUntil = null, result = null }) => ({
+  actor: user?.id ?? null,
+  device: device ? [device.kind, device.id].filter(Boolean).join(' · ') : null,
+  ip,
+  action,
+  entity,
+  entityId: entityId === null || entityId === undefined ? null : String(entityId),
+  before: scrub(before),
+  after: scrub(after),
+  summary,
+  key,
+  undoOf,
+  undoUntil: undoUntil ? new Date(undoUntil).toISOString() : null,
+  result: scrub(result),
+})
+
+export async function writeAudit(payload, { req = null, ...fields }) {
+  return payload.create({ collection: 'audit-log', data: auditData(fields), overrideAccess: true, depth: 0, req: req || undefined, context: { studioAudited: true } })
 }
 
 // Idempotency: an outbox replay with a key already in the log returns the first result, nothing runs twice.
@@ -84,6 +79,22 @@ export async function findByKey(payload, key) {
   const res = await payload.find({ collection: 'audit-log', where: { key: { equals: String(key) } }, limit: 1, overrideAccess: true, depth: 0 })
   return res.docs[0] || null
 }
+
+// The key is taken before the action runs: the unique index lets one request through, a second one with
+// the same key (the same tap sent twice at once) finds the row and waits for its result. → the row, or null
+// when another request holds the key.
+export async function reserveKey(payload, { key, ...fields }) {
+  try {
+    return await writeAudit(payload, { ...fields, key, summary: null, result: null })
+  } catch (e) {
+    if (await findByKey(payload, key)) return null
+    throw e
+  }
+}
+
+export const finishAudit = (payload, id, fields) => payload.update({ collection: 'audit-log', id, data: auditData(fields), overrideAccess: true, depth: 0, context: { studioAudited: true } })
+
+export const releaseKey = (payload, id) => payload.delete({ collection: 'audit-log', id, overrideAccess: true, depth: 0, context: { studioAudited: true } })
 
 // Collection hooks for edits that do not go through Studio actions (Payload admin, seeds with a user).
 export function auditHooks(entity, { global = false } = {}) {
