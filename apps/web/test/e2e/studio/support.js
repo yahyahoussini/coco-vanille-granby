@@ -12,6 +12,7 @@ export async function login(page, who = OWNER, device = 'telephone') {
   await page.getByLabel('Mot de passe').fill(who.password)
   await page.locator(`input[name="appareil"][value="${device}"]`).check({ force: true })
   await page.getByRole('button', { name: 'Se connecter' }).click()
+  await page.waitForURL((url) => !url.pathname.startsWith('/connexion'))
   await expect(page.locator('h1')).not.toHaveText('Coco Studio')
 }
 

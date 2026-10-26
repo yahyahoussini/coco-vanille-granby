@@ -4,7 +4,7 @@
 // Run: npx playwright test --project=admin
 import { test, expect } from '@playwright/test'
 import { raw, PUBLIC_URL, ADMIN_URL } from '../support/site.js'
-import { OWNER, LEA, AGENCY, login, action, stepUp } from './support.js'
+import { OWNER, LEA, MARC, AGENCY, login, action, stepUp } from './support.js'
 
 test.describe('admin host', () => {
   test('every Studio response is noindex and never cached, error pages included', async () => {
@@ -68,8 +68,8 @@ test.describe('roles enforced on the server', () => {
   })
 
   test('money and people actions need a fresh identity check', async ({ page }) => {
-    await login(page, OWNER)
-    const r = await action(page, 'users.pin', { userId: 1, pin: '0000' })
+    await login(page, MARC)
+    const r = await action(page, 'product.price', { productId: 1, variantIndex: 0, price: '9' })
     expect(r.status).toBe(401)
     expect(r.body.code).toBe('step_up')
   })

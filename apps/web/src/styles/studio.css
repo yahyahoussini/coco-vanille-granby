@@ -646,6 +646,22 @@ fieldset.field {
   padding-inline-start: 1.25rem;
 }
 
+/* Closure effects preview: the list for the chosen duration (all of them until one is chosen) */
+.closure-form .fx {
+  display: none;
+}
+
+.closure-form:not(:has(input[name='duree']:checked)) .fx,
+.closure-form:has(input[name='duree'][value='jour']:checked) .fx[data-duree='jour'],
+.closure-form:has(input[name='duree'][value='demain']:checked) .fx[data-duree='demain'],
+.closure-form:has(input[name='duree'][value='jusqua']:checked) .fx[data-duree='jusqua'] {
+  display: block;
+}
+
+.closure-form:has(input[name='duree']:checked) .fx-title {
+  display: none;
+}
+
 /* Sticky save bar for multi-field forms (16a P5) */
 .savebar {
   position: sticky;

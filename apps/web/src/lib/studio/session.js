@@ -89,8 +89,9 @@ function claims(token) {
 }
 
 // Ends the current session server-side too (sessions are revocable, unlike bare JWTs).
-export async function revokeCurrent(payload, headers) {
-  const token = readCookie(headers, payloadCookieName(payload))
+export const revokeCurrent = (payload, headers) => revokeToken(payload, readCookie(headers, payloadCookieName(payload)))
+
+export async function revokeToken(payload, token) {
   const c = token ? claims(token) : null
   if (!c?.id || !c?.sid) return
   const user = await payload.db.findOne({ collection: 'users', where: { id: { equals: c.id } }, req: {} })

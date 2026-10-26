@@ -2,7 +2,7 @@ import { studioAuth, issueSession, revokeCurrent, clearStepUp, sameOrigin, seeOt
 import { verifyPin, pinLocked, afterPinFailure, validPin } from '@/lib/studio/pin'
 import { roleOf, homeFor, BAKERY_ROLES } from '@/lib/studio/roles'
 import { writeAudit, ipOf, sentence } from '@/lib/studio/audit'
-import { allow } from '@/lib/ordering/rate-limit'
+import { tooMany, failed } from '@/lib/studio/throttle'
 
 // POST /svc/nip: « Qui utilise la tablette? » → 4-digit PIN → a fresh 12 h session for that person.
 // Only on a device marked as the shop's shared tablet; 5 wrong PINs lock that person for 15 minutes.
@@ -20,13 +20,14 @@ export async function POST(request) {
   const { payload, user: current, device } = await studioAuth(request.headers)
   if (!device?.shared) return seeOther('/connexion/?erreur=appareil')
   const ip = ipOf(request.headers) || 'local'
-  if (!allow(`studio-pin:${ip}`, { max: 30, windowMs: 10 * 60 * 1000 })) return back('trop')
+  if (tooMany(`studio-pin:${ip}`, { max: 30 })) return back('trop')
   if (!validPin(pin)) return back('format')
 
   const person = await payload.findByID({ collection: 'users', id, ...SYS, disableErrors: true }).catch(() => null)
   if (!person || !BAKERY_ROLES.includes(roleOf(person)) || !person.pinHash) return seeOther('/qui/?erreur=personne')
   if (pinLocked(person)) return back('verrouille')
   if (!(await verifyPin(pin, person.pinHash))) {
+    failed(`studio-pin:${ip}`)
     const next = afterPinFailure(person)
     await payload.update({ collection: 'users', id: person.id, data: next, ...SYS, context: { studioAudited: true } })
     await writeAudit(payload, { user: person, device, ip, action: 'session.pin_failed', entity: 'users', entityId: person.id, summary: sentence(person, device, 'a entré un mauvais NIP') }).catch(() => null)

@@ -31,7 +31,7 @@ export function shopBanners(shop = {}, now = new Date()) {
   const b = shop.busy || {}
   if (b.extraMinutes > 0 && (!b.until || new Date(b.until) > new Date(now))) {
     const span = b.extraMinutes >= 60 && b.extraMinutes % 60 === 0 ? `${b.extraMinutes / 60} h` : `${b.extraMinutes} min`
-    out.push({ key: 'busy', tone: 'warn', text: `Délai allongé de ${span}${b.until ? ` jusqu’à ${clockOf(b.until)}` : ''}`, action: 'shop.busyStop', label: 'Arrêter' })
+    out.push({ key: 'busy', tone: 'warn', text: `Délai allongé de ${span}${b.until ? ` jusqu’à ${localParts(b.until).iso === localParts(now).iso ? clockOf(b.until) : whenFr(b.until, now)}` : ''}`, action: 'shop.busyStop', label: 'Arrêter' })
   }
   if (active(shop.onlinePause, now)) out.push({ key: 'pause', tone: 'warn', text: `Commandes en ligne en pause${shop.onlinePause.until ? ` jusqu’à ${whenFr(shop.onlinePause.until, now)}` : ''}`, action: 'shop.resume', label: 'Reprendre' })
   return out

@@ -12,7 +12,7 @@ const ERRORS = {
   inactif: 'Ce compte est désactivé. Parlez-en à la propriétaire.',
   role: 'Ce compte n’a pas accès à Coco Studio.',
   vide: 'Indiquez le courriel et le mot de passe.',
-  trop: 'Trop d’essais depuis cet appareil. Réessayez dans 10 minutes.',
+  trop: 'Trop d’essais manqués depuis cet appareil. Réessayez dans 10 minutes.',
   origine: 'La page a expiré. Réessayez.',
   appareil: 'Cet appareil n’est pas la tablette partagée de la boutique. Connectez-vous avec votre courriel.',
   cle: 'La clé d’accès n’a pas été acceptée. Utilisez le mot de passe ou un code de secours.',

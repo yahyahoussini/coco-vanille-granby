@@ -1,8 +1,8 @@
 import { generatePayloadCookie } from 'payload/shared'
-import { studioPayload, deviceCookie, readDevice, sameOrigin, safeBack, seeOther } from '@/lib/studio/session'
+import { studioPayload, deviceCookie, readDevice, revokeToken, sameOrigin, safeBack, seeOther } from '@/lib/studio/session'
 import { roleOf, homeFor } from '@/lib/studio/roles'
 import { writeAudit, ipOf, sentence } from '@/lib/studio/audit'
-import { allow } from '@/lib/ordering/rate-limit'
+import { tooMany, failed } from '@/lib/studio/throttle'
 
 // POST /svc/connexion: email + password (Payload login, 12 h session, 5 attempts then a 15-minute lock).
 // Also records what this device is: own phone, computer, or the shop's shared tablet (PIN switch).
@@ -16,7 +16,7 @@ export async function POST(request) {
   const fail = (code) => seeOther(`/connexion/?erreur=${code}${back ? `&retour=${encodeURIComponent(back)}` : ''}`)
   if (!form || !sameOrigin(request.headers)) return fail('origine')
   const ip = ipOf(request.headers) || 'local'
-  if (!allow(`studio-login:${ip}`, { max: 20, windowMs: 10 * 60 * 1000 })) return fail('trop')
+  if (tooMany(`studio-login:${ip}`)) return fail('trop')
   const email = get('email').toLowerCase()
   const password = form.get('password')
   if (!email || typeof password !== 'string' || !password) return fail('vide')
@@ -26,10 +26,14 @@ export async function POST(request) {
   try {
     result = await payload.login({ collection: 'users', data: { email, password } })
   } catch (e) {
+    failed(`studio-login:${ip}`)
     return fail(e?.name === 'LockedAuth' ? 'verrouille' : 'identifiants')
   }
   const user = result.user
-  if (!roleOf(user)) return fail(user?.active === false ? 'inactif' : 'role')
+  if (!roleOf(user)) {
+    await revokeToken(payload, result.token).catch(() => null)
+    return fail(user?.active === false ? 'inactif' : 'role')
+  }
 
   const collectionAuthConfig = payload.collections.users.config.auth
   const cookies = [generatePayloadCookie({ collectionAuthConfig, cookiePrefix: payload.config.cookiePrefix || 'payload', token: result.token })]

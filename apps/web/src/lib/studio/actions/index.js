@@ -25,9 +25,9 @@ const undoInfo = (entry) => (entry?.undoUntil && !entry.undoneAt ? { id: entry.i
 export async function perform(payload, { user, device = null, ip = null, stepUp = false, type, input = {}, key = null, now = new Date() }) {
   // The role matrix first: a refused role learns nothing about what exists.
   if (!can(user, type)) return fail('forbidden', 'Pas permis pour votre rôle. Rien n’a changé.', 403)
+  if (needsStepUp(type) && !stepUp) return fail('step_up', 'Confirmez que c’est vous pour continuer.', 401)
   const def = REGISTRY[type]
   if (!def) return fail('unknown', 'Action inconnue.', 400)
-  if (needsStepUp(type) && !stepUp) return fail('step_up', 'Confirmez que c’est vous pour continuer.', 401)
   if (key) {
     const prev = await findByKey(payload, key)
     if (prev) return { ...(prev.result || { ok: true }), replay: true, undo: undoInfo(prev) }
