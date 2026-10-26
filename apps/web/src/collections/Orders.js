@@ -28,6 +28,7 @@ export const Orders = {
     { name: 'number', type: 'number', unique: true, index: true },
     { name: 'status', type: 'select', required: true, defaultValue: 'pending_payment', options: ORDER_STATUSES, index: true },
     { name: 'source', type: 'select', defaultValue: 'web', options: ['web', 'phone', 'request'] },
+    { name: 'locale', type: 'select', defaultValue: 'fr', options: ['fr', 'en', 'es'], admin: { description: 'Langue de la commande (copie du contrat : français d’abord).' } },
     { name: 'customer', type: 'group', fields: customerFields, access: hideFromAgency },
     {
       name: 'items',
@@ -35,18 +36,28 @@ export const Orders = {
       minRows: 1,
       fields: [
         { name: 'product', type: 'relationship', relationTo: 'products' },
+        { name: 'variantIndex', type: 'number' },
         { name: 'title', type: 'text', required: true },
         { name: 'variantLabel', type: 'text' },
         { name: 'qty', type: 'number', required: true, min: 1 },
         { name: 'unitPriceCents', type: 'number', required: true },
         { name: 'taxClass', type: 'text' },
         { name: 'message', type: 'text', admin: { description: 'Message sur le gâteau.' } },
+        // Capacity snapshot: what this line takes from which pool, on which production day (10 §3).
+        { name: 'productionCategory', type: 'text' },
+        { name: 'units', type: 'number' },
+        { name: 'productionDate', type: 'text', admin: { description: 'AAAA-MM-JJ, jour de production.' } },
       ],
     },
     { name: 'pickupDate', type: 'date', index: true, admin: { date: { pickerAppearance: 'dayOnly' } } },
     { name: 'pickupWindowStart', type: 'text', admin: { description: 'HH:MM, America/Toronto' } },
     { name: 'pickupWindowEnd', type: 'text' },
     { name: 'pickupCode', type: 'text', admin: { description: 'Code à 4 chiffres montré au client.' } },
+    // A web order holds its window and capacity for 10 minutes while the customer pays (10 §3.3).
+    { name: 'holdExpiresAt', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
+    // Opaque token for the customer's payment, thanks and calendar links (never the order number alone).
+    { name: 'accessToken', type: 'text', index: true, access: hideFromAgency, admin: { readOnly: true } },
+    { name: 'request', type: 'relationship', relationTo: 'requests' },
     {
       name: 'totals',
       type: 'group',
@@ -63,9 +74,12 @@ export const Orders = {
       name: 'payment',
       type: 'group',
       fields: [
-        { name: 'provider', type: 'select', options: ['stripe', 'square', 'counter', 'none'], defaultValue: 'none' },
-        { name: 'reference', type: 'text' },
+        // 'mock' = simulated payment (development and tests only, lib/payments).
+        { name: 'provider', type: 'select', options: ['stripe', 'square', 'counter', 'mock', 'none'], defaultValue: 'none' },
+        { name: 'kind', type: 'select', options: ['full', 'deposit'], defaultValue: 'full' },
+        { name: 'reference', type: 'text', index: true },
         { name: 'status', type: 'select', options: ['none', 'pending', 'paid', 'failed', 'refunded'], defaultValue: 'none' },
+        { name: 'amountCents', type: 'number' },
         { name: 'paidAt', type: 'date' },
         { name: 'refundDueBy', type: 'date' },
       ],
@@ -78,13 +92,19 @@ export const Orders = {
       fields: [
         { name: 'termsAcceptedAt', type: 'date' },
         { name: 'termsVersion', type: 'text' },
+        // Language of the conditions the customer expressly chose to be bound by (07 O3; French first).
+        { name: 'bindingLanguage', type: 'select', options: ['fr', 'en', 'es'] },
+        // Separate unticked boxes (07 O10), stored with the wording version.
         { name: 'reviewRequest', type: 'checkbox', defaultValue: false },
-        { name: 'marketing', type: 'checkbox', defaultValue: false },
+        { name: 'marketing', type: 'checkbox', defaultValue: false, admin: { description: 'Précommandes saisonnières.' } },
+        { name: 'birthdayReminder', type: 'checkbox', defaultValue: false },
         { name: 'analytics', type: 'checkbox', defaultValue: false },
+        { name: 'textVersion', type: 'text' },
       ],
     },
     { name: 'attribution', type: 'json', admin: { description: 'utm_*, gclid, langue, « comment nous avez-vous connus ? »' } },
     { name: 'boxToken', type: 'text', index: true },
+    { name: 'contractSentAt', type: 'date', admin: { description: 'Copie du contrat envoyée (07 O6).' } },
     { name: 'timeline', type: 'json', admin: { description: 'Historique des changements d’état.' } },
   ],
 }

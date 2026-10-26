@@ -77,6 +77,8 @@ export const Products = {
           access: { update: ({ req: { user } }) => hasRole(user, 'proprietaire', 'gerant') },
         },
         { name: 'sku', type: 'text' },
+        // Tax rule rows 4–5 (07 §6): single servings in a prepackaged pack. Empty = sold one by one.
+        { name: 'packCount', type: 'number', min: 1, admin: { description: 'Portions individuelles par boîte (vide = à l’unité).' } },
       ],
     },
     { name: 'allergens', type: 'relationship', relationTo: 'allergens', hasMany: true },
@@ -120,6 +122,12 @@ export const Products = {
     { name: 'soldOutUntil', type: 'date', admin: { description: 'Épuisé jusqu’à cette date (par défaut : prochaine ouverture).' } },
     { name: 'availabilityDate', type: 'date' },
     { name: 'onlineOrderable', type: 'checkbox', defaultValue: false },
+    // Ordering engine (10 §3): what one item takes from its production pool, and when it is made.
+    { name: 'capacityUnits', type: 'number', min: 1, admin: { description: 'Unités de capacité par article (vide = 1).' } },
+    { name: 'productionOffsetDays', type: 'number', min: 0, admin: { description: 'Fait la veille = 1 (vide = le jour même).' } },
+    { name: 'cakeMessageMax', type: 'number', min: 1, admin: { description: 'Caractères permis pour le message sur le gâteau (vide = pas de message).' } },
+    // Vendu auparavant → BackOrder (et non PreOrder) quand il revient (06 k).
+    { name: 'everSold', type: 'checkbox', defaultValue: false, label: 'Déjà vendu (produit qui revient)' },
     { name: 'vitrine', type: 'checkbox', defaultValue: false, label: 'Dans la vitrine du jour' },
     { name: 'vitrinePlanned', type: 'number', admin: { description: 'Quantité prévue aujourd’hui.' } },
     { name: 'season', type: 'relationship', relationTo: 'seasons' },
