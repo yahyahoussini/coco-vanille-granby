@@ -165,8 +165,14 @@ body.studio {
   margin-inline: auto;
 }
 
-.st-main.wide {
+.st-main.wide,
+.st-main:has(.agence-page) {
   max-inline-size: 72rem;
+}
+
+.agence-page table.st-table {
+  display: block;
+  overflow-x: auto;
 }
 
 .st-head {

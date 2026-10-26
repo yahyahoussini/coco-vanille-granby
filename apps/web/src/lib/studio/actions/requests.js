@@ -49,7 +49,7 @@ export const requestActions = {
         entityId: request.id,
         before: snapshot(request),
         after: { status: 'quoted', totalCents: q.totalCents, depositCents: q.depositCents, validUntil: q.validUntil },
-        summary: sentence(ctx.user, ctx.device, `a envoyé une soumission de ${money(totalCents)} (avant taxes) à ${customerName(request.customer)}`, ctx.now),
+        summary: sentence(ctx.user, ctx.device, `a envoyé une soumission de ${money(totalCents)} (avant taxes) pour la demande ${request.id}`, ctx.now),
         message: `Soumission envoyée · acompte ${money(q.depositCents)} · part dans 30 s · expire ${shortDay(String(q.validUntil).slice(0, 10))}`,
         data: { redirect: '/demandes/' },
       }
@@ -75,7 +75,7 @@ export const requestActions = {
         entityId: request.id,
         before: snapshot(request),
         after: { status: 'declined', channel: m.channel },
-        summary: sentence(ctx.user, ctx.device, `a refusé la demande de ${customerName(request.customer)}`, ctx.now),
+        summary: sentence(ctx.user, ctx.device, `a refusé la demande ${request.id}`, ctx.now),
         message: `Réponse envoyée à ${customerName(request.customer)} (${m.channel === 'email' ? 'courriel' : 'texto'}) dans 30 s`,
       }
     },
@@ -100,7 +100,7 @@ export const requestActions = {
         entityId: request.id,
         before: snapshot(request),
         after: { proposed: alt, channel: m.channel },
-        summary: sentence(ctx.user, ctx.device, `a proposé le ${shortDay(alt)} à ${customerName(request.customer)}`, ctx.now),
+        summary: sentence(ctx.user, ctx.device, `a proposé le ${shortDay(alt)} pour la demande ${request.id}`, ctx.now),
         message: `Autre date proposée (${shortDay(alt)}) · ${m.channel === 'email' ? 'courriel' : 'texto'} dans 30 s`,
       }
     },

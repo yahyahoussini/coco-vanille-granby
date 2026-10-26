@@ -3,6 +3,7 @@ import { ROLE_LABELS } from '@/lib/studio/roles'
 import { DEVICE_LABELS } from '@/lib/studio/audit'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Flash } from '@/components/studio/Flash'
+import { ShopSettings } from '@/components/studio/settings/ShopSettings'
 
 export const metadata = { title: 'Réglages · Coco Studio' }
 
@@ -145,6 +146,7 @@ export default async function Reglages({ searchParams }) {
         </section>
       )}
 
+      <ShopSettings ctx={ctx} back={BACK} />
     </>
   )
 }

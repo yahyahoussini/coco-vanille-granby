@@ -90,6 +90,44 @@ export const peopleActions = {
     },
   },
 
+  // Deposit % for custom-cake quotes: owner only, no default until set (10 §1.2).
+  'settings.deposit': {
+    async run(ctx, input) {
+      const pct = Number(String(input.percent || '').replace(',', '.'))
+      if (!(pct > 0 && pct <= 100)) refuse('percent', 'Pourcentage invalide (1 à 100).', 422)
+      const shop = await ctx.payload.findGlobal({ slug: 'shop', depth: 0, ...ctx.as })
+      await ctx.payload.updateGlobal({ slug: 'shop', data: { ordering: { ...(shop.ordering || {}), depositPercent: pct } }, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      return {
+        entity: 'shop',
+        entityId: 'ordering.depositPercent',
+        before: { depositPercent: shop.ordering?.depositPercent ?? null },
+        after: { depositPercent: pct },
+        summary: sentence(ctx.user, ctx.device, `a fixé l’acompte des gâteaux sur demande à ${pct} %`, ctx.now),
+        message: `Acompte : ${pct} % · s’applique aux prochaines soumissions.`,
+        noUndo: true,
+      }
+    },
+  },
+
+  // Target of the printed /avis QR code (11 §4.2): the printed link never changes, this does.
+  'settings.reviewLink': {
+    async run(ctx, input) {
+      const url = str(input.url, 500)
+      if (url && !/^https:\/\/(g\.page|search\.google\.com|www\.google\.com|maps\.google\.com|maps\.app\.goo\.gl|business\.google\.com)\//.test(url)) refuse('url', 'Collez le lien « Demander des avis » de la fiche Google (https://g.page/… ou https://search.google.com/…).', 422)
+      const business = await ctx.payload.findGlobal({ slug: 'business', locale: 'fr', depth: 0, ...ctx.as })
+      await ctx.payload.updateGlobal({ slug: 'business', locale: 'fr', data: { google: { ...(business.google || {}), reviewLink: url || null } }, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      return {
+        entity: 'business',
+        entityId: 'google.reviewLink',
+        before: { reviewLink: business.google?.reviewLink || null },
+        after: { reviewLink: url || null },
+        summary: sentence(ctx.user, ctx.device, 'a changé la cible du code QR /avis', ctx.now),
+        message: url ? 'Le code QR /avis mène maintenant à ce lien.' : 'Lien retiré · /avis attend un lien.',
+        noUndo: true,
+      }
+    },
+  },
+
   // « Noter une question de client » → agency FAQ queue (AEO loop, 16 §2.3 #36).
   'question.create': {
     undoSeconds: 30,

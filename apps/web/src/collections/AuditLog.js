@@ -16,7 +16,8 @@ export const AuditLog = {
     { name: 'summary', type: 'text', admin: { description: 'Phrase lisible : « Léa (tablette) a marqué … à 10 h 42 ».' } },
     { name: 'before', type: 'json' },
     { name: 'after', type: 'json' },
-    { name: 'result', type: 'json', admin: { description: 'Réponse renvoyée à l’écran (rejouée telle quelle pour une même clé).' } },
+    // The on-screen message can name a customer (« texto à Julie T. »): not for Agence (Loi 25 minimisation).
+    { name: 'result', type: 'json', access: { read: ({ req: { user } }) => user?.role === 'proprietaire' }, admin: { description: 'Réponse renvoyée à l’écran (rejouée telle quelle pour une même clé).' } },
     // Idempotency key from the offline outbox: the same key never applies twice (16a §7 rule 3).
     { name: 'key', type: 'text', unique: true, index: true },
     { name: 'undoUntil', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
