@@ -138,6 +138,11 @@ test.describe.serial('« Ma boîte » → checkout → mock payment → worker',
   let thanksUrl
 
   test('box, day and window chips, review with taxes, terms, mock payment, thanks', async ({ page }) => {
+    // The checkout pages carry the Stripe-only CSP (next.config.mjs): nothing on them may trip it.
+    const cspErrors = []
+    page.on('console', (m) => {
+      if (/Content Security Policy|Refused to (load|execute|connect|frame)/i.test(m.text())) cspErrors.push(m.text())
+    })
     await page.goto(`${PUBLIC_URL}/commander/`)
     const add = page.locator('form.order-add').first()
     test.skip((await add.count()) === 0, 'No product can be ordered online: run SEED_DEMO=true npm run seed:demo first.')
@@ -193,6 +198,11 @@ test.describe.serial('« Ma boîte » → checkout → mock payment → worker',
     await expect(page.locator('.badge')).toContainText('Votre plage est réservée jusqu’à')
     const scripts = await page.locator('script[src]').evaluateAll((list) => list.map((s) => new URL(s.src).host))
     expect(scripts.filter((h) => h !== new URL(PUBLIC_URL).host), 'no third-party script on the payment page').toEqual([])
+    const csp = (await raw(page.url())).headers['content-security-policy'] || ''
+    expect(csp).toMatch(/script-src 'self' 'unsafe-inline' https:\/\/js\.stripe\.com;/)
+    expect(csp).toMatch(/frame-src https:\/\/js\.stripe\.com https:\/\/hooks\.stripe\.com;/)
+    expect(csp).toMatch(/connect-src 'self' https:\/\/api\.stripe\.com;/)
+    expect(csp).toMatch(/frame-ancestors 'none'/)
     expect(await seriousViolations(page)).toEqual([])
     await page.getByRole('button', { name: `Payer ${total}` }).click()
 
@@ -208,6 +218,7 @@ test.describe.serial('« Ma boîte » → checkout → mock payment → worker',
     expect(ics.status).toBe(200)
     expect(ics.headers['content-type']).toMatch(/^text\/calendar/)
     expect(ics.body).toMatch(/DTSTART:\d{8}T\d{6}Z/)
+    expect(cspErrors, 'CSP violations in the checkout flow').toEqual([])
   })
 
   test('paid in the database; the contract copy is queued, then sent by the worker through the log sender', async () => {

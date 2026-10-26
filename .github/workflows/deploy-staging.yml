@@ -71,10 +71,16 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build on the host network (the build reads the seeded Postgres)
+        env:
+          # Shared by every build and colour (blue/green, 17 §2); the same value sits in each environment's .env.
+          NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}
         run: |
-          docker build --network host \
+          secret=()
+          if [ -n "$NEXT_SERVER_ACTIONS_ENCRYPTION_KEY" ]; then secret=(--secret id=server_actions_key,env=NEXT_SERVER_ACTIONS_ENCRYPTION_KEY); fi
+          docker build --network host "${secret[@]}" \
             --build-arg BUILD_DATABASE_URI="$DATABASE_URI" \
             --build-arg GIT_SHA="$GITHUB_SHA" \
+            --build-arg DEPLOYMENT_ID="$GITHUB_SHA" \
             --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" \
             -t "${{ steps.meta.outputs.image }}:${GITHUB_SHA}" \
             -t "${{ steps.meta.outputs.image }}:staging" \

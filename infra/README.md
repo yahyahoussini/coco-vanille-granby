@@ -113,6 +113,7 @@ DNS-only (no CDN proxying) at launch (17 §6). DNSSEC after a stable week; turn 
 | `VPS_HOST`, `VPS_USER` (`deploy`), `VPS_SSH_KEY` (private `coco-ci`) | environments `staging` and `production` | deploy workflows |
 | `VPS_KNOWN_HOSTS` | both environments (recommended) | pins the host key: `ssh-keyscan -t ed25519 <host>` checked against the provider console |
 | `STAGING_BASIC_AUTH` (`user:password`) | `staging` | gate on staging |
+| `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (`openssl rand -base64 32`) | repository | image build in `deploy-staging.yml` (secret `server_actions_key`); the same value goes in both `.env` files |
 | `SERPAPI_KEY`, `OPENAI_API_KEY`, `PERPLEXITY_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `PSI_KEY` | repository, optional | `weekly.yml` (a step without its key is skipped) |
 | `GOOGLE_SERVICE_ACCOUNT_JSON`, `GA4_PROPERTY_ID` | repository, optional | Search Console + GA4 in `weekly.yml` |
 | variable `SITE_LIVE=true` | repository variables | turns on the live checks in `weekly.yml` once the site is public |
@@ -134,6 +135,13 @@ docker compose -p coco-production --env-file .env --env-file state.env logs --ta
 `deploy.sh <env> <sha>` prints each step and stops at the first failure; before the switch, a failure leaves the live colour untouched (the new colour is stopped):
 
 1. checks (`.env` present and `chmod 600`, lock: one deploy at a time) · 2. pull the image · 3. Postgres up · 4. **pre-migration dump** (`backup.sh --label pre-<sha>`) · 5. `npm run migrate` (one-shot container) · 6. start the idle colour on its own ports · 7. wait for Docker health + `/svc/health/` with the database on the web and the studio process (`src/proxy.js` lets it through on every host and role) · 8. **warm-up**: the image carries pages prerendered at build time from the CI seed; the script waits until the build is older than the ISR period (300 s), requests every sitemap URL once (re-rendered from this environment's data), then requires a 200 on every URL · 9. rewrite `/etc/nginx/coco/upstreams/<env>.conf`, `nginx -t`, reload · 10. worker on the new tag · 11. the previous colour stays up 10 minutes for an instant rollback, then stops (its containers stay on disk).
+
+## Blue/green and Next.js
+
+- **One build id per image.** CI builds with `DEPLOYMENT_ID=<git sha>` (`next.config.mjs` `deploymentId`): a browser that loaded pages from the old colour gets a full reload on its next navigation instead of mixing two builds.
+- **One Server Actions key for every build and colour.** `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (the GitHub secret, passed to `docker build` as the secret `server_actions_key`, and the same value in `/opt/coco/<env>/.env`): forms and the « Avancé » admin keep working across a switch and a rollback. Rotate it with the quarterly keys; a rotation logs open admin sessions out of their pending forms, nothing else.
+- **Compression in nginx only.** `next.config.mjs` has `compress: false`; `snippets/coco-proxy.conf` asks Node for plain bodies and `conf.d/coco.conf` gzips.
+- **Checkout CSP.** `/commander/paiement/`, `/en/order/checkout/` and `/es/pedidos/pago/` send a Content-Security-Policy that allows this site plus Stripe only (`js.stripe.com` script and frames, `hooks.stripe.com` frames for 3-D Secure, `api.stripe.com` calls). A new Stripe.js URL (`STRIPE_JS_URL`) must stay on `js.stripe.com`.
 
 ## Page refresh (ISR)
 
@@ -198,4 +206,3 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 
 ## Open points for integration
 
-- `next.config.mjs` still has Next's compression on; nginx asks Node for plain bodies and compresses itself, so nothing is compressed twice. `deploymentId` and a shared `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (17 §2) are not wired into the build yet.

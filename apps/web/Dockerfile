@@ -38,13 +38,18 @@ ARG BUILD_DATABASE_URI=""
 ARG GIT_SHA=dev
 ARG PUBLISH_GUARD=strict
 ARG ENABLE_ES=false
+# Blue/green (17 §2): DEPLOYMENT_ID = this build (default the git SHA); the Server Actions key is shared by
+# every build, passed as the secret server_actions_key (the NEXT_SERVER_ACTIONS_ENCRYPTION_KEY GitHub secret).
+ARG DEPLOYMENT_ID=""
 ENV GIT_SHA=${GIT_SHA} PUBLISH_GUARD=${PUBLISH_GUARD} ENABLE_ES=${ENABLE_ES} \
     PAYLOAD_CONFIG_PATH=src/payload.config.js
-RUN --mount=type=secret,id=build_database_uri \
+RUN --mount=type=secret,id=build_database_uri --mount=type=secret,id=server_actions_key \
     if [ -s /run/secrets/build_database_uri ]; then DATABASE_URI="$(cat /run/secrets/build_database_uri)"; \
     else DATABASE_URI="$BUILD_DATABASE_URI"; fi \
  && if [ -z "$DATABASE_URI" ]; then echo 'BUILD_DATABASE_URI is required: next build prerenders pages from a seeded Postgres (see the header).' >&2; exit 1; fi \
  && export DATABASE_URI \
+ && export DEPLOYMENT_ID="${DEPLOYMENT_ID:-$GIT_SHA}" \
+ && if [ -s /run/secrets/server_actions_key ]; then NEXT_SERVER_ACTIONS_ENCRYPTION_KEY="$(cat /run/secrets/server_actions_key)"; export NEXT_SERVER_ACTIONS_ENCRYPTION_KEY; fi \
  && export PAYLOAD_SECRET="$(node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('hex'))")" \
  && mkdir -p public \
  && npx next build \
