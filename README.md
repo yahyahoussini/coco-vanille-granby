@@ -1,4 +1,4 @@
-# Coco Vanille · planning and research repo
+# Coco Vanille · website, Coco Studio and research
 
 Planning and research for two sites of **Pâtisserie Coco Vanille** (3 rue Court, Granby, Québec; legal name « Pâtisserie Coco Vanille inc. »; Google Maps spells it « Pâtisserie Cocovanille »):
 
@@ -9,7 +9,32 @@ Planning and research for two sites of **Pâtisserie Coco Vanille** (3 rue Court
 
 Both will be self-hosted on the owner's VPS. Goals, in order: SEO/AEO/GEO first, ordering inside the site, exceptional UI/UX (`research/requirements-2026-10-25.md`).
 
-**Stage: plan and brainstorm only. There is no code yet.** When code starts, it is JavaScript only.
+**Stage (2026-10-26): built, not deployed.** The app is in `apps/web` (JavaScript only). Owner facts are still `[[FACT NEEDED]]` markers, so production mode publishes nothing until the owner answers `research/14-owner-questions.md`.
+
+## The app
+
+| Part | Where | Status |
+|---|---|---|
+| Public site (FR/EN, ES behind `ENABLE_ES`) | `apps/web/src/app/(site-*)`, `src/components/site`, `src/components/templates`, `src/seed/content.js` | Built: page contract, schema graph, hreflang, sitemap, robots, llms.txt, OG cards, calculator, seasonal pages, legal drafts (lawyer review pending) |
+| Ordering | `src/lib/ordering`, `src/lib/payments`, `src/lib/messaging`, `src/worker`, `src/app/svc` | Built: pickup availability, slots + capacity with a DB lock, GST/QST, « Ma boîte », LPC checkout, Stripe + mock, custom-cake request → quote → deposit, SMS/email adapters, worker |
+| Coco Studio (`admin.cocovanillegranby.com`) | `src/app/(studio)`, `src/lib/studio`, `src/components/studio` | Built: 6 daily screens, Cette semaine, Plus, Agence, roles + step-up, PIN, passkey, undo, offline outbox, live updates, PWA, audit log |
+| Data model | `src/collections`, `src/globals`, `src/migrations` | Payload 3 on Postgres 16; initial migration committed |
+| Infra + CI | `infra/`, `.github/workflows/`, `apps/web/Dockerfile`, `apps/web/scripts/gate.mjs` | Built, not yet run on a real VPS or GitHub Actions: see `infra/README.md` |
+
+Run it locally (Node 22, Postgres 16):
+
+```bash
+cd apps/web
+cp .env.example .env            # set DATABASE_URI and PAYLOAD_SECRET
+npm ci
+npm run migrate && npm run seed
+npm run build && npm start      # public: http://localhost:3000 · Studio: http://admin.localhost:3000
+npm test                        # unit tests
+npx playwright test --project=public
+node scripts/gate.mjs           # rank-first gate: 0 FAIL except [[FACT NEEDED]] markers
+```
+
+Verified on 2026-10-26 on a fresh database: 413 unit tests, 23 infra tests, 77 public + 6 ordering + 41 Studio browser tests, gate PASS (54 pages; the only FAILs are owner-fact markers).
 
 Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in research/16) plus systems and automation. This repo is the system's business intelligence: one facts file, one decision log, one risk register, one owner-question list. Persuasion stays ethical: real prices, real capacity, real reviews, never fake urgency (research/02 §7–§8, research/07).
 
