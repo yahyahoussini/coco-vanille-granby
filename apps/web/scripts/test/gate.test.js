@@ -110,3 +110,19 @@ test('ownerTodo groups markers by fact, most pages first; the markdown escapes p
   const md = todoMarkdown(todo, { base: 'http://localhost:3000', generated: '2026-10-26T00:00:00.000Z' })
   assert.match(md, /\| 2 \| prix \\\| taille \| \/carte\/ \|/)
 })
+
+test('siteConfig takes brand, NAP and sameAs from the entity, never a [[FACT NEEDED]] field', () => {
+  const entity = {
+    name: 'Pâtisserie Coco Vanille',
+    telephone: '[[FACT NEEDED: phone]]',
+    address: { addressLocality: 'Granby' },
+    geo: { latitude: 45.39, longitude: -72.72 },
+    sameAs: ['https://www.facebook.com/PatisserieCocoVanille/', '[[FACT NEEDED: instagram]]'],
+  }
+  const cfg = siteConfig(PAGES, { entity })
+  assert.equal(cfg.brand.name, 'Pâtisserie Coco Vanille')
+  assert.deepEqual(cfg.nap, { city: 'Granby' })
+  assert.deepEqual(cfg.geo, { lat: 45.39, lng: -72.72 })
+  assert.deepEqual(cfg.sameAs, ['https://www.facebook.com/PatisserieCocoVanille/'])
+  assert.equal(siteConfig(PAGES).nap, undefined)
+})

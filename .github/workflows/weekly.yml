@@ -1,0 +1,140 @@
+# Weekly rank-first measurement · Monday 06:00 America/Toronto (plan v1 §12 table; 17 §2.2).
+# GitHub cron is UTC only: two schedules (10:00 UTC in EDT, 11:00 UTC in EST) and a clock check
+# keep the run at 06:00 Toronto time all year. Each step without its key is skipped, and
+# tools/weekly.mjs names in the report what was not measured.
+# History: the scoreboard (runs, serp, ai, reports) is carried from the previous successful run's
+# artifact (kept 90 days), so trends and streaks build week after week.
+# Secrets (all optional): SERPAPI_KEY · OPENAI_API_KEY · PERPLEXITY_API_KEY · GEMINI_API_KEY ·
+#   ANTHROPIC_API_KEY · GOOGLE_SERVICE_ACCOUNT_JSON (Search Console + GA4) · GA4_PROPERTY_ID · PSI_KEY
+# Variable: SITE_LIVE=true once cocovanillegranby.com serves the site (turns on the live checks).
+name: Weekly rank-first
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'
+    - cron: '0 11 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: weekly-rank-first
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  weekly:
+    name: Monday measurement
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+      PSI_KEY: ${{ secrets.PSI_KEY }}
+      SITE_LIVE: ${{ vars.SITE_LIVE }}
+      GH_TOKEN: ${{ github.token }}
+    defaults:
+      run:
+        working-directory: rank
+    steps:
+      - name: Only at 06:00 in Toronto
+        id: clock
+        working-directory: .
+        run: |
+          hour="$(TZ=America/Toronto date +%H)"
+          if [ "$GITHUB_EVENT_NAME" = schedule ] && [ "$hour" != 06 ]; then
+            echo "It is ${hour}:00 in Toronto: the other schedule covers this week."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.clock.outputs.run == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.clock.outputs.run == 'true'
+        with:
+          node-version: 22
+
+      - name: Prepare the rank-first folder
+        if: steps.clock.outputs.run == 'true'
+        working-directory: .
+        run: |
+          mkdir -p rank/scoreboard rank/reports
+          node apps/web/scripts/rank-config.mjs --out rank/site.config.json
+          cp data/prompts.csv rank/scoreboard/prompts.csv
+          cp data/competitors.csv rank/scoreboard/competitors.csv
+          echo "WEEK=$(TZ=America/Toronto date +%G-W%V)" >> "$GITHUB_ENV"
+
+      - name: Restore last week's scoreboard
+        if: steps.clock.outputs.run == 'true'
+        run: |
+          id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow weekly.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [ -n "$id" ] && gh run download "$id" --repo "$GITHUB_REPOSITORY" --name rank-first-history --dir .; then
+            echo "restored from run $id"
+          else
+            echo "no previous history: first week"
+          fi
+          cp ../data/prompts.csv scoreboard/prompts.csv
+          cp ../data/competitors.csv scoreboard/competitors.csv
+
+      - name: Google credentials (Search Console, GA4)
+        if: steps.clock.outputs.run == 'true' && env.GOOGLE_SERVICE_ACCOUNT_JSON != ''
+        run: |
+          umask 077
+          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > google-service-account.json
+
+      - name: SERP (SerpApi, google.ca, Granby)
+        if: steps.clock.outputs.run == 'true' && env.SERPAPI_KEY != ''
+        continue-on-error: true
+        run: node ../tools/serp.mjs --week "$WEEK" --gl ca --domain google.ca --location "Granby,Quebec,Canada"
+
+      - name: AI engines (ChatGPT, Perplexity, Gemini, Claude)
+        if: steps.clock.outputs.run == 'true' && (env.OPENAI_API_KEY != '' || env.PERPLEXITY_API_KEY != '' || env.GEMINI_API_KEY != '' || env.ANTHROPIC_API_KEY != '')
+        continue-on-error: true
+        run: node ../tools/ai-runs.mjs --week "$WEEK"
+
+      - name: Core Web Vitals (PageSpeed Insights)
+        if: steps.clock.outputs.run == 'true' && env.SITE_LIVE == 'true'
+        continue-on-error: true
+        run: |
+          node ../tools/cwv.mjs --sitemap https://cocovanillegranby.com/sitemap.xml --max 6 \
+            ${PSI_KEY:+--key "$PSI_KEY"} --json "reports/cwv-${WEEK}.json"
+
+      - name: Weekly report (score, market, Search Console, GA4, live checks, dashboard)
+        if: steps.clock.outputs.run == 'true'
+        run: |
+          live=""
+          if [ "$SITE_LIVE" = true ]; then live="--live"; fi
+          node ../tools/weekly.mjs --week "$WEEK" --no-serp --no-ai $live
+
+      - name: Report in the job summary
+        if: steps.clock.outputs.run == 'true'
+        run: |
+          if [ -f "reports/${WEEK}.md" ]; then cat "reports/${WEEK}.md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Remove credentials
+        if: always()
+        working-directory: .
+        run: rm -f rank/google-service-account.json
+
+      - name: Keep the history for next week
+        if: steps.clock.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rank-first-history
+          path: |
+            rank/scoreboard
+            rank/serp
+            rank/ai
+            rank/reports
+            rank/docs
+          retention-days: 90
+          if-no-files-found: ignore

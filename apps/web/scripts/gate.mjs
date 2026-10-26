@@ -25,6 +25,7 @@ import { gatePages, siteConfig, internalLinks, sitemapPaths, classifyAudit, link
 
 const here = dirname(fileURLToPath(import.meta.url))
 const tools = resolve(here, '../../../tools')
+const factsFile = resolve(here, '../../../data/facts.json')
 const { values } = parseArgs({
   options: {
     base: { type: 'string', default: process.env.GATE_BASE_URL || process.env.PUBLIC_ORIGIN || 'http://localhost:3000' },
@@ -141,7 +142,8 @@ for (const [path, body] of reached) save(linksDir, path, body)
 
 step('Writing site.config.json for rank-first')
 const configFile = join(out, 'site.config.json')
-writeFileSync(configFile, `${JSON.stringify(siteConfig(PAGES, { es }), null, 2)}\n`)
+const entity = existsSync(factsFile) ? JSON.parse(readFileSync(factsFile, 'utf8')).entity : null
+writeFileSync(configFile, `${JSON.stringify(siteConfig(PAGES, { es, entity }), null, 2)}\n`)
 
 step('tools/audit.mjs (page contract)')
 const auditJson = join(out, 'audit.json')

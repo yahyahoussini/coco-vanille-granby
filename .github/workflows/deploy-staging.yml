@@ -1,0 +1,171 @@
+# Deploy staging · every push to main (17 §4 step 2; 19 §1.2 step 4).
+# 1. image: seed a throwaway Postgres, build the image (tag = git SHA, plus :staging), push to GHCR
+# 2. deploy: ship infra/ for this commit to the VPS, run infra/scripts/deploy.sh staging <sha>
+#    (pre-migration dump → migrate → idle colour → health → sitemap warm-up → nginx switch)
+# 3. gate: scripts/gate.mjs against https://staging.cocovanillegranby.com (basic auth) when the secret exists
+# Secrets (environment "staging" or repository): VPS_HOST, VPS_USER, VPS_SSH_KEY,
+#   optional VPS_KNOWN_HOSTS (pinned host key; without it the key is learned on first contact),
+#   optional STAGING_BASIC_AUTH ("user:password" for the staging gate).
+name: Deploy staging
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  image:
+    name: Build and push the image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: cv
+          POSTGRES_PASSWORD: cv
+          POSTGRES_DB: coco_build
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U cv -d coco_build"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+    env:
+      DATABASE_URI: postgres://cv:cv@127.0.0.1:5432/coco_build
+      PAYLOAD_SECRET: build-${{ github.run_id }}
+      PAYLOAD_CONFIG_PATH: src/payload.config.js
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image name (GHCR needs lower case)
+        id: meta
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      # next build prerenders pages from Postgres: give it the seeded schema (verified facts only).
+      - name: Seed the build database
+        working-directory: apps/web
+        run: |
+          npm ci --no-audit --no-fund
+          npm run seed
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build on the host network (the build reads the seeded Postgres)
+        run: |
+          docker build --network host \
+            --build-arg BUILD_DATABASE_URI="$DATABASE_URI" \
+            --build-arg GIT_SHA="$GITHUB_SHA" \
+            --label org.opencontainers.image.source="https://github.com/${GITHUB_REPOSITORY}" \
+            -t "${{ steps.meta.outputs.image }}:${GITHUB_SHA}" \
+            -t "${{ steps.meta.outputs.image }}:staging" \
+            apps/web
+
+      - name: Smoke-test the image (web role answers its health check)
+        run: |
+          docker run -d --name smoke --network host -e APP_ROLE=web -e PORT=3999 \
+            -e DATABASE_URI="$DATABASE_URI" -e PAYLOAD_SECRET="$PAYLOAD_SECRET" \
+            "${{ steps.meta.outputs.image }}:${GITHUB_SHA}"
+          for _ in $(seq 1 30); do
+            if curl -fsS -H 'Host: localhost' http://127.0.0.1:3999/svc/health/; then echo; docker rm -f smoke; exit 0; fi
+            sleep 2
+          done
+          docker logs smoke
+          exit 1
+
+      - name: Push
+        run: |
+          docker push "${{ steps.meta.outputs.image }}:${GITHUB_SHA}"
+          docker push "${{ steps.meta.outputs.image }}:staging"
+
+  deploy:
+    name: Deploy to staging
+    needs: image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: staging
+      url: https://staging.cocovanillegranby.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH key and host key
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          test -n "$VPS_HOST" && test -n "$VPS_SSH_KEY" || { echo "::error::VPS_HOST / VPS_SSH_KEY secrets are missing"; exit 1; }
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          if [ -n "$VPS_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::VPS_KNOWN_HOSTS is not set: trusting the host key seen now (set it to pin the key)."
+            ssh-keyscan -t ed25519 "$VPS_HOST" > ~/.ssh/known_hosts
+          fi
+
+      - name: Ship infra/ for this commit
+        env:
+          VPS: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        run: |
+          tar -C infra -czf - . | ssh -i ~/.ssh/id_deploy -o BatchMode=yes "$VPS" \
+            "mkdir -p /opt/coco/releases/${GITHUB_SHA} && tar -xzf - -C /opt/coco/releases/${GITHUB_SHA}"
+
+      - name: deploy.sh staging
+        env:
+          VPS: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        run: |
+          ssh -i ~/.ssh/id_deploy -o BatchMode=yes -o ServerAliveInterval=30 "$VPS" \
+            "bash /opt/coco/releases/${GITHUB_SHA}/scripts/deploy.sh staging ${GITHUB_SHA}"
+
+  gate:
+    name: rank-first gate on staging
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: staging
+    env:
+      GATE_BASIC_AUTH: ${{ secrets.STAGING_BASIC_AUTH }}
+      PUBLISH_GUARD: show
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Gate (skipped without STAGING_BASIC_AUTH)
+        working-directory: apps/web
+        run: |
+          if [ -z "$GATE_BASIC_AUTH" ]; then echo "::notice::STAGING_BASIC_AUTH not set: staging gate skipped"; exit 0; fi
+          node scripts/gate.mjs --base https://staging.cocovanillegranby.com --out reports/gate
+      - name: Owner to-do in the job summary
+        if: always()
+        run: |
+          if [ -f apps/web/reports/gate/owner-todo.md ]; then cat apps/web/reports/gate/owner-todo.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staging-gate-${{ github.sha }}
+          path: apps/web/reports/gate
+          retention-days: 30
+          if-no-files-found: ignore

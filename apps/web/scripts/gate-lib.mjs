@@ -21,15 +21,18 @@ export function gatePages(pages, { es = false } = {}) {
   return out
 }
 
-// site.config.json for tools/audit.mjs and tools/links.mjs (they read site, languages, brand, pages).
-export function siteConfig(pages, { es = false } = {}) {
+// site.config.json for the rank-first tools (audit, links, serp, ai-runs, weekly…): site, languages and
+// pages from the registry; brand, NAP and sameAs from the canonical entity in data/facts.json, and only
+// the fields that hold a real value (a [[FACT NEEDED]] entity field is left out, never guessed).
+export function siteConfig(pages, { es = false, entity = null } = {}) {
   const others = es ? ['en', 'es'] : ['en']
   const hreflang = { fr: 'fr-CA', en: 'en-CA', ...(es ? { es: 'es' } : {}) }
-  return {
+  const known = (v) => (typeof v === 'string' && v && !MARKER_RE.test(v) ? v : undefined)
+  const cfg = {
     site: SITE,
     languages: { default: 'fr', others, hreflang },
     urlPolicy: { trailingSlash: true, www: false },
-    brand: { name: 'Coco Vanille' },
+    brand: { name: known(entity?.name) || 'Coco Vanille' },
     pages: pages
       .filter((p) => p.status !== 'utility' && p.paths.fr)
       .map((p) => {
@@ -38,6 +41,16 @@ export function siteConfig(pages, { es = false } = {}) {
         return { path: p.paths.fr, alt, ...(AUDIT_TYPE[p.template] ? { type: AUDIT_TYPE[p.template] } : {}) }
       }),
   }
+  if (entity) {
+    const city = known(entity.address?.addressLocality)
+    const phone = known(entity.telephone)
+    if (city || phone) cfg.nap = { ...(city ? { city } : {}), ...(phone ? { phone } : {}) }
+    if (city) cfg.category = { city: { fr: city } }
+    if (typeof entity.geo?.latitude === 'number' && typeof entity.geo?.longitude === 'number') cfg.geo = { lat: entity.geo.latitude, lng: entity.geo.longitude }
+    const sameAs = (entity.sameAs || []).filter(known)
+    if (sameAs.length) cfg.sameAs = sameAs
+  }
+  return cfg
 }
 
 // Same normalisation as tools/links.mjs: internal path with a trailing slash, or null (external, mailto, tel…).

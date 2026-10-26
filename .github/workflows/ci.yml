@@ -1,0 +1,141 @@
+# CI · every pull request and every push to main (plan v1 §12, research/19 §1.2). Red = no merge.
+# app:   Postgres → npm ci → seed → build → unit tests → server (APP_ROLE=all) → Playwright (public)
+#        → rank-first gate (audit + links; only [[FACT NEEDED]] markers may fail) → reports
+# infra: shellcheck, nginx -t on infra/nginx, docker compose config, Dockerfile checks
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: Build, tests and rank-first gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: cv
+          POSTGRES_PASSWORD: cv
+          POSTGRES_DB: coco_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U cv -d coco_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    defaults:
+      run:
+        working-directory: apps/web
+    env:
+      CI: 'true'
+      NEXT_TELEMETRY_DISABLED: '1'
+      DATABASE_URI: postgres://cv:cv@127.0.0.1:5432/coco_ci
+      # Throwaway: CI data is the seed (verified facts only), nothing to protect.
+      PAYLOAD_SECRET: ci-${{ github.run_id }}-${{ github.run_attempt }}
+      PAYLOAD_CONFIG_PATH: src/payload.config.js
+      APP_ROLE: all
+      PORT: '3000'
+      PUBLIC_ORIGIN: http://localhost:3000
+      ADMIN_ORIGIN: http://admin.localhost:3000
+      ADMIN_HOSTS: admin.localhost
+      # show: markers render (pages stay noindex), so the gate can list every missing fact.
+      PUBLISH_GUARD: show
+      ENABLE_ES: 'false'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Seed the CI database (schema push + verified facts only)
+        run: npm run seed
+
+      - name: Build
+        run: npx next build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Gate and infra helper tests
+        run: node --test 'scripts/test/*.test.js'
+
+      - name: Start the server (APP_ROLE=all, both hosts)
+        run: |
+          nohup npx next start > "$RUNNER_TEMP/server.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://localhost:3000/svc/health/; then echo "up after ${i} tries"; exit 0; fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/server.log"
+          exit 1
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright (public project)
+        run: npx playwright test --project=public
+
+      - name: rank-first gate (audit + links)
+        run: node scripts/gate.mjs --base http://localhost:3000 --out reports/gate
+
+      - name: Owner to-do in the job summary
+        if: always()
+        run: |
+          if [ -f reports/gate/owner-todo.md ]; then cat reports/gate/owner-todo.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Keep the server log
+        if: always()
+        run: cp "$RUNNER_TEMP/server.log" reports/server.log 2>/dev/null || true
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+            apps/web/reports
+          retention-days: 14
+          if-no-files-found: ignore
+
+  infra:
+    name: Infra checks (shellcheck, nginx -t, compose, Dockerfile)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: shellcheck
+        run: shellcheck -x infra/scripts/*.sh apps/web/scripts/*.sh
+
+      - name: nginx -t on infra/nginx (Ubuntu 24.04 nginx, as on the VPS)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nginx
+          sudo env NGINX_BIN=/usr/sbin/nginx bash infra/scripts/nginx-test.sh
+
+      - name: docker compose config
+        run: |
+          cp infra/.env.example infra/.env
+          sed -i 's/^POSTGRES_PASSWORD=$/POSTGRES_PASSWORD=ci0000/' infra/.env
+          docker compose -f infra/docker-compose.yml --profile blue --profile green --profile ops config --quiet
+
+      - name: Dockerfile build checks
+        run: docker buildx build --check apps/web
