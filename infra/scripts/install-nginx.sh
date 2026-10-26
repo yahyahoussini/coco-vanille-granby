@@ -73,7 +73,7 @@ else
   pass="${STAGING_AUTH_PASSWORD:-}"
   if [ -z "$user" ]; then read -r -p "    staging user name: " user; fi
   if [ -z "$pass" ]; then read -r -s -p "    staging password: " pass; echo; fi
-  [ -n "$user" ] && [ -n "$pass" ] || { echo "staging user and password are required" >&2; exit 1; }
+  if [ -z "$user" ] || [ -z "$pass" ]; then echo "staging user and password are required" >&2; exit 1; fi
   printf '%s:%s\n' "$user" "$(openssl passwd -apr1 "$pass")" >"$coco/staging.htpasswd"
   chown root:www-data "$coco/staging.htpasswd"
   chmod 640 "$coco/staging.htpasswd"

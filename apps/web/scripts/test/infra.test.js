@@ -45,6 +45,10 @@ test('public host: apex canonical in one hop, private paths 404, long cache on /
   const statics = blocks.find((b) => b.match === '^~ /_next/static/')
   assert.match(statics.body, /max-age=31536000, immutable/)
   assert.match(conf, /proxy_pass http:\/\/coco_production_web;/)
+  // A cake request carries up to 3 photos of 10 MB (src/lib/ordering/requests.js REQUEST_LIMITS).
+  const demande = blocks.find((b) => b.match === '= /svc/demande/')
+  assert.match(demande.body, /client_max_body_size 32m;/)
+  assert.match(demande.body, /proxy_pass http:\/\/coco_production_web;/)
   // Uploads straight from disk, but never the customers' request photos (Loi 25).
   const media = blocks.find((b) => b.match === '^~ /media/')
   assert.match(media.body, /alias \/opt\/coco\/production\/media\/;/)
@@ -67,10 +71,16 @@ test('admin host: noindex on every status, login rate limit, unbuffered SSE, 12 
   assert.match(conf, /client_max_body_size 12m;/)
   const blocks = locations(conf)
   assert.ok(!blocks.some((b) => /add_header/.test(b.body)), 'no location may add its own headers (it would drop X-Robots-Tag)')
-  const login = blocks.find((b) => b.match.includes('/api/users/') && b.match.includes('login'))
+  const login = blocks.find((b) => b.match.includes('api/users/') && b.match.includes('login'))
   assert.match(login.body, /limit_req zone=coco_login/)
-  const sse = blocks.find((b) => b.match === '^~ /flux/')
+  // Studio's own sign-in routes share the limit (password, PIN switch, step-up, passkey).
+  const re = new RegExp(login.match.replace(/^~\s*/, ''))
+  for (const path of ['/api/users/login', '/svc/connexion/', '/svc/nip/', '/svc/verifier/', '/svc/cle/options/']) assert.match(path, re, path)
+  assert.doesNotMatch('/svc/action/', re)
+  // The real SSE route (src/app/(studio)/studio/svc/evenements, rewritten from /svc/evenements/ on this host).
+  const sse = blocks.find((b) => b.match === '^~ /svc/evenements/')
   assert.match(sse.body, /proxy_buffering off;/)
+  assert.match(sse.body, /proxy_read_timeout 1h;/)
   assert.match(nginx('conf.d/coco.conf'), /limit_req_zone \$binary_remote_addr zone=coco_login:/)
 })
 

@@ -23,7 +23,7 @@ flock -n 9 || die "a deploy or rollback is running for ${ENV_NAME}"
 live="$(state_get LIVE_COLOR)"
 previous="$(state_get PREVIOUS_COLOR)"
 [ -n "$live" ] || die "no live colour recorded"
-[ -n "$previous" ] && [ "$previous" != "$live" ] || die "no previous colour to go back to (first deploy?): redeploy an older tag with deploy.sh"
+if [ -z "$previous" ] || [ "$previous" = "$live" ]; then die "no previous colour to go back to (first deploy?): redeploy an older tag with deploy.sh"; fi
 previous_tag="$(state_get "$(upper "$previous")_TAG")"
 [ -n "$previous_tag" ] || die "no tag recorded for ${previous}"
 info "live ${live} ($(state_get "$(upper "$live")_TAG")) → back to ${previous} (${previous_tag})"
