@@ -29,14 +29,17 @@ export async function GET() {
       urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod: doc?.updatedAt, alternates })
     }
   }
-  const products = await payload.find({ collection: 'products', where: { _status: { equals: 'published' } }, locale: 'all', limit: 1000, depth: 1 })
-  // Under strict, a product page exists per language only with its facts complete (lib/publish.js).
+  // Products taken off the menu have no page (lib/data.js getProductBySlugs): not listed either.
+  const listed = { _status: { equals: 'published' }, availability: { not_equals: 'discontinued' } }
+  const products = await payload.find({ collection: 'products', where: listed, locale: 'all', limit: 1000, depth: 1 })
+  // Under strict, a product page exists per language only with its facts complete, French first (lib/publish.js).
   const readyIn = {}
   if (strict) {
+    const french = new Map((await payload.find({ collection: 'products', where: listed, locale: 'fr', limit: 1000, depth: 0 })).docs.map((d) => [d.id, d]))
     for (const locale of LOCALES) {
       if (!localeEnabled(locale)) continue
-      const docs = (await payload.find({ collection: 'products', where: { _status: { equals: 'published' } }, locale, limit: 1000, depth: 0 })).docs
-      readyIn[locale] = new Set(docs.filter((d) => productServed(d, { strict, servedHere: served[locale] })).map((d) => d.id))
+      const docs = locale === 'fr' ? [...french.values()] : (await payload.find({ collection: 'products', where: listed, locale, limit: 1000, depth: 0 })).docs
+      readyIn[locale] = new Set(docs.filter((d) => productServed(d, { strict, servedHere: served[locale], locale, frProduct: french.get(d.id) })).map((d) => d.id))
     }
   }
   for (const p of products.docs) {

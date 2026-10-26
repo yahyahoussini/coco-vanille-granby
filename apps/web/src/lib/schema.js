@@ -1,5 +1,6 @@
 import { SITE_ORIGIN, HTML_LANG } from './routes.js'
 import { isMissing } from './facts.js'
+import { localParts, addDays } from './studio/time.js'
 
 // One @graph per page (v1 L2/L8): Bakery + WebSite on every page, plus the page node.
 // Rules: only values visible on the page; no self-serving review stars; nothing for missing facts.
@@ -22,7 +23,22 @@ const clean = (obj) => {
   return isMissing(obj) ? undefined : obj
 }
 
-export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays = []) {
+// Days an active exceptional closure (« Reste de la journée », « Jusqu’au… ») keeps the shop closed, from
+// today to the day before it reopens (60 days at most); with no reopening date, today only.
+export function closureDays(shop = {}, now = new Date()) {
+  const c = shop?.closure
+  if (!c?.active) return []
+  const today = localParts(now).iso
+  if (!c.until) return [today]
+  const until = new Date(c.until)
+  if (until.getTime() <= new Date(now).getTime()) return []
+  const reopens = localParts(until).iso
+  const days = []
+  for (let d = today; d < reopens && days.length < 60; d = addDays(d, 1)) days.push(d)
+  return days.length ? days : [today]
+}
+
+export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays = [], { now = new Date() } = {}) {
   const a = business.address || {}
   const hours = (shop.hours || []).map((h) => ({
     '@type': 'OpeningHoursSpecification',
@@ -31,8 +47,11 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays 
     closes: h.closes,
   }))
   // Special days shown in the hours table (holidays, exceptional closures): closed = 00:00–00:00 (schema.org).
-  const special = (specialDays || [])
+  // An exceptional closure (the site's banner) closes each of its days too, over any special day.
+  const closed = closureDays(shop, now)
+  const special = [...closed.map((date) => ({ date, state: 'closed' })), ...(specialDays || []).filter((d) => !closed.includes(d.date))]
     .filter((d) => d.state === 'closed' || (d.opens && d.closes && ['open', 'special'].includes(d.state)))
+    .sort((x, y) => String(x.date).localeCompare(String(y.date)))
     .map((d) => ({
       '@type': 'OpeningHoursSpecification',
       validFrom: d.date,

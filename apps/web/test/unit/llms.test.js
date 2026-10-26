@@ -50,3 +50,11 @@ test('the file follows llmstxt.org: title, summary, sections of links, Optional 
   assert.match(text, /## English\n- \[Pastry shop and bakery\]\(https:\/\/cocovanillegranby\.com\/en\/\)/)
   assert.ok(text.indexOf('## Optional') > text.indexOf('## English'))
 })
+
+test('an exceptional closure reaches llms.txt like the banner and the JSON-LD', () => {
+  const shop = { hours: [{ day: 'Monday', opens: '09:00', closes: '18:00' }], closure: { active: true, until: '2026-10-31T13:00:00.000Z' }, specialDays: [{ date: '2026-12-25T12:00:00.000Z', state: 'closed', label: 'Noël' }] }
+  const text = factLines(business, shop, { now: new Date('2026-10-30T15:00:00.000Z') }).join('\n')
+  assert.match(text, /Fermeture exceptionnelle : la boutique rouvre le samedi 31 octobre à 9 h\./)
+  assert.match(text, /Jours spéciaux : 2026-10-30 fermé/)
+  assert.doesNotMatch(factLines(business, { ...shop, closure: { active: false } }, { now: new Date('2026-10-30T15:00:00.000Z') }).join('\n'), /Fermeture/)
+})

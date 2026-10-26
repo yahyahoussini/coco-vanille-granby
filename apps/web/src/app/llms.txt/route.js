@@ -1,6 +1,5 @@
 import { PAGES, LOCALES, SITE_ORIGIN, pathFor, isIndexable } from '@/lib/routes'
 import { getBusiness, getShop, getServed, payloadClient } from '@/lib/data'
-import { containsMarker, publishGuard } from '@/lib/facts'
 import { buildLlmsTxt } from '@/components/site/llms'
 
 export const revalidate = 300
@@ -9,7 +8,6 @@ export const revalidate = 300
 // published copy only, conditional pages once seeded, and nothing with a marker under PUBLISH_GUARD=strict.
 export async function GET() {
   const payload = await payloadClient()
-  const strict = publishGuard() === 'strict'
   const [business, shop] = await Promise.all([getBusiness('fr'), getShop('fr')])
   const docs = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale: 'all', limit: 500, depth: 0 })
   const byKey = Object.fromEntries(docs.docs.map((d) => [d.key, d]))
@@ -18,7 +16,9 @@ export async function GET() {
   const pages = []
   for (const page of PAGES) {
     const doc = byKey[page.key]
-    if (!isIndexable(page) || !doc || (strict && containsMarker(doc))) continue
+    // served[locale] already holds only ready copy per language (strict): a marker left in another language
+    // never hides a live page.
+    if (!isIndexable(page) || !doc) continue
     for (const locale of LOCALES) {
       const path = pathFor(page.key, locale)
       const title = pick(doc.h1, locale) || pick(doc.title, locale)

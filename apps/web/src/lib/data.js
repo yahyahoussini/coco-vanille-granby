@@ -6,7 +6,7 @@ import { engineContext } from '@/lib/ordering/context'
 import { productOfferState } from '@/lib/ordering/availability'
 import { LOCALES } from '@/lib/routes'
 import { publishGuard } from '@/lib/facts'
-import { servedKeys } from '@/lib/publish'
+import { servedByLocale, productReady } from '@/lib/publish'
 
 export const payloadClient = cache(async () => getPayload({ config }))
 
@@ -43,8 +43,8 @@ export const getPagesIn = cache(async (locale = 'fr') => {
 // Registry keys the site answers, per language (lib/publish.js): links and hreflang point only at these.
 export const getServed = cache(async () => {
   const strict = publishGuard() === 'strict'
-  const entries = await Promise.all(LOCALES.map(async (l) => [l, servedKeys(await getPagesIn(l), l, { strict })]))
-  return Object.fromEntries(entries)
+  const docs = Object.fromEntries(await Promise.all(LOCALES.map(async (l) => [l, await getPagesIn(l)])))
+  return servedByLocale(docs, { strict })
 })
 
 export const getCategories = cache(async (locale = 'fr') => {
@@ -53,20 +53,26 @@ export const getCategories = cache(async (locale = 'fr') => {
   return res.docs
 })
 
+// Under strict, an English or Spanish product page also needs its French version ready (lib/publish.js):
+// each product carries `frenchReady` so cards and tables never link to a page that would answer 404.
 export const getProducts = cache(async ({ locale = 'fr', productionCategory, categoryId } = {}) => {
   const payload = await payloadClient()
   const where = { _status: { equals: 'published' }, availability: { not_equals: 'discontinued' } }
   if (productionCategory) where.productionCategory = { equals: productionCategory }
   if (categoryId) where.category = { equals: categoryId }
   const res = await payload.find({ collection: 'products', where, locale, limit: 200, depth: 1, sort: 'title' })
-  return res.docs
+  if (locale === 'fr' || publishGuard() !== 'strict' || !res.docs.length) return res.docs
+  const fr = await payload.find({ collection: 'products', where: { id: { in: res.docs.map((d) => d.id) } }, locale: 'fr', limit: 200, depth: 0 })
+  const ready = new Set(fr.docs.filter(productReady).map((d) => d.id))
+  return res.docs.map((d) => ({ ...d, frenchReady: ready.has(d.id) }))
 })
 
+// A product taken off the menu (« Retiré ») has no page, like in the listings and the sitemap: 404.
 export const getProductBySlugs = cache(async (locale, categorySlug, productSlug) => {
   const payload = await payloadClient()
   const res = await payload.find({
     collection: 'products',
-    where: { slug: { equals: productSlug }, _status: { equals: 'published' } },
+    where: { slug: { equals: productSlug }, _status: { equals: 'published' }, availability: { not_equals: 'discontinued' } },
     locale,
     limit: 5,
     depth: 2,

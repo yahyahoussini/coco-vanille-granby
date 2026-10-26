@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, localeEnabled, pageByKey } from '@/lib/routes'
+import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, HTML_LANG, localeEnabled, pageByKey } from '@/lib/routes'
 import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, getServed, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard, marker } from '@/lib/facts'
 import { readyCopy, servedAlternates, productServed } from '@/lib/publish'
@@ -49,16 +49,19 @@ function crumbsFor(key, locale, lastName, served) {
     .filter(Boolean)
 }
 
+// The product's URL in every language that answers it (the French document decides for the others, under
+// strict). The same map drives hreflang, the language switcher and whether this page is served at all.
 async function productAlternates(product, servedBy) {
   const strict = publishGuard() === 'strict'
   const payload = await payloadClient()
   const languages = {}
+  const frProduct = await payload.findByID({ collection: 'products', id: product.id, locale: 'fr', depth: 1 }).catch(() => null)
   for (const locale of LOCALES) {
     if (!localeEnabled(locale)) continue
-    const doc = await payload.findByID({ collection: 'products', id: product.id, locale, depth: 1 }).catch(() => null)
-    if (!doc?.slug || !doc.category?.slug || !productServed(doc, { strict, servedHere: servedBy[locale] })) continue
+    const doc = locale === 'fr' ? frProduct : await payload.findByID({ collection: 'products', id: product.id, locale, depth: 1 }).catch(() => null)
+    if (!doc?.slug || !doc.category?.slug || !productServed(doc, { strict, servedHere: servedBy[locale], locale, frProduct })) continue
     const prefix = locale === 'fr' ? '' : `/${locale}`
-    languages[locale === 'fr' ? 'fr-CA' : locale === 'en' ? 'en-CA' : 'es'] = `${SITE_ORIGIN}${prefix}/${doc.category.slug}/${doc.slug}/`
+    languages[HTML_LANG[locale]] = `${SITE_ORIGIN}${prefix}/${doc.category.slug}/${doc.slug}/`
   }
   if (languages['fr-CA']) languages['x-default'] = languages['fr-CA']
   return languages
@@ -67,7 +70,8 @@ async function productAlternates(product, servedBy) {
 export async function buildMetadata(locale, segments) {
   const hit = await resolve(locale, segments)
   if (!hit) return notFoundMetadata(locale)
-  const robotsIndex = { index: true, follow: true, googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 } }
+  // Top level, so every engine reads them (Bing feeds Copilot and ChatGPT search), not only Googlebot.
+  const robotsIndex = { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 }
   const ogLocale = locale === 'en' ? 'en_CA' : locale === 'es' ? 'es_ES' : 'fr_CA'
   // Typographic OG card per page (src/components/site/og.js), absolute URL as crawlers expect.
   const social = ({ title, description, name, alt }) => {
@@ -121,10 +125,10 @@ export async function SitePage({ locale, segments = [], query }) {
     if (strict && crumbs.at(-1)?.path === pathFor('carte', locale) && !served[locale].has('carte')) crumbs.pop()
     const categoryPage = PAGES.find((p) => p.template === 'category' && p.category === hit.product.productionCategory)
     if (hit.product.category && (!strict || (categoryPage && served[locale].has(categoryPage.key)))) {
-      crumbs.push({ name: hit.product.category.title, path: `${locale === 'fr' ? '' : `/${locale}`}/${hit.product.category.slug}/`, url: '' })
+      const path = `${locale === 'fr' ? '' : `/${locale}`}/${hit.product.category.slug}/`
+      crumbs.push({ name: hit.product.category.title, path, url: `${SITE_ORIGIN}${path}` })
     }
     crumbs.push({ name: hit.product.title, path: hit.path, url: `${SITE_ORIGIN}${hit.path}` })
-    if (!productServed(hit.product, { strict, servedHere: served[locale] })) notFound()
   } else {
     const { page } = hit
     pageKey = page.key
@@ -140,6 +144,7 @@ export async function SitePage({ locale, segments = [], query }) {
   // Canonical + hreflang as real <link> tags (React 19 hoists them to <head>). Next's metadata API
   // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
   const languages = hit.kind === 'product' ? await productAlternates(hit.product, served) : servedAlternates(hit.page.key, served)
+  if (hit.kind === 'product' && strict && !languages[HTML_LANG[locale]]) notFound()
   const pageNodes = [
     bakeryNode(business, shop, locale, upcomingSpecialDays(shop)),
     websiteNode(),
@@ -154,7 +159,7 @@ export async function SitePage({ locale, segments = [], query }) {
       {Object.entries(languages).map(([lang, href]) => (
         <link key={lang} rel="alternate" hrefLang={lang} href={href} />
       ))}
-      <Header locale={locale} pageKey={pageKey} served={served} />
+      <Header locale={locale} pageKey={pageKey} served={served} alternates={languages} />
       <main id="contenu" className="site-main">
         <div className="wrap">
           {notice && (
@@ -168,7 +173,7 @@ export async function SitePage({ locale, segments = [], query }) {
         <RelatedPages pageKey={pageKey} locale={locale} served={served[locale]} />
       </main>
       <Footer business={business} shop={shop} locale={locale} served={served} />
-      <StickyBar business={business} locale={locale} />
+      <StickyBar business={business} locale={locale} served={served} />
       <JsonLd data={graph([...pageNodes, ...extra])} />
     </>
   )

@@ -3,7 +3,7 @@
 import test, { describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { PAGES, alternatesFor } from '../../src/lib/routes.js'
-import { hasCopy, readyCopy, servedKeys, servedAlternates, productReady, productServed } from '../../src/lib/publish.js'
+import { hasCopy, readyCopy, servedKeys, servedByLocale, servedAlternates, productReady, productServed } from '../../src/lib/publish.js'
 import { isKnownPublicPath, notFoundPathFor, localeOfPath } from '../../src/lib/public-paths.js'
 import { productTitle, productDescription, clip } from '../../src/lib/meta.js'
 
@@ -44,6 +44,29 @@ describe('served pages (publish guard)', () => {
     assert.equal(productServed({}, { strict: false }), true)
     assert.equal(productServed(ready, { strict: true, servedHere: home }), true)
     assert.equal(productServed(ready, { strict: true, servedHere: new Set() }), false)
+  })
+
+  test('strict, French first (Loi 96): no English or Spanish page goes live before its French page', () => {
+    const marked = (d) => ({ ...d, sections: [{ body: '[[FACT NEEDED: heures]]' }] })
+    const enDocs = [{ key: 'home', title: 'Coco Vanille Pastry Shop, Granby' }, { key: 'faq', title: 'FAQ' }]
+    const frMissing = servedByLocale({ fr: [marked({ key: 'home', title: 'Accueil' }), { key: 'faq', title: 'FAQ' }], en: enDocs, es: enDocs }, { strict: true })
+    assert.deepEqual([frMissing.fr.size, frMissing.en.size, frMissing.es.size], [0, 0, 0])
+    const frHome = servedByLocale({ fr: [{ key: 'home', title: 'Accueil' }, marked({ key: 'faq', title: 'FAQ' })], en: enDocs }, { strict: true })
+    assert.deepEqual([...frHome.en], ['home'], 'the English FAQ waits for the French FAQ')
+    assert.deepEqual(servedAlternates('faq', frHome), {})
+    const both = servedByLocale({ fr: [{ key: 'home', title: 'Accueil' }, { key: 'faq', title: 'FAQ' }], en: enDocs }, { strict: true })
+    assert.deepEqual([...both.en].sort(), ['faq', 'home'])
+    assert.ok(servedAlternates('faq', both)['x-default'])
+    // show (CI, staging): every page, every language.
+    assert.ok(servedByLocale({}, { strict: false }).en.has('faq'))
+  })
+
+  test('strict: an English product page needs its French version ready', () => {
+    const ready = { summary: 'Pur beurre.', leadTimeHours: 24, allergensVerified: { at: '2026-10-20' }, variants: [{ label: 'Unité', priceCents: 375, portionsMin: 1 }] }
+    const home = new Set(['home'])
+    assert.equal(productServed(ready, { strict: true, servedHere: home, locale: 'en', frProduct: { ...ready, summary: '[[FACT NEEDED: description]]' } }), false)
+    assert.equal(productServed(ready, { strict: true, servedHere: home, locale: 'en' }), false)
+    assert.equal(productServed(ready, { strict: true, servedHere: home, locale: 'en', frProduct: ready }), true)
   })
 
   test('hreflang names only the languages that answer, x-default with French', () => {

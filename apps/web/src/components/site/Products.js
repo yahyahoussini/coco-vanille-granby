@@ -11,7 +11,8 @@ const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
 // « Contient : » (fr, non-breaking space) · "Contains:" (en, es)
 export const colon = (locale) => (locale === 'fr' ? '\u00a0:' : ':')
 // Under PUBLISH_GUARD=strict a product with missing facts has no page (lib/publish.js): no link to it either.
-const linkable = (p) => publishGuard() !== 'strict' || productReady(p)
+// In English or Spanish the French version must be ready too (frenchReady, lib/data.js getProducts).
+const linkable = (p) => publishGuard() !== 'strict' || (productReady(p) && p.frenchReady !== false)
 export const productPath = (p, locale) => (p?.category?.slug && p?.slug && linkable(p) ? `${prefixFor(locale)}/${p.category.slug}/${p.slug}/` : null)
 
 // Real photos only (v1 L19): alt from the media record, intrinsic size always set (no layout shift).
@@ -115,7 +116,7 @@ export function ProductCard({ product, locale, state, orderingEnabled, showPlann
 
 export async function ProductGrid({ products: all, locale, showPlanned, level }) {
   // Production (strict) lists only products whose facts are complete: a card never shows a marker there.
-  const products = publishGuard() === 'strict' ? all.filter(productReady) : all
+  const products = publishGuard() === 'strict' ? all.filter(linkable) : all
   const [states, shop] = await Promise.all([getOfferStates(products, locale), getShop(locale)])
   const orderingEnabled = Boolean(shop?.ordering?.enabled)
   return (

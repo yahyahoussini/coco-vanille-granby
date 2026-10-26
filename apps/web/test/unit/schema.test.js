@@ -174,3 +174,18 @@ describe('productNode', () => {
     assert.ok(!keys.includes('review'))
   })
 })
+
+describe('exceptional closure in the Bakery node (same data as the site banner)', () => {
+  const shop = { hours: [{ day: 'Monday', opens: '09:00', closes: '18:00' }], closure: { active: true, reason: 'tempete', until: '2026-10-31T13:00:00.000Z' }, specialDays: [] }
+  const now = new Date('2026-10-28T15:00:00.000Z')
+  test('one closed day per day until it reopens, regular hours kept', () => {
+    const node = graph([bakeryNode(business, shop, 'fr', [{ date: '2026-10-29', state: 'open' }, { date: '2026-12-24', state: 'special', opens: '09:00', closes: '13:00' }], { now })])['@graph'][0]
+    const special = node.specialOpeningHoursSpecification
+    assert.deepEqual(special.map((d) => [d.validFrom, d.opens, d.closes]), [['2026-10-28', '00:00', '00:00'], ['2026-10-29', '00:00', '00:00'], ['2026-10-30', '00:00', '00:00'], ['2026-12-24', '09:00', '13:00']])
+    assert.equal(node.openingHoursSpecification.length, 1)
+  })
+  test('ended or inactive: nothing added', () => {
+    assert.equal(graph([bakeryNode(business, { ...shop, closure: { active: false } }, 'fr', [], { now })])['@graph'][0].specialOpeningHoursSpecification, undefined)
+    assert.equal(graph([bakeryNode(business, shop, 'fr', [], { now: new Date('2026-11-01T12:00:00Z') })])['@graph'][0].specialOpeningHoursSpecification, undefined)
+  })
+})

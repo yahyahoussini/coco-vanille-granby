@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { t, longDate } from '@/lib/i18n'
-import { pathFor, SITE_ORIGIN } from '@/lib/routes'
+import { PAGES, pathFor, SITE_ORIGIN } from '@/lib/routes'
 import { getProducts, getCategories, getAllergens, payloadClient } from '@/lib/data'
 import { productNode } from '@/lib/schema'
 import { mediaUrl } from '@/lib/media'
@@ -21,6 +21,16 @@ import { orderingTemplates } from './ordering'
 
 const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
 const REGION = { QC: 'Québec' }
+
+// `served` (lib/publish.js): a link only to a page the site answers in this language (show: every page).
+const answers = (served, locale, key) => !served || Boolean(served[locale]?.has(key))
+const pageHref = (served, locale, key) => (answers(served, locale, key) ? pathFor(key, locale) : null)
+// A category's page is a registry page (template 'category'), found by its production category.
+function categoryHref(c, locale, served) {
+  const page = PAGES.find((p) => p.template === 'category' && p.category === c.productionCategory)
+  if (!c?.slug || (served && !(page && served[locale]?.has(page.key)))) return null
+  return `${prefixFor(locale)}/${c.slug}/`
+}
 
 function Missing({ text }) {
   if (!text) return null
@@ -126,13 +136,12 @@ async function HomeTemplate(props) {
   const maps = mapsAction(business, locale)
   const order = orderAction(locale, served)
   const start = [
-    ...categories.map((c) => ({ href: `${prefixFor(locale)}/${c.slug}/`, label: c.title, key: c.id })),
+    ...categories.map((c) => ({ href: categoryHref(c, locale, served), label: c.title, key: c.id })),
     ...(order ? [{ href: order.href, label: s.nav.commander, key: 'commander' }] : []),
-    ...['gateaux-personnalises', 'prix', 'faq']
-      .filter((key) => !served || served[locale]?.has(key))
-      .map((key) => ({ href: pathFor(key, locale), label: s.pageNames[key], key })),
-    { href: pathFor('nous-trouver', locale), label: s.nav['nous-trouver'], key: 'nous-trouver' },
+    ...['gateaux-personnalises', 'prix', 'faq'].map((key) => ({ href: pageHref(served, locale, key), label: s.pageNames[key], key })),
+    { href: pageHref(served, locale, 'nous-trouver'), label: s.nav['nous-trouver'], key: 'nous-trouver' },
   ].filter((l) => l.href)
+  const menuHref = pageHref(served, locale, 'carte')
 
   return (
     <article className="page home">
@@ -175,12 +184,14 @@ async function HomeTemplate(props) {
           {vitrine.length ? (
             <ProductGrid products={vitrine} locale={locale} showPlanned />
           ) : photo ? (
-            <p className="vitrine-empty">
-              <Link href={pathFor('carte', locale)}>{h.seeMenu}</Link>
-            </p>
+            menuHref && (
+              <p className="vitrine-empty">
+                <Link href={menuHref}>{h.seeMenu}</Link>
+              </p>
+            )
           ) : (
             <p className="vitrine-empty">
-              {h.vitrineEmpty} <Link href={pathFor('carte', locale)}>{h.seeMenu}</Link>
+              {h.vitrineEmpty} {menuHref && <Link href={menuHref}>{h.seeMenu}</Link>}
             </p>
           )}
         </section>
@@ -190,16 +201,18 @@ async function HomeTemplate(props) {
           <HoursTable shop={shop} locale={locale} />
         </section>
         <Sections sections={doc?.sections} />
-        <nav aria-labelledby="home-start" className="start">
-          <h2 id="home-start">{h.start}</h2>
-          <ul className="start-grid">
-            {start.map((l) => (
-              <li key={l.key}>
-                <Link href={l.href}>{l.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {start.length > 0 && (
+          <nav aria-labelledby="home-start" className="start">
+            <h2 id="home-start">{h.start}</h2>
+            <ul className="start-grid">
+              {start.map((l) => (
+                <li key={l.key}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
         <Faq items={doc?.faq} locale={locale} />
         <ConversionBand primary={order} secondary={maps || phoneAction(business, locale)} />
         <MetaLine doc={doc} locale={locale} />
@@ -216,15 +229,13 @@ async function CategoryList({ locale, productionCategory, level }) {
 }
 
 async function MenuTemplate(props) {
-  const { locale } = props
+  const { locale, served } = props
   const categories = await getCategories(locale)
   const list = (
     <div className="menu-families">
       {categories.map((c) => (
         <section key={c.id} aria-labelledby={`cat-${c.id}`} className="menu-family">
-          <h3 id={`cat-${c.id}`}>
-            <Link href={`${prefixFor(locale)}/${c.slug}/`}>{c.title}</Link>
-          </h3>
+          <h3 id={`cat-${c.id}`}>{categoryHref(c, locale, served) ? <Link href={categoryHref(c, locale, served)}>{c.title}</Link> : c.title}</h3>
           {c.intro && <p>{c.intro}</p>}
           <CategoryList locale={locale} productionCategory={c.productionCategory} level={4} />
         </section>

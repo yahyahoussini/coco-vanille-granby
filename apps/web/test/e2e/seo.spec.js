@@ -135,6 +135,8 @@ test.describe('page contract', () => {
 
       expect(d.robots, 'one robots meta').toHaveLength(1)
       expect(d.robots[0]).toMatch(/index/)
+      // Snippet and image limits for every engine (Bing feeds Copilot and ChatGPT search), not only Googlebot.
+      if (!/noindex/.test(d.robots[0])) expect(d.robots[0]).toMatch(/max-snippet:-1.*max-image-preview:large|max-image-preview:large.*max-snippet:-1/)
 
       expect(d.jsonld, 'one JSON-LD block').toHaveLength(1)
       const blocks = d.jsonld.map((text, i) => {
@@ -162,6 +164,25 @@ test.describe('page contract', () => {
       }
     })
   }
+})
+
+test.describe('product pages', () => {
+  test('BreadcrumbList: every crumb but the last has its item URL; robots open to every engine', async ({ page }) => {
+    const { locs } = await sitemap()
+    const registry = new Set(PAGES.flatMap((p) => Object.values(p.paths)).map((path) => `${SITE_ORIGIN}${path}`))
+    const products = locs.filter((u) => !registry.has(u) && new URL(u).pathname.replace(/^\/(en|es)\//, '/').split('/').filter(Boolean).length === 2)
+    test.skip(!products.length, 'no product page in the sitemap')
+    for (const url of products.slice(0, 4)) {
+      const res = await raw(local(url))
+      expect(res.status, url).toBe(200)
+      const d = await inspect(page, res.body)
+      const crumbs = ldNodes(d.jsonld.map((t) => JSON.parse(t))).find((n) => hasType(n, 'BreadcrumbList'))
+      expect(crumbs, `${url}: BreadcrumbList`).toBeTruthy()
+      const items = crumbs.itemListElement
+      for (const li of items.slice(0, -1)) expect(li.item, `${url}: crumb ${li.position} « ${li.name} »`).toMatch(/^https:\/\//)
+      if (!/noindex/.test(d.robots[0])) expect(d.robots[0]).toMatch(/max-snippet:-1/)
+    }
+  })
 })
 
 test.describe('URL policy', () => {

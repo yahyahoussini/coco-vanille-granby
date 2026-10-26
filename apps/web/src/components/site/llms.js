@@ -2,7 +2,8 @@
 // Pure (node --test): facts come from bakeryNode(), the very function that writes the Bakery node, so the two
 // cannot drift; a fact missing there is missing here too. No new claim, no marker.
 import { bakeryNode, graph } from '../../lib/schema.js'
-import { hoursSummary } from './hours.js'
+import { closureNotice } from '../../lib/studio/closure.js'
+import { hoursSummary, upcomingSpecialDays } from './hours.js'
 
 const LABELS = {
   fr: {
@@ -13,6 +14,8 @@ const LABELS = {
     telephone: 'Téléphone',
     email: 'Courriel',
     hours: 'Heures',
+    special: 'Jours spéciaux',
+    closed: 'fermé',
     geo: 'Coordonnées',
     map: 'Carte',
     sameAs: 'Page officielle',
@@ -28,9 +31,15 @@ const LABELS = {
 
 const line = (label, value) => (value ? `- ${label} : ${value}` : null)
 
-export function factLines(business, shop) {
-  const node = graph([bakeryNode(business, shop, 'fr')])['@graph'][0] || {}
+const hhmm = (v) => String(v || '').replace(/^(\d{2}):(\d{2})$/, (_, h, m) => `${Number(h)} h${m === '00' ? '' : ` ${m}`}`)
+
+// The same Bakery node as every page (special days and an exceptional closure included), and the banner's
+// sentence when the shop is closed.
+export function factLines(business, shop, { now = new Date() } = {}) {
+  const node = graph([bakeryNode(business, shop, 'fr', upcomingSpecialDays(shop, { now }), { now })])['@graph'][0] || {}
   const l = LABELS.fr
+  const special = (node.specialOpeningHoursSpecification || []).map((d) => `${d.validFrom} ${d.opens === '00:00' && d.closes === '00:00' ? l.closed : `${hhmm(d.opens)} – ${hhmm(d.closes)}`}`).join('; ')
+  const notice = closureNotice(shop || {}, 'fr', now)
   const a = node.address || {}
   const address = [a.streetAddress, a.addressLocality, [a.addressRegion, a.postalCode].filter(Boolean).join(' '), a.addressCountry].filter(Boolean).join(', ')
   const hours = node.openingHoursSpecification?.length ? hoursSummary(shop?.hours, 'fr') : null
@@ -40,7 +49,9 @@ export function factLines(business, shop) {
     line(l.address, address),
     line(l.telephone, node.telephone && business?.phoneDisplay ? `${business.phoneDisplay} (${node.telephone})` : node.telephone),
     line(l.email, node.email),
+    notice ? `- ${notice.text}` : null,
     line(l.hours, hours),
+    line(l.special, special),
     line(l.geo, node.geo ? `${node.geo.latitude}, ${node.geo.longitude}` : null),
     line(l.map, node.hasMap),
     line(l.sameAs, [].concat(node.sameAs || []).join(', ')),
