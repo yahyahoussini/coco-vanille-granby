@@ -8,6 +8,7 @@ import { en } from '@payloadcms/translations/languages/en'
 import sharp from 'sharp'
 import { collections } from './collections/index.js'
 import { globals } from './globals/index.js'
+import { cocoEmailAdapter } from './lib/messaging/payload-email.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const adminOrigin = process.env.ADMIN_ORIGIN || 'http://admin.localhost:3000'
@@ -25,6 +26,8 @@ export default buildConfig({
   collections,
   globals,
   editor: lexicalEditor(),
+  // Same delivery adapter as the shop's messages: SES in production, a log in development (lib/messaging).
+  email: cocoEmailAdapter,
   localization: {
     locales: [
       { code: 'fr', label: 'Français' },

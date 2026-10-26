@@ -5,7 +5,7 @@
 //   payment: { provider: 'stripe'|'mock'|'counter'|'none' }, consent, attribution, allergyNote, req })
 // → { order, totals, errors: [], paymentLink }   (validates capacity, slot, prices, tax classes; never invents a price)
 //
-// sendQuote(payload, { requestId, totalCents, depositPercent, validHours, taxClass, req }) → { request, paymentLink, errors }
+// sendQuote(payload, { requestId, totalCents, depositPercent, validHours, taxClass, force, req }) → { request, paymentLink, errors, messages }
 // availableWindows(payload, { date, items, now }) → [{ start: 'HH:MM', end: 'HH:MM', remaining }]
 // availableDays(payload, { items, now, source }) → { days: [{ date, windows, toConfirm }], reason }
 import { localParts, addDays, dayOf } from '../studio/time.js'
@@ -20,6 +20,7 @@ import { cleanCustomer } from './customer.js'
 import { orderError } from './errors.js'
 import { getShopSettings, getPools, getUsage, engineContext, withCapacityLock, newToken, newPickupCode, nextOrderNumber, storedDay, publicOrigin } from './context.js'
 import { paymentProvider } from '../payments/provider.js'
+import { notifyOrderConfirmed, notifyQuoteSent, scheduleReminder } from '../messaging/notify.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/
@@ -171,6 +172,11 @@ export async function createOrder(payload, args = {}) {
       timeline: [timelineEntry(status, { by, source, at: now, note: counter ? 'Commande téléphone · paiement au comptoir' : 'Plage réservée pendant le paiement' })],
     }
     const order = await payload.create({ collection: 'orders', data, ...SYS })
+    // Phone order booked at once: same confirmation as the web (16 §3.2), after the undo window.
+    if (counter) {
+      await notifyOrderConfirmed(payload, order).catch(() => null)
+      await scheduleReminder(payload, order, { now }).catch(() => null)
+    }
     return { order, totals, errors: [], paymentLink: counter ? null : paymentLinkFor(order) }
   })
 }
@@ -263,7 +269,9 @@ export async function sendQuote(payload, { requestId, totalCents, depositPercent
       },
       ...SYS,
     })
-    return { request: updated, paymentLink, errors: [] }
+    // Email (recap) + SMS (link), sent after the undo window (16 §3.0).
+    const messages = await notifyQuoteSent(payload, updated).catch(() => [])
+    return { request: updated, paymentLink, errors: [], messages }
   })
 }
 
