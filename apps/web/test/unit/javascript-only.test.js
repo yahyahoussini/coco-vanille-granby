@@ -26,6 +26,7 @@ test('migrations are JavaScript with up and down, and carry no type annotation',
   const dir = join(app, 'src', 'migrations')
   const js = readdirSync(dir).filter((f) => f.endsWith('.js'))
   assert.ok(js.some((f) => /_initial\.js$/.test(f)), 'initial migration')
+  assert.ok(js.some((f) => /_orders_notify\.js$/.test(f)), 'orders trigger migration')
   for (const f of js) {
     const src = readFileSync(join(dir, f), 'utf8')
     assert.match(src, /export async function up\(/, f)

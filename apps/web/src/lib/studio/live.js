@@ -4,7 +4,9 @@
 const CHANNEL = 'coco_orders'
 const POLL_MS = 10 * 1000
 
-// Fires on every new order and every status change (idempotent; production also ships it as a migration).
+// Fires on every new order and every status change. Migrated databases (production, staging, CI) get it from
+// src/migrations/*_orders_notify.js and the app runs no DDL there; a development database built by Payload's
+// schema push (no migrations) gets it at start instead (idempotent).
 export const TRIGGER_SQL = `
 CREATE OR REPLACE FUNCTION coco_orders_notify() RETURNS trigger AS $$
 BEGIN
@@ -12,6 +14,11 @@ BEGIN
   RETURN NEW;
 END $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER coco_orders_notify AFTER INSERT OR UPDATE OF status ON orders FOR EACH ROW EXECUTE FUNCTION coco_orders_notify();
+`
+
+export const DROP_TRIGGER_SQL = `
+DROP TRIGGER IF EXISTS coco_orders_notify ON orders;
+DROP FUNCTION IF EXISTS coco_orders_notify();
 `
 
 const state = (globalThis.__cocoLive ||= { listeners: new Set(), started: false, mode: null, client: null, timer: null, last: null })
@@ -39,6 +46,13 @@ async function startPolling(payload) {
   state.timer = setInterval(read, POLL_MS)
 }
 
+// The orders_notify migration has run: the trigger is the migration's, never touched at run time.
+const migrated = (client) =>
+  client
+    .query("select 1 from payload_migrations where name like '%orders_notify' and batch > 0 limit 1")
+    .then((r) => r.rowCount > 0)
+    .catch(() => false)
+
 async function start(payload) {
   if (state.started) return
   state.started = true
@@ -46,7 +60,7 @@ async function start(payload) {
   if (!pool?.connect) return startPolling(payload)
   try {
     const client = await pool.connect()
-    await client.query(TRIGGER_SQL).catch((e) => payload.logger?.warn?.({ err: e }, 'studio live: trigger not installed'))
+    if (!(await migrated(client))) await client.query(TRIGGER_SQL).catch((e) => payload.logger?.warn?.({ err: e }, 'studio live: trigger not installed'))
     await client.query(`LISTEN ${CHANNEL}`)
     client.on('notification', (n) => {
       let msg = null
