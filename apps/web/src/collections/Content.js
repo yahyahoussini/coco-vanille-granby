@@ -1,4 +1,4 @@
-import { anyone, isOwnerOrAgency, isTeam, publishedOrTeam } from '../lib/access.js'
+import { anyone, isOwnerOrAgency, isEditor, publishedOrTeam } from '../lib/access.js'
 
 // Page copy following the page contract (v1 §7, rank-first 02-page-contract):
 // h1 with the searcher's words → 40–60-word answer block (brand + place + dated number)
@@ -7,7 +7,7 @@ export const Pages = {
   slug: 'pages',
   admin: { useAsTitle: 'key', group: 'Contenu', defaultColumns: ['key', 'title', 'tier', '_status'] },
   versions: { drafts: true, maxPerDoc: 50 },
-  access: { read: publishedOrTeam, create: isOwnerOrAgency, update: isTeam, delete: isOwnerOrAgency },
+  access: { read: publishedOrTeam, create: isOwnerOrAgency, update: isEditor, delete: isOwnerOrAgency },
   fields: [
     { name: 'key', type: 'text', required: true, unique: true, admin: { description: 'Clé du registre des pages (src/lib/routes.js).' } },
     {

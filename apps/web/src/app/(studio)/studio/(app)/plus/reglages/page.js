@@ -1,5 +1,5 @@
 import { studioPage } from '@/lib/studio/guard'
-import { ROLE_LABELS } from '@/lib/studio/roles'
+import { ROLE_LABELS, PIN_ROLES } from '@/lib/studio/roles'
 import { DEVICE_LABELS } from '@/lib/studio/audit'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Flash } from '@/components/studio/Flash'
@@ -85,8 +85,8 @@ export default async function Reglages({ searchParams }) {
                   {p.active === false ? '× Désactivé' : `✓ ${ROLE_LABELS[p.role]}`}
                 </span>
               </div>
-              <p className="meta">{withPin.has(String(p.id)) ? 'NIP enregistré' : 'Pas de NIP (ne peut pas prendre la tablette)'}</p>
-              {p.role !== 'agence' && p.role !== 'integration' && (
+              <p className="meta">{!PIN_ROLES.includes(p.role) ? 'Connexion par clé d’accès ou mot de passe (pas de NIP)' : withPin.has(String(p.id)) ? 'NIP enregistré' : 'Pas de NIP (ne peut pas prendre la tablette)'}</p>
+              {PIN_ROLES.includes(p.role) && (
                 <ActionForm type="users.pin" fields={{ userId: p.id }} back={BACK} className="btn-row">
                   <label className="sr-only" htmlFor={`pin-${p.id}`}>
                     Nouveau NIP de {p.name}

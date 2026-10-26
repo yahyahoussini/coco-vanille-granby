@@ -31,7 +31,6 @@ const DEMO_STAFF = [
   { name: `Marc ${DEMO}`, email: 'marc.demo@comptoir.invalid', role: 'gerant', pin: '2222', password: 'marc-demo-only' },
   { name: `Agence ${DEMO}`, email: 'agence.demo@exemple.test', role: 'agence', password: 'agence-demo-only' },
 ]
-const OWNER_PIN = '0000'
 
 async function findUser(email) {
   const r = await payload.find({ collection: 'users', where: { email: { equals: email } }, limit: 1, ...SYS })
@@ -81,7 +80,8 @@ for (const s of DEMO_STAFF) {
   else await payload.create({ collection: 'users', data: { ...data, email: s.email, password: s.password }, ...SYS })
 }
 const owner = await findUser('proprio@exemple.test')
-if (owner) await payload.update({ collection: 'users', id: owner.id, data: { pinHash: await hashPin(OWNER_PIN), pinFailures: 0, pinLockedUntil: null, loginAttempts: 0, lockUntil: null, passkeys: null, backupCodes: null }, ...SYS })
+// The owner signs in with the password (passkey once enrolled), never a tablet PIN (decision 4).
+if (owner) await payload.update({ collection: 'users', id: owner.id, data: { pinHash: null, pinFailures: 0, pinLockedUntil: null, loginAttempts: 0, lockUntil: null, passkeys: null, backupCodes: null }, ...SYS })
 
 await removeDemoTraffic()
 // Fresh undo windows and idempotency keys for the demo accounts (all dev-only accounts).
@@ -204,5 +204,5 @@ await payload.create({
 await payload.create({ collection: 'reviews', data: { platform: 'google', author: `Julie T. ${DEMO}`, rating: 5, text: 'Le Paris-Brest était parfait, merci! (démo)', language: 'fr', receivedAt: new Date(now.getTime() - 3 * 3600 * 1000).toISOString(), status: 'unanswered' }, ...SYS })
 await payload.create({ collection: 'reviews', data: { platform: 'google', author: `Peter K. ${DEMO}`, rating: 2, text: 'The cake was not what I ordered. (demo)', language: 'en', receivedAt: new Date(now.getTime() - 20 * 3600 * 1000).toISOString(), status: 'unanswered' }, ...SYS })
 
-payload.logger.info(`Studio demo data applied (SEED_DEMO=true): staff PINs Léa 1111, Marc 2222, owner ${OWNER_PIN}. Remove with SEED_DEMO=clean.`)
+payload.logger.info(`Studio demo data applied (SEED_DEMO=true): staff PINs Léa 1111, Marc 2222 (the owner signs in with the password). Remove with SEED_DEMO=clean.`)
 process.exit(0)

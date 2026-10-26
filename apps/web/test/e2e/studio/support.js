@@ -28,7 +28,7 @@ export async function signInTurn(fn) {
   }
 }
 
-export const OWNER = { email: 'proprio@exemple.test', password: 'coco-dev-only', pin: '0000' }
+export const OWNER = { email: 'proprio@exemple.test', password: 'coco-dev-only' }
 export const LEA = { name: 'Léa (démo)', email: 'lea.demo@comptoir.invalid', password: 'lea-demo-only', pin: '1111' }
 export const MARC = { name: 'Marc (démo)', email: 'marc.demo@comptoir.invalid', password: 'marc-demo-only', pin: '2222' }
 export const AGENCY = { email: 'agence.demo@exemple.test', password: 'agence-demo-only' }

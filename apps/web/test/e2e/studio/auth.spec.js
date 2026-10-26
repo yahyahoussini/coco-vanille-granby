@@ -4,7 +4,7 @@
 // Run: npx playwright test --project=admin
 import { test, expect } from '@playwright/test'
 import { raw, PUBLIC_URL, ADMIN_URL } from '../support/site.js'
-import { OWNER, LEA, MARC, AGENCY, login, action, stepUp, signInTurn } from './support.js'
+import { OWNER, LEA, MARC, AGENCY, login, action, stepUp, signInTurn, sql } from './support.js'
 
 test.describe('admin host', () => {
   test('every Studio response is noindex and never cached, error pages included', async () => {
@@ -72,6 +72,64 @@ test.describe('roles enforced on the server', () => {
     const r = await action(page, 'product.price', { productId: 1, variantIndex: 0, price: '9' })
     expect(r.status).toBe(401)
     expect(r.body.code).toBe('step_up')
+  })
+})
+
+// Payload's REST API on the same host, with the page's own cookies (same origin, like « Avancé »).
+const rest = (page, method, path, body) =>
+  page.evaluate(
+    async ({ method, path, body }) => {
+      const res = await fetch(path, { method, headers: { 'content-type': 'application/json', accept: 'application/json' }, body: body ? JSON.stringify(body) : undefined })
+      return { status: res.status, body: await res.json().catch(() => null) }
+    },
+    { method, path, body },
+  )
+
+test.describe('REST /api follows the same rules as Studio', () => {
+  test('Comptoir: no product, order, message or shop write over REST', async ({ page }) => {
+    const [product] = await sql('select id from products order by id limit 1')
+    const [order] = await sql('select id from orders order by id limit 1')
+    await login(page, LEA)
+    const tries = [
+      ['PATCH', `/api/products/${product.id}`, { allergens: [] }],
+      ['PATCH', `/api/orders/${order.id}`, { status: 'picked_up', payment: { status: 'paid' }, totals: { balanceCents: 0 } }],
+      ['POST', '/api/messages', { channel: 'sms', template: 'order_ready', to: '+15145550000', body: 'payez ici' }],
+      ['POST', '/api/globals/shop', { closure: { active: true }, hours: [] }],
+    ]
+    for (const [method, path, body] of tries) expect((await rest(page, method, path, body)).status, `${method} ${path}`).toBe(403)
+  })
+
+  test('Gérant·e without a step-up: prices and allergens stay as they were', async ({ page }) => {
+    const [product] = await sql('select id from products where id in (select _parent_id from products_variants where price_cents > 0) order by id limit 1')
+    await login(page, MARC)
+    const before = (await rest(page, 'GET', `/api/products/${product.id}?depth=0`)).body
+    const variants = before.variants.map((v) => ({ ...v, priceCents: 100 }))
+    await rest(page, 'PATCH', `/api/products/${product.id}`, { variants, allergens: [], allergensVerified: { by: 1, at: new Date().toISOString() } })
+    const after = (await rest(page, 'GET', `/api/products/${product.id}?depth=0`)).body
+    expect(after.variants.map((v) => v.priceCents)).toEqual(before.variants.map((v) => v.priceCents))
+    expect(after.allergens).toEqual(before.allergens)
+    expect(after.allergensVerified).toEqual(before.allergensVerified)
+  })
+
+  test('owner without a step-up: no new account, no deposit change', async ({ page }) => {
+    await login(page, OWNER)
+    const created = await rest(page, 'POST', '/api/users', { name: 'Intrus', email: 'intrus@exemple.test', password: 'pas-permis-123', role: 'proprietaire' })
+    expect(created.status).toBe(403)
+    const before = (await rest(page, 'GET', '/api/globals/shop?depth=0')).body
+    await rest(page, 'POST', '/api/globals/shop', { ordering: { ...before.ordering, depositPercent: 100 } })
+    const after = (await rest(page, 'GET', '/api/globals/shop?depth=0')).body
+    expect(after.ordering.depositPercent ?? null).toBe(before.ordering.depositPercent ?? null)
+  })
+
+  test('agency: orders without pickup codes, cake messages or history', async ({ page }) => {
+    await login(page, AGENCY, 'ordinateur')
+    const r = await rest(page, 'GET', '/api/orders?limit=5&depth=0')
+    expect(r.status).toBe(200)
+    expect(r.body.docs.length).toBeGreaterThan(0)
+    for (const doc of r.body.docs) {
+      for (const key of ['pickupCode', 'timeline', 'customer', 'consent', 'boxToken', 'accessToken', 'allergyNote']) expect(doc[key], key).toBeUndefined()
+      for (const it of doc.items || []) expect(it.message).toBeUndefined()
+    }
   })
 })
 

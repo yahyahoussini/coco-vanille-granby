@@ -1,10 +1,11 @@
-import { anyone, isTeam } from '../lib/access.js'
+import { anyone, isEditor } from '../lib/access.js'
 
 // Real photos only (v1 L19). Alt text is written from visible facts, never invented.
 export const Media = {
   slug: 'media',
   admin: { useAsTitle: 'alt', group: 'Contenu' },
-  access: { read: anyone, create: isTeam, update: isTeam, delete: isTeam },
+  // Comptoir adds the photo of the day through Studio (server-side), never through REST.
+  access: { read: anyone, create: isEditor, update: isEditor, delete: isEditor },
   upload: {
     staticDir: 'media',
     mimeTypes: ['image/*'],

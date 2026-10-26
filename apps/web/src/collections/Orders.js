@@ -1,4 +1,5 @@
-import { isStaff, isOwner, isOwnerOrManager, isOwnerOrAgency, isTeam, hasRole, nobody } from '../lib/access.js'
+import { hasRole, nobody } from '../lib/access.js'
+import { auditHooks } from '../lib/studio/audit.js'
 
 // Order state machine (10 §2): pending_payment → paid → ready → picked_up
 // (+ not_picked_up, cancelled, refunded). « En préparation » is derived, never tapped.
@@ -12,18 +13,21 @@ export const customerFields = [
   { name: 'language', type: 'select', defaultValue: 'fr', options: ['fr', 'en', 'es'] },
 ]
 
-// Agence sees counts, not customer names or phones (Loi 25 minimisation, 16 §1.1).
-const hideFromAgency = { read: ({ req: { user } }) => hasRole(user, 'proprietaire', 'gerant', 'comptoir') }
+// Agence sees counts, not customer names, phones, codes, cake messages or the history (Loi 25 minimisation, 16 §1.1).
+export const hideFromAgency = { read: ({ req: { user } }) => hasRole(user, 'proprietaire', 'gerant', 'comptoir') }
 
+// Read-only over REST and « Avancé »: every change goes through the checkout, the payment code, the worker or a
+// Studio action (role matrix, state machine, audit log), all server-side with overrideAccess (10 §2, 16 §2.2).
 export const Orders = {
   slug: 'orders',
   admin: { useAsTitle: 'number', group: 'Commandes', defaultColumns: ['number', 'status', 'pickupDate', 'total'] },
   access: {
     read: ({ req: { user } }) => hasRole(user, 'proprietaire', 'gerant', 'comptoir', 'agence'),
-    create: isStaff,
-    update: isStaff,
+    create: nobody,
+    update: nobody,
     delete: nobody,
   },
+  hooks: auditHooks('orders'),
   fields: [
     { name: 'number', type: 'number', unique: true, index: true },
     { name: 'status', type: 'select', required: true, defaultValue: 'pending_payment', options: ORDER_STATUSES, index: true },
@@ -42,7 +46,7 @@ export const Orders = {
         { name: 'qty', type: 'number', required: true, min: 1 },
         { name: 'unitPriceCents', type: 'number', required: true },
         { name: 'taxClass', type: 'text' },
-        { name: 'message', type: 'text', admin: { description: 'Message sur le gâteau.' } },
+        { name: 'message', type: 'text', access: hideFromAgency, admin: { description: 'Message sur le gâteau.' } },
         // Capacity snapshot: what this line takes from which pool, on which production day (10 §3).
         { name: 'productionCategory', type: 'text' },
         { name: 'units', type: 'number' },
@@ -52,7 +56,7 @@ export const Orders = {
     { name: 'pickupDate', type: 'date', index: true, admin: { date: { pickerAppearance: 'dayOnly' } } },
     { name: 'pickupWindowStart', type: 'text', admin: { description: 'HH:MM, America/Toronto' } },
     { name: 'pickupWindowEnd', type: 'text' },
-    { name: 'pickupCode', type: 'text', admin: { description: 'Code à 4 chiffres montré au client.' } },
+    { name: 'pickupCode', type: 'text', access: hideFromAgency, admin: { description: 'Code à 4 chiffres montré au client.' } },
     // A web order holds its window and capacity for 10 minutes while the customer pays (10 §3.3).
     { name: 'holdExpiresAt', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' } } },
     // Opaque token for the customer's payment, thanks and calendar links (never the order number alone).
@@ -89,6 +93,7 @@ export const Orders = {
     {
       name: 'consent',
       type: 'group',
+      access: hideFromAgency,
       fields: [
         { name: 'termsAcceptedAt', type: 'date' },
         { name: 'termsVersion', type: 'text' },
@@ -103,8 +108,8 @@ export const Orders = {
       ],
     },
     { name: 'attribution', type: 'json', admin: { description: 'utm_*, gclid, langue, « comment nous avez-vous connus ? »' } },
-    { name: 'boxToken', type: 'text', index: true },
+    { name: 'boxToken', type: 'text', index: true, access: hideFromAgency },
     { name: 'contractSentAt', type: 'date', admin: { description: 'Copie du contrat envoyée (07 O6).' } },
-    { name: 'timeline', type: 'json', admin: { description: 'Historique des changements d’état.' } },
+    { name: 'timeline', type: 'json', access: hideFromAgency, admin: { description: 'Historique des changements d’état.' } },
   ],
 }

@@ -1,10 +1,11 @@
-import { isStaff, isOwner, isOwnerOrManager, isOwnerOrAgency, isTeam, hasRole, nobody } from '../lib/access.js'
+import { isOwnerOrManager, nobody } from '../lib/access.js'
 
-// Outbound texts and emails (transactional vs commercial, CASL), with delivery status.
+// Outbound texts and emails (transactional vs commercial, CASL), with delivery status. Only server code queues
+// them (lib/messaging/queue.js, which sets `kind` from the template); nobody writes one over REST.
 export const Messages = {
   slug: 'messages',
   admin: { useAsTitle: 'template', group: 'Système' },
-  access: { read: isOwnerOrManager, create: isStaff, update: isStaff, delete: nobody },
+  access: { read: isOwnerOrManager, create: nobody, update: nobody, delete: nobody },
   fields: [
     { name: 'channel', type: 'select', options: ['sms', 'email'], required: true },
     { name: 'kind', type: 'select', options: ['transactional', 'commercial'], defaultValue: 'transactional' },

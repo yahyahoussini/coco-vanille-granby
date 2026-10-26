@@ -1,4 +1,4 @@
-import { isStaff, isOwner, isOwnerOrManager, isOwnerOrAgency, isTeam, hasRole, nobody } from '../lib/access.js'
+import { isOwnerOrManager, isTeam } from '../lib/access.js'
 
 // Daily capacity per production category; date overrides from « Boutique & heures ».
 export const CapacityPools = {

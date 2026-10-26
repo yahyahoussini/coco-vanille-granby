@@ -34,7 +34,7 @@ function moveOrFail(order, to, role) {
 async function markReady(ctx, order) {
   if (order.status !== 'paid') refuseState(order)
   moveOrFail(order, 'ready', ctx.user.role)
-  const updated = await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'ready', timeline: pushTimeline(order, timelineEntry(ctx, 'ready', 'Marquée prête')) }, ...ctx.as, depth: 0 })
+  const updated = await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'ready', timeline: pushTimeline(order, timelineEntry(ctx, 'ready', 'Marquée prête')) }, ...ctx.write, depth: 0 })
   const messages = await notifyReady(ctx.payload, updated).catch(() => [])
   await holdMessages(ctx.payload, messages, ctx.undoUntil)
   return { updated, messages }
@@ -132,7 +132,7 @@ export const orderActions = {
       const balance = order.totals?.balanceCents > 0 ? order.totals.balanceCents : 0
       if (balance) await recordCounterPayment(ctx.payload, { orderId: order.id, by: ctx.user.id, now: ctx.now })
       const fresh = await ctx.payload.findByID({ collection: 'orders', id: order.id, ...SYS })
-      await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'picked_up', timeline: pushTimeline(fresh, timelineEntry(ctx, 'picked_up', recognized ? 'Remise · client reconnu' : 'Remise · code vérifié')) }, ...ctx.as, depth: 0 })
+      await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'picked_up', timeline: pushTimeline(fresh, timelineEntry(ctx, 'picked_up', recognized ? 'Remise · client reconnu' : 'Remise · code vérifié')) }, ...ctx.write, depth: 0 })
       return {
         entity: 'orders',
         entityId: order.id,
@@ -212,7 +212,7 @@ export const orderActions = {
       const f = await facts(ctx.payload)
       const m = await enqueueMessage(ctx.payload, { channel: 'sms', template: 'other_slot', to: order.customer.phone, language: order.locale, orderId: order.id, body: studioSms('other_slot', order.locale, { number: order.number, phone: f.phone }) })
       await holdMessages(ctx.payload, [m], ctx.undoUntil)
-      await ctx.payload.update({ collection: 'orders', id: order.id, data: { timeline: pushTimeline(order, timelineEntry(ctx, order.status, 'Autre créneau proposé par texto')) }, ...ctx.as, depth: 0 })
+      await ctx.payload.update({ collection: 'orders', id: order.id, data: { timeline: pushTimeline(order, timelineEntry(ctx, order.status, 'Autre créneau proposé par texto')) }, ...ctx.write, depth: 0 })
       return {
         entity: 'orders',
         entityId: order.id,
@@ -243,7 +243,7 @@ export const orderActions = {
         collection: 'orders',
         id: order.id,
         data: { status: 'cancelled', payment: refundDueBy ? { refundDueBy } : {}, timeline: pushTimeline(order, timelineEntry(ctx, 'cancelled', `Annulée : ${reason}`)) },
-        ...ctx.as,
+        ...ctx.write,
         depth: 0,
       })
       return {
@@ -284,7 +284,7 @@ export const orderActions = {
         collection: 'orders',
         id: order.id,
         data: { status: 'refunded', payment: { status: 'refunded', refundDueBy: null }, timeline: pushTimeline(order, timelineEntry(ctx, 'refunded', `Remboursée ${money(paidCents)} ${how} : ${reason}${reference ? ` (${reference})` : ''}`)) },
-        ...ctx.as,
+        ...ctx.write,
         depth: 0,
       })
       return {

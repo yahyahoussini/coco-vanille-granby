@@ -15,7 +15,7 @@ const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/
 const REASON_FR = { tempete: 'tempête', maladie: 'maladie', bris: 'bris', autre: 'autre raison' }
 
 const readShop = (ctx) => ctx.payload.findGlobal({ slug: 'shop', locale: 'fr', depth: 0, ...ctx.as })
-const writeShop = (ctx, data) => ctx.payload.updateGlobal({ slug: 'shop', locale: 'fr', data, depth: 0, ...ctx.as, context: { studioAudited: true } })
+const writeShop = (ctx, data) => ctx.payload.updateGlobal({ slug: 'shop', locale: 'fr', data, depth: 0, ...ctx.write })
 const restoreShop = (ctx, data) => ctx.payload.updateGlobal({ slug: 'shop', locale: 'fr', data, ...SYS, context: { studioAudited: true } })
 
 // Undoable shop toggles share one shape: write `next`, keep `before` for « Annuler ».
@@ -239,7 +239,7 @@ export const shopActions = {
       const next = Math.max(0, limit + delta)
       const overrides = (pool.overrides || []).filter((o) => dayOf(o.date) !== date).map(({ id, date: d, capacity }) => ({ id, date: d, capacity }))
       overrides.push({ date: `${date}T12:00:00.000Z`, capacity: next })
-      await ctx.payload.update({ collection: 'capacity-pools', id: pool.id, data: { overrides }, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      await ctx.payload.update({ collection: 'capacity-pools', id: pool.id, data: { overrides }, depth: 0, ...ctx.write })
       return {
         entity: 'capacity-pools',
         entityId: pool.id,

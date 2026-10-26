@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import { studioAuth } from '@/lib/studio/session'
-import { BAKERY_ROLES, ROLE_LABELS } from '@/lib/studio/roles'
+import { PIN_ROLES, ROLE_LABELS } from '@/lib/studio/roles'
 import { PinPad } from '@/components/studio/PinPad'
 
 export const metadata = { title: 'Qui utilise la tablette? · Coco Studio' }
@@ -33,7 +33,7 @@ export default async function Qui({ searchParams }) {
   }
   const res = await payload.find({
     collection: 'users',
-    where: { and: [{ role: { in: BAKERY_ROLES } }, { active: { not_equals: false } }, { pinHash: { exists: true } }] },
+    where: { and: [{ role: { in: PIN_ROLES } }, { active: { not_equals: false } }, { pinHash: { exists: true } }] },
     sort: 'name',
     limit: 30,
     depth: 0,

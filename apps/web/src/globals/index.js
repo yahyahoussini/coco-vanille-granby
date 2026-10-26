@@ -1,5 +1,6 @@
-import { anyone, isOwner, isOwnerOrManager, hasRole } from '../lib/access.js'
+import { anyone, isOwner, isOwnerOrManager, hasRole, withStepUp } from '../lib/access.js'
 import { withRevalidation } from '../lib/revalidate.js'
+import { auditHooks } from '../lib/studio/audit.js'
 
 const weekdays = [
   { value: 'Monday', label: 'lundi' },
@@ -17,6 +18,7 @@ export const Business = {
   slug: 'business',
   admin: { group: 'Boutique' },
   access: { read: anyone, update: isOwnerOrManager },
+  hooks: auditHooks('business', { global: true }),
   fields: [
     {
       name: 'name',
@@ -77,10 +79,13 @@ export const Business = {
 }
 
 // « Boutique & heures »: regular hours, special days, closure, busy mode, pause, ordering rules.
+// REST and « Avancé »: owner and manager. Comptoir's « Délai allongé » (and « Fermeture » when the owner allows it)
+// are Studio actions, checked against the role matrix and written server-side.
 export const Shop = {
   slug: 'shop',
   admin: { group: 'Boutique' },
-  access: { read: anyone, update: ({ req: { user } }) => hasRole(user, 'proprietaire', 'gerant', 'comptoir') },
+  access: { read: anyone, update: isOwnerOrManager },
+  hooks: auditHooks('shop', { global: true }),
   fields: [
     {
       name: 'hours',
@@ -124,7 +129,8 @@ export const Shop = {
         { name: 'windowMinutes', type: 'number', defaultValue: 15 },
         { name: 'maxPerWindow', type: 'number', defaultValue: 4 },
         { name: 'maxDaysAhead', type: 'number', defaultValue: 30 },
-        { name: 'depositPercent', type: 'number', access: { update: ({ req: { user } }) => hasRole(user, 'proprietaire') } },
+        // Money: the owner, after a fresh identity check (16b §4 #4), like Studio's « Acompte ».
+        { name: 'depositPercent', type: 'number', access: { update: withStepUp('proprietaire') } },
         { name: 'quoteValidHours', type: 'number', defaultValue: 72 },
         { name: 'termsVersion', type: 'text' },
       ],

@@ -46,10 +46,11 @@ export function actorLabel(user, device) {
 // « Léa (tablette) a marqué Croissant aux amandes épuisé à 10 h 42 »
 export const sentence = (user, device, what, at = new Date()) => `${actorLabel(user, device)} ${what} à ${clockOf(at)}`
 
+// The client's address as nginx saw it (X-Real-IP = $remote_addr, infra/nginx/snippets/coco-proxy.conf).
+// Never X-Forwarded-For: its first entry is whatever the client typed. Null without the proxy (development).
 export function ipOf(headers) {
   const get = (k) => (typeof headers?.get === 'function' ? headers.get(k) : headers?.[k])
-  const fwd = get('x-forwarded-for')
-  return (fwd ? String(fwd).split(',')[0].trim() : get('x-real-ip')) || null
+  return String(get('x-real-ip') || '').trim() || null
 }
 
 export async function writeAudit(payload, { user = null, device = null, ip = null, action, entity = null, entityId = null, before = null, after = null, summary = null, key = null, undoOf = null, undoUntil = null, result = null, req = null }) {
@@ -85,7 +86,7 @@ export async function findByKey(payload, key) {
 }
 
 // Collection hooks for edits that do not go through Studio actions (Payload admin, seeds with a user).
-export function auditHooks(entity) {
+export function auditHooks(entity, { global = false } = {}) {
   const log = async ({ req, action, doc, before, after }) => {
     if (req?.context?.studioAudited || req?.context?.skipAudit) return
     if (!req?.user) return
@@ -94,7 +95,7 @@ export function auditHooks(entity) {
     await req.payload
       .create({
         collection: 'audit-log',
-        data: { actor: req.user.id, device: 'avance', ip: ipOf(req.headers), action, entity, entityId: String(doc.id), before: d.before, after: d.after, summary: `${req.user.name || 'Quelqu’un'} (Avancé) · ${action}` },
+        data: { actor: req.user.id, device: 'avance', ip: ipOf(req.headers), action, entity, entityId: global ? entity : String(doc.id), before: d.before, after: d.after, summary: `${req.user.name || 'Quelqu’un'} (Avancé) · ${action}` },
         overrideAccess: true,
         depth: 0,
         req,
@@ -102,6 +103,8 @@ export function auditHooks(entity) {
       })
       .catch((e) => req.payload.logger?.error?.({ err: e }, 'audit hook'))
   }
+  // Globals: no operation, no delete (« Boutique & heures », the business identity).
+  if (global) return { afterChange: [async ({ doc, previousDoc, req }) => (await log({ req, action: `${entity}.update`, doc, before: previousDoc, after: doc }), doc)] }
   return {
     afterChange: [
       async ({ doc, previousDoc, operation, req }) => {

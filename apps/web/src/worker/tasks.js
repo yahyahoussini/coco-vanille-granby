@@ -5,6 +5,7 @@ import { localParts, addDays, dayBounds, dayOf, closingOf, zonedTime } from '../
 import { canTransition } from '../lib/ordering/state.js'
 import { cancelIntent } from '../lib/payments/stripe.js'
 import { notifyNotPickedUp } from '../lib/messaging/notify.js'
+import { kindOf } from '../lib/messaging/queue.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 export const MAX_ATTEMPTS = 5
@@ -38,7 +39,8 @@ export async function sendDueMessages(payload, { now = new Date(), senders, limi
           continue
         }
       }
-      if (m.kind === 'commercial') {
+      // The template decides, whatever the row says (a row queued before the collection was locked down).
+      if (m.kind === 'commercial' || kindOf(m.template) === 'commercial') {
         // Commercial messages need a matching consent (07 A5); none is sent by this module yet.
         await payload.update({ collection: 'messages', id: m.id, data: { status: 'cancelled', error: 'message commercial sans consentement vérifié' }, ...SYS })
         out.cancelled += 1

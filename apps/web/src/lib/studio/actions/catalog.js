@@ -15,7 +15,7 @@ const readShop = (ctx) => ctx.payload.findGlobal({ slug: 'shop', locale: 'fr', d
 
 // Keep a published product published (drafts stay drafts) when Studio changes one field.
 async function saveProduct(ctx, product, data, { system = false } = {}) {
-  return ctx.payload.update({ collection: 'products', id: product.id, locale: 'fr', data: { ...data, ...(product._status ? { _status: product._status } : {}) }, depth: 0, ...(system ? SYS : ctx.as), context: { studioAudited: true } })
+  return ctx.payload.update({ collection: 'products', id: product.id, locale: 'fr', data: { ...data, ...(product._status ? { _status: product._status } : {}) }, depth: 0, ...(system ? SYS : ctx.write), context: { studioAudited: true } })
 }
 
 const availability = (p) => ({ availability: p.availability, soldOutUntil: p.soldOutUntil || null })
@@ -130,8 +130,7 @@ export const catalogActions = {
         file: { data: Buffer.from(await file.arrayBuffer()), mimetype: file.type, name: `vitrine-${today}-${Date.now()}.${ext}`, size: file.size },
         locale: 'fr',
         depth: 0,
-        ...ctx.as,
-        context: { studioAudited: true },
+        ...ctx.write,
       })
       return { entity: 'media', entityId: doc.id, before: null, after: { alt, filename: doc.filename }, summary: sentence(ctx.user, ctx.device, 'a publié la photo de la vitrine', ctx.now), message: 'Photo publiée sur le site.', data: { mediaId: doc.id } }
     },

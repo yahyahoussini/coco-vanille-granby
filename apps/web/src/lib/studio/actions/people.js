@@ -2,6 +2,7 @@
 import { randomBytes } from 'node:crypto'
 import { hashPin, validPin } from '../pin.js'
 import { sentence } from '../audit.js'
+import { PIN_ROLES } from '../roles.js'
 import { refuse, load, str, bool } from './util.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
@@ -15,6 +16,7 @@ export const peopleActions = {
       const pin = str(input.pin, 4)
       if (!validPin(pin)) refuse('pin_invalid', 'Le NIP doit avoir 4 chiffres.', 422)
       const target = await load(ctx, 'users', input.userId)
+      if (!PIN_ROLES.includes(target.role)) refuse('pin_role', 'Le NIP sert au personnel sur la tablette; ce compte se connecte avec sa clé d’accès ou son mot de passe.', 422)
       await ctx.payload.update({ collection: 'users', id: target.id, data: { pinHash: await hashPin(pin), pinFailures: 0, pinLockedUntil: null }, ...SYS, context: { studioAudited: true } })
       return {
         entity: 'users',
@@ -77,7 +79,7 @@ export const peopleActions = {
     async run(ctx, input) {
       const target = await load(ctx, 'users', input.userId)
       const mayClose = bool(input.mayClose)
-      await ctx.payload.update({ collection: 'users', id: target.id, data: { mayClose }, ...ctx.as, depth: 0, context: { studioAudited: true } })
+      await ctx.payload.update({ collection: 'users', id: target.id, data: { mayClose }, ...ctx.write, depth: 0 })
       return {
         entity: 'users',
         entityId: target.id,
@@ -96,7 +98,7 @@ export const peopleActions = {
       const pct = Number(String(input.percent || '').replace(',', '.'))
       if (!(pct > 0 && pct <= 100)) refuse('percent', 'Pourcentage invalide (1 à 100).', 422)
       const shop = await ctx.payload.findGlobal({ slug: 'shop', depth: 0, ...ctx.as })
-      await ctx.payload.updateGlobal({ slug: 'shop', data: { ordering: { ...(shop.ordering || {}), depositPercent: pct } }, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      await ctx.payload.updateGlobal({ slug: 'shop', data: { ordering: { ...(shop.ordering || {}), depositPercent: pct } }, depth: 0, ...ctx.write })
       return {
         entity: 'shop',
         entityId: 'ordering.depositPercent',
@@ -115,7 +117,7 @@ export const peopleActions = {
       const url = str(input.url, 500)
       if (url && !/^https:\/\/(g\.page|search\.google\.com|www\.google\.com|maps\.google\.com|maps\.app\.goo\.gl|business\.google\.com)\//.test(url)) refuse('url', 'Collez le lien « Demander des avis » de la fiche Google (https://g.page/… ou https://search.google.com/…).', 422)
       const business = await ctx.payload.findGlobal({ slug: 'business', locale: 'fr', depth: 0, ...ctx.as })
-      await ctx.payload.updateGlobal({ slug: 'business', locale: 'fr', data: { google: { ...(business.google || {}), reviewLink: url || null } }, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      await ctx.payload.updateGlobal({ slug: 'business', locale: 'fr', data: { google: { ...(business.google || {}), reviewLink: url || null } }, depth: 0, ...ctx.write })
       return {
         entity: 'business',
         entityId: 'google.reviewLink',
@@ -136,7 +138,7 @@ export const peopleActions = {
       if (text.length < 3) refuse('text_required', 'Écrivez la question.', 422)
       const language = ['fr', 'en', 'es'].includes(input.language) ? input.language : 'fr'
       const source = ['comptoir', 'telephone', 'instagram', 'courriel', 'avis'].includes(input.source) ? input.source : 'comptoir'
-      const doc = await ctx.payload.create({ collection: 'questions', data: { text, language, source, status: 'new' }, ...ctx.as, depth: 0, context: { studioAudited: true } })
+      const doc = await ctx.payload.create({ collection: 'questions', data: { text, language, source, status: 'new' }, ...ctx.write, depth: 0 })
       return {
         entity: 'questions',
         entityId: doc.id,

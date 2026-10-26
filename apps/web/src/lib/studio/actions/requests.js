@@ -69,7 +69,7 @@ export const requestActions = {
       const text = str(input.message, 1000)
       if (text.length < 10) refuse('text_required', 'Écrivez la réponse au client.', 422)
       const m = await send(ctx, request, text)
-      await ctx.payload.update({ collection: 'requests', id: request.id, data: { status: 'declined', timeline: pushTimeline(request, timelineEntry(ctx, 'declined', 'Refusée · réponse envoyée')) }, ...ctx.as, depth: 0 })
+      await ctx.payload.update({ collection: 'requests', id: request.id, data: { status: 'declined', timeline: pushTimeline(request, timelineEntry(ctx, 'declined', 'Refusée · réponse envoyée')) }, ...ctx.write, depth: 0 })
       return {
         entity: 'requests',
         entityId: request.id,
@@ -94,7 +94,7 @@ export const requestActions = {
       const text = str(input.message, 1000)
       if (text.length < 10) refuse('text_required', 'Écrivez la réponse au client.', 422)
       const m = await send(ctx, request, text)
-      await ctx.payload.update({ collection: 'requests', id: request.id, data: { answerBy: null, timeline: pushTimeline(request, timelineEntry(ctx, 'new', `Autre date proposée : ${alt}`)) }, ...ctx.as, depth: 0 })
+      await ctx.payload.update({ collection: 'requests', id: request.id, data: { answerBy: null, timeline: pushTimeline(request, timelineEntry(ctx, 'new', `Autre date proposée : ${alt}`)) }, ...ctx.write, depth: 0 })
       return {
         entity: 'requests',
         entityId: request.id,

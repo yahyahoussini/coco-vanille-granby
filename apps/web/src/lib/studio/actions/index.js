@@ -20,6 +20,11 @@ export const REGISTRY = { ...orderActions, ...catalogActions, ...shopActions, ..
 
 const fail = (code, message, status = 409, extra = {}) => ({ ok: false, code, message, status, ...extra })
 
+// Reads keep the person's own access rules (ctx.as). Writes run once the role matrix and the step-up above
+// have passed: the collections refuse these writes over REST (comptoir, agence, no step-up), so Studio writes
+// with overrideAccess, still as the person (hooks see who), and logs the change itself (studioAudited).
+export const writeAs = (user) => ({ user, overrideAccess: true, context: { studioAudited: true } })
+
 const undoInfo = (entry) => (entry?.undoUntil && !entry.undoneAt ? { id: entry.id, until: entry.undoUntil, visible: UNDO_VISIBLE_SECONDS } : null)
 
 export async function perform(payload, { user, device = null, ip = null, stepUp = false, type, input = {}, key = null, now = new Date() }) {
@@ -34,7 +39,7 @@ export async function perform(payload, { user, device = null, ip = null, stepUp 
   }
   const t = new Date(now).getTime()
   const undoSeconds = def.undo ? (typeof def.undoSeconds === 'function' ? def.undoSeconds(input) : def.undoSeconds ?? UNDO_SECONDS) : 0
-  const ctx = { payload, user, device, ip, now: new Date(now), as: { user, overrideAccess: false }, undoUntil: undoSeconds ? new Date(t + undoSeconds * 1000) : null }
+  const ctx = { payload, user, device, ip, now: new Date(now), as: { user, overrideAccess: false }, write: writeAs(user), undoUntil: undoSeconds ? new Date(t + undoSeconds * 1000) : null }
   let r
   try {
     r = await def.run(ctx, input || {})
@@ -70,7 +75,7 @@ export async function undo(payload, { user, device = null, ip = null, id, now = 
   if (String(actor) !== String(user?.id) && user?.role !== 'proprietaire') return fail('forbidden', 'Seule la personne qui a fait le changement peut l’annuler.', 403)
   if (entry.undoneAt) return { ok: true, message: 'Déjà annulé.', replay: true }
   if (!entry.undoUntil || new Date(entry.undoUntil).getTime() < new Date(now).getTime()) return fail('undo_late', 'Trop tard pour annuler : le changement est déjà appliqué partout.', 409)
-  const ctx = { payload, user, device, ip, now: new Date(now), as: { user, overrideAccess: false } }
+  const ctx = { payload, user, device, ip, now: new Date(now), as: { user, overrideAccess: false }, write: writeAs(user) }
   let r
   try {
     r = (await def.undo(ctx, entry)) || {}

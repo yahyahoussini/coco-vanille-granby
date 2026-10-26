@@ -14,7 +14,7 @@ const setStatus = (status, word) => ({
     const reply = str(input.reply, 4000)
     const data = status === 'answered' ? { status, reply: reply || review.replyDraft || null, repliedAt: ctx.now.toISOString(), replyDraft: reply || review.replyDraft || null } : { status, replyDraft: reply || review.replyDraft || null }
     if (status === 'answered' && !data.reply) refuse('reply_required', 'Écrivez ou copiez la réponse d’abord.', 422)
-    await ctx.payload.update({ collection: 'reviews', id: review.id, data, depth: 0, ...ctx.as, context: { studioAudited: true } })
+    await ctx.payload.update({ collection: 'reviews', id: review.id, data, depth: 0, ...ctx.write })
     const late = status === 'answered' && ctx.now.getTime() - new Date(review.receivedAt).getTime() > 24 * 3600000
     return {
       entity: 'reviews',
@@ -50,7 +50,7 @@ export const reviewActions = {
         receivedAt: receivedAt.toISOString(),
         status: 'unanswered',
       }
-      const doc = await ctx.payload.create({ collection: 'reviews', data, depth: 0, ...ctx.as, context: { studioAudited: true } })
+      const doc = await ctx.payload.create({ collection: 'reviews', data, depth: 0, ...ctx.write })
       return { entity: 'reviews', entityId: doc.id, before: null, after: data, summary: sentence(ctx.user, ctx.device, `a ajouté un avis ${stars(rating)} de ${author}`, ctx.now), message: `Avis ${rating}★ ajouté · répondre d’ici 24 h.`, data: { reviewId: doc.id } }
     },
     async undo(ctx, entry) {

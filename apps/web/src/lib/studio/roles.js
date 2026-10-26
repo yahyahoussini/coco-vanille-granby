@@ -11,6 +11,9 @@ export const ROLE_LABELS = { proprietaire: 'Propriétaire', gerant: 'Gérant·e'
 // Roles that can open Studio at all (the integration bot uses an API key, never a screen).
 export const STUDIO_ROLES = [P, G, C, A, T]
 export const BAKERY_ROLES = [P, G, C]
+// The 4-digit PIN switch on the shared tablet is for staff; the owner signs in with a passkey or the password
+// (decision 4, 16b §4), so a PIN is never a way into owner rights.
+export const PIN_ROLES = [G, C]
 
 export const SCREENS = {
   aujourdhui: [P, G, C],
@@ -125,8 +128,19 @@ export const homeFor = (user) => (roleOf(user) === A ? '/agence/' : roleOf(user)
 export function redactOrder(order, user) {
   if (!order) return order
   if (BAKERY_ROLES.includes(roleOf(user))) return order
-  const { customer, allergyNote, accessToken, pickupCode, ...rest } = order
-  return { ...rest, customer: null, allergyNote: null, accessToken: null, pickupCode: null, hasAllergy: Boolean(allergyNote) }
+  const { customer, allergyNote, accessToken, pickupCode, timeline, consent, boxToken, items, ...rest } = order
+  return {
+    ...rest,
+    customer: null,
+    allergyNote: null,
+    accessToken: null,
+    pickupCode: null,
+    timeline: null,
+    consent: null,
+    boxToken: null,
+    items: Array.isArray(items) ? items.map(({ message, ...it }) => ({ ...it, message: null })) : items,
+    hasAllergy: Boolean(allergyNote),
+  }
 }
 
 export const redactRequest = (request, user) => {

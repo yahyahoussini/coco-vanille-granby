@@ -4,19 +4,20 @@ import { smsInfo } from './gsm.js'
 
 export const UNDO_SECONDS = 5
 
-export async function enqueueMessage(payload, { channel, template, to, language = 'fr', orderId, requestId, kind = 'transactional', body, subject, html, attachments, delaySeconds = UNDO_SECONDS, sendAfter, req }) {
+// Messages about one order or request the customer started (CASL transactional). Any other template counts
+// as commercial, and the worker sends a commercial message only with a verified consent (07 A5). The kind
+// comes from this list, never from the caller.
+export const TRANSACTIONAL_TEMPLATES = new Set(['order_confirmed', 'order_reminder', 'order_ready', 'order_not_picked_up', 'payment_link', 'other_slot', 'closure', 'request_received', 'request_answer', 'quote_sent'])
+export const kindOf = (template) => (TRANSACTIONAL_TEMPLATES.has(template) ? 'transactional' : 'commercial')
+
+// Server code only (the collection refuses REST writes): callers check who may act before queuing.
+export async function enqueueMessage(payload, { channel, template, to, language = 'fr', orderId, requestId, body, subject, html, attachments, delaySeconds = UNDO_SECONDS, sendAfter }) {
   if (!to) return null
   const after = sendAfter ? new Date(sendAfter).toISOString() : new Date(Date.now() + delaySeconds * 1000).toISOString()
-  const data = { channel, template, to, language, kind, body, order: orderId, request: requestId, sendAfter: after, status: 'queued', attempts: 0 }
+  const data = { channel, template, to, language, kind: kindOf(template), body, order: orderId, request: requestId, sendAfter: after, status: 'queued', attempts: 0 }
   if (channel === 'email') Object.assign(data, { subject, html, attachments: attachments || null })
   if (channel === 'sms' && body) data.segments = smsInfo(body).segments
-  return payload.create({
-    collection: 'messages',
-    data,
-    req,
-    overrideAccess: !req,
-    depth: 0,
-  })
+  return payload.create({ collection: 'messages', data, overrideAccess: true, depth: 0 })
 }
 
 // « Annuler » inside the window: cancel what has not left yet.

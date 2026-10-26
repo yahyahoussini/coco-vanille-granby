@@ -8,10 +8,10 @@ import config from '@payload-config'
 import { randomBytes } from 'node:crypto'
 import { sign, unsign } from './pin.js'
 import { roleOf } from './roles.js'
+import { STEPUP_COOKIE, STEPUP_MINUTES, readCookie, stepUpValue, hasStepUp } from './stepup.js'
 
+export { STEPUP_COOKIE, STEPUP_MINUTES, readCookie, hasStepUp }
 export const DEVICE_COOKIE = 'cv_appareil'
-export const STEPUP_COOKIE = 'cv_verif'
-export const STEPUP_MINUTES = 5
 export const DEVICE_KINDS = ['telephone', 'tablette', 'ordinateur']
 
 export const studioPayload = () => getPayload({ config })
@@ -23,15 +23,6 @@ export function cookieString(name, value, { maxAge = 60 * 60 * 24 * 365, httpOnl
   if (httpOnly) parts.push('HttpOnly')
   if (secure()) parts.push('Secure')
   return parts.join('; ')
-}
-
-export function readCookie(headers, name) {
-  const raw = headers.get('cookie') || ''
-  for (const part of raw.split(';')) {
-    const i = part.indexOf('=')
-    if (i > 0 && part.slice(0, i).trim() === name) return decodeURIComponent(part.slice(i + 1).trim())
-  }
-  return null
 }
 
 const deviceSecret = (payload) => `${payload.secret}:appareil`
@@ -101,17 +92,8 @@ export async function revokeToken(payload, token) {
   await payload.db.updateOne({ id: user.id, collection: 'users', data: user, req: {}, returning: false })
 }
 
-// Step-up: a fresh password, passkey or backup-code check, valid 5 minutes for this person only.
-const stepSecret = (payload) => `${payload.secret}:verif`
-
-export function stepUpCookie(payload, user, now = Date.now()) {
-  return cookieString(STEPUP_COOKIE, sign({ uid: user.id, exp: now + STEPUP_MINUTES * 60 * 1000 }, stepSecret(payload)), { maxAge: STEPUP_MINUTES * 60 })
-}
-
-export function hasStepUp(payload, headers, user, now = Date.now()) {
-  const v = unsign(readCookie(headers, STEPUP_COOKIE), stepSecret(payload))
-  return Boolean(v && user && String(v.uid) === String(user.id) && v.exp > now)
-}
+// Step-up: a fresh password, passkey or backup-code check, valid 5 minutes for this person only (stepup.js).
+export const stepUpCookie = (payload, user, now = Date.now()) => cookieString(STEPUP_COOKIE, stepUpValue(payload, user, now), { maxAge: STEPUP_MINUTES * 60 })
 
 export const clearStepUp = () => cookieString(STEPUP_COOKIE, '', { maxAge: 0 })
 

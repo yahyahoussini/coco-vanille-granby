@@ -1,7 +1,7 @@
 // 16 §2.2 access matrix, enforced server-side: the same rules drive the tabs, the screens and every action.
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { can, canSee, tabsFor, needsStepUp, redactOrder, redactRequest, homeFor, ACTIONS, OFFLINE_OK } from '../../../src/lib/studio/roles.js'
+import { can, canSee, tabsFor, needsStepUp, redactOrder, redactRequest, homeFor, ACTIONS, OFFLINE_OK, PIN_ROLES } from '../../../src/lib/studio/roles.js'
 
 const u = (role, extra = {}) => ({ id: role, role, name: role, active: true, ...extra })
 const owner = u('proprietaire')
@@ -79,6 +79,9 @@ describe('tab bar per role (16 §2.1)', () => {
   test('never more than 5 tabs', () => {
     for (const user of [owner, manager, counter, agency, u('traduction')]) assert.ok(tabsFor(user).length <= 5)
   })
+  test('the tablet PIN is for staff; the owner never signs in with one (decision 4)', () => {
+    assert.deepEqual(PIN_ROLES, ['gerant', 'comptoir'])
+  })
   test('home per role', () => {
     assert.equal(homeFor(counter), '/')
     assert.equal(homeFor(agency), '/agence/')
@@ -86,12 +89,15 @@ describe('tab bar per role (16 §2.1)', () => {
 })
 
 describe('Agence sees no customer names or phones (Loi 25)', () => {
-  const order = { id: 1, number: 1042, customer: { firstName: 'Julie', phone: '+15145550000' }, allergyNote: 'noix', pickupCode: '4821', accessToken: 't', totals: { totalCents: 4800 } }
+  const order = { id: 1, number: 1042, customer: { firstName: 'Julie', phone: '+15145550000' }, allergyNote: 'noix', pickupCode: '4821', accessToken: 't', totals: { totalCents: 4800 }, timeline: [{ note: 'Annulée : client a rappelé' }], items: [{ title: 'Gâteau', qty: 1, message: 'Bonne fête Julie' }] }
   test('redacted for Agence', () => {
     const r = redactOrder(order, agency)
     assert.equal(r.customer, null)
     assert.equal(r.pickupCode, null)
     assert.equal(r.allergyNote, null)
+    assert.equal(r.timeline, null)
+    assert.equal(r.items[0].message, null)
+    assert.equal(r.items[0].qty, 1)
     assert.equal(r.hasAllergy, true)
     assert.equal(r.totals.totalCents, 4800)
   })

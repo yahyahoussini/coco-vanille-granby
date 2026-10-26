@@ -1,12 +1,15 @@
 import { customerFields } from './Orders.js'
 import { PRODUCTION_CATEGORIES } from './Catalog.js'
-import { isStaff, isOwner, isOwnerOrManager, isOwnerOrAgency, isTeam, hasRole, nobody } from '../lib/access.js'
+import { isOwnerOrManager, hasRole, nobody } from '../lib/access.js'
+import { auditHooks } from '../lib/studio/audit.js'
 
-// Custom-cake requests: request → price → deposit link (16 §3.4, 10 §5.2).
+// Custom-cake requests: request → price → deposit link (16 §3.4, 10 §5.2). Read-only over REST and « Avancé »:
+// the public form, the quote, the deposit and the worker write server-side (like orders).
 export const Requests = {
   slug: 'requests',
   admin: { useAsTitle: 'occasion', group: 'Commandes', defaultColumns: ['occasion', 'eventDate', 'status', 'answerBy'] },
-  access: { read: isOwnerOrManager, create: isOwnerOrManager, update: isOwnerOrManager, delete: nobody },
+  access: { read: isOwnerOrManager, create: nobody, update: nobody, delete: nobody },
+  hooks: auditHooks('requests'),
   fields: [
     { name: 'status', type: 'select', defaultValue: 'new', options: ['new', 'quoted', 'deposit_paid', 'confirmed', 'declined', 'expired'], index: true },
     { name: 'source', type: 'select', defaultValue: 'web', options: ['web', 'phone'] },
