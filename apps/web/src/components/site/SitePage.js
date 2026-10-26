@@ -34,7 +34,8 @@ function crumbsFor(key, locale, lastName) {
     .map((p, i) => {
       const path = pathFor(p.key, locale)
       if (!path) return null
-      const name = i === chain.length - 1 && lastName ? lastName : p.key === 'home' ? t(locale).breadcrumbHome : t(locale).nav[p.key] || p.key
+      const s = t(locale)
+      const name = i === chain.length - 1 && lastName ? lastName : p.key === 'home' ? s.breadcrumbHome : s.nav[p.key] || s.pageNames?.[p.key] || p.key
       return { name, path, url: `${SITE_ORIGIN}${path}` }
     })
     .filter(Boolean)
@@ -76,7 +77,8 @@ export async function buildMetadata(locale, segments) {
   }
 }
 
-export async function SitePage({ locale, segments = [] }) {
+// `query` (search params) reaches the template only from routes that opt into dynamic rendering (the calculator).
+export async function SitePage({ locale, segments = [], query }) {
   const hit = await resolve(locale, segments)
   if (!hit) notFound()
   const [business, shop] = await Promise.all([getBusiness(locale), getShop(locale)])
@@ -85,7 +87,7 @@ export async function SitePage({ locale, segments = [] }) {
   let pageKey = null
   let doc = null
   let Template
-  let props = { locale, business, shop }
+  let props = { locale, business, shop, query }
   let crumbs
   let pageName
 
@@ -143,10 +145,13 @@ export async function SitePage({ locale, segments = [] }) {
   )
 }
 
+// Templates that read the query string have their own dynamic route (src/app/(site-*)/…/calculateur…/page.js).
+export const DYNAMIC_TEMPLATES = ['calculator']
+
 export function staticParamsFor(locale) {
   if (!localeEnabled(locale)) return []
   const prefix = locale === 'fr' ? '' : `/${locale}`
-  return PAGES.filter((p) => p.paths[locale])
+  return PAGES.filter((p) => p.paths[locale] && !DYNAMIC_TEMPLATES.includes(p.template))
     .map((p) => p.paths[locale].slice(prefix.length).split('/').filter(Boolean))
     .map((path) => ({ path }))
 }

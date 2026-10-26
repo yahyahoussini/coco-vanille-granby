@@ -22,12 +22,13 @@ export function AnswerBlock({ text }) {
   return <p className="answer">{text}</p>
 }
 
-export function KeyFacts({ items, locale }) {
+// Five dated facts, brand named in each line (v1 §7): extractable as they stand.
+export function KeyFacts({ items, locale, title }) {
   const list = (items || []).filter(Boolean)
   if (!list.length) return null
   return (
     <aside className="key-facts" aria-labelledby="key-facts-title">
-      <h2 id="key-facts-title">{t(locale).keyFacts}</h2>
+      <h2 id="key-facts-title">{title || t(locale).keyFacts}</h2>
       <ul>
         {list.map((f, i) => (
           <li key={i}>{f}</li>
@@ -38,8 +39,12 @@ export function KeyFacts({ items, locale }) {
 }
 
 // One question-phrased h2 per sub-query; the first sentence answers.
-export function Sections({ sections }) {
-  return (sections || []).map((s, i) => (
+// `slot` renders template content (a product list, a table) at the end of section `slot.after`.
+export function Sections({ sections, slot }) {
+  const list = sections || []
+  const at = slot ? Math.min(slot.after ?? 0, list.length - 1) : -1
+  if (slot && !list.length) return slot.node
+  return list.map((s, i) => (
     <section key={i} className="qa">
       <h2>{s.heading}</h2>
       <p className="qa-answer">{s.answer}</p>
@@ -51,6 +56,7 @@ export function Sections({ sections }) {
           ))}
         </ul>
       )}
+      {i === at && slot.node}
     </section>
   ))
 }

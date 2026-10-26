@@ -7,7 +7,8 @@
 import { marker } from '../lib/facts.js'
 
 const fn = marker
-const UPDATED = '2026-10-25'
+// Noon in Granby (16:00 UTC), so the date reads the same in every time zone of the country.
+const UPDATED = '2026-10-25T16:00:00.000Z'
 
 const s = (heading, answer, extra = {}) => ({
   heading,
