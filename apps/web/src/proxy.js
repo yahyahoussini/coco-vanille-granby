@@ -10,6 +10,7 @@ const NOINDEX = 'noindex, nofollow, noarchive'
 
 const hostOf = (req) => (req.headers.get('host') || '').split(':')[0].toLowerCase()
 const isAsset = (p) => p.startsWith('/_next/') || /\.[a-z0-9]{2,5}$/i.test(p)
+const isHealth = (p) => p === '/svc/health' || p === '/svc/health/'
 
 function notFound(req) {
   const url = req.nextUrl.clone()
@@ -17,10 +18,22 @@ function notFound(req) {
   return NextResponse.rewrite(url, { status: 404 })
 }
 
+function adminHeaders(res) {
+  res.headers.set('X-Robots-Tag', NOINDEX)
+  res.headers.set('Cache-Control', 'no-store, private')
+  // Studio and « Avancé » are never framed by another site (16b §4 #10).
+  res.headers.set('Content-Security-Policy', "frame-ancestors 'none'")
+  return res
+}
+
 export function proxy(req) {
   const host = hostOf(req)
   const { pathname } = req.nextUrl
   const adminHost = ADMIN_HOSTS.includes(host)
+
+  // Health check (17 §12.2) on every host and every role, before the Studio rewrite and the role checks:
+  // Docker, deploy.sh and the uptime monitor reach web and studio processes the same way.
+  if (isHealth(pathname)) return adminHost ? adminHeaders(NextResponse.next()) : NextResponse.next()
 
   if (adminHost) {
     if (ROLE === 'web') return notFound(req)
@@ -37,11 +50,7 @@ export function proxy(req) {
       url.pathname = `/studio${pathname === '/' ? '' : pathname}`
       res = NextResponse.rewrite(url)
     }
-    res.headers.set('X-Robots-Tag', NOINDEX)
-    res.headers.set('Cache-Control', 'no-store, private')
-    // Studio and « Avancé » are never framed by another site (16b §4 #10).
-    res.headers.set('Content-Security-Policy', "frame-ancestors 'none'")
-    return res
+    return adminHeaders(res)
   }
 
   // Public host

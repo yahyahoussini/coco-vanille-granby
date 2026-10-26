@@ -51,3 +51,17 @@ test.describe('admin host', () => {
     expect(res.body).not.toMatch(/<urlset/)
   })
 })
+
+test.describe('health check on both hosts (17 §12.2)', () => {
+  for (const [name, base] of [['public', PUBLIC_URL], ['admin', ADMIN_URL]]) {
+    test(`${name} host: /svc/health/ answers 200 with the database, ?shallow=1 without it`, async () => {
+      const deep = await raw(`${base}/svc/health/`)
+      expect(deep.status).toBe(200)
+      expect(JSON.parse(deep.body)).toMatchObject({ ok: true, db: 'up' })
+      const shallow = await raw(`${base}/svc/health/?shallow=1`)
+      expect(shallow.status).toBe(200)
+      expect(JSON.parse(shallow.body)).toMatchObject({ ok: true, db: 'skipped' })
+      expect(shallow.headers['cache-control']).toMatch(/no-store/)
+    })
+  }
+})

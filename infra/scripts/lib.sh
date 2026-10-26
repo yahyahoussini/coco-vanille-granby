@@ -159,25 +159,28 @@ wait_service_healthy() {
   done
 }
 
-# Waits until web-<colour> and studio-<colour> report Docker "healthy" and the web process passes the
+# Waits until web-<colour> and studio-<colour> report Docker "healthy" and both processes pass the
 # deep health check (/svc/health/ → 200, database up). Returns 1 after HEALTH_TIMEOUT seconds.
 wait_healthy() {
-  local colour="$1" timeout="${HEALTH_TIMEOUT:-180}" start web_port public_host body=""
+  local colour="$1" timeout="${HEALTH_TIMEOUT:-180}" start web_port studio_port public_host admin_host body="" studio_body=""
   start="$(date +%s)"
   web_port="$(port_of web "$colour")"
+  studio_port="$(port_of studio "$colour")"
   public_host="$(env_get PUBLIC_HOST cocovanillegranby.com)"
+  admin_host="$(env_get ADMIN_HOST admin.cocovanillegranby.com)"
   while :; do
     if [ "$(service_health "web-$colour")" = healthy ] && [ "$(service_health "studio-$colour")" = healthy ]; then
       body="$(curl -s --max-time 5 -H "Host: ${public_host}" "http://127.0.0.1:${web_port}/svc/health/" || true)"
-      case "$body" in
-        *'"ok":true'*'"db":"up"'*)
-          info "healthy after $(($(date +%s) - start)) s: $body"
+      studio_body="$(curl -s --max-time 5 -H "Host: ${admin_host}" "http://127.0.0.1:${studio_port}/svc/health/" || true)"
+      case "$body|$studio_body" in
+        *'"ok":true'*'"db":"up"'*'|'*'"ok":true'*'"db":"up"'*)
+          info "healthy after $(($(date +%s) - start)) s: web $body · studio $studio_body"
           return 0
           ;;
       esac
     fi
     if [ $(($(date +%s) - start)) -ge "$timeout" ]; then
-      warn "web-$colour: $(service_health "web-$colour"), studio-$colour: $(service_health "studio-$colour"), /svc/health/: ${body:-no answer}"
+      warn "web-$colour: $(service_health "web-$colour"), studio-$colour: $(service_health "studio-$colour"), /svc/health/: web ${body:-no answer} · studio ${studio_body:-no answer}"
       return 1
     fi
     sleep 3

@@ -133,7 +133,7 @@ docker compose -p coco-production --env-file .env --env-file state.env logs --ta
 
 `deploy.sh <env> <sha>` prints each step and stops at the first failure; before the switch, a failure leaves the live colour untouched (the new colour is stopped):
 
-1. checks (`.env` present and `chmod 600`, lock: one deploy at a time) · 2. pull the image · 3. Postgres up · 4. **pre-migration dump** (`backup.sh --label pre-<sha>`) · 5. `npm run migrate` (one-shot container) · 6. start the idle colour on its own ports · 7. wait for Docker health + `/svc/health/` with the database · 8. **warm-up**: the image carries pages prerendered at build time from the CI seed; the script waits until the build is older than the ISR period (300 s), requests every sitemap URL once (re-rendered from this environment's data), then requires a 200 on every URL · 9. rewrite `/etc/nginx/coco/upstreams/<env>.conf`, `nginx -t`, reload · 10. worker on the new tag · 11. the previous colour stays up 10 minutes for an instant rollback, then stops (its containers stay on disk).
+1. checks (`.env` present and `chmod 600`, lock: one deploy at a time) · 2. pull the image · 3. Postgres up · 4. **pre-migration dump** (`backup.sh --label pre-<sha>`) · 5. `npm run migrate` (one-shot container) · 6. start the idle colour on its own ports · 7. wait for Docker health + `/svc/health/` with the database on the web and the studio process (`src/proxy.js` lets it through on every host and role) · 8. **warm-up**: the image carries pages prerendered at build time from the CI seed; the script waits until the build is older than the ISR period (300 s), requests every sitemap URL once (re-rendered from this environment's data), then requires a 200 on every URL · 9. rewrite `/etc/nginx/coco/upstreams/<env>.conf`, `nginx -t`, reload · 10. worker on the new tag · 11. the previous colour stays up 10 minutes for an instant rollback, then stops (its containers stay on disk).
 
 ## Migrations
 
@@ -194,7 +194,6 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 
 ## Open points for integration
 
-- `src/proxy.js` answers `/svc/health/` with 404 on the admin host (it is rewritten into the Studio tree, and a `studio` process sends any other host to 404). The image health check falls back to `/api/users/me` for `studio` until `proxy()` lets `/svc/health` through on every host (17 §12.2).
 - The worker is a stub that exits after start-up, so Docker restarts it in a loop until the M2 worker keeps running.
 - `/svc/revalidate` (17 §12.3) does not exist yet; nginx already restricts it to local callers.
 - Public pages must reference uploads as `https://cocovanillegranby.com/media/<file>`: the public host serves `/media/` from disk and 404s `/api`.
