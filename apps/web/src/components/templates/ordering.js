@@ -105,7 +105,8 @@ function OrderThanks({ order, locale, business }) {
   const paid = ['paid', 'ready', 'picked_up'].includes(order.status)
   const cancelled = ['cancelled', 'refunded'].includes(order.status)
   const day = dayOf(order.pickupDate)
-  const when = `${longDayLabel(day, locale)}, ${windowLabel(order.pickupWindowStart, order.pickupWindowEnd, locale)}`
+  const tbd = { fr: 'heure à convenir avec la boutique', en: 'time to be agreed with the shop', es: 'hora por acordar con la tienda' }[locale] || 'heure à convenir avec la boutique'
+  const when = `${longDayLabel(day, locale)}, ${order.pickupWindowStart ? windowLabel(order.pickupWindowStart, order.pickupWindowEnd || order.pickupWindowStart, locale) : tbd}`
   const title = cancelled ? t.order(order.number) : paid ? `${s.pageTitles.thanks} ${t.order(order.number)}` : s.pageTitles.pending
   return (
     <article className="wrap page ordering thanks">
@@ -134,11 +135,13 @@ function OrderThanks({ order, locale, business }) {
           <section aria-labelledby="merci-quand">
             <h2 id="merci-quand">{t.when}</h2>
             <p>{when}</p>
-            <p>
-              <a className="btn btn-quiet" href={`/svc/calendrier/?${Q.order}=${order.accessToken}`} download={`cueillette-${order.number}.ics`}>
-                {t.calendar}
-              </a>
-            </p>
+            {order.pickupWindowStart && (
+              <p>
+                <a className="btn btn-quiet" href={`/svc/calendrier/?${Q.order}=${order.accessToken}`} download={`cueillette-${order.number}.ics`}>
+                  {t.calendar}
+                </a>
+              </p>
+            )}
           </section>
           <section aria-labelledby="merci-ou">
             <h2 id="merci-ou">{t.where}</h2>
