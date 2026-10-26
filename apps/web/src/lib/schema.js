@@ -22,7 +22,7 @@ const clean = (obj) => {
   return isMissing(obj) ? undefined : obj
 }
 
-export function bakeryNode(business = {}, shop = {}, locale = 'fr') {
+export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays = []) {
   const a = business.address || {}
   const hours = (shop.hours || []).map((h) => ({
     '@type': 'OpeningHoursSpecification',
@@ -30,6 +30,16 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr') {
     opens: h.opens,
     closes: h.closes,
   }))
+  // Special days shown in the hours table (holidays, exceptional closures): closed = 00:00–00:00 (schema.org).
+  const special = (specialDays || [])
+    .filter((d) => d.state === 'closed' || (d.opens && d.closes && ['open', 'special'].includes(d.state)))
+    .map((d) => ({
+      '@type': 'OpeningHoursSpecification',
+      validFrom: d.date,
+      validThrough: d.date,
+      opens: d.state === 'closed' ? '00:00' : d.opens,
+      closes: d.state === 'closed' ? '00:00' : d.closes,
+    }))
   return {
     '@type': 'Bakery',
     '@id': BAKERY_ID,
@@ -51,6 +61,7 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr') {
     geo: business.geo && business.geo.lat ? { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lng } : undefined,
     hasMap: business.google && business.google.cid ? `https://maps.google.com/?cid=${business.google.cid}` : undefined,
     openingHoursSpecification: hours,
+    specialOpeningHoursSpecification: special,
     sameAs: (business.sameAs || []).filter((s) => s.verified).map((s) => s.url),
     knowsLanguage: (business.languagesServed || ['fr']).map((l) => HTML_LANG[l]),
     inLanguage: HTML_LANG[locale],

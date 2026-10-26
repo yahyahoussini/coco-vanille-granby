@@ -1,4 +1,5 @@
 import { anyone, isOwner, isOwnerOrManager, hasRole } from '../lib/access.js'
+import { withRevalidation } from '../lib/revalidate.js'
 
 const weekdays = [
   { value: 'Monday', label: 'lundi' },
@@ -131,5 +132,6 @@ export const Shop = {
   ],
 }
 
-export const globals = [Business, Shop]
+// Both show on every public page (footer NAP and hours, closure banner, JSON-LD): a change refreshes the site.
+export const globals = [Business, Shop].map((g) => withRevalidation(g, { global: true }))
 export { isOwner }

@@ -135,6 +135,10 @@ docker compose -p coco-production --env-file .env --env-file state.env logs --ta
 
 1. checks (`.env` present and `chmod 600`, lock: one deploy at a time) · 2. pull the image · 3. Postgres up · 4. **pre-migration dump** (`backup.sh --label pre-<sha>`) · 5. `npm run migrate` (one-shot container) · 6. start the idle colour on its own ports · 7. wait for Docker health + `/svc/health/` with the database on the web and the studio process (`src/proxy.js` lets it through on every host and role) · 8. **warm-up**: the image carries pages prerendered at build time from the CI seed; the script waits until the build is older than the ISR period (300 s), requests every sitemap URL once (re-rendered from this environment's data), then requires a 200 on every URL · 9. rewrite `/etc/nginx/coco/upstreams/<env>.conf`, `nginx -t`, reload · 10. worker on the new tag · 11. the previous colour stays up 10 minutes for an instant rollback, then stops (its containers stay on disk).
 
+## Page refresh (ISR)
+
+Public pages are static with a 5-minute ISR period. A write that the site shows (shop and business globals, products, categories, seasons, allergens, page copy, photos) refreshes them at once through Payload hooks (`apps/web/src/lib/revalidate.js`): the public process clears its own cache; `studio`, the worker and one-off scripts `POST /svc/revalidate/` on `PUBLIC_ORIGIN` (or `REVALIDATE_URL`) with `REVALIDATE_SECRET`. nginx accepts that path only from 127.0.0.1 and the Docker range (staging skips the password there); the app answers 404 without the secret. If the call fails, the write still succeeds and the pages renew within 5 minutes. Containers reach the public host through hairpin NAT: if `/svc/revalidate/` answers 403 from a container, add the VPS IP to the `allow` list (17 §12.3).
+
 ## Migrations
 
 - Generated with `cd apps/web && npm run migrate:create` (Payload), committed under `apps/web/src/migrations/`, run by the `migrate` service before the new colour starts.
@@ -195,6 +199,5 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 ## Open points for integration
 
 - The worker is a stub that exits after start-up, so Docker restarts it in a loop until the M2 worker keeps running.
-- `/svc/revalidate` (17 §12.3) does not exist yet; nginx already restricts it to local callers.
 - `next.config.mjs` still has Next's compression on; nginx asks Node for plain bodies and compresses itself, so nothing is compressed twice. `deploymentId` and a shared `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (17 §2) are not wired into the build yet.
 - `apps/web/reports/` (gate output, default `--out`) is not in `apps/web/.gitignore` yet.

@@ -73,7 +73,7 @@ export function closureNotice(shop = {}, locale = 'fr', now = new Date()) {
       tone: 'closure',
       text: {
         fr: `Fermeture exceptionnelle : la boutique rouvre le ${dayLong(d, l)} à ${hourOf(c.until, l)}.`,
-        en: `Temporarily closed: the shop reopens on ${dayLong(d, l)} at ${hourOf(c.until, l)}.`,
+        en: `Temporarily closed: the shop reopens on ${dayLong(d, l)} at ${hourOf(c.until, l).replace(/\.$/, '')}.`,
         es: `Cierre excepcional: la tienda reabre el ${dayLong(d, l)} a las ${hourOf(c.until, l)}.`,
       }[l],
     }

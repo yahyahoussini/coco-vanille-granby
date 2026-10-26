@@ -2,6 +2,7 @@
 // hours editor with the sticky save bar. Needs the demo seeds (see auth.spec.js).
 import { test, expect } from '@playwright/test'
 import { OWNER, LEA, login, sql, demoOrder } from './support.js'
+import { PUBLIC_URL, raw } from '../support/site.js'
 
 test.describe.configure({ mode: 'serial' })
 
@@ -28,11 +29,19 @@ test('T4 « Tempête demain. Fermez la boutique toute la journée et prévenez l
   const [sms] = await sql(`select status, body from messages where order_id = $1 and template = 'closure'`, [nadia.id])
   expect(sms.status).toBe('queued')
   expect(sms.body).toMatch(/^Coco Vanille : fermé le/)
+  // The public site says it on its next request (the write refreshed its ISR pages), in French and English,
+  // and tomorrow is closed in the hours table.
+  const banner = /<p class="closure-banner is-notice"[^>]*>Fermeture exceptionnelle le [^<]+\./
+  expect((await raw(`${PUBLIC_URL}/`)).body).toMatch(banner)
+  expect((await raw(`${PUBLIC_URL}/carte/`)).body).toMatch(banner)
+  expect((await raw(`${PUBLIC_URL}/en/`)).body).toMatch(/Closed on [^<]+ \(exceptional closure\)\./)
+  expect((await raw(`${PUBLIC_URL}/nous-trouver/`)).body).toMatch(/<tr class="special-closed">/)
   // « Annuler » inside the 60 s: nothing leaves, tomorrow is open again.
   await page.locator('.st-snack').getByRole('button', { name: 'Annuler' }).click()
   await expect(page.locator('.st-snack')).toContainText('aucun texto n’est parti')
   const [after] = await sql(`select status from messages where order_id = $1 and template = 'closure'`, [nadia.id])
   expect(after.status).toBe('cancelled')
+  expect((await raw(`${PUBLIC_URL}/`)).body).not.toMatch(/closure-banner/)
 })
 
 test('Comptoir: « Délai allongé +1 h » with undo; no closure button', async ({ page }) => {

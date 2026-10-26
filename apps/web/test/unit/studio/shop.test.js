@@ -126,6 +126,9 @@ describe('public closure notice (FR/EN/ES)', async () => {
     const s = shop({ closure: { active: true, until: new Date('2026-10-31T09:00:00-04:00').toISOString() } })
     assert.equal(closureNotice(s, 'fr', fri).text, 'Fermeture exceptionnelle : la boutique rouvre le samedi 31 octobre à 9 h.')
     assert.match(closureNotice(s, 'en', fri).text, /^Temporarily closed: the shop reopens on Saturday, October 31 at 9/)
+    assert.doesNotMatch(closureNotice(s, 'en', fri).text, /\.\.$/)
+    const late = shop({ closure: { active: true, until: new Date('2026-10-31T11:22:00-04:00').toISOString() } })
+    assert.match(closureNotice(late, 'en', fri).text, /at 11:22\sa\.m\.$/)
     assert.equal(closureNotice(s, 'es', fri).text, 'Cierre excepcional: la tienda reabre el sábado, 31 de octubre a las 09:00.')
   })
   test('« Demain » closure: the closed day within a week; nothing otherwise', () => {

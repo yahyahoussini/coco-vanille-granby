@@ -11,6 +11,8 @@ import { JsonLd } from './JsonLd'
 import { Breadcrumb } from './Contract'
 import { TEMPLATES } from '../templates'
 import { ogPath } from './og-path'
+import { closureNotice } from '@/lib/studio/closure'
+import { upcomingSpecialDays } from './hours'
 
 // Resolves "/<locale>/<segments>/" to a registry page or a product page.
 async function resolve(locale, segments) {
@@ -89,7 +91,9 @@ export async function buildMetadata(locale, segments) {
 export async function SitePage({ locale, segments = [], query }) {
   const hit = await resolve(locale, segments)
   if (!hit) notFound()
-  const [business, shop] = await Promise.all([getBusiness(locale), getShop(locale)])
+  const [business, shop, shopFr] = await Promise.all([getBusiness(locale), getShop(locale), getShop('fr')])
+  // Studio writes the closure and its special-day label in French: read the notice from the French record.
+  const notice = closureNotice(shopFr, locale)
   const strict = publishGuard() === 'strict'
 
   let pageKey = null
@@ -127,7 +131,7 @@ export async function SitePage({ locale, segments = [], query }) {
   // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
   const languages = hit.kind === 'product' ? await productAlternates(hit.product) : alternatesFor(hit.page.key)
   const pageNodes = [
-    bakeryNode(business, shop, locale),
+    bakeryNode(business, shop, locale, upcomingSpecialDays(shop)),
     websiteNode(),
     webPageNode({ url, name: pageName, description: doc?.description || props.product?.summary, locale, dateModified: doc?.updatedAt || props.product?.updatedAt }),
     breadcrumbNode(url, crumbs),
@@ -143,6 +147,11 @@ export async function SitePage({ locale, segments = [], query }) {
       <Header locale={locale} pageKey={pageKey} />
       <main id="contenu" className="site-main">
         <div className="wrap">
+          {notice && (
+            <p className={`closure-banner${notice.tone === 'closure' ? '' : ' is-notice'}`} data-nosnippet="">
+              {notice.text}
+            </p>
+          )}
           <Breadcrumb crumbs={crumbs} />
         </div>
         <Template {...props} />

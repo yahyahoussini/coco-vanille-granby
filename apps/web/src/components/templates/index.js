@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { t, clock, longDate } from '@/lib/i18n'
+import { t, longDate } from '@/lib/i18n'
 import { pathFor, SITE_ORIGIN } from '@/lib/routes'
 import { getProducts, getCategories, getAllergens, payloadClient } from '@/lib/data'
 import { productNode } from '@/lib/schema'
@@ -8,8 +8,11 @@ import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
-import { ProductGrid, SizesTable, AllergenBlock, LaCoupe, OfferBadge, productPath } from '../site/Products'
-import { hoursSummary } from '../site/hours'
+import { ProductGrid, SizesTable, AllergenBlock, LaCoupe, OfferBadge, Photo, productPath } from '../site/Products'
+import { hoursSummary, pillSchedule } from '../site/hours'
+import { vitrinePhotoOf } from '@/lib/studio/vitrine'
+import { localParts } from '@/lib/studio/time'
+import { longDayLabel } from '@/lib/ordering/labels'
 import { parseGuests, matchSizes, seasonState, monthYear, leadTimeText, fromPriceCents, sizeText, portionsText, priceText, perPortionText, offerBadge } from '../site/offer'
 import { orderingTemplates } from './ordering'
 
@@ -113,8 +116,8 @@ async function HomeTemplate(props) {
   const { doc, business, shop, locale } = props
   const s = t(locale)
   const h = s.home
-  const hours = (shop?.hours || []).map((x) => ({ ...x, closesLabel: clock(x.closes, locale) }))
-  const [products, categories] = await Promise.all([getProducts({ locale }), getCategories(locale)])
+  const today = localParts().iso
+  const [products, categories, photo] = await Promise.all([getProducts({ locale }), getCategories(locale), payloadClient().then((payload) => vitrinePhotoOf(payload, today)).catch(() => null)])
   const vitrine = products.filter((p) => p.vitrine && p.availability !== 'discontinued')
   const rating = ratingOf(business, locale)
   const maps = mapsAction(business, locale)
@@ -138,7 +141,7 @@ async function HomeTemplate(props) {
             <a className="btn btn-primary" href={order.href} data-event={order.event}>{order.label}</a>
             {maps && <a className="btn btn-quiet" href={maps.href} data-event={maps.event}>{maps.label}</a>}
           </div>
-          <OpenNow hours={hours} labels={{ open: s.openNow, closed: s.closedNow, until: s.until }} />
+          <OpenNow schedule={pillSchedule(shop)} locale={locale} labels={{ open: s.openNow, closed: s.closedNow, until: s.until }} />
         </div>
       </header>
       <div className="wrap">
@@ -157,8 +160,18 @@ async function HomeTemplate(props) {
         )}
         <section aria-labelledby="home-vitrine" className="vitrine">
           <h2 id="home-vitrine">{h.vitrine}</h2>
+          {photo && (
+            <figure className="vitrine-photo">
+              <Photo media={photo} size="hero" lang={locale === 'fr' ? undefined : 'fr'} />
+              <figcaption>{s.vitrinePhoto(longDayLabel(today, locale))}</figcaption>
+            </figure>
+          )}
           {vitrine.length ? (
             <ProductGrid products={vitrine} locale={locale} showPlanned />
+          ) : photo ? (
+            <p className="vitrine-empty">
+              <Link href={pathFor('carte', locale)}>{h.seeMenu}</Link>
+            </p>
           ) : (
             <p className="vitrine-empty">
               {h.vitrineEmpty} <Link href={pathFor('carte', locale)}>{h.seeMenu}</Link>
