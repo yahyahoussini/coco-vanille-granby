@@ -105,3 +105,10 @@ export function MetaLine({ doc, locale }) {
     </p>
   )
 }
+
+// Headings: a hyphenated word (« centre-ville », « Paris-Brest ») never breaks at its hyphen.
+// The text stays byte-identical for crawlers; only a nowrap span is added around the word.
+export function Unbroken({ text }) {
+  if (typeof text !== 'string') return text ?? null
+  return text.split(/(\S+-\S+)/).map((part, i) => (i % 2 ? <span key={i} className="nowrap">{part}</span> : part))
+}

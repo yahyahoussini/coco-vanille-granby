@@ -117,8 +117,9 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows }
   const list = rows || variants.map((variant) => ({ variant }))
   if (!list.length) return null
   const anyPerPortion = list.some(({ variant }) => perPortionText(variant, locale))
+  // Focusable scroll region: a keyboard user can scroll a wide table on a phone (WCAG 2.1.1).
   return (
-    <div className="table-scroll">
+    <div className="table-scroll" role="region" aria-label={caption || o.pricesCaption} tabIndex={0}>
       <table className="sizes">
         <caption>{caption || o.pricesCaption}</caption>
         <thead>

@@ -20,7 +20,9 @@ export function OpenNow({ hours = [], labels }) {
     })
     setState(open ? { open: true, closes: open.closesLabel } : { open: false })
   }, [hours])
-  if (!state || !hours.length) return null
+  if (!hours.length) return null
+  // Same box before the clock is read in the browser, so the pill never pushes content down.
+  if (!state) return <p className="open-pill is-pending" aria-hidden="true">{labels.open}</p>
   return (
     <p className={`open-pill ${state.open ? 'is-open' : 'is-closed'}`} role="status">
       <span aria-hidden="true">●</span> {state.open ? `${labels.open} · ${labels.until} ${state.closes}` : labels.closed}

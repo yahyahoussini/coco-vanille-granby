@@ -12,9 +12,8 @@ export function Header({ locale, pageKey }) {
     <header className="site-header">
       <a className="skip" href="#contenu">{s.skip}</a>
       <div className="wrap header-row">
-        <Link href={pathFor('home', locale)} className="wordmark" aria-label="Pâtisserie Coco Vanille">
-          <span className="wordmark-small">Pâtisserie</span>
-          <span className="wordmark-big">Coco Vanille</span>
+        <Link href={pathFor('home', locale)} className="wordmark">
+          <span className="wordmark-small">Pâtisserie</span> <span className="wordmark-big">Coco Vanille</span>
         </Link>
         <nav aria-label={locale === 'fr' ? 'Navigation principale' : locale === 'en' ? 'Main navigation' : 'Navegación principal'}>
           <ul className="nav">

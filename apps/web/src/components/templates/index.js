@@ -6,7 +6,7 @@ import { productNode } from '@/lib/schema'
 import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
-import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine } from '../site/Contract'
+import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
 import { ProductGrid, SizesTable, AllergenBlock, LaCoupe, AvailabilityBadge, productPath } from '../site/Products'
 import { hoursSummary } from '../site/hours'
 import { parseGuests, matchSizes, seasonState, monthYear, leadTimeText, fromPriceCents, sizeText, portionsText, priceText, perPortionText } from '../site/offer'
@@ -85,7 +85,7 @@ function briefItems({ business, shop, locale }) {
 function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, className = '' }) {
   return (
     <article className={`wrap page ${className}`.trim()}>
-      <h1>{doc?.h1 || doc?.title || <Fact value={null} label="titre de la page" />}</h1>
+      <h1>{doc?.h1 || doc?.title ? <Unbroken text={doc?.h1 || doc?.title} /> : <Fact value={null} label="titre de la page" />}</h1>
       <Missing text={conditionNotice} />
       <AnswerBlock text={doc?.answer} />
       {children}
@@ -129,7 +129,7 @@ async function HomeTemplate(props) {
       <header className="hero">
         <div className="wrap hero-inner">
           <p className="eyebrow">{h.eyebrow}</p>
-          <h1>{doc?.h1 || <Fact value={null} label="titre de la page" />}</h1>
+          <h1>{doc?.h1 ? <Unbroken text={doc.h1} /> : <Fact value={null} label="titre de la page" />}</h1>
           <p className="hero-deck">
             <Fact value={business?.categorySentence} label="phrase de catégorie (option B en attente d’approbation)" id="categorySentence" />
           </p>
@@ -322,7 +322,7 @@ async function AllergensTemplate(props) {
   const s = t(locale)
   const [allergens, products] = await Promise.all([getAllergens(locale), getProducts({ locale })])
   const table = products.length ? (
-    <div className="table-scroll">
+    <div className="table-scroll" role="region" aria-label={s.allergens} tabIndex={0}>
       <table className="allergen-table">
         <caption>{s.allergens}</caption>
         <thead>
@@ -440,7 +440,7 @@ async function CalculatorTemplate(props) {
                 {priceText(best.variant, locale) && ` · ${priceText(best.variant, locale)}`}
                 {perPortionText(best.variant, locale) && ` (${perPortionText(best.variant, locale)} ${s.offer.each})`}
               </p>
-              <SizesTable rows={matches} locale={locale} caption={c.results(guests)} showProduct />
+              <SizesTable rows={matches} locale={locale} showProduct />
             </>
           ) : (
             <p>{c.noneFits(guests, largest)}</p>
@@ -509,7 +509,7 @@ function ProductTemplate({ product, locale, business }) {
     <article className="wrap page product">
       <div className="product-head">
         <div className="product-intro">
-          <h1>{product.title}</h1>
+          <h1><Unbroken text={product.title} /></h1>
           {product.summary ? (
             <AnswerBlock text={product.summary} />
           ) : (
