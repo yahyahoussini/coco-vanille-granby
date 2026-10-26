@@ -6,6 +6,7 @@ import { sendDueMessages, expireHolds, expireQuotes, markNotPickedUp, retention,
 import { smsSender, emailSender, mailFrom } from '../../../src/lib/messaging/senders.js'
 import { buildMime } from '../../../src/lib/messaging/mime.js'
 import { signRequest } from '../../../src/lib/messaging/sigv4.js'
+import { perform } from '../../../src/lib/studio/actions/index.js'
 import { fakePayload } from './fake-payload.js'
 import { shop, local } from './fixtures.js'
 
@@ -95,6 +96,42 @@ describe('expiry and pickup jobs', () => {
     assert.deepEqual(payload.store.orders.map((o) => o.status), ['not_picked_up', 'not_picked_up', 'picked_up'])
     const sms = payload.store.messages.find((m) => m.template === 'order_not_picked_up')
     assert.match(sms.body, /1042/)
+  })
+
+  test('never « non récupérée » when the shop itself was closed: the closure, a day set to « Fermé », even after reopening', async () => {
+    const day = (iso, extra = {}) => ({ status: 'paid', pickupDate: `${iso}T12:00:00.000Z`, pickupWindowStart: '10:00', pickupWindowEnd: '10:15', customer: { phone: '+14505550101' }, ...extra })
+    payload.store.orders.push(
+      { id: 1, number: 1050, ...day('2026-10-31') },
+      { id: 2, number: 1051, ...day('2026-10-30') },
+      { id: 3, number: 1053, ...day('2026-10-28', { timeline: [{ status: 'paid', reason: 'closure' }, { status: 'paid', reason: 'closure_undone' }] }) },
+    )
+    const globals = payload.store
+    const manager = { id: 2, role: 'gerant', name: 'Marc', active: true }
+    await payload.updateGlobal({ slug: 'shop', data: { specialDays: [{ date: '2026-10-30T12:00:00.000Z', state: 'closed', label: 'Fermé' }] } })
+    // Storm at 7 h: « Reste de la journée ». Order 1050 is affected and texted.
+    const closed = await perform(payload, { user: manager, type: 'shop.closure', input: { reason: 'tempete', duree: 'jour' }, now: local('2026-10-31', '07:00') })
+    assert.ok(closed.ok, closed.message)
+    assert.equal(globals.orders[0].timeline.at(-1).reason, 'closure')
+    assert.equal((await markNotPickedUp(payload, { now: NOW })).notPickedUp, 1)
+    assert.deepEqual(globals.orders.map((o) => o.status), ['paid', 'paid', 'not_picked_up'])
+    await perform(payload, { user: manager, type: 'shop.reopen', input: {}, now: local('2026-11-01', '08:00') })
+    await markNotPickedUp(payload, { now: local('2026-11-06', '18:00') })
+    assert.deepEqual(globals.orders.map((o) => o.status), ['paid', 'paid', 'not_picked_up'])
+    assert.deepEqual(globals.messages.filter((m) => m.template === 'order_not_picked_up').map((m) => m.order), [3])
+  })
+
+  test('« vous attend au comptoir » and « pas été récupérée » never leave once the order is handed over', async () => {
+    payload.store.orders.push({ id: 1, status: 'picked_up' }, { id: 2, status: 'ready' })
+    const due = new Date(NOW.getTime() - 1000).toISOString()
+    payload.store.messages.push(
+      { id: 1, channel: 'sms', template: 'order_ready', to: '+14505550101', body: 'vous attend', status: 'queued', order: 1, sendAfter: due },
+      { id: 2, channel: 'sms', template: 'order_not_picked_up', to: '+14505550101', body: 'pas récupérée', status: 'queued', order: 1, sendAfter: due },
+      { id: 3, channel: 'sms', template: 'order_ready', to: '+14505550102', body: 'vous attend', status: 'queued', order: 2, sendAfter: due },
+    )
+    const s = recorder()
+    const out = await sendDueMessages(payload, { now: NOW, senders: s })
+    assert.deepEqual([out.sent, out.cancelled], [1, 2])
+    assert.equal(s.sent[0].to, '+14505550102')
   })
 
   test('nightly retention deletes allergy notes 30 days after pickup, not before', async () => {

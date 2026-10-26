@@ -7,7 +7,7 @@ import { localParts, addDays, closingOf, zonedTime, toMinutes, dayOf, shortDay, 
 import { whenFr } from '../format.js'
 import { sentence } from '../audit.js'
 import { studioSms } from '../texts.js'
-import { closurePlan, affectedOrders, withPhone, CLOSURE_LABEL } from '../closure.js'
+import { closurePlan, affectedOrders, withPhone, CLOSURE_LABEL, CLOSURE_MARK, CLOSURE_UNDONE } from '../closure.js'
 import { refuse, str, int, holdMessages } from './util.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
@@ -134,6 +134,11 @@ export const shopActions = {
       } else {
         await writeShop(ctx, { closure: { active: true, reason, until: plan.until.toISOString(), message: null } })
       }
+      // Each affected order says so in its history, so the worker never marks it « Non récupérée ».
+      for (const o of orders) {
+        const note = `${CLOSURE_LABEL} (${REASON_FR[reason]}) : ${o.customer?.phone ? 'texto au client' : 'client à joindre'} pour une autre date ou un remboursement`
+        await ctx.payload.update({ collection: 'orders', id: o.id, data: { timeline: [...(o.timeline || []), { at: ctx.now.toISOString(), status: o.status, by: ctx.user.id, source: 'studio', note, reason: CLOSURE_MARK }] }, ...SYS })
+      }
       const f = await facts(ctx.payload)
       const messages = []
       for (const o of withPhone(orders)) {
@@ -155,7 +160,10 @@ export const shopActions = {
     async undo(ctx, entry) {
       for (const number of entry.after?.orders || []) {
         const r = await ctx.payload.find({ collection: 'orders', where: { number: { equals: number } }, limit: 1, ...SYS })
-        if (r.docs[0]) await cancelQueued(ctx.payload, { orderId: r.docs[0].id, template: 'closure' })
+        const o = r.docs[0]
+        if (!o) continue
+        await cancelQueued(ctx.payload, { orderId: o.id, template: 'closure' })
+        await ctx.payload.update({ collection: 'orders', id: o.id, data: { timeline: [...(o.timeline || []), { at: ctx.now.toISOString(), status: o.status, by: ctx.user.id, source: 'studio', note: 'Fermeture annulée : la cueillette reste prévue', reason: CLOSURE_UNDONE }] }, ...SYS })
       }
       await restoreShop(ctx, entry.after?.mode === 'special' ? { specialDays: entry.before.specialDays } : { closure: entry.before.closure || { active: false, reason: null, until: null } })
       return { message: 'Annulé · la boutique reste ouverte, aucun texto n’est parti.' }

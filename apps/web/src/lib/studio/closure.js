@@ -50,6 +50,21 @@ export function affectedOrders(orders, plan, now = new Date()) {
 
 export const withPhone = (orders) => orders.filter((o) => o.customer?.phone)
 
+// Timeline markers on the orders a closure affects (« Annuler » adds the second one).
+export const CLOSURE_MARK = 'closure'
+export const CLOSURE_UNDONE = 'closure_undone'
+
+// The shop was closed for this pickup (an order the closure affected, or the day set to « Fermé »): the
+// customer was told to call for another date or a refund, so the order is never « Non récupérée » (worker,
+// 10 §6), even after the shop reopens.
+export function closedForPickup(shop = {}, order = {}) {
+  const day = dayOf(order.pickupDate)
+  if (!day) return false
+  if ((shop.specialDays || []).some((d) => dayOf(d.date) === day && d.state === 'closed')) return true
+  const mark = (Array.isArray(order.timeline) ? order.timeline : []).filter((t) => t?.reason === CLOSURE_MARK || t?.reason === CLOSURE_UNDONE).at(-1)
+  return mark?.reason === CLOSURE_MARK
+}
+
 // Banner text for the public site (FR/EN/ES), from the same shop global Studio writes (integration helper for
 // the site templates): an active closure, or an exceptional closed day within the next 7 days.
 const dayLong = (iso, l) => {

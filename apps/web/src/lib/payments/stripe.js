@@ -27,6 +27,8 @@ export async function ensureIntent({ kind, id, number, amountCents, reference, d
     if (existing && existing.amount === amountCents && (reusable.includes(existing.status) || existing.status === 'succeeded')) {
       return { id: existing.id, clientSecret: existing.client_secret, status: existing.status, created: false }
     }
+    // The amount changed (a new quote): the old intent must not stay payable in a tab left open.
+    if (existing && existing.amount !== amountCents && reusable.includes(existing.status) && existing.status !== 'processing') await stripe.paymentIntents.cancel(existing.id).catch(() => null)
   }
   const intent = await stripe.paymentIntents.create(
     {

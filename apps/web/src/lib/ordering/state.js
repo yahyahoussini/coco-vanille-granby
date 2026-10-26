@@ -2,7 +2,7 @@
 // « En préparation » is derived from the production date; nobody taps it.
 export const TRANSITIONS = {
   pending_payment: ['paid', 'cancelled'],
-  paid: ['ready', 'cancelled', 'refunded', 'not_picked_up'],
+  paid: ['ready', 'picked_up', 'cancelled', 'refunded', 'not_picked_up'], // picked_up: handed over before « Prête »
   ready: ['picked_up', 'paid', 'not_picked_up', 'cancelled', 'refunded'],
   picked_up: ['ready'], // undo window only
   not_picked_up: ['ready', 'picked_up', 'cancelled', 'refunded'],

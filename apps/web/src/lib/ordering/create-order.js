@@ -20,6 +20,7 @@ import { cleanCustomer } from './customer.js'
 import { orderError } from './errors.js'
 import { getShopSettings, getPools, getUsage, engineContext, withCapacityLock, newToken, newPickupCode, nextOrderNumber, storedDay, publicOrigin } from './context.js'
 import { paymentProvider } from '../payments/provider.js'
+import { cancelIntent } from '../payments/stripe.js'
 import { notifyOrderConfirmed, notifyQuoteSent, scheduleReminder } from '../messaging/notify.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
@@ -254,12 +255,16 @@ export async function sendQuote(payload, { requestId, totalCents, depositPercent
     const paymentLink = `${publicOrigin()}/svc/p/${accessToken}/`
     const validUntil = new Date(new Date(now).getTime() + hours * 3600 * 1000).toISOString()
     const timeline = [...(Array.isArray(request.timeline) ? request.timeline : []), timelineEntry('quoted', { by: req?.user?.id ?? null, at: now, note: `Soumission ${totalCents} ¢ avant taxes, acompte ${pct} %` })]
+    // A new quote replaces the old one: its deposit intent (if any) is cancelled, the page makes a new one.
+    const previous = request.payment?.status !== 'paid' && request.payment?.provider === 'stripe' ? request.payment?.reference : null
+    if (previous) await cancelIntent(previous)
     const updated = await payload.update({
       collection: 'requests',
       id: request.id,
       data: {
         status: 'quoted',
         accessToken,
+        ...(previous ? { payment: { provider: 'stripe', reference: null, status: 'none' } } : {}),
         quote: {
           subtotalCents: totals.subtotalCents,
           taxClass: cls,

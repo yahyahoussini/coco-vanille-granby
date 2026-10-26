@@ -33,7 +33,7 @@ export async function POST(request) {
     const consent = await quoteConsent(payload, { locale, terms: get('terms'), frenchFirst: get('frenchFirst') })
     if (!consent.ok) return seeOther(`${checkoutPath(locale)}?${Q.quote}=${req.accessToken}&${Q.error}=${consent.code}#paiement`)
     const res = await markDepositPaid(payload, { requestId: req.id, provider: 'mock', reference: `mock_${newToken(9)}`, amountCents: req.quote?.depositCents, consent: consent.consent })
-    if (!res.ok) return seeOther(`${checkoutPath(locale)}?${Q.quote}=${req.accessToken}&${Q.error}=${res.code}#paiement`)
+    if (!res.ok) return seeOther(`${checkoutPath(locale)}?${Q.quote}=${req.accessToken}&${Q.error}=${res.refundDue ? 'refund_due' : res.code}#paiement`)
     return seeOther(`${thanksPath(locale)}?${Q.order}=${res.order?.accessToken || res.request?.order?.accessToken || ''}`)
   }
   return new Response('Introuvable', { status: 404 })

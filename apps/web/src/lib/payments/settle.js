@@ -1,7 +1,7 @@
 // Settles a payment, whatever the adapter (mock button or Stripe webhook). Idempotent: a second call for the
 // same payment changes nothing. Only this module turns « pending_payment » into « paid » (10 §4).
 import { dayOf } from '../studio/time.js'
-import { capacityLimit, usedUnits, bookedInWindow, COMMITTED_STATUSES } from '../ordering/capacity.js'
+import { capacityLimit, usedUnits, bookedInWindow, holdIsLive, COMMITTED_STATUSES } from '../ordering/capacity.js'
 import { windowSettings } from '../ordering/slots.js'
 import { getShopSettings, getPools, getUsage, withCapacityLock, newToken, newPickupCode, nextOrderNumber } from '../ordering/context.js'
 import { notifyOrderConfirmed, scheduleReminder } from '../messaging/notify.js'
@@ -30,7 +30,21 @@ function slotStillFree(order, shop, pools, usage) {
   return true
 }
 
+// Why an order is « cancelled »: the worker ends an unpaid hold (reason hold_expired); anything else is a
+// decision (Studio, « Annuler » on a phone order). Older worker entries carry source 'worker'.
+export const HOLD_EXPIRED = 'hold_expired'
+export function cancelledByHoldExpiry(order) {
+  const last = (Array.isArray(order?.timeline) ? order.timeline : []).filter((t) => t?.status === 'cancelled').at(-1)
+  return Boolean(last && (last.reason === HOLD_EXPIRED || last.source === 'worker'))
+}
+
+const refundDate = (now) => new Date(new Date(now).getTime() + REFUND_DAYS * 86400 * 1000).toISOString()
+
 // → { ok, already?, order, code? }
+// A payment for a live hold confirms the order. A payment that lands after the hold ran out (swept by the
+// worker or not yet) keeps the order only if its window and pools still have room; otherwise, and for an
+// order the shop cancelled, the money is recorded with a full refund due within 15 days (07 A9), and no
+// confirmation leaves.
 export async function markOrderPaid(payload, { orderId, provider, reference = null, amountCents = null, eventId = null, now = new Date() }) {
   return withCapacityLock(payload, async () => {
     const order = await payload.findByID({ collection: 'orders', id: orderId, ...SYS, disableErrors: true }).catch(() => null)
@@ -46,8 +60,9 @@ export async function markOrderPaid(payload, { orderId, provider, reference = nu
     let status = order.status
     let refundDueBy = null
     let note = 'Paiement reçu'
-    if (order.status === 'pending_payment') status = 'paid'
-    else if (order.status === 'cancelled') {
+    const lateHold = order.status === 'pending_payment' && !holdIsLive(order, now)
+    if (order.status === 'pending_payment' && !lateHold) status = 'paid'
+    else if (lateHold || (order.status === 'cancelled' && cancelledByHoldExpiry(order))) {
       const shop = await getShopSettings(payload)
       const pools = await getPools(payload)
       const day = dayOf(order.pickupDate)
@@ -56,9 +71,13 @@ export async function markOrderPaid(payload, { orderId, provider, reference = nu
         status = 'paid'
         note = 'Paiement reçu après la fin de la réservation; la plage était encore libre'
       } else {
-        refundDueBy = new Date(new Date(now).getTime() + REFUND_DAYS * 86400 * 1000).toISOString()
+        status = 'cancelled'
+        refundDueBy = refundDate(now)
         note = 'Paiement reçu après la fin de la réservation; plage prise : remboursement complet dû (15 jours)'
       }
+    } else if (order.status === 'cancelled') {
+      refundDueBy = refundDate(now)
+      note = 'Paiement reçu pour une commande annulée par la boutique : remboursement complet dû (15 jours)'
     } else {
       note = `Paiement reçu (commande déjà « ${order.status} »)`
     }
@@ -78,7 +97,7 @@ export async function markOrderPaid(payload, { orderId, provider, reference = nu
       await notifyOrderConfirmed(payload, updated).catch((e) => payload.logger?.error?.({ err: e }, 'order_confirmed not queued'))
       await scheduleReminder(payload, updated, { now }).catch(() => null)
     }
-    return { ok: true, order: updated }
+    return { ok: true, order: updated, ...(refundDueBy ? { refundDue: true } : {}) }
   })
 }
 
@@ -92,16 +111,33 @@ export async function markOrderPaymentFailed(payload, { orderId, reference = nul
 
 // Quote deposit paid (16 §3.4): the request becomes a confirmed order on the pools, deposit and balance on it.
 // consent: { termsAcceptedAt, termsVersion, bindingLanguage } recorded on the payment page.
+// A deposit that can't be honoured is never dropped: an older quote's amount, a quote taken back (« Annuler »),
+// a declined request, or a late payment for a day that has filled since. The money is recorded on a
+// cancelled order with a full refund due (Studio shows it), the request's history says why, and no
+// confirmation leaves. → { ok, already?, request, order, code?, refundDue? }
 export async function markDepositPaid(payload, { requestId, provider, reference = null, amountCents = null, eventId = null, consent = {}, now = new Date() }) {
   return withCapacityLock(payload, async () => {
     const request = await payload.findByID({ collection: 'requests', id: requestId, ...SYS, disableErrors: true }).catch(() => null)
     if (!request) return { ok: false, code: 'request_missing' }
     if (request.payment?.status === 'paid' || seen(request, eventId)) return { ok: true, already: true, request }
     const q = request.quote || {}
-    if (!Number.isInteger(q.depositCents) || !Number.isInteger(q.totalCents)) return { ok: false, code: 'request_state' }
-    if (amountCents !== null && amountCents !== q.depositCents) return { ok: false, code: 'amount_mismatch' }
     const day = dayOf(request.eventDate)
-    const late = q.validUntil && new Date(q.validUntil).getTime() < new Date(now).getTime()
+    const late = Boolean(q.validUntil) && new Date(q.validUntil).getTime() < new Date(now).getTime()
+    const refund = (code, why) => depositRefundDue(payload, { request, provider, reference, amountCents: amountCents ?? q.depositCents ?? null, eventId, now, code, why })
+
+    if (!Number.isInteger(q.depositCents) || !Number.isInteger(q.totalCents)) return refund('request_state', 'aucune soumission en cours')
+    if (amountCents !== null && amountCents !== q.depositCents) return refund('amount_mismatch', `montant ${amountCents} ¢ d’une soumission précédente (acompte demandé : ${q.depositCents} ¢)`)
+    if (request.status === 'declined') return refund('request_state', 'demande refusée par la boutique')
+    if (!['quoted', 'expired'].includes(request.status)) return refund('request_state', `demande « ${request.status} »`)
+    if (late || request.status === 'expired') {
+      // Its tentative hold ended: the day must still have room for this cake (no daily limit set: nothing to check).
+      const pools = await getPools(payload)
+      const { usage } = await getUsage(payload, { now, fromISO: day, toISO: day, excludeRequestId: request.id })
+      const category = request.productionCategory || 'gateaux'
+      const limit = capacityLimit(pools, category, day)
+      const units = request.capacityUnits > 0 ? request.capacityUnits : 1
+      if (limit !== null && usedUnits(usage, day, category) + units > limit) return refund('day_full', 'soumission expirée et journée complète depuis')
+    }
     const language = request.customer?.language || 'fr'
     const order = await payload.create({
       collection: 'orders',
@@ -134,7 +170,7 @@ export async function markDepositPaid(payload, { requestId, provider, reference 
       },
       ...SYS,
     })
-    const timeline = [...(request.timeline || []), entry('deposit_paid', late ? 'Acompte reçu après l’expiration de la soumission : à confirmer' : 'Acompte reçu · commande confirmée', { at: now, eventId })]
+    const timeline = [...(request.timeline || []), entry('deposit_paid', late || request.status === 'expired' ? 'Acompte reçu après l’expiration de la soumission; la journée avait encore de la place · commande confirmée' : 'Acompte reçu · commande confirmée', { at: now, eventId })]
     const updated = await payload.update({
       collection: 'requests',
       id: request.id,
@@ -146,6 +182,36 @@ export async function markDepositPaid(payload, { requestId, provider, reference 
   })
 }
 
+// Money received for a quote that can't be honoured: kept on a cancelled order (nothing booked on the pools)
+// with a 15-day refund due, so Studio's refund flow (Stripe or counter) applies; the request keeps its status.
+async function depositRefundDue(payload, { request, provider, reference, amountCents, eventId, now, code, why }) {
+  const q = request.quote || {}
+  const day = dayOf(request.eventDate)
+  const refundDueBy = refundDate(now)
+  const note = `Acompte reçu, ${why} : remboursement complet dû (15 jours)`
+  const order = await payload.create({
+    collection: 'orders',
+    data: {
+      number: await nextOrderNumber(payload),
+      status: 'cancelled',
+      source: 'request',
+      locale: request.customer?.language || 'fr',
+      customer: request.customer,
+      items: [{ title: `Gâteau personnalisé · ${request.occasion} (acompte à rembourser)`, qty: 1, unitPriceCents: q.subtotalCents ?? amountCents ?? 0, taxClass: q.taxClass || null, productionCategory: request.productionCategory || 'gateaux', units: 0, productionDate: day }],
+      pickupDate: `${day}T12:00:00.000Z`,
+      accessToken: newToken(),
+      totals: { subtotalCents: q.subtotalCents ?? null, gstCents: q.gstCents ?? null, qstCents: q.qstCents ?? null, totalCents: amountCents, depositCents: amountCents, balanceCents: 0 },
+      payment: { provider, kind: 'deposit', reference, status: 'paid', paidAt: new Date(now).toISOString(), amountCents, refundDueBy },
+      request: request.id,
+      timeline: [entry('cancelled', note, { at: now, eventId })],
+    },
+    ...SYS,
+  })
+  const timeline = [...(request.timeline || []), entry(request.status, `${note} · commande ${order.number}`, { at: now, eventId })]
+  const updated = await payload.update({ collection: 'requests', id: request.id, data: { timeline }, ...SYS })
+  payload.logger?.warn?.({ requestId: request.id, order: order.number, code }, 'deposit received for a quote that can’t be honoured: refund due')
+  return { ok: false, code, refundDue: true, request: updated, order }
+}
 
 // Studio, at hand-over: the balance (or the whole amount of a phone order) was paid at the counter (POS).
 // Money only: the order's flow status (ready → picked_up) stays Studio's transition.

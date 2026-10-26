@@ -7,6 +7,8 @@ import { markOrderPaid, markDepositPaid, markOrderPaymentFailed } from '../../..
 import { verifyWebhook, testSignature } from '../../../src/lib/payments/stripe.js'
 import { inAppBrowser, openInBrowserHref } from '../../../src/lib/ordering/iab.js'
 import { createOrder, sendQuote } from '../../../src/lib/ordering/create-order.js'
+import { expireHolds, expireQuotes } from '../../../src/worker/tasks.js'
+import { perform } from '../../../src/lib/studio/actions/index.js'
 import { fakePayload } from './fake-payload.js'
 import { shop, pools, cake, croissant, local } from './fixtures.js'
 
@@ -97,19 +99,64 @@ describe('settlement', () => {
     assert.equal(payload.store.orders[0].status, 'pending_payment')
   })
 
+  // The worker sweeps the hold first (as in production), then the payment lands.
+  const AFTER = new Date(NOW.getTime() + 11 * 60 * 1000)
+  const fullWindow = (start) => {
+    for (let i = 0; i < 4; i++) payload.store.orders.push({ id: 100 + i, status: 'paid', pickupDate: '2026-10-31T12:00:00.000Z', pickupWindowStart: start, items: [{ qty: 1, units: 1, productionCategory: 'gateaux', productionDate: '2026-10-31' }] })
+  }
+
   test('paid after the hold ran out: kept if the window is still free, refund due otherwise', async () => {
     const { order: o } = await order()
-    payload.store.orders[0].status = 'cancelled'
-    const kept = await markOrderPaid(payload, { orderId: o.id, provider: 'stripe', amountCents: 6000, now: NOW })
+    await expireHolds(payload, { now: AFTER })
+    assert.equal(payload.store.orders[0].status, 'cancelled')
+    const kept = await markOrderPaid(payload, { orderId: o.id, provider: 'stripe', amountCents: 6000, now: AFTER })
     assert.equal(kept.order.status, 'paid')
 
     const { order: late } = await order({ pickup: { date: '2026-10-31', windowStart: '10:15' } })
-    payload.store.orders.find((x) => x.id === late.id).status = 'cancelled'
-    for (let i = 0; i < 4; i++) payload.store.orders.push({ id: 100 + i, status: 'paid', pickupDate: '2026-10-31T12:00:00.000Z', pickupWindowStart: '10:15', items: [{ qty: 1, units: 1, productionCategory: 'gateaux', productionDate: '2026-10-31' }] })
-    const refund = await markOrderPaid(payload, { orderId: late.id, provider: 'stripe', amountCents: 6000, now: NOW })
+    await expireHolds(payload, { now: AFTER })
+    fullWindow('10:15')
+    const refund = await markOrderPaid(payload, { orderId: late.id, provider: 'stripe', amountCents: 6000, now: AFTER })
     assert.equal(refund.order.status, 'cancelled')
     assert.equal(refund.order.payment.status, 'paid')
-    assert.equal(new Date(refund.order.payment.refundDueBy).getTime() - NOW.getTime(), 15 * 86400 * 1000)
+    assert.equal(new Date(refund.order.payment.refundDueBy).getTime() - AFTER.getTime(), 15 * 86400 * 1000)
+  })
+
+  test('a payment after the hold ran out, before the worker swept it, re-checks the window (no overbooking)', async () => {
+    const { order: o } = await order({ pickup: { date: '2026-10-31', windowStart: '10:30' } })
+    fullWindow('10:30')
+    const r = await markOrderPaid(payload, { orderId: o.id, provider: 'stripe', amountCents: 6000, now: AFTER })
+    assert.equal(r.order.status, 'cancelled')
+    assert.ok(r.order.payment.refundDueBy)
+    assert.equal(r.refundDue, true)
+    assert.equal(payload.store.messages.filter((m) => m.order === o.id && m.template === 'order_confirmed').length, 0, 'no « commande confirmée »')
+    assert.equal(payload.store.orders.filter((x) => x.pickupWindowStart === '10:30' && ['paid', 'ready'].includes(x.status)).length, 4)
+  })
+
+  test('an order the shop cancelled stays cancelled when its open payment completes: refund due, no confirmation', async () => {
+    const { order: o } = await order({ pickup: { date: '2026-10-31', windowStart: '11:00' } })
+    const manager = { id: 2, role: 'gerant', name: 'Marc', active: true }
+    const c = await perform(payload, { user: manager, type: 'order.cancel', input: { orderId: o.id, reason: 'Client a rappelé : annule' }, now: NOW })
+    assert.ok(c.ok)
+    const r = await markOrderPaid(payload, { orderId: o.id, provider: 'stripe', amountCents: 6000, now: new Date(NOW.getTime() + 60e3) })
+    assert.equal(r.order.status, 'cancelled')
+    assert.ok(r.order.payment.refundDueBy)
+    assert.equal(payload.store.messages.filter((m) => m.order === o.id && m.status === 'queued').length, 0)
+  })
+
+  test('the worker never overwrites a payment that landed after it read the holds', async () => {
+    const { order: o } = await order({ pickup: { date: '2026-10-31', windowStart: '11:15' } })
+    const find = payload.find.bind(payload)
+    payload.find = async (args) => {
+      const r = await find(args)
+      if (args.collection === 'orders' && args.where?.and?.[0]?.status?.equals === 'pending_payment') await markOrderPaid(payload, { orderId: o.id, provider: 'stripe', amountCents: 6000, now: NOW })
+      return r
+    }
+    const out = await expireHolds(payload, { now: AFTER })
+    payload.find = find
+    assert.equal(out.holdsExpired, 0)
+    const fresh = payload.store.orders.find((x) => x.id === o.id)
+    assert.deepEqual([fresh.status, fresh.payment.status], ['paid', 'paid'])
+    assert.ok(fresh.timeline.some((t) => t.note === 'Paiement reçu'))
   })
 
   test('a failed card keeps the hold so the customer can retry', async () => {
@@ -130,6 +177,44 @@ describe('settlement', () => {
     assert.equal(r.order.pickupWindowStart, undefined)
     assert.equal((await markDepositPaid(payload, { requestId: 7, provider: 'mock', amountCents: 5400, now: NOW })).already, true)
     assert.ok(payload.store.messages.some((m) => m.template === 'order_confirmed' && /heure à convenir/.test(m.body)))
+  })
+
+  const request = (over = {}) => ({ id: 8, status: 'new', occasion: 'Mariage', eventDate: '2026-11-07T12:00:00.000Z', productionCategory: 'gateaux', capacityUnits: 1, customer: { firstName: 'Ana', email: 'ana@example.test', phone: '+14505550124', language: 'fr' }, ...over })
+
+  test('re-quoted: the old deposit amount is recorded as a refund due, the request keeps its new quote', async () => {
+    payload.store.requests.push(request())
+    await sendQuote(payload, { requestId: 8, totalCents: 10000, taxClass: 'zero', now: NOW })
+    const oldDeposit = payload.store.requests[0].quote.depositCents
+    await sendQuote(payload, { requestId: 8, totalCents: 12000, taxClass: 'zero', now: NOW })
+    const r = await markDepositPaid(payload, { requestId: 8, provider: 'stripe', reference: 'pi_A', amountCents: oldDeposit, eventId: 'evt_A', now: NOW })
+    assert.equal(r.ok, false)
+    assert.equal(r.refundDue, true)
+    assert.deepEqual([r.order.status, r.order.payment.status, r.order.payment.amountCents, r.order.payment.reference], ['cancelled', 'paid', oldDeposit, 'pi_A'])
+    assert.ok(r.order.payment.refundDueBy)
+    const req = payload.store.requests[0]
+    assert.equal(req.status, 'quoted')
+    assert.match(req.timeline.at(-1).note, /remboursement complet dû/)
+    assert.equal((await markDepositPaid(payload, { requestId: 8, provider: 'stripe', reference: 'pi_A', amountCents: oldDeposit, eventId: 'evt_A', now: NOW })).already, true, 'a webhook retry adds nothing')
+    assert.equal(payload.store.messages.filter((m) => m.template === 'order_confirmed').length, 0)
+  })
+
+  test('a deposit after the quote expired: booked if the day has room, refund due if it filled since', async () => {
+    payload.store.requests.push(request(), request({ id: 9, customer: { firstName: 'Bo', email: 'bo@example.test', language: 'fr' } }))
+    await sendQuote(payload, { requestId: 8, totalCents: 10000, taxClass: 'zero', now: NOW })
+    await sendQuote(payload, { requestId: 9, totalCents: 10000, taxClass: 'zero', now: NOW })
+    const later = new Date(NOW.getTime() + 80 * 3600 * 1000)
+    await expireQuotes(payload, { now: later })
+    assert.deepEqual(payload.store.requests.map((r) => r.status), ['expired', 'expired'])
+    const ok = await markDepositPaid(payload, { requestId: 8, provider: 'mock', amountCents: payload.store.requests[0].quote.depositCents, now: later })
+    assert.equal(ok.ok, true)
+    assert.equal(ok.order.status, 'paid')
+    const limit = pools().find((p) => p.productionCategory === 'gateaux').defaultPerDay
+    for (let i = 0; i < limit; i++) payload.store.orders.push({ id: 200 + i, status: 'paid', pickupDate: '2026-11-07T12:00:00.000Z', items: [{ qty: 1, units: 1, productionCategory: 'gateaux', productionDate: '2026-11-07' }] })
+    const full = await markDepositPaid(payload, { requestId: 9, provider: 'mock', amountCents: payload.store.requests[1].quote.depositCents, now: later })
+    assert.equal(full.ok, false)
+    assert.equal(full.code, 'day_full')
+    assert.equal(full.order.status, 'cancelled')
+    assert.equal(payload.store.requests[1].status, 'expired')
   })
 })
 

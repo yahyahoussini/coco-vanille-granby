@@ -81,6 +81,27 @@ describe('« Remettre la commande »', () => {
   })
 })
 
+describe('the customer is already at the counter', () => {
+  test('a paid order is handed over directly; undo puts it back to Payée', async () => {
+    const payload = setup([order(42, 'paid')])
+    const r = await perform(payload, { user: lea, device, type: 'order.pickup', input: { orderId: 42, code: '4821' } })
+    assert.ok(r.ok, r.message)
+    assert.equal(payload.store.orders[0].status, 'picked_up')
+    const u = await undo(payload, { user: lea, id: r.undo.id })
+    assert.match(u.message, /Payée/)
+    assert.equal(payload.store.orders[0].status, 'paid')
+  })
+
+  test('« Prête » then « Remettre »: the queued « vous attend au comptoir » is cancelled', async () => {
+    const payload = setup([order(42, 'paid')])
+    await perform(payload, { user: lea, device, type: 'order.ready', input: { orderId: 42 } })
+    assert.equal(payload.store.messages[0].status, 'queued')
+    const r = await perform(payload, { user: lea, device, type: 'order.pickup', input: { orderId: 42, recognized: 'true' } })
+    assert.ok(r.ok)
+    assert.equal(payload.store.messages[0].status, 'cancelled')
+  })
+})
+
 describe('money actions', () => {
   test('Comptoir cannot cancel; the owner needs a reason and gets a 15-day refund timer', async () => {
     const payload = setup([order(42, 'paid')])

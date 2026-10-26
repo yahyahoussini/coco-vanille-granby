@@ -25,11 +25,12 @@ export function LangBadge({ language }) {
 }
 
 // « Remettre la commande »: the customer's 4-digit code, or « Client reconnu » (16 §3.2 hand-over).
-export function Handover({ order, back }) {
+// On a paid order (customer already at the counter) it sits below « Marquer prête » as the second choice.
+export function Handover({ order, back, secondary = false }) {
   const balance = order.totals?.balanceCents > 0 ? order.totals.balanceCents : 0
   return (
     <details className="sheet">
-      <summary className="btn btn-primary">Remettre la commande</summary>
+      <summary className={secondary ? 'btn' : 'btn btn-primary'}>Remettre la commande</summary>
       <div className="sheet-body">
         {balance > 0 && (
           <p>
@@ -59,11 +60,14 @@ export function ForwardButton({ order, back }) {
   const next = forwardAction(order)
   if (next === 'ready') {
     return (
-      <ActionForm type="order.ready" fields={{ orderId: order.id }} back={back} pending={`Commande ${order.number} prête…`}>
-        <button className="btn btn-primary" type="submit">
-          Marquer prête
-        </button>
-      </ActionForm>
+      <>
+        <ActionForm type="order.ready" fields={{ orderId: order.id }} back={back} pending={`Commande ${order.number} prête…`}>
+          <button className="btn btn-primary" type="submit">
+            Marquer prête
+          </button>
+        </ActionForm>
+        <Handover order={order} back={back} secondary />
+      </>
     )
   }
   if (next === 'pickup') return <Handover order={order} back={back} />

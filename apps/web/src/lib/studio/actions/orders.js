@@ -6,7 +6,7 @@ import { createOrder } from '../../ordering/create-order.js'
 import { notifyReady } from '../../messaging/notify.js'
 import { cancelQueued, enqueueMessage } from '../../messaging/queue.js'
 import { recordCounterPayment } from '../../payments/settle.js'
-import { stripeClient } from '../../payments/stripe.js'
+import { stripeClient, cancelIntent } from '../../payments/stripe.js'
 import { senderFacts } from '../../messaging/templates.js'
 import { customerName, money } from '../format.js'
 import { clockFr, shortDay } from '../time.js'
@@ -133,6 +133,8 @@ export const orderActions = {
       if (balance) await recordCounterPayment(ctx.payload, { orderId: order.id, by: ctx.user.id, now: ctx.now })
       const fresh = await ctx.payload.findByID({ collection: 'orders', id: order.id, ...SYS })
       await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'picked_up', timeline: pushTimeline(fresh, timelineEntry(ctx, 'picked_up', recognized ? 'Remise · client reconnu' : 'Remise · code vérifié')) }, ...ctx.write, depth: 0 })
+      // The customer has it: « vous attend au comptoir » or « pas été récupérée » must not follow.
+      for (const template of ['order_ready', 'order_not_picked_up']) await cancelQueued(ctx.payload, { orderId: order.id, template })
       return {
         entity: 'orders',
         entityId: order.id,
@@ -147,7 +149,7 @@ export const orderActions = {
       const order = await ctx.payload.findByID({ collection: 'orders', id: entry.entityId, ...SYS })
       if (order.status !== 'picked_up') refuse('undo_state', `la commande ${order.number} a changé depuis.`)
       await revert(ctx, order.id, entry.before, 'Annulé : pas encore remise')
-      return { message: `Commande ${order.number} : retour à « ${entry.before.status === 'ready' ? 'Prête' : 'Non récupérée'} ».` }
+      return { message: `Commande ${order.number} : retour à « ${{ ready: 'Prête', paid: 'Payée' }[entry.before.status] || 'Non récupérée'} ».` }
     },
   },
 
@@ -197,7 +199,9 @@ export const orderActions = {
     },
     async undo(ctx, entry) {
       const order = await ctx.payload.findByID({ collection: 'orders', id: entry.entityId, ...SYS })
+      if (order.payment?.status === 'paid') refuse('undo_state', `la commande ${order.number} est déjà payée : annulez-la avec un remboursement.`)
       await cancelQueued(ctx.payload, { orderId: order.id })
+      if (order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(order.payment.reference)
       await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'cancelled', holdExpiresAt: null, timeline: pushTimeline(order, timelineEntry(ctx, 'cancelled', 'Commande téléphone annulée (« Annuler »)')) }, ...SYS })
       return { message: `Commande ${order.number} annulée · rien n’est parti au client.` }
     },
@@ -239,6 +243,9 @@ export const orderActions = {
       const paid = order.payment?.status === 'paid'
       const refundDueBy = paid ? new Date(ctx.now.getTime() + REFUND_DAYS * 86400000).toISOString() : null
       await cancelQueued(ctx.payload, { orderId: order.id })
+      // A payment page still open must not bring the order back: its intent is cancelled first (settle.js
+      // records a payment that slips through anyway as a refund due, never as a confirmed order).
+      if (!paid && order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(order.payment.reference)
       await ctx.payload.update({
         collection: 'orders',
         id: order.id,

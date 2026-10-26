@@ -6,12 +6,17 @@ import { canTransition } from '../lib/ordering/state.js'
 import { cancelIntent } from '../lib/payments/stripe.js'
 import { notifyNotPickedUp } from '../lib/messaging/notify.js'
 import { kindOf } from '../lib/messaging/queue.js'
+import { withCapacityLock } from '../lib/ordering/context.js'
+import { holdIsLive } from '../lib/ordering/capacity.js'
+import { HOLD_EXPIRED } from '../lib/payments/settle.js'
+import { closedForPickup } from '../lib/studio/closure.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 export const MAX_ATTEMPTS = 5
 export const RETENTION_DAYS = 30
-// Messages about an order that make no sense once it is cancelled or refunded.
-const ORDER_FOLLOWUPS = ['order_reminder', 'order_ready', 'order_not_picked_up']
+// Messages about an order that only make sense while it is still in that state: « vous attend au comptoir »
+// once it is handed over, « pas été récupérée » once the customer came, a reminder once it is gone.
+const ORDER_FOLLOWUPS = { order_reminder: ['paid', 'ready'], order_ready: ['ready'], order_not_picked_up: ['not_picked_up'] }
 
 const entry = (status, note, now) => ({ at: new Date(now).toISOString(), status, by: 'worker', source: 'worker', note })
 const push = (doc, e) => [...(Array.isArray(doc.timeline) ? doc.timeline : []), e]
@@ -31,9 +36,9 @@ export async function sendDueMessages(payload, { now = new Date(), senders, limi
     if (!claimed.docs?.length) continue
     const attempts = (m.attempts || 0) + 1
     try {
-      if (m.order && ORDER_FOLLOWUPS.includes(m.template)) {
+      if (m.order && ORDER_FOLLOWUPS[m.template]) {
         const order = await payload.findByID({ collection: 'orders', id: m.order, ...SYS, disableErrors: true }).catch(() => null)
-        if (!order || ['cancelled', 'refunded'].includes(order.status) || (m.template === 'order_reminder' && order.status !== 'paid' && order.status !== 'ready')) {
+        if (!order || !ORDER_FOLLOWUPS[m.template].includes(order.status)) {
           await payload.update({ collection: 'messages', id: m.id, data: { status: 'cancelled', error: 'commande annulée ou déjà traitée' }, ...SYS })
           out.cancelled += 1
           continue
@@ -63,28 +68,48 @@ export async function sendDueMessages(payload, { now = new Date(), senders, limi
   return out
 }
 
-// A web order whose 10-minute hold ran out without payment frees its window and capacity.
+// A web order whose 10-minute hold ran out without payment frees its window and capacity. Each order is read
+// again under the booking lock (the payment webhook takes the same lock), so a payment that lands meanwhile is
+// never overwritten; the Stripe intent is cancelled after, outside the lock.
 export async function expireHolds(payload, { now = new Date() } = {}) {
   const res = await payload.find({ collection: 'orders', where: { and: [{ status: { equals: 'pending_payment' } }, { holdExpiresAt: { less_than: new Date(now).toISOString() } }] }, limit: 100, ...SYS })
+  let expired = 0
   for (const o of res.docs) {
-    await payload.update({ collection: 'orders', id: o.id, data: { status: 'cancelled', timeline: push(o, entry('cancelled', 'Réservation de la plage expirée sans paiement', now)) }, ...SYS })
-    if (o.payment?.provider === 'stripe' && o.payment?.reference) await cancelIntent(o.payment.reference)
+    const done = await withCapacityLock(payload, async () => {
+      const fresh = await payload.findByID({ collection: 'orders', id: o.id, ...SYS, disableErrors: true }).catch(() => null)
+      if (!fresh || fresh.status !== 'pending_payment' || fresh.payment?.status === 'paid' || holdIsLive(fresh, now)) return null
+      await payload.update({ collection: 'orders', id: fresh.id, data: { status: 'cancelled', timeline: push(fresh, { ...entry('cancelled', 'Réservation de la plage expirée sans paiement', now), reason: HOLD_EXPIRED }) }, ...SYS })
+      return fresh
+    })
+    if (!done) continue
+    expired += 1
+    if (done.payment?.provider === 'stripe' && done.payment?.reference) await cancelIntent(done.payment.reference)
   }
-  return { holdsExpired: res.docs.length }
+  return { holdsExpired: expired }
 }
 
-// A quote past its validity frees its tentative hold (« Expirée · place libérée », 16 §3.4).
+// A quote past its validity frees its tentative hold (« Expirée · place libérée », 16 §3.4); same lock and
+// fresh read as the deposit webhook, so a deposit paid meanwhile keeps its request « Acompte reçu ».
 export async function expireQuotes(payload, { now = new Date() } = {}) {
   const res = await payload.find({ collection: 'requests', where: { and: [{ status: { equals: 'quoted' } }, { 'quote.validUntil': { less_than: new Date(now).toISOString() } }] }, limit: 100, ...SYS })
+  let expired = 0
   for (const r of res.docs) {
-    if (r.payment?.status === 'paid') continue
-    await payload.update({ collection: 'requests', id: r.id, data: { status: 'expired', timeline: push(r, entry('expired', 'Soumission expirée · place libérée', now)) }, ...SYS })
-    if (r.payment?.reference) await cancelIntent(r.payment.reference)
+    const done = await withCapacityLock(payload, async () => {
+      const fresh = await payload.findByID({ collection: 'requests', id: r.id, ...SYS, disableErrors: true }).catch(() => null)
+      if (!fresh || fresh.status !== 'quoted' || fresh.payment?.status === 'paid') return null
+      if (!fresh.quote?.validUntil || new Date(fresh.quote.validUntil).getTime() >= new Date(now).getTime()) return null
+      await payload.update({ collection: 'requests', id: fresh.id, data: { status: 'expired', timeline: push(fresh, entry('expired', 'Soumission expirée · place libérée', now)) }, ...SYS })
+      return fresh
+    })
+    if (!done) continue
+    expired += 1
+    if (done.payment?.reference) await cancelIntent(done.payment.reference)
   }
-  return { quotesExpired: res.docs.length }
+  return { quotesExpired: expired }
 }
 
 // Paid or ready orders still there after closing time on their pickup day → « Non récupérée » + text (10 §6).
+// Not when the shop itself was closed for that pickup (closure or a day set to « Fermé »).
 export async function markNotPickedUp(payload, { now = new Date(), shop } = {}) {
   const s = shop || (await payload.findGlobal({ slug: 'shop', ...SYS }))
   const today = localParts(now).iso
@@ -95,6 +120,7 @@ export async function markNotPickedUp(payload, { now = new Date(), shop } = {}) 
     const closes = closingOf(s, day)
     const over = day < today || (closes && new Date(now).getTime() >= zonedTime(day, closes).getTime())
     if (!over || !canTransition(o.status, 'not_picked_up', 'integration')) continue
+    if (closedForPickup(s, o)) continue
     const updated = await payload.update({ collection: 'orders', id: o.id, data: { status: 'not_picked_up', timeline: push(o, entry('not_picked_up', 'Non récupérée à la fermeture', now)) }, ...SYS })
     await notifyNotPickedUp(payload, updated).catch(() => null)
     marked += 1

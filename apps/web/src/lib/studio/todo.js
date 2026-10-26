@@ -1,7 +1,7 @@
 // « À faire » on Aujourd'hui: at most 3 cards, filtered by role (16 §3.1, §4.5). Shop work first:
 // late answers, unpicked orders after closing, failed textos, the display-case photo, holidays to confirm.
 import { canSee } from './roles.js'
-import { answerTimer, stars, customerName } from './format.js'
+import { answerTimer, stars, customerName, money } from './format.js'
 import { shortDay, addDays, localParts, closingOf, toMinutes, dayBounds } from './time.js'
 import { holidaySuggestions } from '../ordering/holidays.js'
 
@@ -58,6 +58,12 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
   }
 
   if (['proprietaire', 'gerant'].includes(user.role)) {
+    // Money received that must go back within 15 days (07 A9): a cancelled order paid anyway, a payment after
+    // its slot was taken, a deposit for a quote that changed or ran out.
+    const due = await payload.find({ collection: 'orders', where: { and: [{ 'payment.status': { equals: 'paid' } }, { 'payment.refundDueBy': { exists: true } }] }, sort: 'createdAt', limit: 3, depth: 0, ...as })
+    for (const o of due.docs) {
+      cards.push({ key: `refund-${o.id}`, rank: 0, tone: 'bad', title: `Remboursement à faire · commande ${o.number}`, why: `${money(o.payment.amountCents || o.totals?.totalCents)} d’ici le ${shortDay(String(o.payment.refundDueBy).slice(0, 10))}`, href: `/commandes/${o.id}/`, action: 'Ouvrir' })
+    }
     const known = new Set((shop.specialDays || []).filter((d) => d.state && d.state !== 'to_confirm').map((d) => String(d.date).slice(0, 10)))
     const soon = holidaySuggestions(shop, { fromISO: here.iso }).filter((h) => h.date <= addDays(here.iso, 30) && !known.has(h.date))
     for (const h of soon.slice(0, 2)) cards.push({ key: `hol-${h.date}`, rank: 3, title: `Le ${shortDay(h.date)} approche : ouvert ou fermé?`, why: `${h.label || 'Jour férié'} · à confirmer`, href: '/boutique/#jours-speciaux', action: 'Choisir' })

@@ -55,6 +55,7 @@ const MESSAGES = {
     quote_expired: 'Cette soumission a expiré.',
     order_state: 'Cette commande ne peut plus être payée.',
     hold_expired: 'Le délai de réservation de la plage est écoulé.',
+    refund_due: 'Votre paiement a bien été reçu, mais cette soumission n’est plus valide : la boutique vous rembourse au complet et vous contacte.',
   },
   en: {
     empty: 'Your box is empty.',
@@ -109,6 +110,7 @@ const MESSAGES = {
     quote_expired: 'This quote has expired.',
     order_state: 'This order can no longer be paid.',
     hold_expired: 'The slot hold has run out.',
+    refund_due: 'Your payment was received, but this quote is no longer valid: the shop refunds you in full and will contact you.',
   },
   es: {
     empty: 'Su caja está vacía.',
@@ -163,6 +165,7 @@ const MESSAGES = {
     quote_expired: 'Este presupuesto venció.',
     order_state: 'Este pedido ya no se puede pagar.',
     hold_expired: 'El plazo de reserva de la franja terminó.',
+    refund_due: 'Recibimos su pago, pero este presupuesto ya no es válido: la tienda le reembolsa el total y se pone en contacto con usted.',
   },
 }
 

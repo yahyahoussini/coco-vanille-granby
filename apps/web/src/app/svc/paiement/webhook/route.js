@@ -26,9 +26,12 @@ export async function POST(request) {
       const amountCents = intent.amount_received ?? intent.amount
       if (meta.kind === 'deposit' && meta.requestId) {
         const req = await payload.findByID({ collection: 'requests', id: meta.requestId, overrideAccess: true, depth: 0, disableErrors: true }).catch(() => null)
-        await markDepositPaid(payload, { requestId: meta.requestId, provider: 'stripe', reference: intent.id, amountCents, eventId: event.id, consent: req?.consent || {} })
+        const r = await markDepositPaid(payload, { requestId: meta.requestId, provider: 'stripe', reference: intent.id, amountCents, eventId: event.id, consent: req?.consent || {} })
+        // Recorded either way (a refund due shows in Studio): Stripe must not retry, but the log says so.
+        if (!r.ok) payload.logger.warn({ event: event.id, requestId: meta.requestId, code: r.code, refundDue: Boolean(r.refundDue) }, 'deposit not applied to a booking')
       } else if (meta.orderId) {
-        await markOrderPaid(payload, { orderId: meta.orderId, provider: 'stripe', reference: intent.id, amountCents, eventId: event.id })
+        const r = await markOrderPaid(payload, { orderId: meta.orderId, provider: 'stripe', reference: intent.id, amountCents, eventId: event.id })
+        if (!r.ok || r.refundDue) payload.logger.warn({ event: event.id, orderId: meta.orderId, code: r.code || null, refundDue: Boolean(r.refundDue) }, 'payment not applied to a booking')
       }
     } else if (event.type === 'payment_intent.payment_failed' && meta.orderId) {
       await markOrderPaymentFailed(payload, { orderId: meta.orderId, reference: intent.id, eventId: event.id, reason: intent.last_payment_error?.code || '' })
