@@ -35,9 +35,9 @@ test.describe('login', () => {
   test('wrong password: a clear French error, no session', async ({ page }) => {
     await page.goto('/connexion/')
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr-CA')
-    await page.getByLabel('Courriel').fill(OWNER.email)
-    await page.getByLabel('Mot de passe').fill('pas-le-bon')
-    await page.getByRole('button', { name: 'Se connecter' }).click()
+    await page.locator('#email').fill(OWNER.email)
+    await page.locator('#password').fill('pas-le-bon')
+    await page.getByRole('button', { name: 'Se connecter', exact: true }).click()
     await expect(page.locator('.error-summary')).toContainText('Courriel ou mot de passe incorrect')
   })
 

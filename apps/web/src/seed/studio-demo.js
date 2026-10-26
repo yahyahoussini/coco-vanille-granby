@@ -79,7 +79,7 @@ for (const s of DEMO_STAFF) {
   else await payload.create({ collection: 'users', data: { ...data, email: s.email, password: s.password }, ...SYS })
 }
 const owner = await findUser('proprio@exemple.test')
-if (owner) await payload.update({ collection: 'users', id: owner.id, data: { pinHash: await hashPin(OWNER_PIN), pinFailures: 0, pinLockedUntil: null, loginAttempts: 0, lockUntil: null }, ...SYS })
+if (owner) await payload.update({ collection: 'users', id: owner.id, data: { pinHash: await hashPin(OWNER_PIN), pinFailures: 0, pinLockedUntil: null, loginAttempts: 0, lockUntil: null, passkeys: null, backupCodes: null }, ...SYS })
 
 await removeDemoTraffic()
 // Fresh undo windows and idempotency keys for the demo accounts (all dev-only accounts).

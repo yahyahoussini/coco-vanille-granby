@@ -10,6 +10,7 @@ import { snack } from './Snackbar'
 export function ActionForm({ type, fields = {}, back = '/', pending = null, className = '', children, needsNetwork = false, ...rest }) {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
+  const [queued, setQueued] = useState(false)
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -33,6 +34,8 @@ export function ActionForm({ type, fields = {}, back = '/', pending = null, clas
     if (r.code === 'step_up') return router.push(`/verifier/?retour=${encodeURIComponent(back)}`)
     if (r.code === 'login') return router.push(`/connexion/?retour=${encodeURIComponent(back)}`)
     snack({ message: r.ok ? r.message : `Pas appliqué : ${r.message}`, tone: r.ok ? 'ok' : 'bad', undo: r.undo || null, link: r.data?.link || null })
+    // Kept in the outbox: show it here; the screen refreshes once the outbox is empty again (ClientBoot).
+    if (r.queued) return setQueued(true)
     if (r.ok && r.data?.redirect) router.push(r.data.redirect)
     else router.refresh()
   }
@@ -45,6 +48,11 @@ export function ActionForm({ type, fields = {}, back = '/', pending = null, clas
         Array.isArray(v) ? v.map((x) => <input key={`${k}-${x}`} type="hidden" name={`${k}[]`} value={x} />) : <input key={k} type="hidden" name={k} value={v ?? ''} />,
       )}
       {children}
+      {queued && (
+        <span className="tag" data-tone="warn" role="status">
+          <span aria-hidden="true">◐</span> En attente du réseau
+        </span>
+      )}
     </form>
   )
 }

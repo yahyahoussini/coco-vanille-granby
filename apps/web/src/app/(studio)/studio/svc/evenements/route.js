@@ -22,7 +22,7 @@ export async function GET(request) {
       }
       send('retry: 5000\n\n')
       // Counts and ids only: no names, phones or notes in the stream.
-      const off = await subscribe(payload, (msg) => send(`event: commande\ndata: ${JSON.stringify({ id: msg?.id ?? null, status: msg?.status ?? null })}\n\n`))
+      const off = await subscribe(payload, (msg) => send(`event: commande\ndata: ${JSON.stringify({ id: msg?.id ?? null, status: msg?.status ?? null, nouvelle: msg?.op === 'INSERT' })}\n\n`))
       const ping = setInterval(() => send(': ping\n\n'), 25000)
       cleanup = () => {
         clearInterval(ping)

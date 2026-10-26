@@ -11,6 +11,17 @@ const IDLE_MS = 30 * 60 * 1000
 export function ClientBoot({ shared = false }) {
   const router = useRouter()
   useEffect(() => {
+    let waiting = 0
+    const onOutbox = (e) => {
+      const n = e.detail?.count || 0
+      if (waiting > 0 && n === 0) router.refresh()
+      waiting = n
+    }
+    window.addEventListener('studio:outbox', onOutbox)
+    return () => window.removeEventListener('studio:outbox', onOutbox)
+  }, [router])
+
+  useEffect(() => {
     wireOutbox()
     if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {})
   }, [])

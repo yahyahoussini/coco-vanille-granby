@@ -34,7 +34,7 @@ export default async function Aujourdhui({ searchParams }) {
         <span className="st-date">{longDay(today)}</span>
       </div>
       <Flash ctx={ctx} searchParams={searchParams} back="/" />
-      <LiveRefresh />
+      <LiveRefresh sound={Boolean(ctx.device?.shared)} />
 
       <a className="st-status" href="/boutique/">
         <span>

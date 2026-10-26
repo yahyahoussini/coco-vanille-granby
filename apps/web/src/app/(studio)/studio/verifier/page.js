@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { studioAuth, safeBack } from '@/lib/studio/session'
+import { PasskeyStepUp } from '@/components/studio/Passkey'
 
 export const metadata = { title: 'Confirmer que c’est vous · Coco Studio' }
 export const dynamic = 'force-dynamic'
@@ -16,10 +17,11 @@ const ERRORS = {
 // Step-up before money, prices, allergens, taxes and people (16b §4 #4): valid 5 minutes.
 export default async function Verifier({ searchParams }) {
   const q = (await searchParams) || {}
-  const { user } = await studioAuth(await headers())
+  const { payload, user } = await studioAuth(await headers())
   const back = safeBack(typeof q.retour === 'string' ? q.retour : '/', '/')
   if (!user) redirect(`/connexion/?retour=${encodeURIComponent(back)}`)
   const error = ERRORS[q.erreur]
+  const passkeys = (await payload.findByID({ collection: 'users', id: user.id, depth: 0, overrideAccess: true, showHiddenFields: true })).passkeys
   return (
     <main className="st-auth" id="contenu">
       <h1>Confirmer que c’est vous</h1>
@@ -29,6 +31,7 @@ export default async function Verifier({ searchParams }) {
           {error}
         </div>
       )}
+      {Array.isArray(passkeys) && passkeys.length > 0 && <PasskeyStepUp back={back} />}
       <form method="post" action="/svc/verifier/" className="card">
         <input type="hidden" name="retour" value={back} />
         <div className="field">

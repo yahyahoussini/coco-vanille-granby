@@ -4,6 +4,7 @@ import { DEVICE_LABELS } from '@/lib/studio/audit'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Flash } from '@/components/studio/Flash'
 import { ShopSettings } from '@/components/studio/settings/ShopSettings'
+import { PasskeySettings } from '@/components/studio/settings/PasskeySettings'
 
 export const metadata = { title: 'Réglages · Coco Studio' }
 
@@ -147,6 +148,7 @@ export default async function Reglages({ searchParams }) {
       )}
 
       <ShopSettings ctx={ctx} back={BACK} />
+      <PasskeySettings ctx={ctx} />
     </>
   )
 }
