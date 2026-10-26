@@ -1,7 +1,7 @@
 import { PAGES, LOCALES, SITE_ORIGIN, HTML_LANG, pathFor, isIndexable, localeEnabled } from '@/lib/routes'
 import { payloadClient, getServed } from '@/lib/data'
-import { servedAlternates } from '@/lib/publish'
-import { containsMarker, publishGuard } from '@/lib/facts'
+import { servedAlternates, productServed } from '@/lib/publish'
+import { publishGuard } from '@/lib/facts'
 
 export const revalidate = 300
 
@@ -30,11 +30,19 @@ export async function GET() {
     }
   }
   const products = await payload.find({ collection: 'products', where: { _status: { equals: 'published' } }, locale: 'all', limit: 1000, depth: 1 })
-  for (const p of products.docs) {
-    if (strict && containsMarker(p)) continue
-    const alternates = {}
+  // Under strict, a product page exists per language only with its facts complete (lib/publish.js).
+  const readyIn = {}
+  if (strict) {
     for (const locale of LOCALES) {
       if (!localeEnabled(locale)) continue
+      const docs = (await payload.find({ collection: 'products', where: { _status: { equals: 'published' } }, locale, limit: 1000, depth: 0 })).docs
+      readyIn[locale] = new Set(docs.filter((d) => productServed(d, { strict, servedHere: served[locale] })).map((d) => d.id))
+    }
+  }
+  for (const p of products.docs) {
+    const alternates = {}
+    for (const locale of LOCALES) {
+      if (!localeEnabled(locale) || (strict && !readyIn[locale]?.has(p.id))) continue
       const slug = p.slug?.[locale]
       const cat = p.category?.slug?.[locale]
       if (slug && cat) alternates[HTML_LANG[locale]] = `${SITE_ORIGIN}${locale === 'fr' ? '' : `/${locale}`}/${cat}/${slug}/`

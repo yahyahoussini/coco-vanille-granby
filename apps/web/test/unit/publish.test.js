@@ -3,7 +3,7 @@
 import test, { describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { PAGES, alternatesFor } from '../../src/lib/routes.js'
-import { hasCopy, readyCopy, servedKeys, servedAlternates } from '../../src/lib/publish.js'
+import { hasCopy, readyCopy, servedKeys, servedAlternates, productReady, productServed } from '../../src/lib/publish.js'
 import { isKnownPublicPath, notFoundPathFor, localeOfPath } from '../../src/lib/public-paths.js'
 import { productTitle, productDescription, clip } from '../../src/lib/meta.js'
 
@@ -26,6 +26,24 @@ describe('served pages (publish guard)', () => {
     assert.equal(show.size, PAGES.filter((p) => p.paths.en).length)
     const strict = servedKeys(docs, 'fr', { strict: true })
     assert.deepEqual([...strict].sort(), ['carte', 'home'])
+  })
+
+  test('strict: a language goes live with its home page, or not at all', () => {
+    const noHome = docs.map((d) => (d.key === 'home' ? { ...d, sections: [{ body: '[[FACT NEEDED: x]]' }] } : d))
+    assert.equal(servedKeys(noHome, 'fr', { strict: true }).size, 0)
+    assert.ok(servedKeys(noHome, 'fr', { strict: false }).has('carte'))
+  })
+
+  test('strict: a product page needs its description, priced and portioned sizes, lead time, checked allergens', () => {
+    const ready = { summary: 'Pur beurre.', leadTimeHours: 24, allergensVerified: { at: '2026-10-20' }, variants: [{ label: 'Unité', priceCents: 375, portionsMin: 1 }] }
+    assert.equal(productReady(ready), true)
+    for (const gap of [{ summary: '' }, { leadTimeHours: 0 }, { allergensVerified: {} }, { variants: [] }, { variants: [{ label: 'Unité', portionsMin: 1 }] }, { variants: [{ label: 'Unité', priceCents: 375 }] }]) {
+      assert.equal(productReady({ ...ready, ...gap }), false, JSON.stringify(gap))
+    }
+    const home = new Set(['home'])
+    assert.equal(productServed({}, { strict: false }), true)
+    assert.equal(productServed(ready, { strict: true, servedHere: home }), true)
+    assert.equal(productServed(ready, { strict: true, servedHere: new Set() }), false)
   })
 
   test('hreflang names only the languages that answer, x-default with French', () => {

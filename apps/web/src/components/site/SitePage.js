@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, localeEnabled, pageByKey } from '@/lib/routes'
 import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, getServed, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard, marker } from '@/lib/facts'
-import { readyCopy, servedAlternates } from '@/lib/publish'
+import { readyCopy, servedAlternates, productServed } from '@/lib/publish'
 import { productTitle, productDescription } from '@/lib/meta'
 import { t } from '@/lib/i18n'
 import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode } from '@/lib/schema'
@@ -29,7 +29,8 @@ async function resolve(locale, segments) {
   return null
 }
 
-function crumbsFor(key, locale, lastName) {
+// `served` (strict): crumbs only to pages the site answers; the current page always closes the trail.
+function crumbsFor(key, locale, lastName, served) {
   const chain = []
   let page = pageByKey(key)
   while (page) {
@@ -40,7 +41,7 @@ function crumbsFor(key, locale, lastName) {
   return chain
     .map((p, i) => {
       const path = pathFor(p.key, locale)
-      if (!path) return null
+      if (!path || (served && i < chain.length - 1 && !served.has(p.key))) return null
       const s = t(locale)
       const name = i === chain.length - 1 && lastName ? lastName : p.key === 'home' ? s.breadcrumbHome : s.nav[p.key] || s.pageNames?.[p.key] || p.key
       return { name, path, url: `${SITE_ORIGIN}${path}` }
@@ -48,13 +49,14 @@ function crumbsFor(key, locale, lastName) {
     .filter(Boolean)
 }
 
-async function productAlternates(product) {
+async function productAlternates(product, servedBy) {
+  const strict = publishGuard() === 'strict'
   const payload = await payloadClient()
   const languages = {}
   for (const locale of LOCALES) {
     if (!localeEnabled(locale)) continue
     const doc = await payload.findByID({ collection: 'products', id: product.id, locale, depth: 1 }).catch(() => null)
-    if (!doc?.slug || !doc.category?.slug) continue
+    if (!doc?.slug || !doc.category?.slug || !productServed(doc, { strict, servedHere: servedBy[locale] })) continue
     const prefix = locale === 'fr' ? '' : `/${locale}`
     languages[locale === 'fr' ? 'fr-CA' : locale === 'en' ? 'en-CA' : 'es'] = `${SITE_ORIGIN}${prefix}/${doc.category.slug}/${doc.slug}/`
   }
@@ -115,12 +117,14 @@ export async function SitePage({ locale, segments = [], query }) {
     props.offer = (await getOfferStates([hit.product], locale)).get(hit.product.id)
     pageKey = null
     pageName = hit.product.title
-    crumbs = crumbsFor('carte', locale)
-    if (hit.product.category) {
+    crumbs = crumbsFor('carte', locale, null, strict ? served[locale] : null)
+    if (strict && crumbs.at(-1)?.path === pathFor('carte', locale) && !served[locale].has('carte')) crumbs.pop()
+    const categoryPage = PAGES.find((p) => p.template === 'category' && p.category === hit.product.productionCategory)
+    if (hit.product.category && (!strict || (categoryPage && served[locale].has(categoryPage.key)))) {
       crumbs.push({ name: hit.product.category.title, path: `${locale === 'fr' ? '' : `/${locale}`}/${hit.product.category.slug}/`, url: '' })
     }
     crumbs.push({ name: hit.product.title, path: hit.path, url: `${SITE_ORIGIN}${hit.path}` })
-    if (strict && containsMarker(hit.product)) notFound()
+    if (!productServed(hit.product, { strict, servedHere: served[locale] })) notFound()
   } else {
     const { page } = hit
     pageKey = page.key
@@ -129,13 +133,13 @@ export async function SitePage({ locale, segments = [], query }) {
     Template = TEMPLATES[page.template] || TEMPLATES.content
     props = { ...props, page, doc, conditionNotice: page.status === 'conditional' && (!doc || containsMarker(doc)) ? marker(page.condition) : null }
     pageName = doc?.h1 || doc?.title
-    crumbs = crumbsFor(page.key, locale, doc?.h1)
+    crumbs = crumbsFor(page.key, locale, doc?.h1, strict ? served[locale] : null)
   }
 
   const url = `${SITE_ORIGIN}${hit.path}`
   // Canonical + hreflang as real <link> tags (React 19 hoists them to <head>). Next's metadata API
   // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
-  const languages = hit.kind === 'product' ? await productAlternates(hit.product) : servedAlternates(hit.page.key, served)
+  const languages = hit.kind === 'product' ? await productAlternates(hit.product, served) : servedAlternates(hit.page.key, served)
   const pageNodes = [
     bakeryNode(business, shop, locale, upcomingSpecialDays(shop)),
     websiteNode(),

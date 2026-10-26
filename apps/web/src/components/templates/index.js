@@ -27,8 +27,11 @@ function Missing({ text }) {
   return <p className="notice fact-needed" data-nosnippet="">{text}</p>
 }
 
-function orderAction(locale) {
-  return { href: pathFor('commander', locale) || pathFor('commander', 'fr'), label: t(locale).actions.order, event: 'order_click' }
+// `served` (lib/publish.js): no « Commander » button while the order page is not published in that language.
+function orderAction(locale, served) {
+  const href = pathFor('commander', locale) || pathFor('commander', 'fr')
+  if (served && !served[locale]?.has('commander')) return null
+  return { href, label: t(locale).actions.order, event: 'order_click' }
 }
 
 const googleMapsUrl = (business) => (business?.google?.cid ? `https://maps.google.com/?cid=${business.google.cid}` : null)
@@ -121,10 +124,10 @@ async function HomeTemplate(props) {
   const vitrine = products.filter((p) => p.vitrine && p.availability !== 'discontinued')
   const rating = ratingOf(business, locale)
   const maps = mapsAction(business, locale)
-  const order = orderAction(locale)
+  const order = orderAction(locale, served)
   const start = [
     ...categories.map((c) => ({ href: `${prefixFor(locale)}/${c.slug}/`, label: c.title, key: c.id })),
-    { href: order.href, label: s.nav.commander, key: 'commander' },
+    ...(order ? [{ href: order.href, label: s.nav.commander, key: 'commander' }] : []),
     ...['gateaux-personnalises', 'prix', 'faq']
       .filter((key) => !served || served[locale]?.has(key))
       .map((key) => ({ href: pathFor(key, locale), label: s.pageNames[key], key })),
@@ -141,7 +144,7 @@ async function HomeTemplate(props) {
             <Fact value={business?.categorySentence} label="phrase de catégorie (option B en attente d’approbation)" id="categorySentence" />
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href={order.href} data-event={order.event}>{order.label}</a>
+            {order && <a className="btn btn-primary" href={order.href} data-event={order.event}>{order.label}</a>}
             {maps && <a className="btn btn-quiet" href={maps.href} data-event={maps.event}>{maps.label}</a>}
           </div>
           <OpenNow schedule={pillSchedule(shop)} locale={locale} labels={{ open: s.openNow, closed: s.closedNow, until: s.until }} />
@@ -228,13 +231,13 @@ async function MenuTemplate(props) {
       ))}
     </div>
   )
-  return <ContentTemplate {...props} primary={orderAction(locale)} slot={{ after: 0, node: list }} />
+  return <ContentTemplate {...props} primary={orderAction(locale, props.served)} slot={{ after: 0, node: list }} />
 }
 
 function CategoryTemplate(props) {
   const { page, locale } = props
   const list = <CategoryList locale={locale} productionCategory={page.category} level={3} />
-  return <ContentTemplate {...props} className={`category category-${page.category}`} primary={orderAction(locale)} slot={{ after: 0, node: list }} />
+  return <ContentTemplate {...props} className={`category category-${page.category}`} primary={orderAction(locale, props.served)} slot={{ after: 0, node: list }} />
 }
 
 // ---------- Visit: address, link-out buttons (no map tiles), parking, hours ----------
@@ -386,7 +389,7 @@ async function PricesTemplate(props) {
     .map((c) => ({ category: c, rows: products.filter((p) => p.productionCategory === c.productionCategory).flatMap((p) => (p.variants || []).map((variant) => ({ product: p, variant }))) }))
     .filter((g) => g.rows.length)
   return (
-    <ContentTemplate {...props} primary={orderAction(locale)}>
+    <ContentTemplate {...props} primary={orderAction(locale, props.served)}>
       <section aria-labelledby="prices-table" className="prices">
         <h2 id="prices-table">{o.sizesTitle}</h2>
         {groups.length ? (
@@ -414,7 +417,7 @@ async function CalculatorTemplate(props) {
   const action = pathFor(page.key, locale)
   const best = matches[0]
   return (
-    <ContentTemplate {...props} className="calculator" primary={orderAction(locale)} secondary={phoneAction(business, locale)}>
+    <ContentTemplate {...props} className="calculator" primary={orderAction(locale, props.served)} secondary={phoneAction(business, locale)}>
       <form method="get" action={action} className="calc-form">
         <fieldset>
           <legend>{c.legend}</legend>
@@ -481,7 +484,7 @@ async function SeasonalTemplate(props) {
   const label = st.state === 'over' ? se.over(monthYear(st.back, locale)) : se[st.state]
   const date = (d) => <time dateTime={d.toISOString()}>{longDate(d.toISOString(), locale)}</time>
   return (
-    <ContentTemplate {...props} className="seasonal" primary={st.state === 'open' ? { ...orderAction(locale), label: t(locale).actions.preorder } : orderAction(locale)}>
+    <ContentTemplate {...props} className="seasonal" primary={st.state === 'open' && orderAction(locale, props.served) ? { ...orderAction(locale, props.served), label: t(locale).actions.preorder } : orderAction(locale, props.served)}>
       <section aria-labelledby="season-state" className={`season-card season-${st.state}`}>
         <h2 id="season-state">{se.title}</h2>
         <p className="season-badge">{label}</p>
@@ -516,7 +519,7 @@ async function SeasonalTemplate(props) {
 }
 
 // ---------- Product: sizes table, verified allergens, lead time, the engine's availability (« Prête dès … ») ----------
-function ProductTemplate({ product, offer, shop, locale, business }) {
+function ProductTemplate({ product, offer, shop, locale, business, served }) {
   const s = t(locale)
   const o = s.offer
   const lead = leadTimeText(product.leadTimeHours, locale)
@@ -552,7 +555,7 @@ function ProductTemplate({ product, offer, shop, locale, business }) {
         <p>{lead ? o.leadTime(lead) : <Fact value={null} label="délai de préparation" id="leadTimeHours" />}</p>
       </section>
       <AllergenBlock product={product} business={business} locale={locale} />
-      <ConversionBand primary={orderAction(locale)} secondary={phoneAction(business, locale)} />
+      <ConversionBand primary={orderAction(locale, served)} secondary={phoneAction(business, locale)} />
       <MetaLine doc={product} locale={locale} />
     </article>
   )
@@ -612,7 +615,7 @@ function LegalTemplate(props) {
 
 export const TEMPLATES = {
   home: HomeTemplate,
-  content: (p) => <ContentTemplate {...p} primary={p.page?.key === 'chef' ? null : orderAction(p.locale)} />,
+  content: (p) => <ContentTemplate {...p} primary={p.page?.key === 'chef' ? null : orderAction(p.locale, p.served)} />,
   about: AboutTemplate,
   visit: VisitTemplate,
   menu: MenuTemplate,

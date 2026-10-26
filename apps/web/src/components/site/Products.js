@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { t, money, longDate } from '@/lib/i18n'
-import { containsMarker } from '@/lib/facts'
+import { containsMarker, publishGuard } from '@/lib/facts'
+import { productReady } from '@/lib/publish'
 import { mediaFile } from '@/lib/media'
 import { getOfferStates, getShop } from '@/lib/data'
 import { Fact } from './Fact'
@@ -9,7 +10,9 @@ import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, lead
 const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
 // « Contient : » (fr, non-breaking space) · "Contains:" (en, es)
 export const colon = (locale) => (locale === 'fr' ? '\u00a0:' : ':')
-export const productPath = (p, locale) => (p?.category?.slug && p?.slug ? `${prefixFor(locale)}/${p.category.slug}/${p.slug}/` : null)
+// Under PUBLISH_GUARD=strict a product with missing facts has no page (lib/publish.js): no link to it either.
+const linkable = (p) => publishGuard() !== 'strict' || productReady(p)
+export const productPath = (p, locale) => (p?.category?.slug && p?.slug && linkable(p) ? `${prefixFor(locale)}/${p.category.slug}/${p.slug}/` : null)
 
 // Real photos only (v1 L19): alt from the media record, intrinsic size always set (no layout shift).
 // Served from /media/<file> on the public host (lib/media.js), never Payload's /api URL.
@@ -110,7 +113,9 @@ export function ProductCard({ product, locale, state, orderingEnabled, showPlann
   )
 }
 
-export async function ProductGrid({ products, locale, showPlanned, level }) {
+export async function ProductGrid({ products: all, locale, showPlanned, level }) {
+  // Production (strict) lists only products whose facts are complete: a card never shows a marker there.
+  const products = publishGuard() === 'strict' ? all.filter(productReady) : all
   const [states, shop] = await Promise.all([getOfferStates(products, locale), getShop(locale)])
   const orderingEnabled = Boolean(shop?.ordering?.enabled)
   return (

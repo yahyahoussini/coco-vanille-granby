@@ -206,5 +206,14 @@ The restore test fails on: no tables, `users` or `pages` missing, fewer orders t
 | Leaked key | rotate at the provider → update `.env` → redeploy; if personal data was exposed, log it in the Loi 25 incident register |
 | Crawlers blocked | `crawler-access.mjs`; nginx `limit_req` / fail2ban bans (`sudo fail2ban-client status nginx-limit-req`) |
 
-## Open points for integration
+## Open points after integration
+
+- **Production publishes nothing yet.** Under `PUBLISH_GUARD=strict` a language goes live with its home page, a page needs its copy in that language with no `[[FACT NEEDED]]` marker, and a product page needs its description, priced and portioned sizes, lead time and checked allergens (`src/lib/publish.js`). With today's seed every page copy still holds a marker, so strict serves no page (gate: 0 pages, empty sitemap) until the owner answers `owner-todo.md`. Facts kept outside the page copy (shop hours, the privacy officer's email) still render as markers on served pages: supply them before the first page goes live.
+- **404 for a missing product or a page hidden by strict.** Unknown URLs get the server-rendered 404 page from `src/proxy.js`; a URL shaped like a product (`/gateaux/<slug>/`) whose product does not exist, or a registry page hidden by strict, still goes through Next's `notFound()`, which answers 404 with a client-rendered body (Next's limitation with several root layouts).
+- **Old URLs.** The `redirects` collection exists in Payload but nothing serves it yet (proxy or nginx map).
+- **Web Push.** VAPID keys are only reported in Agence; Studio's four urgent push alerts are not wired.
+- **Checkout CSP** keeps `'unsafe-inline'` for scripts (Next's inline bootstrap). A per-request nonce from `src/proxy.js` on the three checkout paths would remove it.
+- **Stripe** was exercised with the mock provider only (no keys here): run one test-mode payment and the webhook on staging.
+- **Hairpin NAT** for `/svc/revalidate/` from the containers: check on the VPS (see « Page refresh »).
+- **Public favicon**: none yet (audit warning on every page); it needs the owner's logo or wordmark.
 
