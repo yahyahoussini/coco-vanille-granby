@@ -7,8 +7,7 @@
 // 3. Fails unless every FAIL is explained by a [[FACT NEEDED]] marker, and prints those markers as
 //    the owner's to-do list (also written to <out>/owner-todo.md). "Explained" is narrow (gate-lib.mjs):
 //    the marker FAIL itself, or the noindex/title/description FAILs of a page the publish guard holds
-//    back because it shows a marker. One audit.mjs false positive (a schema.org Bakery node is not
-//    seen as the business node) is listed apart, only when the page really has that node.
+//    back because it shows a marker.
 // Usage: node scripts/gate.mjs [--base http://localhost:3000] [--out reports/gate] [--auth user:pass] [--max 300]
 //   --base  server to read (default GATE_BASE_URL, then PUBLIC_ORIGIN); its Host must route to the public site
 //   --auth  HTTP basic auth for staging (default GATE_BASIC_AUTH)
@@ -152,7 +151,7 @@ if (!existsSync(auditJson)) {
   console.error(`audit.mjs did not write a report (exit ${audit.status})`)
   process.exit(2)
 }
-const { marker, toolGap, real } = classifyAudit(JSON.parse(readFileSync(auditJson, 'utf8')), htmlByPath)
+const { marker, real } = classifyAudit(JSON.parse(readFileSync(auditJson, 'utf8')), htmlByPath)
 
 step('tools/links.mjs (internal links)')
 const links = run('links.mjs', [linksDir, '--config', configFile, '--json', join(out, 'links.json')])
@@ -168,7 +167,6 @@ const summary = {
   pages: Object.keys(htmlByPath).length,
   hidden,
   markerFails: marker.length,
-  auditFalsePositives: toolGap,
   failures,
   ownerTodo: todo,
   pass: failures.length === 0,
@@ -181,7 +179,6 @@ if (hidden.length) console.log(`  Not published yet (404): ${hidden.join(', ')}`
 
 step('Gate result')
 console.log(`  ${summary.pages} pages audited · ${marker.length} FAIL(s) explained by [[FACT NEEDED]] markers · ${failures.length} other FAIL(s)`)
-if (toolGap.length) console.log(`  ${toolGap.length} audit.mjs false positive(s) not counted: Bakery node not recognised (tools/audit.mjs org check)`)
 for (const f of failures) console.log(`  ✗ ${f.where}: ${f.message}`)
 console.log(`  Reports: ${out}/{gate.json,audit.json,links.json,owner-todo.md}`)
 console.log(failures.length ? '\nGATE FAIL' : '\nGATE PASS (only owner facts are missing)')

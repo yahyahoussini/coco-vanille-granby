@@ -191,6 +191,28 @@ test.describe('URL policy', () => {
     expect(res.status).toBe(404)
   })
 
+  test('the 404 page is a whole page in the server HTML, in the language of the URL', async ({ page }) => {
+    const cases = [
+      ['/cette-page-nexiste-pas/', 'fr', 'Oups'],
+      ['/en/this-page-does-not-exist/', 'en', 'Oops'],
+      ['/gateaux/a/b/', 'fr', 'Oups'],
+      ['/es/no-existe/', ES_ENABLED ? 'es' : 'fr', ES_ENABLED ? '' : 'Oups'],
+    ]
+    for (const [path, locale, h1] of cases) {
+      const res = await raw(`${PUBLIC_URL}${path}`)
+      expect(res.status, path).toBe(404)
+      const d = await inspect(page, res.body)
+      expect(d.lang, `${path} lang`).toBe(HTML_LANG[locale])
+      expect(d.title, `${path} title`).toMatch(/· Pâtisserie Coco Vanille$/)
+      expect(d.h1, `${path} h1`).toHaveLength(1)
+      if (h1) expect(d.h1[0]).toContain(h1)
+      expect(d.robots.join(','), `${path} noindex`).toMatch(/noindex/)
+      expect(res.body, `${path} meta description`).toMatch(/<meta name="description" content="[^"]{50,}"/)
+      expect(res.body, `${path} header and footer`).toMatch(/<header class="site-header">[\s\S]*<footer class="site-footer">/)
+      expect(d.links, `${path} links home`).toContain(locale === 'en' ? '/en/' : locale === 'es' ? '/es/' : '/')
+    }
+  })
+
   test(`Spanish pages ${ES_ENABLED ? 'answer 200' : 'answer 404 while ENABLE_ES=false'}`, async () => {
     const wrong = []
     await each(esPaths(), async ({ path }) => {

@@ -1,5 +1,6 @@
-import { PAGES, LOCALES, SITE_ORIGIN, HTML_LANG, pathFor, alternatesFor, isIndexable, localeEnabled } from '@/lib/routes'
-import { payloadClient } from '@/lib/data'
+import { PAGES, LOCALES, SITE_ORIGIN, HTML_LANG, pathFor, isIndexable, localeEnabled } from '@/lib/routes'
+import { payloadClient, getServed } from '@/lib/data'
+import { servedAlternates } from '@/lib/publish'
 import { containsMarker, publishGuard } from '@/lib/facts'
 
 export const revalidate = 300
@@ -12,16 +13,19 @@ export async function GET() {
   const strict = publishGuard() === 'strict'
   const docs = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale: 'all', limit: 500, depth: 0 })
   const byKey = Object.fromEntries(docs.docs.map((d) => [d.key, d]))
+  // Only the languages the site answers (lib/publish.js): under strict, a page without its copy in a language,
+  // or with a missing fact, is neither listed nor named in hreflang.
+  const served = await getServed()
   const urls = []
   for (const page of PAGES) {
     if (!isIndexable(page)) continue
     const doc = byKey[page.key]
-    if (strict && (!doc || containsMarker(doc))) continue
+    if (strict && !doc) continue
     if (page.status === 'conditional' && !doc) continue
-    const alternates = alternatesFor(page.key)
+    const alternates = servedAlternates(page.key, served)
     for (const locale of LOCALES) {
       const path = pathFor(page.key, locale)
-      if (!path) continue
+      if (!path || !served[locale]?.has(page.key)) continue
       urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod: doc?.updatedAt, alternates })
     }
   }

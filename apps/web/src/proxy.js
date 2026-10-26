@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { isKnownPublicPath, notFoundPathFor } from './lib/public-paths.js'
 
 // Host-based routing (16b §2): one build, two hosts.
 //  admin.cocovanillegranby.com → Studio at "/", Payload « Avancé » at /admin, REST at /api; never indexed.
@@ -12,9 +13,11 @@ const hostOf = (req) => (req.headers.get('host') || '').split(':')[0].toLowerCas
 const isAsset = (p) => p.startsWith('/_next/') || /\.[a-z0-9]{2,5}$/i.test(p)
 const isHealth = (p) => p === '/svc/health' || p === '/svc/health/'
 
+// The 404 page of the URL's language, rendered on the server with header and footer (lib/public-paths.js).
 function notFound(req) {
   const url = req.nextUrl.clone()
-  url.pathname = '/__introuvable/'
+  url.pathname = notFoundPathFor(req.nextUrl.pathname)
+  url.search = ''
   return NextResponse.rewrite(url, { status: 404 })
 }
 
@@ -62,6 +65,8 @@ export function proxy(req) {
     url.pathname = `${pathname}/`
     return NextResponse.redirect(url.toString(), 301)
   }
+  // Unknown page URL (not in the registry, not a product under a category, not a box token): a real 404.
+  if (!isAsset(pathname) && !pathname.startsWith('/svc/') && !isKnownPublicPath(pathname)) return notFound(req)
   return NextResponse.next()
 }
 

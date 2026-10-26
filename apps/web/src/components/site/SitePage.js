@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation'
-import { PAGES, resolvePath, pathFor, alternatesFor, isIndexable, SITE_ORIGIN, LOCALES, localeEnabled, pageByKey } from '@/lib/routes'
-import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, payloadClient } from '@/lib/data'
+import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, localeEnabled, pageByKey } from '@/lib/routes'
+import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, getServed, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard, marker } from '@/lib/facts'
+import { readyCopy, servedAlternates } from '@/lib/publish'
+import { productTitle, productDescription } from '@/lib/meta'
 import { t } from '@/lib/i18n'
 import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode } from '@/lib/schema'
 import { Header } from './Header'
@@ -13,6 +15,8 @@ import { TEMPLATES } from '../templates'
 import { ogPath } from './og-path'
 import { closureNotice } from '@/lib/studio/closure'
 import { upcomingSpecialDays } from './hours'
+import { RelatedPages } from './Related'
+import { notFoundMetadata } from './NotFoundPage'
 
 // Resolves "/<locale>/<segments>/" to a registry page or a product page.
 async function resolve(locale, segments) {
@@ -60,7 +64,7 @@ async function productAlternates(product) {
 
 export async function buildMetadata(locale, segments) {
   const hit = await resolve(locale, segments)
-  if (!hit) return { title: t(locale).notFoundTitle, robots: { index: false } }
+  if (!hit) return notFoundMetadata(locale)
   const robotsIndex = { index: true, follow: true, googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 } }
   const ogLocale = locale === 'en' ? 'en_CA' : locale === 'es' ? 'es_ES' : 'fr_CA'
   // Typographic OG card per page (src/components/site/og.js), absolute URL as crawlers expect.
@@ -73,14 +77,16 @@ export async function buildMetadata(locale, segments) {
   }
   if (hit.kind === 'product') {
     const p = hit.product
-    const title = `${p.title} · Coco Vanille, Granby`
-    const description = p.summary?.slice(0, 160)
+    const title = productTitle(p, locale)
+    const description = productDescription(p, await getBusiness(locale), locale)
     return { title, description, robots: robotsIndex, ...social({ title, description, name: `p-${p.id}`, alt: p.title }) }
   }
   const doc = await getPageDoc(hit.page.key, locale)
-  const indexable = isIndexable(hit.page) && doc && !(publishGuard() === 'show' && containsMarker(doc))
+  // Indexed only with its copy in this language and no missing fact; until then noindex (or hidden, strict).
+  const indexable = isIndexable(hit.page) && readyCopy(doc)
+  const s = t(locale)
   return {
-    title: doc?.title || 'Pâtisserie Coco Vanille · Granby',
+    title: doc?.title || `${s.pageNames?.[hit.page.key] || s.nav[hit.page.key] || s.breadcrumbHome} · Pâtisserie Coco Vanille`,
     description: doc?.description,
     robots: indexable ? robotsIndex : { index: false, follow: true },
     ...social({ title: doc?.title, description: doc?.description, name: hit.page.key, alt: doc?.h1 || doc?.title || 'Pâtisserie Coco Vanille' }),
@@ -91,7 +97,7 @@ export async function buildMetadata(locale, segments) {
 export async function SitePage({ locale, segments = [], query }) {
   const hit = await resolve(locale, segments)
   if (!hit) notFound()
-  const [business, shop, shopFr] = await Promise.all([getBusiness(locale), getShop(locale), getShop('fr')])
+  const [business, shop, shopFr, served] = await Promise.all([getBusiness(locale), getShop(locale), getShop('fr'), getServed()])
   // Studio writes the closure and its special-day label in French: read the notice from the French record.
   const notice = closureNotice(shopFr, locale)
   const strict = publishGuard() === 'strict'
@@ -99,7 +105,7 @@ export async function SitePage({ locale, segments = [], query }) {
   let pageKey = null
   let doc = null
   let Template
-  let props = { locale, business, shop, query }
+  let props = { locale, business, shop, query, served }
   let crumbs
   let pageName
 
@@ -119,7 +125,7 @@ export async function SitePage({ locale, segments = [], query }) {
     const { page } = hit
     pageKey = page.key
     doc = await getPageDoc(page.key, locale)
-    if (strict && (!doc || containsMarker(doc))) notFound()
+    if (strict && !readyCopy(doc)) notFound()
     Template = TEMPLATES[page.template] || TEMPLATES.content
     props = { ...props, page, doc, conditionNotice: page.status === 'conditional' && (!doc || containsMarker(doc)) ? marker(page.condition) : null }
     pageName = doc?.h1 || doc?.title
@@ -129,7 +135,7 @@ export async function SitePage({ locale, segments = [], query }) {
   const url = `${SITE_ORIGIN}${hit.path}`
   // Canonical + hreflang as real <link> tags (React 19 hoists them to <head>). Next's metadata API
   // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
-  const languages = hit.kind === 'product' ? await productAlternates(hit.product) : alternatesFor(hit.page.key)
+  const languages = hit.kind === 'product' ? await productAlternates(hit.product) : servedAlternates(hit.page.key, served)
   const pageNodes = [
     bakeryNode(business, shop, locale, upcomingSpecialDays(shop)),
     websiteNode(),
@@ -144,7 +150,7 @@ export async function SitePage({ locale, segments = [], query }) {
       {Object.entries(languages).map(([lang, href]) => (
         <link key={lang} rel="alternate" hrefLang={lang} href={href} />
       ))}
-      <Header locale={locale} pageKey={pageKey} />
+      <Header locale={locale} pageKey={pageKey} served={served} />
       <main id="contenu" className="site-main">
         <div className="wrap">
           {notice && (
@@ -155,8 +161,9 @@ export async function SitePage({ locale, segments = [], query }) {
           <Breadcrumb crumbs={crumbs} />
         </div>
         <Template {...props} />
+        <RelatedPages pageKey={pageKey} locale={locale} served={served[locale]} />
       </main>
-      <Footer business={business} shop={shop} locale={locale} />
+      <Footer business={business} shop={shop} locale={locale} served={served} />
       <StickyBar business={business} locale={locale} />
       <JsonLd data={graph([...pageNodes, ...extra])} />
     </>

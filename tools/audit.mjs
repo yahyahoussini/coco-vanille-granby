@@ -54,6 +54,8 @@ const kind = (path) => {
   return "content";
 };
 const isContent = (k) => !["404", "legal", "contact"].includes(k);
+// schema.org FoodEstablishment and its subtypes (all LocalBusiness): https://schema.org/FoodEstablishment
+const FOOD_TYPES = new Set(["FoodEstablishment", "Bakery", "BarOrPub", "Brewery", "CafeOrCoffeeShop", "Distillery", "FastFoodRestaurant", "IceCreamShop", "Restaurant", "Winery"]);
 const GENERIC_ANCHORS = /^(cliquez ici|click here|ici|here|en savoir plus|lire la suite|read more|plus|voir|link|lien|اضغط هنا|المزيد|هنا)$/i;
 const PLACEHOLDER = /\[\[FACT NEEDED[^\]]*\]\]|\{\{[^}]+\}\}|\bTODO\b|lorem ipsum|\bXXX\b|REPLACE_WITH|\[INSERT|Votre texte ici/i;
 
@@ -251,11 +253,13 @@ for (const doc of docs) {
   const nodes = ldNodes(blocks);
   for (const b of blocks) if (!b.ok) fail(`JSON-LD does not parse: ${b.error}`);
   if (!blocks.length && k !== "404") (isContent(k) ? fail : warn)("no JSON-LD block");
-  const orgLike = nodes.find((n) => n["@id"]?.endsWith("#org") || hasType(n, "Organization") || hasType(n, "LocalBusiness") || (typeof n["@type"] === "string" && /Business|Store|Dealer|Rental|Restaurant|Cafe|Clinic|Dentist|Physician|Repair|Agency|Company|Salon|Hotel|School|Shop/.test(n["@type"])));
+  // schema.org LocalBusiness subtypes count as the business node, FoodEstablishment and its subtypes included
+  // (Bakery, CafeOrCoffeeShop, IceCreamShop, Restaurant…); @type may be a string or an array.
+  const orgLike = nodes.find((n) => n["@id"]?.endsWith("#org") || hasType(n, "Organization") || hasType(n, "LocalBusiness") || [].concat(n["@type"] ?? []).some((t) => typeof t === "string" && (FOOD_TYPES.has(t) || /Business|Store|Dealer|Rental|Restaurant|Cafe|Clinic|Dentist|Physician|Repair|Agency|Company|Salon|Hotel|School|Shop/.test(t))));
   if (blocks.length && !orgLike && k !== "404") (isContent(k) ? fail : warn)("no Organization/LocalBusiness node in JSON-LD (embed the site graph on every page; an empty @graph is a placeholder)");
   if (orgLike) {
     for (const p of ["name", "url"]) if (!orgLike[p]) warn(`org node missing ${p}`);
-    if (hasType(orgLike, "LocalBusiness") || /Business|Store|Dealer|Rental|Restaurant|Cafe|Clinic|Dentist|Repair|Salon|Hotel/.test(String(orgLike["@type"]))) {
+    if (hasType(orgLike, "LocalBusiness") || [].concat(orgLike["@type"] ?? []).some((t) => FOOD_TYPES.has(t)) || /Business|Store|Dealer|Rental|Restaurant|Cafe|Clinic|Dentist|Repair|Salon|Hotel/.test(String(orgLike["@type"]))) {
       for (const p of ["address", "telephone"]) if (!orgLike[p]) warn(`local business node missing ${p}`);
     }
     if (orgLike.aggregateRating || orgLike.review) warn("self-serving aggregateRating/review on your own Organization/LocalBusiness is against Google's guidelines");
@@ -309,7 +313,7 @@ for (const doc of docs) {
   const bytes = Buffer.byteLength(html, "utf8");
   if (bytes > 250 * 1024) warn(`HTML is ${(bytes / 1024).toFixed(0)} KB (aim well under 250 KB)`);
   if (!/href=["']#main["']/i.test(html)) info("no skip link (href=\"#main\")");
-  if (k !== "home" && k !== "404" && !/aria-label=["'][^"']*(fil d'ariane|breadcrumb|مسار)/i.test(html)) warn("no breadcrumb <nav> (aria-label=\"Fil d'Ariane\")");
+  if (k !== "home" && k !== "404" && !/aria-label=["'][^"']*(fil d['’]ariane|breadcrumb|مسار)/i.test(html)) warn("no breadcrumb <nav> (aria-label=\"Fil d'Ariane\")");
   if (!/data-nosnippet/i.test(html) && /(cookie|témoins)/i.test(html)) info("wrap the cookie/consent text in data-nosnippet so engines never lift it as the passage");
 }
 

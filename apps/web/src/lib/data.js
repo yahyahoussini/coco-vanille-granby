@@ -4,6 +4,9 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { engineContext } from '@/lib/ordering/context'
 import { productOfferState } from '@/lib/ordering/availability'
+import { LOCALES } from '@/lib/routes'
+import { publishGuard } from '@/lib/facts'
+import { servedKeys } from '@/lib/publish'
 
 export const payloadClient = cache(async () => getPayload({ config }))
 
@@ -28,6 +31,20 @@ export const getPageDoc = cache(async (key, locale = 'fr') => {
     depth: 1,
   })
   return res.docs[0] || null
+})
+
+// Published page copy of every registry page, in one language (one query per render and language).
+export const getPagesIn = cache(async (locale = 'fr') => {
+  const payload = await payloadClient()
+  const res = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale, limit: 500, depth: 0, pagination: false })
+  return res.docs
+})
+
+// Registry keys the site answers, per language (lib/publish.js): links and hreflang point only at these.
+export const getServed = cache(async () => {
+  const strict = publishGuard() === 'strict'
+  const entries = await Promise.all(LOCALES.map(async (l) => [l, servedKeys(await getPagesIn(l), l, { strict })]))
+  return Object.fromEntries(entries)
 })
 
 export const getCategories = cache(async (locale = 'fr') => {

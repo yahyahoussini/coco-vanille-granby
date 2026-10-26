@@ -5,9 +5,11 @@ import { LOCALES, pathFor, localeEnabled } from '@/lib/routes'
 const NAV = ['carte', 'commander', 'nous-trouver', 'a-propos']
 
 // Skip link → header → language switcher to the equivalent page (no flags; names in their own language).
-export function Header({ locale, pageKey }) {
+// `served` ({ fr: Set, en: Set, es: Set }, lib/publish.js): only pages the site answers get a link.
+export function Header({ locale, pageKey, served }) {
   const s = t(locale)
   const others = LOCALES.filter((l) => l !== locale && localeEnabled(l))
+  const answers = (key, l) => !served || served[l]?.has(key)
   return (
     <header className="site-header">
       <a className="skip" href="#contenu">{s.skip}</a>
@@ -19,7 +21,7 @@ export function Header({ locale, pageKey }) {
           <ul className="nav">
             {NAV.map((key) => {
               const href = pathFor(key, locale)
-              if (!href) return null
+              if (!href || !answers(key, locale)) return null
               return (
                 <li key={key}>
                   <Link href={href} aria-current={pageKey === key ? 'page' : undefined}>{s.nav[key]}</Link>
@@ -30,7 +32,7 @@ export function Header({ locale, pageKey }) {
         </nav>
         <ul className="lang" aria-label="Langue · Language">
           {others.map((l) => {
-            const href = (pageKey && pathFor(pageKey, l)) || pathFor('home', l)
+            const href = (pageKey && answers(pageKey, l) && pathFor(pageKey, l)) || pathFor('home', l)
             return (
               <li key={l}>
                 <a href={href} hrefLang={l} lang={l}>{t(l).languageName}</a>

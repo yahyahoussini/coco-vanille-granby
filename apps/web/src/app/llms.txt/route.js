@@ -1,5 +1,5 @@
 import { PAGES, LOCALES, SITE_ORIGIN, pathFor, isIndexable } from '@/lib/routes'
-import { getBusiness, getShop, payloadClient } from '@/lib/data'
+import { getBusiness, getShop, getServed, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard } from '@/lib/facts'
 import { buildLlmsTxt } from '@/components/site/llms'
 
@@ -13,6 +13,7 @@ export async function GET() {
   const [business, shop] = await Promise.all([getBusiness('fr'), getShop('fr')])
   const docs = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale: 'all', limit: 500, depth: 0 })
   const byKey = Object.fromEntries(docs.docs.map((d) => [d.key, d]))
+  const served = await getServed()
   const pick = (field, locale) => (field && typeof field === 'object' ? field[locale] : undefined)
   const pages = []
   for (const page of PAGES) {
@@ -21,7 +22,7 @@ export async function GET() {
     for (const locale of LOCALES) {
       const path = pathFor(page.key, locale)
       const title = pick(doc.h1, locale) || pick(doc.title, locale)
-      if (!path || !title) continue
+      if (!path || !title || !served[locale]?.has(page.key)) continue
       pages.push({ key: page.key, locale, status: page.status, template: page.template, url: `${SITE_ORIGIN}${path}`, title, description: pick(doc.description, locale) })
     }
   }

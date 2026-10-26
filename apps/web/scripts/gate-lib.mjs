@@ -84,45 +84,20 @@ const robotsNoindex = (html) => /<meta[^>]+name=["']robots["'][^>]+content=["'][
 const GUARDED = [/^content page is noindex$/, /^missing <title>$/, /^missing meta description$/, /^duplicate title, also on /]
 const isGuarded = (message, html) => markersIn(html).length > 0 && robotsNoindex(html) && GUARDED.some((re) => re.test(message))
 
-// tools/audit.mjs only recognises Organization, LocalBusiness and a list of type names as the
-// business node; schema.org's FoodEstablishment subtypes (Bakery…) are missing from that list.
-// Accepted only when the page really carries such a node with a name and an address.
-const FOOD_TYPES = new Set(['Bakery', 'FoodEstablishment', 'CafeOrCoffeeShop', 'Restaurant', 'LocalBusiness', 'Organization'])
-export function hasBusinessNode(html) {
-  for (const m of String(html).matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)) {
-    let data
-    try {
-      data = JSON.parse(m[1])
-    } catch {
-      continue
-    }
-    const nodes = (Array.isArray(data) ? data : [data]).flatMap((d) => (d && d['@graph'] ? d['@graph'] : [d]))
-    for (const n of nodes) {
-      const types = [].concat(n?.['@type'] || [])
-      if (types.some((t) => FOOD_TYPES.has(t)) && n.name && n.address) return true
-    }
-  }
-  return false
-}
-const isToolGap = (message, html) => message.startsWith('no Organization/LocalBusiness node in JSON-LD') && hasBusinessNode(html)
-
-// Splits audit.mjs FAILs into: explained by a [[FACT NEEDED]] marker, known audit.mjs false
-// positives (checked on the page itself), and real defects.
+// Splits audit.mjs FAILs into: explained by a [[FACT NEEDED]] marker, and real defects.
 export function classifyAudit(report, htmlByPath) {
   const marker = []
-  const toolGap = []
   const real = []
   for (const page of report.pages || []) {
     const html = htmlByPath[page.path] || ''
     for (const message of page.fails || []) {
       const item = { where: page.path, message }
       if (isMarkerFail(message) || isGuarded(message, html)) marker.push(item)
-      else if (isToolGap(message, html)) toolGap.push(item)
       else real.push(item)
     }
   }
   for (const message of report.site?.fails || []) real.push({ where: 'site', message })
-  return { marker, toolGap, real }
+  return { marker, real }
 }
 
 // links.mjs prints each FAIL as "✗ <path>: <reason>".

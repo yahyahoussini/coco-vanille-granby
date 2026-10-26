@@ -113,7 +113,7 @@ function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, chi
 
 // ---------- Home: typographic hero (real h1, no image needed), vitrine du jour, key facts, hours ----------
 async function HomeTemplate(props) {
-  const { doc, business, shop, locale } = props
+  const { doc, business, shop, locale, served } = props
   const s = t(locale)
   const h = s.home
   const today = localParts().iso
@@ -125,6 +125,9 @@ async function HomeTemplate(props) {
   const start = [
     ...categories.map((c) => ({ href: `${prefixFor(locale)}/${c.slug}/`, label: c.title, key: c.id })),
     { href: order.href, label: s.nav.commander, key: 'commander' },
+    ...['gateaux-personnalises', 'prix', 'faq']
+      .filter((key) => !served || served[locale]?.has(key))
+      .map((key) => ({ href: pathFor(key, locale), label: s.pageNames[key], key })),
     { href: pathFor('nous-trouver', locale), label: s.nav['nous-trouver'], key: 'nous-trouver' },
   ].filter((l) => l.href)
 

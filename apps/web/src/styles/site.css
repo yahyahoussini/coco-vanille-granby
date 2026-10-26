@@ -872,6 +872,11 @@ th a {
   padding: var(--space-3);
 }
 
+/* « À consulter aussi » under a page: the registry pages below it. */
+.related {
+  margin-block: var(--space-4);
+}
+
 .start-grid {
   list-style: none;
   padding: 0;

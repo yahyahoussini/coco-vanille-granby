@@ -49,7 +49,7 @@ describe('host and role isolation', () => {
   test('a web process sends the admin host to 404', async () => {
     const res = call(await proxyFor('web'), 'admin.cocovanillegranby.com', '/')
     assert.equal(res.status, 404)
-    assert.match(rewrite(res), /\/__introuvable\/?$/)
+    assert.match(rewrite(res), /\/page-introuvable\/?$/)
   })
 
   test('a studio process sends the public host to 404', async () => {
@@ -62,6 +62,26 @@ describe('host and role isolation', () => {
     assert.match(rewrite(call(proxy, 'admin.cocovanillegranby.com', '/commandes/')), /\/studio\/commandes\/?$/)
     assert.match(rewrite(call(proxy, 'admin.cocovanillegranby.com', '/svc/evenements/')), /\/studio\/svc\/evenements\/?$/)
     assert.ok(passes(call(proxy, 'admin.cocovanillegranby.com', '/api/users/me')))
+  })
+
+  test('unknown public URLs get the 404 page of their language, with status 404', async () => {
+    const proxy = await proxyFor('all')
+    const cases = [
+      ['/gate-introuvable-1/', /\/page-introuvable\/?$/],
+      ['/gateaux/a/b/', /\/page-introuvable\/?$/],
+      ['/en/nope/', /\/en\/page-not-found\/?$/],
+      ['/es/pasteles/', /\/page-introuvable\/?$/], // Spanish off: French 404
+      ['/page-introuvable/', /\/page-introuvable\/?$/], // never a 200 at its own URL
+    ]
+    for (const [path, target] of cases) {
+      const res = call(proxy, 'cocovanillegranby.com', path)
+      assert.equal(res.status, 404, path)
+      assert.match(rewrite(res), target, path)
+    }
+    for (const path of ['/', '/carte/', '/en/menu/', '/gateaux/gateau-aux-framboises/', '/en/cakes/raspberry-cake/', '/boite/abc_DEF-123/', '/commander/merci/', '/avis/', '/svc/commande/', '/og/carte.png', '/media/x.avif', '/sitemap.xml']) {
+      const res = call(proxy, 'cocovanillegranby.com', path)
+      assert.ok(passes(res), path)
+    }
   })
 
   test('the public host: private paths 404, trailing slash enforced', async () => {
