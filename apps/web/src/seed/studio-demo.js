@@ -124,6 +124,7 @@ const ORDERS = [
   { first: 'Léo', last: `B. ${DEMO}`, phone: '+15145550102', lang: 'fr', at: -30, status: 'ready', items: [line(croissant, 6, 425)], code: '1039' },
   { first: 'Mark', last: `S. ${DEMO}`, phone: '+15145550103', lang: 'en', at: 45, status: 'paid', items: [line(raspberry, 1, 3800, { message: 'Happy birthday Mia', productionCategory: 'gateaux' })], code: '7310', allergy: 'Allergie aux noix (démo)', counter: true },
   { first: 'Sofía', last: `R. ${DEMO}`, phone: '+15145550104', lang: 'es', at: 90, status: 'paid', items: [line(croissant, 2, 425), line(parisBrest, 2, 650)], code: '2290' },
+  { first: 'Inès', last: `G. ${DEMO}`, phone: '+15145550107', lang: 'fr', at: 120, status: 'paid', items: [line(parisBrest, 3, 650)], code: '6604' },
 ]
 for (const o of ORDERS) {
   const [start, end] = slot(o.at)
