@@ -32,3 +32,23 @@ export async function stepUp(page, password = OWNER.password) {
   await page.getByRole('button', { name: 'Confirmer', exact: true }).click()
   await expect(page).toHaveURL(/\/plus\/reglages\//)
 }
+
+// Read-only checks in the dev database (DATABASE_URI from .env), e.g. « the texto is queued ».
+export async function sql(text, params = []) {
+  const { default: pg } = await import('pg')
+  const client = new pg.Client({ connectionString: process.env.DATABASE_URI || 'postgres://cv:cv@127.0.0.1:5432/coco_vanille' })
+  await client.connect()
+  try {
+    return (await client.query(text, params)).rows
+  } finally {
+    await client.end()
+  }
+}
+
+// The demo order of a customer (Studio demo seed), by first name.
+export async function demoOrder(firstName) {
+  const rows = await sql(`select id, number, status from orders where customer_first_name = $1 and customer_last_name like '%(démo)%' order by id desc limit 1`, [firstName])
+  return rows[0]
+}
+
+export const card = (page, name) => page.locator('article.card', { hasText: name })

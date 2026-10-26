@@ -34,6 +34,7 @@ export const ACTIONS = {
   'order.pickup': [P, G, C],
   'order.bulkReady': [P, G, C],
   'order.phone': [P, G, C],
+  'order.otherSlot': [P, G, C],
   'order.cancel': [P, G],
   'order.refund': [P],
   'production.print': [P, G, C],
@@ -77,7 +78,7 @@ export const ACTIONS = {
 export const STEP_UP = new Set(['order.refund', 'product.price', 'product.allergens', 'product.tax', 'settings.deposit', 'users.create', 'users.pin', 'users.active'])
 
 // Actions that may wait in the offline outbox; everything else needs the network (16 §3.0 offline policy).
-export const OFFLINE_OK = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create'])
+export const OFFLINE_OK = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create', 'order.phone'])
 
 export const roleOf = (user) => (user && user.active !== false && STUDIO_ROLES.includes(user.role) ? user.role : null)
 

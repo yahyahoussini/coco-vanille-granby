@@ -59,7 +59,7 @@ body.studio {
   min-block-size: 100dvh;
 }
 
-.studio a {
+:where(.studio) a {
   color: var(--s-ink-link);
   text-underline-offset: 0.15em;
 }
@@ -697,7 +697,7 @@ fieldset.field {
   display: inline-flex;
   align-items: center;
   min-block-size: var(--s-tap);
-  padding: 0 0.875rem;
+  padding: 0 0.625rem;
   color: var(--s-ink);
   text-decoration: none;
   font-weight: 600;
@@ -742,6 +742,7 @@ fieldset.field {
 }
 
 .st-tabs a {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -750,8 +751,16 @@ fieldset.field {
   min-block-size: var(--s-tap-primary);
   color: var(--s-ink-on-dark-soft);
   text-decoration: none;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
+}
+
+.st-tabs .badge {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-start: calc(50% + 8px);
+  margin: 0;
 }
 
 .st-tabs a span[aria-hidden] {
@@ -968,6 +977,10 @@ table.st-table td {
   }
 }
 
+.print-only {
+  display: none;
+}
+
 /* ---------- Print: production list and pickup list (16a §7.6 paper fallback) ---------- */
 @media print {
   body.studio {
@@ -989,6 +1002,11 @@ table.st-table td {
   .st-main {
     padding: 0;
     max-inline-size: none;
+  }
+
+  .print-only {
+    display: block;
+    font-weight: 700;
   }
 
   .card {

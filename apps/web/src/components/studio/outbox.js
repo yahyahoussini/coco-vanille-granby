@@ -6,7 +6,7 @@
 // Only the actions allowed offline wait in the queue (16 §3.0); the others say they need the network.
 const DB = 'coco-studio'
 const STORE = 'outbox'
-export const OFFLINE_TYPES = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create', 'order.phoneDraft'])
+export const OFFLINE_TYPES = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create', 'order.phone'])
 
 let dbPromise = null
 function db() {

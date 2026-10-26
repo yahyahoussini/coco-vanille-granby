@@ -17,7 +17,7 @@ export async function POST(request) {
 
   const result = await perform(payload, { user, device, ip: ipOf(request.headers), stepUp: hasStepUp(payload, request.headers, user), type, input, key })
   if (asJson) return json(result, { status: result.ok ? 200 : result.status || 409 })
-  if (result.ok) return seeOther(withParams(to, { fait: result.auditId || 'ok' }))
+  if (result.ok) return seeOther(withParams(result.data?.redirect ? safeBack(result.data.redirect, to) : to, { fait: result.auditId || 'ok' }))
   if (result.code === 'step_up') return seeOther(`/verifier/?retour=${encodeURIComponent(to)}`)
   return seeOther(withParams(to, { erreur: result.code, msg: result.message }))
 }
