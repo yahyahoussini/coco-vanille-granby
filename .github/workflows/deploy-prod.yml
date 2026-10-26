@@ -1,0 +1,116 @@
+# Deploy production · manual, after review on staging (17 §4 steps 3–5; 19 §1.2 steps 5–7).
+# Run it from Actions › Deploy production › Run workflow with the git SHA that staging runs.
+# The "production" environment must have protection rules (required reviewer: the owner or the
+# agency), so the run waits for an approval before it touches the VPS.
+# Same image as staging (build once, promote): nothing is rebuilt here.
+# Secrets (environment "production"): VPS_HOST, VPS_USER, VPS_SSH_KEY, optional VPS_KNOWN_HOSTS.
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Full git SHA of the commit to release (the image tag deployed on staging)
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    environment:
+      name: production
+      url: https://cocovanillegranby.com
+    env:
+      SHA: ${{ inputs.sha }}
+    steps:
+      - name: Check the input
+        run: |
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::sha must be a full 40-character git SHA"; exit 1; }
+          echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+
+      # infra/ is shipped from the released commit, not from main.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: The image exists (built and tested by deploy-staging)
+        run: docker buildx imagetools inspect "${IMAGE}:${SHA}" > /dev/null
+
+      - name: SSH key and host key
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          test -n "$VPS_HOST" && test -n "$VPS_SSH_KEY" || { echo "::error::VPS_HOST / VPS_SSH_KEY secrets are missing"; exit 1; }
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          if [ -n "$VPS_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::VPS_KNOWN_HOSTS is not set: trusting the host key seen now (set it to pin the key)."
+            ssh-keyscan -t ed25519 "$VPS_HOST" > ~/.ssh/known_hosts
+          fi
+
+      - name: Ship infra/ for this commit
+        env:
+          VPS: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        run: |
+          tar -C infra -czf - . | ssh -i ~/.ssh/id_deploy -o BatchMode=yes "$VPS" \
+            "mkdir -p /opt/coco/releases/${SHA} && tar -xzf - -C /opt/coco/releases/${SHA}"
+
+      - name: deploy.sh production
+        env:
+          VPS: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+        run: |
+          ssh -i ~/.ssh/id_deploy -o BatchMode=yes -o ServerAliveInterval=30 "$VPS" \
+            "bash /opt/coco/releases/${SHA}/scripts/deploy.sh production ${SHA}"
+
+      - name: Tag the image as production
+        run: docker buildx imagetools create -t "${IMAGE}:production" "${IMAGE}:${SHA}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # After every deploy, from outside the VPS (17 §2.2): live status/canonical/hreflang per sitemap
+      # URL, and what each search and AI crawler receives. A failure means: decide on rollback.sh.
+      - name: Post-deploy · check-urls
+        run: node tools/check-urls.mjs https://cocovanillegranby.com/sitemap.xml --json post-deploy-urls.json
+
+      - name: Post-deploy · crawler-access
+        if: always()
+        run: node tools/crawler-access.mjs --sitemap https://cocovanillegranby.com/sitemap.xml --max 5 --json post-deploy-crawlers.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-post-deploy-${{ inputs.sha }}
+          path: post-deploy-*.json
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: If a check failed
+        if: failure()
+        run: |
+          {
+            echo "### Production checks failed after deploying ${SHA}"
+            echo "Roll back in seconds (previous colour): ssh deploy@VPS 'bash /opt/coco/production/infra/scripts/rollback.sh production'"
+          } >> "$GITHUB_STEP_SUMMARY"

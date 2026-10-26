@@ -1,0 +1,7 @@
+# Reboots only if unattended-upgrades asked for it (/var/run/reboot-required), in the weekly window.
+[Unit]
+Description=Coco Vanille reboot window (only when an update needs it)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'if [ -f /var/run/reboot-required ]; then /usr/bin/systemctl reboot; fi'

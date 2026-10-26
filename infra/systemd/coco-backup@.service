@@ -1,0 +1,13 @@
+# Nightly Postgres + uploads backup of one environment (%i = production | staging).
+# Enable after the first deploy: systemctl enable --now coco-backup@production.timer
+[Unit]
+Description=Coco Vanille backup (%i)
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+User=deploy
+ExecStart=/usr/bin/bash /opt/coco/%i/infra/scripts/backup.sh %i
+Nice=10
+IOSchedulingClass=idle

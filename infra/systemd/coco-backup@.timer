@@ -1,0 +1,11 @@
+[Unit]
+Description=Coco Vanille backup (%i) every night at 02:15
+
+[Timer]
+# The server clock is America/Toronto (harden-vps.sh).
+OnCalendar=*-*-* 02:15:00
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

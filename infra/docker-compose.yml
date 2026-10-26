@@ -1,0 +1,132 @@
+# Coco Vanille · one environment (production or staging) on the VPS (17 §1.1, §4).
+# One image, one Compose project per environment:
+#   db            Postgres 16 on the private network only (never published)
+#   migrate       one-shot `npm run migrate`, run by deploy.sh before the new colour starts
+#   web-<colour>  public site  (APP_ROLE=web, :3000 in the container)
+#   studio-<col.> Coco Studio  (APP_ROLE=studio, :3001 in the container)
+#   worker        jobs (APP_ROLE=worker), exactly one, follows the live colour
+# Blue/green: both colours exist, only the one named by LIVE_COLOR receives traffic from nginx.
+# deploy.sh / compose.sh run it as:
+#   docker compose -p coco-<env> --project-directory /opt/coco/<env> -f <release>/docker-compose.yml \
+#     --env-file /opt/coco/<env>/.env --env-file /opt/coco/<env>/state.env …
+# so `.env` below is /opt/coco/<env>/.env (in the repo: infra/.env, from infra/.env.example).
+# Local try-out: cd infra && cp .env.example .env && docker compose --profile blue up -d
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: '3'
+
+x-app: &app
+  env_file: [.env]
+  environment: &app-env
+    # Built here so the password lives once in .env (generate it as hex: no URL escaping).
+    DATABASE_URI: postgres://${POSTGRES_USER:-coco}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-coco}
+  restart: unless-stopped
+  logging: *logging
+  stop_grace_period: 30s
+  security_opt: ['no-new-privileges:true']
+  cap_drop: [ALL]
+  depends_on:
+    db:
+      condition: service_healthy
+  networks: [private, egress]
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coco}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-coco}
+      TZ: America/Toronto
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    shm_size: 256m
+    mem_limit: 1g
+    networks: [private]
+
+  migrate:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${DEPLOY_TAG:-latest}
+    profiles: [ops]
+    command: [npm, run, --silent, migrate]
+    environment:
+      <<: *app-env
+      APP_ROLE: migrate
+    restart: 'no'
+    healthcheck:
+      disable: true
+    networks: [private]
+
+  web-blue:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${BLUE_TAG:-latest}
+    profiles: [blue]
+    environment:
+      <<: *app-env
+      APP_ROLE: web
+    ports: ['127.0.0.1:${WEB_BLUE_PORT:-3001}:3000']
+    volumes: ['${MEDIA_DIR:-./media}:/app/media:ro']
+    mem_limit: 768m
+
+  studio-blue:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${BLUE_TAG:-latest}
+    profiles: [blue]
+    environment:
+      <<: *app-env
+      APP_ROLE: studio
+    ports: ['127.0.0.1:${STUDIO_BLUE_PORT:-3002}:3001']
+    volumes: ['${MEDIA_DIR:-./media}:/app/media']
+    mem_limit: 768m
+
+  web-green:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${GREEN_TAG:-latest}
+    profiles: [green]
+    environment:
+      <<: *app-env
+      APP_ROLE: web
+    ports: ['127.0.0.1:${WEB_GREEN_PORT:-3011}:3000']
+    volumes: ['${MEDIA_DIR:-./media}:/app/media:ro']
+    mem_limit: 768m
+
+  studio-green:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${GREEN_TAG:-latest}
+    profiles: [green]
+    environment:
+      <<: *app-env
+      APP_ROLE: studio
+    ports: ['127.0.0.1:${STUDIO_GREEN_PORT:-3012}:3001']
+    volumes: ['${MEDIA_DIR:-./media}:/app/media']
+    mem_limit: 768m
+
+  worker:
+    <<: *app
+    image: ${IMAGE:-ghcr.io/yahyahoussini/coco-vanille-granby}:${WORKER_TAG:-latest}
+    environment:
+      <<: *app-env
+      APP_ROLE: worker
+    volumes: ['${MEDIA_DIR:-./media}:/app/media']
+    mem_limit: 512m
+
+volumes:
+  pgdata:
+
+networks:
+  # Postgres sits here alone with the app containers: no route to the internet, nothing published.
+  private:
+    internal: true
+  # Outbound calls (Stripe, Twilio, SES, IndexNow) and the 127.0.0.1 ports nginx proxies to.
+  egress: {}
