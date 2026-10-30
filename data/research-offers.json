@@ -1,0 +1,522 @@
+[
+  {
+    "id": "offer.owner_list_2026",
+    "value": "Pinned Instagram post « Bienvenue chez Coco Vanille » lists: « Viennoiseries & croissants », « Pains frais », « Pâtisseries gourmandes », « Gâteaux personnalisés sur commande pour vos anniversaires et vos occasions spéciales », « Options sans gluten et/ou sans lactose », « Spécialités marocaines : msemmens, harchas et autres gourmandises », hot drinks, cold drinks, and a place to sit and have a coffee",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-1 of research/20b. Owner source; post dated 2026-08-25 (pinned). Caption read via /embed/captioned/ through a summarising reader: check the wording against the post before printing. The free-from line is NOT publishable: see claim.free_from.owner_statement."
+  },
+  {
+    "id": "offer.viennoiseries",
+    "value": "Viennoiseries and croissants are sold (« Viennoiseries & croissants »)",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-2. Post 2026-08-25. Which viennoiseries, their prices and bake-out times: not found (research/14 P1, H6)."
+  },
+  {
+    "id": "offer.viennoiseries.almond_croissant",
+    "value": "Almond croissants praised by customers",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/",
+    "seen": "2026-10-29",
+    "note": "Row T-3. Review summaries only (search summary; direct read returned HTTP 403). Not named by the shop in its 2026 posts. The site's /viennoiseries/croissant-aux-amandes/ rests on it. Owner confirmation needed before copy names it as current (research/14 N4, P2)."
+  },
+  {
+    "id": "offer.viennoiseries.chocolatine",
+    "value": "No public mention of chocolatines (pains au chocolat) by name",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-6. Absence of evidence (12 visible posts, directories, search), not proof. Do not publish 'not offered'. Route: owner fact (research/14 P2)."
+  },
+  {
+    "id": "offer.bread.fresh",
+    "value": "Fresh bread is sold (« Pains frais »); most posts are tagged #boulangerie",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-3. Post 2026-08-25. Bread varieties are not named."
+  },
+  {
+    "id": "offer.bread.baguette",
+    "value": "Baguettes sold",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Rows T-1, T-2. Three Best Rated 'Specialities' list (2025 Highlights) and a customer review; the Wanderlog review summary also names baguettes (https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille). Review-derived, so counted as one source. Not named by the shop in 2026 (its posts say « Pains frais »)."
+  },
+  {
+    "id": "offer.bread.frozen",
+    "value": "Frozen bread and baguettes sold (2025-era mentions)",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Rows T-1, T-2. The Three Best Rated 2025 Highlights quote a customer review (« ces pains et baquettes congelées »); Wanderlog tip 'Try their frozen breads and muffins'. Both appear to come from customer reviews: one source class. Not in the 2026 posts. Owner « oui » needed before the site answers the frozen-bread question (research/14 P2)."
+  },
+  {
+    "id": "offer.pastry.general",
+    "value": "Pastries: « Pâtisseries gourmandes »; « Chez Coco Vanille, chaque pâtisserie est préparée et décorée avec soin, jusqu'au dernier détail. »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DdZg6XXt4nh/",
+    "seen": "2026-10-29",
+    "note": "Row S-4. Reel 2026-09-17; also the pinned post of 2026-08-25."
+  },
+  {
+    "id": "offer.pastry.chocolate_mousse",
+    "value": "Chocolate mousse pastry: « Une mousse au chocolat onctueuse, une finition croquante et cette petite touche chocolatée qui fait toute la différence. »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DdZg6XXt4nh/",
+    "seen": "2026-10-29",
+    "note": "Row S-5. Reel 2026-09-17. Answers « mousse au chocolat » in research/14 N4. No price."
+  },
+  {
+    "id": "offer.pastry.gateau_royal",
+    "value": "« Gâteau Royal »: « Une pâtisserie intensément chocolatée, avec une texture fondante, une base croustillante et un glaçage chocolat brillant, sublimée par quelques noisettes. » « Disponible dès maintenant chez Coco Vanille à Granby ! »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/Dc6sHszMKxT/",
+    "seen": "2026-10-29",
+    "note": "Row S-6. Reel 2026-09-05. Ingredients named in a caption are not an allergen list (research/14 A1). No price or size."
+  },
+  {
+    "id": "offer.pastry.verrine_kunafa_pistache",
+    "value": "« Verrine Kunafa Pistache, de retour Chez @coco_vanillegranby »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/DeSbWThBvfM/",
+    "seen": "2026-10-29",
+    "note": "Row S-7. Post 2026-10-09. « De retour » means a returning item, so availability rotates (inference). Answers « verrines » in research/14 N4. No price."
+  },
+  {
+    "id": "offer.pastry.paris_brest",
+    "value": "Paris-Brest praised by customers",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/",
+    "seen": "2026-10-29",
+    "note": "Row T-3. Review summary only. Not named by the shop in 2026. The site's /patisseries/paris-brest/ rests on it."
+  },
+  {
+    "id": "offer.pastry.tarts",
+    "value": "Tarts, including a chocolate tart",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Rows T-1, T-3. Three Best Rated 'Specialities' list; RestoMontreal review summary (chocolate tart). Review-derived."
+  },
+  {
+    "id": "offer.pastry.cheesecake",
+    "value": "Cheesecakes",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Row T-1. Three Best Rated 'Specialities' list only (2025 Highlights)."
+  },
+  {
+    "id": "offer.pastry.pistachio_biscuit",
+    "value": "A pistachio biscuit praised by a customer",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/",
+    "seen": "2026-10-29",
+    "note": "Row T-3. Search summary of reviews only."
+  },
+  {
+    "id": "offer.pastry.muffins",
+    "value": "Muffins (a frozen option is mentioned)",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row T-2. Wanderlog tip 'Try their frozen breads and muffins', generated from Google reviews."
+  },
+  {
+    "id": "offer.cake.custom",
+    "value": "Custom cakes to order for birthdays and special occasions: « Gâteaux personnalisés sur commande pour vos anniversaires et vos occasions spéciales »; « nous réalisons vos gâteaux sur commande selon vos envies et votre événement »; bio « Gâteaux sur commande »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-8. Posts 2026-08-25 and 2026-09-13 (https://www.instagram.com/p/DdPKZ3TiYnm/); bio seen 2026-10-29. Weddings are not named. Lead time, sizes, prices and deposit are not stated."
+  },
+  {
+    "id": "offer.cake.custom.examples",
+    "value": "Published examples: a chocolate, caramel and crunch cake (« chocolat, caramel & croquant ») and a « bedazzled » birthday cake with pearls, gold touches and mini disco balls",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DdcTXIkBcuz/",
+    "seen": "2026-10-29",
+    "note": "Row S-8. Reel 2026-09-18 (birthday cake) and carousel 2026-09-13 (https://www.instagram.com/p/DdPKZ3TiYnm/). Instagram's machine description of the 2026-09-18 reel says 'wedding cake'; its caption says « gâteau d'anniversaire »."
+  },
+  {
+    "id": "offer.cake.raspberry",
+    "value": "Raspberry cake recommended by customers",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Rows T-2, T-3. Wanderlog and RestoMontreal review summaries (likely the same Google reviews): one source class. The site's /gateaux/gateau-aux-framboises/ rests on it."
+  },
+  {
+    "id": "offer.cake.strawberry_shortcake",
+    "value": "Strawberry shortcake praised by customers",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row T-2. Wanderlog only. The site's /gateaux/shortcake-aux-fraises/ rests on it."
+  },
+  {
+    "id": "offer.cake.wedding",
+    "value": "No public evidence of wedding or tiered cakes",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-3. Absence of evidence. A machine image description ('wedding cake', reel 2026-09-18) is contradicted by that post's caption (birthday cake). Route: owner fact (research/14 P2). research/01 §11 already keeps weddings out."
+  },
+  {
+    "id": "offer.savoury.snacks",
+    "value": "« feuilletés dorés, mini pizzas généreusement garnies et pastillas au poulet. Parfait pour une petite pause, sur place ou à emporter. »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dc6u1avscrR/",
+    "seen": "2026-10-29",
+    "note": "Row S-10. Post 2026-09-05. No prices."
+  },
+  {
+    "id": "offer.savoury.platter",
+    "value": "Savoury platter (« plateau de bouchées salées ») for sharing or events: mini burgers (ground meat), tuna quiches, small salmon croissants, chicken wraps; « Pour commander votre plateau, contactez-nous en message privé ou directement à la pâtisserie. »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/DdDH7oLg_h8/",
+    "seen": "2026-10-29",
+    "note": "Row S-11. Post 2026-09-09. Price, minimum and lead time are not stated (row N-15): the price is an owner fact; lead time and minimum can be agency defaults."
+  },
+  {
+    "id": "offer.savoury.sandwiches",
+    "value": "Two sandwiches: tuna (« Thon, œuf, olives, tomate et salade ») and cachir (« Saucisson de viande (cachir), fromage, tomate et salade »); « Parfait pour une pause lunch gourmande, sur place ou à emporter. »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/DdhC7keCdYf/",
+    "seen": "2026-10-29",
+    "note": "Row S-12. Carousel 2026-09-20. Answers « sandwiches/lunch » in research/14 N4. Halal is not stated: never infer it from « cachir » (row N-17)."
+  },
+  {
+    "id": "offer.savoury.vol_au_vent",
+    "value": "Vol-au-vents, best ordered ahead by phone",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row T-2. Wanderlog tip generated from Google reviews. Not named by the shop in 2026. The site's /patisseries/vol-au-vent/ rests on it."
+  },
+  {
+    "id": "offer.savoury.pret_a_manger_2022",
+    "value": "Ready-to-eat items (« prêts-à-manger ») sold at the Marché public kiosk in autumn 2022",
+    "label": "unverified",
+    "source": "https://www.lavoixdelest.ca/2022/10/23/un-marche-qui-mise-sur-le-bon-voisinage-cd5aafe8bfcdc08ab30265e590a93863/",
+    "seen": "2026-10-29",
+    "note": "Row T-4. Press article of 2022-10-23 (search summary); history only."
+  },
+  {
+    "id": "offer.moroccan_specialities",
+    "value": "« Spécialités marocaines : msemmens, harchas et autres gourmandises »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-13. Post 2026-08-25. No prices or days."
+  },
+  {
+    "id": "offer.cafe.hot_drinks",
+    "value": "Hot drinks: « café, espresso, cappuccino, latte, macchiato, thé, tisane, chocolat chaud »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-14. Post 2026-08-25. Answers the drinks part of research/14 N3. No prices."
+  },
+  {
+    "id": "offer.cafe.cold_drinks",
+    "value": "Cold drinks: « café glacé, moka glacé, matcha et autres boissons rafraîchissantes »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-15. Post 2026-08-25. No prices."
+  },
+  {
+    "id": "service.eat_in_takeout",
+    "value": "Customers can sit in or take away: « un endroit chaleureux où vous pouvez vous installer, prendre un café »; « sur place ou à emporter »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-16. Posts 2026-08-25, 2026-09-05 (https://www.instagram.com/p/Dc6u1avscrR/) and 2026-09-20 (https://www.instagram.com/p/DdhC7keCdYf/). RestoMontreal also lists the shop among takeout places."
+  },
+  {
+    "id": "service.seats_count",
+    "value": "About ten seats",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/en/",
+    "seen": "2026-10-29",
+    "note": "Row T-3. One reviewer, via a search summary. Route: owner fact (research/14 N3, H5)."
+  },
+  {
+    "id": "service.order_channel.custom_cake",
+    "value": "Cake orders by message: « Écrivez-nous pour passer votre commande »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/DdPKZ3TiYnm/",
+    "seen": "2026-10-29",
+    "note": "Row S-9. Carousel 2026-09-13. The channel (Instagram DM, Facebook, text, phone) is not named. Platters: private message or at the shop (see offer.savoury.platter)."
+  },
+  {
+    "id": "service.next_day_phone_order",
+    "value": "Order by phone, ready the next day",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Row T-1. Three Best Rated '2025 Highlights' only; not stated by the shop. The next-day rule is routed to an agency decision (row N-7; research/14 P4)."
+  },
+  {
+    "id": "service.lead_time.custom_cake",
+    "value": "No public lead time for custom cakes",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-7. Absence of evidence. Route: agency decision (default) that the owner can change in Studio (research/14 P4)."
+  },
+  {
+    "id": "service.deposit",
+    "value": "No public deposit, cancellation or refund terms",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-8. Absence of evidence. Route: agency decision (research/14 O4; research/15 D12)."
+  },
+  {
+    "id": "service.delivery",
+    "value": "No delivery found: not on Uber Eats, DoorDash or SkipTheDishes; the 2026 posts say only « sur place ou à emporter »",
+    "label": "unverified",
+    "source": "https://www.ubereats.com/ca/category/granby-qc/cake",
+    "seen": "2026-10-29",
+    "note": "Rows N-9, T-6. Absence of evidence. Route: agency decision; research/15 D11 (pickup only at launch) stands. Do not publish 'no delivery' as the shop's own statement."
+  },
+  {
+    "id": "service.gift_cards",
+    "value": "No public mention of gift cards (cartes-cadeaux)",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-10. Absence of evidence. Route: agency decision."
+  },
+  {
+    "id": "service.payment_methods",
+    "value": "No public information on payment methods (cash, debit, credit, foreign cards)",
+    "label": "unverified",
+    "source": "https://www.pagesjaunes.ca/bus/Quebec/Granby/Patisserie-Coco-Vanille-Inc/102750737.html",
+    "seen": "2026-10-29",
+    "note": "Row N-11. Checked: Instagram captions, PagesJaunes, Three Best Rated, Wanderlog, search. A fact, not a policy: it stays [[FACT NEEDED]] for the owner (research/14 O5)."
+  },
+  {
+    "id": "seasonal.buches_noel",
+    "value": "No public mention of bûches de Noël, for any year",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-1. The Facebook timeline is unreadable; the visible Instagram posts start on 2026-08-25; 3 searches found nothing. Route: owner fact (research/14 P3). research/15 D20 stays conditional; its date is 2026-11-01."
+  },
+  {
+    "id": "seasonal.holiday_menu_2026",
+    "value": "No public 2026 holiday menu (vol-au-vent, tourtière, Fêtes)",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-2. Absence of evidence. Route: owner fact (research/14 P3)."
+  },
+  {
+    "id": "seasonal.halloween_2026",
+    "value": "Halloween 2026 activity: decorating pumpkins « avec la tendance BEDAZZLE » (beads, rhinestones); « à partager en famille ou entre amis »; « Tous les vendredis, samedis et dimanches »; booking « 438 528 7818 »; « Places et quantités limitées »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DevLPQ3gDCo/",
+    "seen": "2026-10-29",
+    "note": "Row S-20. Reel 2026-10-20 (#halloween2026). No price and no end date: treat as expired after 2026-10-31 (inference)."
+  },
+  {
+    "id": "atelier.offer",
+    "value": "Creative decoration workshops: « Peinture ou Bedazzling avec des perles et des strass, choisissez votre article préféré et personnalisez-le à votre image »; framed as a café outing",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-17. Reel 2026-10-22 (« tout nouveaux ateliers de décoration créative »). Which items can be chosen is not stated."
+  },
+  {
+    "id": "atelier.duration",
+    "value": "2 h 30",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-18. « 2 h 30 de créativité et de plaisir ». Start times are not stated."
+  },
+  {
+    "id": "atelier.includes",
+    "value": "One item to decorate with the materials supplied, one drink of your choice, one slice of cake",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-18. « Un article à personnaliser avec le matériel de décoration fourni », « Une boisson au choix », « Une part de gâteau »."
+  },
+  {
+    "id": "atelier.price",
+    "value": "37 $ per person (« Le tout pour seulement 37 $ par personne »)",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-18. Reel 2026-10-22. The only price the shop has published. Taxes are not stated: copy the price as published; whether taxes are included is an owner fact."
+  },
+  {
+    "id": "atelier.days",
+    "value": "Fridays, Saturdays and Sundays, by reservation",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-19. « Ateliers disponibles les vendredis, samedis et dimanches, sur réservation »."
+  },
+  {
+    "id": "atelier.booking_phone",
+    "value": "438-528-7818",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-19. Also in the Halloween reel of 2026-10-20 (https://www.instagram.com/reel/DevLPQ3gDCo/). Answers research/14 N1 for the workshops. The site's FAQ currently says 450-372-7177 (apps/web/src/seed/content.js): to fix. Whether the number takes texts is not stated."
+  },
+  {
+    "id": "atelier.capacity",
+    "value": "Places are limited (no number given)",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-19. « Places limitées ». Group size is not stated (row N-14)."
+  },
+  {
+    "id": "atelier.audience",
+    "value": "Pitched as a café outing to share with someone (« Identifiez la personne avec qui vous aimeriez vivre cette expérience ! »); the Halloween activity is « à partager en famille ou entre amis »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Rows S-17, S-20. Ages, children's sessions and private groups are not stated (row N-14)."
+  },
+  {
+    "id": "atelier.unknowns",
+    "value": "Not stated anywhere: ages, group size, start times, which items can be decorated, taxes, prepayment, cancellation, private groups or birthday parties",
+    "label": "unverified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row N-14. Absence of evidence. Route: owner fact (ages, group size, times, items, taxes); agency decision (prepayment, cancellation, booking flow on the site)."
+  },
+  {
+    "id": "claim.first_in_granby",
+    "value": "The shop calls its workshops « UNE PREMIÈRE À GRANBY ! »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Row S-25. Verified only as the shop's own wording. DO NOT PUBLISH as a fact: Les Finfinettes (24 rue Johnson, Granby) already advertises a café with creative workshops (https://www.quebecvacances.com/fr/attractions/les-finfinettes, search summary)."
+  },
+  {
+    "id": "claim.fait_maison",
+    "value": "Posts tagged #faitmaison; « chaque pâtisserie est préparée et décorée avec soin »",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DdZg6XXt4nh/",
+    "seen": "2026-10-29",
+    "note": "Row S-22. The hashtag appears on at least 3 posts (2026-09-17, 2026-10-09, 2026-10-15). It is not a claim about every product (frozen bread was sold in 2025): don't write « tout est fait maison » (research/14 S8)."
+  },
+  {
+    "id": "claim.free_from.owner_statement",
+    "value": "The shop's Instagram lists « Options sans gluten et/ou sans lactose »",
+    "label": "verified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-21. DO NOT PUBLISH. Verified only as a statement the shop made (post 2026-08-25); the claim itself is unverified. « Sans gluten » in advertising, Instagram included, is regulated (FDR B.24.018; research/07 A-6); the rules for « sans lactose » were not checked (UNVERIFIED). Which products, how they are made and the cross-contact practice stay [[FACT NEEDED]] until a person at the shop verifies them (research/14 A1, A2). The site's sentence that the shop presents no product as « sans gluten » is now contradicted: reword it to describe the site."
+  },
+  {
+    "id": "claim.tagline",
+    "value": "« Votre petit coin douceur »",
+    "label": "unverified",
+    "source": "https://www.instagram.com/p/Dcd6Ks4O-G5/",
+    "seen": "2026-10-29",
+    "note": "Row S-1 (also seen). Text inside the pinned image, read by Instagram's machine description, not from a caption."
+  },
+  {
+    "id": "voice.register",
+    "value": "The shop addresses customers as « vous »",
+    "label": "verified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row S-26. Every caption (« Venez découvrir… », « Réservez votre place… »). A signal for research/14 L3 and research/15 D21."
+  },
+  {
+    "id": "price.published.none_else",
+    "value": "No product price, size or portion published by the shop or by any third party",
+    "label": "unverified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Row N-12. Absence of evidence. Route: owner fact; never invent (research/14 P1, P7)."
+  },
+  {
+    "id": "price.range.directory",
+    "value": "$–$$",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/patisserie-cocovanille-granby/20633/fr/",
+    "seen": "2026-10-29",
+    "note": "Row T-3. A directory label, not a price."
+  },
+  {
+    "id": "price.not_ours.choco_vanille",
+    "value": "« à partir de seulement 4$ par portion » is the price of choco.vanille (Le Marmiton, 166 rue St-Charles Sud, Granby), not of Coco Vanille",
+    "label": "verified",
+    "source": "https://www.facebook.com/chocovanille.marmiton/",
+    "seen": "2026-10-29",
+    "note": "Row T-7. choco.vanille's own page, via a search summary. Name-collision risk (research/01 §8): AI answers may attach this price to Coco Vanille."
+  },
+  {
+    "id": "channel.marche_public.listing",
+    "value": "Listed as an exhibitor of the Marché public de Granby et région, categories « Spécialités » and « Sucré »",
+    "label": "verified",
+    "source": "https://www.marchepublicgranby.ca/exposants/patisserie-coco-vanille/",
+    "seen": "2026-10-29",
+    "note": "Row T-5. The market's own site (footer © 2026); no description and no days. Presence in 2026: unverified (research/14 S10)."
+  },
+  {
+    "id": "side.instagram.account",
+    "value": "Instagram @coco_vanillegranby (« Coco•vanille ») is the shop's account: its bio is the Facebook bio with both shop numbers; 266 followers, 103 following; the link in bio opens « Pâtisserie Coco Vanille | Granby QC »",
+    "label": "verified",
+    "source": "https://www.instagram.com/coco_vanillegranby/",
+    "seen": "2026-10-29",
+    "note": "Section 6 (side finding, outside this step): for data/facts.json social.instagram and sameAs_unverified, research/01 §7, research/14 T4. Link in bio: https://www.facebook.com/share/1DThcg9BeB/."
+  },
+  {
+    "id": "side.instagram.latest_post",
+    "value": "The newest posts, dated 2026-10-20 and 2026-10-22, advertise activities at 3 rue Court",
+    "label": "verified",
+    "source": "https://www.instagram.com/reel/DezR46TBye6/",
+    "seen": "2026-10-29",
+    "note": "Section 6. Owner evidence of trading in late October 2026 (research/14 S1)."
+  },
+  {
+    "id": "side.facebook.followers",
+    "value": "1 067 followers",
+    "label": "verified",
+    "source": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FPatisserieCocoVanille&tabs=timeline",
+    "seen": "2026-10-29",
+    "note": "Section 6. Page plugin header; no posts rendered. data/facts.json had 1,046 (undated snapshot)."
+  },
+  {
+    "id": "side.pagesjaunes.phone",
+    "value": "PagesJaunes lists only 450-372-7177 (« Principal »); no 450-372-5917 and no hours",
+    "label": "verified",
+    "source": "https://www.pagesjaunes.ca/bus/Quebec/Granby/Patisserie-Coco-Vanille-Inc/102750737.html",
+    "seen": "2026-10-29",
+    "note": "Section 6. Direct read of the listing. For research/14 H3 and research/01 §2.2."
+  },
+  {
+    "id": "side.threebestrated.hours",
+    "value": "Three Best Rated (EN) shows Wed–Sat 8:30–17:30, Sun 9:00–17:00, Mon–Tue closed",
+    "label": "verified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Section 6. Direct read: this is what the listing shows, not the shop's hours. Sunday 9:00 differs from the Google listing relayed by Yahya (9:30). research/01 §3 had Thu–Fri 9–16:30, Sat 9–15 for this site."
+  },
+  {
+    "id": "side.marche_public.season",
+    "value": "Saturdays from 2 May to 7 November; Thursday evenings from 18 June to 27 August",
+    "label": "unverified",
+    "source": "https://www.marchepublicgranby.ca/exposants/",
+    "seen": "2026-10-29",
+    "note": "Section 6. The year is not printed; the weekdays match 2026 and the footer says © 2026 (inference). research/01 §9.5 had these dates as not reproduced."
+  }
+]

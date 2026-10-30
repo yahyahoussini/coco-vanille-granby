@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 // scripts/market.mjs — the market map and the battle plan (Layers 7.1, 7.5, 7.7, 9.2, 12, 14, 15): who owns the category today on Google,
 // in the AI engines and in the map pack, prompt by prompt; what each winner's page is; each competitor's exploitable weaknesses;
-// the fan-out topics nobody covers; and the ordered list of moves that take first place. Writes docs/19-marche-et-concurrence.md.
+// the fan-out topics nobody covers; and the ordered list of moves that take first place. Writes scoreboard/market/<week>.md (never
+// docs/19-marche-et-concurrence.md unless --out names it: that document is completed by hand).
 // Reads whatever exists (everything optional; empty sections say what fills them):
 //   serp/<week>/prompts.json, share-of-voice.csv, local-pack.csv, listicles.csv, paa.csv   (serp.mjs)
-//   scoreboard/runs/*.csv (hand-filled or ai-runs.mjs / serp.mjs), ai/<week>/share-of-model.csv, fanout.csv   (ai-runs.mjs)
+//   scoreboard/runs/*.csv (hand-filled or ai-runs.mjs / serp.mjs; not runs/proxy/, PROXY rows left out; several runs of a case → what most agree on),
+//   ai/<week>/share-of-model.csv, fanout.csv   (ai-runs.mjs)
 //   crawl/<host>.json (crawl.mjs on each competitor), docs/gaps/*.json (content-gap.mjs --json), scoreboard/competitors.csv (name,domain,gbp_rating,gbp_reviews,notes)
-//   scoreboard/prompts.csv (w_score), site.config.json (pages[] titles → topics we already cover)
-// Usage: node market.mjs [--week 2026-W40] [--out docs/19-marche-et-concurrence.md]
+//   scoreboard/prompts.csv (w_score), site.config.json (pages[] titles → topics we already cover; languages.others → the versions a competitor lacks)
+// Usage: node market.mjs [--week 2026-W40] [--out scoreboard/market/2026-W40.md]
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
-import { loadConfig, parseArgs, csvObjects, c, isoWeek, isoDate } from "./lib.mjs";
+import { loadConfig, parseArgs, csvObjects, c, isoWeek, isoDate, readRuns, caseRow, brandNameList } from "./lib.mjs";
 import { tokens, STOP } from "./extract.mjs";
 
 const args = parseArgs(process.argv.slice(2));
@@ -36,10 +38,10 @@ const som = readCsv(join("ai", week, "share-of-model.csv"));
 const fanout = readCsv(join("ai", week, "fanout.csv"));
 const competitors = readCsv("scoreboard/competitors.csv").map((r) => ({ ...r, domain: norm(r.domain), name: r.name ?? "" })).filter((r) => r.domain && !/FACT NEEDED/.test(r.name + r.domain));
 const prompts = readCsv("scoreboard/prompts.csv");
-const runsRank = (f) => (/-gsc\.csv$/.test(f) ? 0 : /-(google|ai)\.csv$/.test(f) ? 1 : 2); // same precedence as citation-share.mjs
-const runMap = new Map();
-if (existsSync("scoreboard/runs")) for (const f of readdirSync("scoreboard/runs").filter((f) => f.endsWith(".csv")).sort((a, b) => runsRank(a) - runsRank(b) || a.localeCompare(b))) for (const r of readCsv(join("scoreboard/runs", f))) { const row = { ...r, week: r.week || f.replace(/(-google|-ai|-gsc)?\.csv$/, "") }; runMap.set(`${row.week}|${row.prompt_id}|${(row.engine ?? "").toLowerCase()}`, row); }
-const runs = [...runMap.values()];
+// same precedence and passes as citation-share.mjs (lib.mjs readRuns): one row per (week, prompt, engine), the value most runs agree on
+const { cases, proxySkipped } = readRuns("scoreboard/runs");
+if (proxySkipped) console.log(c.yellow(`${proxySkipped} PROXY row(s) in scoreboard/runs left out: proxy weeks belong in scoreboard/runs/proxy/.`));
+const runs = cases.map(caseRow);
 const lastWeeks = [...new Set(runs.map((r) => r.week))].sort().slice(-4);
 const recent = runs.filter((r) => lastWeeks.includes(r.week));
 const crawls = existsSync("crawl") ? readdirSync("crawl").filter((f) => f.endsWith(".json")).map((f) => readJson(join("crawl", f))).filter(Boolean) : [];
@@ -47,7 +49,7 @@ const gaps = existsSync("docs/gaps") ? readdirSync("docs/gaps").filter((f) => f.
 
 if (!serp && !recent.length && !crawls.length && !gaps.length && !som.length && !args.force) {
   console.log(c.yellow(`Nothing measured yet for week ${week}: no serp/${week}/prompts.json, no scoreboard/runs/*.csv, no crawl/*.json, no docs/gaps/*.json.`));
-  console.log("docs/19-marche-et-concurrence.md keeps its hand-fill template. Measure first: npm run serp (SerpApi) / npm run ai (AI APIs) / fill scoreboard/runs/<week>.csv by hand, npm run crawl -- <competitor URL>, npm run gap -- --prompt … — then npm run market. (--force writes the empty map anyway.)");
+  console.log("Nothing written. Measure first: npm run serp (SerpApi) / npm run ai (AI APIs) / fill scoreboard/runs/<week>.csv by hand, npm run crawl -- <competitor URL>, npm run gap -- --prompt … — then npm run market. (--force writes the empty map anyway.)");
   process.exit(0);
 }
 
@@ -57,9 +59,17 @@ const get = (h) => { h = norm(h); if (!h) return null; if (!dom.has(h)) dom.set(
 for (const s of sov) { const d = get(s.host); if (!d) continue; d.sov = +s.score || 0; d.top1 = +s.top1 || 0; d.top3 = +s.top3 || 0; d.snippets = +s.snippets || 0; d.aio = +s.aio_refs || 0; }
 for (const r of recent.filter((r) => !/^google$/i.test(r.engine))) for (const h of (r.cited_domains ?? "").split(";").map(norm).filter(Boolean)) { const d = get(h); if (d) d.ai[r.engine] = (d.ai[r.engine] ?? 0) + 1; }
 for (const s of som) { const d = get(s.host); if (d) d.mentions += +s.mentions || 0; }
-const nameToDomain = (title) => { const t = String(title ?? "").toLowerCase(); if (brandName && t.includes(brandName.toLowerCase())) return brandHost; const hit = competitors.find((cp) => cp.name && t.includes(cp.name.toLowerCase())); return hit?.domain ?? ""; };
+const ourNames = brandNameList(cfg); if (!ourNames.length) ourNames.push(brandHost); // brand.name, nameAr, alternateNames: our pack listing under any form of the name
+const nameToDomain = (title) => { const t = String(title ?? "").toLowerCase(); if (ourNames.some((n) => t.includes(n))) return brandHost; const hit = competitors.find((cp) => cp.name && t.includes(cp.name.toLowerCase())); return hit?.domain ?? ""; };
 for (const p of pack) { const h = nameToDomain(p.title); const d = h ? get(h) : null; if (d) { d.pack++; if (p.rating) d.gbp = `${p.rating}★ (${p.reviews || "?"})`; } }
 for (const cp of competitors) { const d = get(cp.domain); if (!d) continue; if (cp.gbp_rating) d.gbp = `${cp.gbp_rating}★ (${cp.gbp_reviews || "?"})`; d.name = cp.name; d.notes = cp.notes ?? ""; }
+// a missing version counts only in a language the site itself serves beyond its default (site.config.json languages.others)
+const otherLangs = (cfg ? cfg.languages?.others ?? [] : ["ar"]).map((l) => String(l).toLowerCase().split("-")[0]);
+const LANG_NAMES = { ar: "arabe", en: "anglaise", es: "espagnole", fr: "française", de: "allemande", it: "italienne", pt: "portugaise", zgh: "amazighe" };
+const langName = (l) => LANG_NAMES[l] ?? `« ${l} »`;
+// cart, checkout, login and account pages are noindex on purpose (also on another host: account.example.com): never a weakness
+const UTILITY_PATH = /\/(cart|panier|checkouts?|commande|caisse|login|logout|sign-?in|sign-?up|connexion|register|inscription|my-?account|mon-compte|accounts?|compte|authentication|oauth|wishlist)(\/|$)/i;
+const utilityPage = (u) => { try { const x = new URL(u); return UTILITY_PATH.test(x.pathname) || /^(account|accounts|login|auth|checkout)\./i.test(x.host); } catch { return false; } };
 for (const cr of crawls) {
   if (!cr?.summary?.host) continue;
   const d = get(cr.summary.host); const s = cr.summary; if (!d) continue; d.pages = `${s.ok} pages, ${Object.keys(s.topics).slice(0, 5).join("/")}, maj ${s.latestYear ?? "?"}`;
@@ -72,10 +82,12 @@ for (const cr of crawls) {
   if (pct(s.withQuestions) < 30) d.weak.push("titres non formulés en questions");
   if (s.avgFactDensity < 3) d.weak.push(`peu de chiffres (${s.avgFactDensity}/100 mots)`);
   if (!Object.keys(s.schemaTypes).some((t) => /Organization|LocalBusiness|Business|Store|Service|Dealer|Rental|Repair|Clinic|Agent|Restaurant|Hotel/.test(t))) d.weak.push("aucune entité Organization/LocalBusiness en JSON-LD");
-  if (!Object.keys(s.languages).some((l) => /^ar/i.test(l))) d.weak.push("pas de version arabe");
+  const theirLangs = Object.keys(s.languages ?? {}).map((l) => l.toLowerCase().split("-")[0]);
+  for (const l of otherLangs) if (!theirLangs.includes(l)) d.weak.push(`pas de version ${langName(l)}`);
   if (s.latestYear && s.latestYear < new Date().getFullYear() - 1) d.weak.push(`contenu daté de ${s.latestYear}`);
   if (s.duplicateTitles > 0) d.weak.push(`${s.duplicateTitles} titres dupliqués`);
-  if (s.noindex > 0) d.weak.push(`${s.noindex} pages noindex`);
+  const noindex = Array.isArray(cr.pages) ? cr.pages.filter((p) => p.status === 200 && p.noindex && !utilityPage(p.url) && !(p.redirectTo && utilityPage(p.redirectTo))).length : s.noindex;
+  if (noindex > 0) d.weak.push(`${noindex} pages noindex`);
 }
 const aiTotal = (d) => Object.values(d.ai).reduce((a, b) => a + b, 0);
 const score = (d) => d.sov + 3 * aiTotal(d) + 2 * d.mentions + 2 * d.pack;
@@ -88,7 +100,9 @@ const wScore = new Map(prompts.map((p) => [p.id, +p.w_score || 0]));
 const gapFor = (id, text) => gaps.find((g) => g.prompt && (g.prompt === text || g.prompt === id));
 const moves = [];
 const battle = [];
-const promptList = serp?.prompts ?? prompts.map((p) => ({ id: p.id, prompt: p.prompt, type: p.type, position: +(recent.find((r) => r.prompt_id === p.id && /^google$/i.test(r.engine))?.google_position ?? 0), owner: "", top3: [], aio: false, aioRefs: [], aioCited: false, mapPack: recent.find((r) => r.prompt_id === p.id && /^google$/i.test(r.engine))?.map_pack ?? "", features: [], winning: "", intent: p.type, paa: [] }));
+// a prompt's Google row from the latest week it was measured: recent spans 4 weeks in file order (not by week), so a plain find would return an older week
+const lastGoogle = (id) => recent.filter((r) => r.prompt_id === id && /^google$/i.test(r.engine)).sort((a, b) => String(b.week).localeCompare(String(a.week)))[0];
+const promptList = serp?.prompts ?? prompts.map((p) => ({ id: p.id, prompt: p.prompt, type: p.type, position: +(lastGoogle(p.id)?.google_position ?? 0), owner: "", top3: [], aio: false, aioRefs: [], aioCited: false, mapPack: lastGoogle(p.id)?.map_pack ?? "", features: [], winning: "", intent: p.type, paa: [] }));
 for (const p of promptList) {
   const aiRows = recent.filter((r) => r.prompt_id === p.id && !/^(google|ai overview)$/i.test(r.engine));
   const aiCited = aiRows.filter((r) => (r.cited_domains ?? "").split(";").some((d) => d && isBrand(d)) || yes(r.brand_named));
@@ -134,7 +148,7 @@ md.push(`\n## 1. Qui possède le marché aujourd'hui${ourRank ? ` — nous somme
 ranking.slice(0, 15).forEach((d, i) => md.push(`| ${i + 1} | ${isBrand(d.host) ? `**${d.host}** (nous)` : d.host} | ${score(d)} | ${d.sov} | ${d.top1} | ${d.top3} | ${d.snippets} | ${d.aio} | ${Object.entries(d.ai).map(([e, n]) => `${e} ${n}`).join(", ") || "—"} | ${d.mentions || "—"} | ${d.pack || "—"} | ${d.gbp || "—"} | ${d.pages || "—"} |`));
 if (!ranking.length) md.push("| — | (lancer serp.mjs / ai-runs.mjs, ou remplir scoreboard/runs/<semaine>.csv à la main) | | | | | | | | | | | |");
 md.push(`Score = part de voix Google + 3 × citations IA + 2 × mentions IA + 2 × apparitions dans le pack local. Le domaine le plus cité de la catégorie est la cible à dépasser (définition de « premier », GEO).`);
-md.push(`\n## 2. Faiblesses exploitables des concurrents (crawl)\n${ranking.filter((d) => !isBrand(d.host) && d.weak.length).map((d) => `- **${d.host}** : ${d.weak.join(" · ")}`).join("\n") || "- crawler chaque concurrent du top 5 : `node tools/crawl.mjs https://concurrent.ma/ --max 150` — les faiblesses (pages minces, non datées, sans FAQ, sans arabe, sans entité) apparaissent ici"}`);
+md.push(`\n## 2. Faiblesses exploitables des concurrents (crawl)\n${ranking.filter((d) => !isBrand(d.host) && d.weak.length).map((d) => `- **${d.host}** : ${d.weak.join(" · ")}`).join("\n") || `- crawler chaque concurrent du top 5 : \`node tools/crawl.mjs https://concurrent.example/ --max 150\` — les faiblesses (pages minces, non datées, sans FAQ${otherLangs.length ? `, sans version ${otherLangs.map(langName).join(" ou ")}` : ""}, sans entité) apparaissent ici`}`);
 md.push(`\n## 3. Carte de bataille par prompt (4 dernières semaines)\n| Prompt | Type | W | Notre pos. | Propriétaire n°1 (type) | Extrait | AI Overview | Cité IA | Moteurs IA citent | Pack local | Format qui gagne | Priorité | Coup à jouer |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|`);
 for (const b of [...battle].sort((a, b) => b.priority - a.priority)) md.push(`| ${b.id} ${b.prompt} | ${b.type ?? ""} | ${b.w || "—"} | ${b.position || "—"} | ${b.owner ? `${b.owner} (${b.top3?.[0]?.type ?? ""})` : "—"} | ${b.snippetOwner ? (isBrand(b.snippetOwner) ? "**nous**" : b.snippetOwner) : "—"} | ${b.aio ? (b.aioCited ? "**cités**" : b.aioRefs.slice(0, 2).join(", ") || "oui") : "—"} | ${b.aiCited} | ${b.aiOwner || "—"} | ${b.mapPack || "—"} | ${b.winning || "—"} | ${b.priority} | ${b.actions.join(" ; ") || "—"} |`);
 md.push(`W = score de gagnabilité (prompts.csv). Priorité = 3 × W + 20 si à portée (positions 2–10) + 10 si commercial/local + pack local manqué + AI Overview manqué − distance.`);
@@ -142,7 +156,7 @@ md.push(`\n## 4. Les dix coups, dans l'ordre\n${moves.slice(0, 10).map((m, i) =>
 md.push(`\n## 5. Sujets que les moteurs cherchent (fan-out) et que nos pages ne couvrent pas (${uncovered.length})\n${uncovered.slice(0, 30).map((u) => `- ${u.q} _(${u.src}; mots absents : ${u.missing})_`).join("\n") || "- aucun (ou pas de données fan-out/PAA : ai-runs.mjs, serp.mjs)"}\nChaque ligne devient une section du pilier ou une page cluster (Layer 9.2) — jamais une page quasi-dupliquée.`);
 md.push(`\n## 6. Listicles et annuaires qui décident les prompts commerciaux (${listicles.length})\n${[...new Map(listicles.map((l) => [l.url, l])).values()].slice(0, 25).map((l) => `- ${l.host} — ${l.title} (${l.type}, position ${l.position} sur ${l.prompt_id})`).join("\n") || "- (serp.mjs remplit cette liste ; sinon docs/06 à la main)"}\nÊtre dans chaque liste où la catégorie se décide est le coup off-site n°1 (Layers 12.5, 15.2) — avec des preuves, jamais contre paiement non signalé.`);
 md.push(`\n## 7. Ce que ce document ne sait pas\n- Les autorités de liens (domaines référents) : Ahrefs/Semrush ou l'export Search Console « Liens » des concurrents n'existe pas — estimer par les mentions trouvées.\n- Les avis Google des concurrents hors pack local : les relever à la main dans scoreboard/competitors.csv (gbp_rating, gbp_reviews).\n- Copilot et AI Mode : pas d'API — relevé manuel hebdomadaire.\n- Les chiffres concurrents restent des faits sur les concurrents (page + date), jamais des faits du client.`);
-const out = args.out ?? "docs/19-marche-et-concurrence.md";
+const out = args.out ?? join("scoreboard", "market", `${week}.md`); // docs/19 is completed by hand: only an explicit --out writes it
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, md.join("\n") + "\n");
 console.log(c.bold(`Market map ${week} for ${brandHost}: ${ranking.length} domains scored${ourRank ? `, we are #${ourRank}` : ""} · ${battle.length} prompts mapped · ${moves.length} moves · ${uncovered.length} uncovered topics`));

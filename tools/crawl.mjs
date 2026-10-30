@@ -5,6 +5,8 @@
 //   node crawl.mjs https://competitor.ma/ [--max 150] [--sitemap https://competitor.ma/sitemap.xml] [--include /blog/]
 //                  [--concurrency 4] [--delay 250] [--depth 6] [--out crawl/competitor.ma.json] [--csv] [--no-robots] [--keep-query]
 // Respects robots.txt ("*" group) unless --no-robots; identifies as rank-first-crawl. Stores a compact profile per page (extract.mjs), never the full text.
+// A 200 that is not a web page (PDF, image, feed, JSON…) is recorded as "non-html" and skipped. No stored URL keeps a session: a redirect
+// that leaves the site (a login on account.<host>) loses its query string, and session parameters are dropped even with --keep-query.
 import { mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { parseArgs, fetchText, toCsv, c } from "./lib.mjs";
@@ -22,6 +24,10 @@ const MAX = +(args.max ?? 150), CONC = +(args.concurrency ?? 4), DELAY = +(args.
 const UA = `Mozilla/5.0 (compatible; rank-first-crawl/1.0; +https://github.com/) ${args.ua ?? ""}`.trim();
 const SKIP_EXT = /\.(pdf|jpe?g|png|gif|webp|avif|svg|ico|css|js|mjs|json|xml|txt|zip|rar|7z|mp4|mp3|webm|woff2?|ttf|eot|docx?|xlsx?|pptx?)(\?.*)?$/i;
 const TRACKING = /^(utm_|gclid|fbclid|msclkid|mc_|ref$|source$)/i;
+const SESSION = /^(state|nonce|code|token|access_token|id_token|session|session_?id|sid|phpsessid|jsessionid|client_id|redirect_uri|return_to|returnurl|analytics_trace_id|buyer_flags|_ga|_gl|oseid)$/i;
+// an off-site URL (where a redirect ends) is stored as origin + path only: its query string can carry a session
+const offsite = (u) => { try { const x = new URL(u); x.search = ""; x.hash = ""; return x.toString(); } catch { return String(u).replace(/[?#].*$/, ""); } };
+const isHtml = (ct, text) => /html/i.test(ct) || (!ct && /^\s*(<!doctype html|<html)/i.test(text.slice(0, 1024))); // no Content-Type: sniff the start
 // --alias prod.ma : links that point at the production host are followed on the crawled (staging/local) host
 const ALIASES = new Set(String(args.alias ?? "").split(",").map((a) => hostKey(a.trim())).filter(Boolean));
 
@@ -31,7 +37,7 @@ function normalize(href, base) {
   if (ALIASES.has(hostKey(u.host))) { u.protocol = origin.protocol; u.host = origin.host; }
   if (hostKey(u.host) !== HOST) return null;
   u.hash = "";
-  if (args["keep-query"]) { for (const k of [...u.searchParams.keys()]) if (TRACKING.test(k)) u.searchParams.delete(k); } else u.search = "";
+  if (args["keep-query"]) { for (const k of [...u.searchParams.keys()]) if (TRACKING.test(k) || SESSION.test(k)) u.searchParams.delete(k); } else u.search = "";
   if (SKIP_EXT.test(u.pathname)) return null;
   if (args.include && !u.pathname.startsWith(args.include)) return null;
   return u.toString();
@@ -89,9 +95,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       active++;
       try {
         const r = await fetchText(url, { ua: UA, timeoutMs: 20000 });
-        const finalUrl = r.url && r.url !== url ? normalize(r.url, url) ?? r.url : url;
+        const finalUrl = r.url && r.url !== url ? normalize(r.url, url) ?? offsite(r.url) : url;
         const ct = r.headers.get("content-type") ?? "";
-        if (r.status !== 200 || !/html/i.test(ct)) { pages.set(url, { url, status: r.status, redirectTo: finalUrl !== url ? finalUrl : undefined, depth }); continue; }
+        if (r.status !== 200) { pages.set(url, { url, status: r.status, redirectTo: finalUrl !== url ? finalUrl : undefined, depth }); continue; }
+        if (!isHtml(ct, r.text)) { pages.set(url, { url, status: "non-html", contentType: ct.split(";")[0].trim() || "none", redirectTo: finalUrl !== url ? finalUrl : undefined, depth }); continue; }
         const p = profilePage(r.text, { url: finalUrl });
         const tf = termFrequency([p.title, p.h1, ...p.headings.map((h) => h.text)].join(". "));
         const topTerms = [...tf.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15).map(([t]) => t);
@@ -145,7 +152,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   console.log("Topics (title/h1/heading terms, pages using them):", topics.slice(0, 20).map(([t, n]) => `${t} (${n})`).join(", "));
   if (Object.keys(byYear).length) console.log("Pages by last-modified year:", JSON.stringify(byYear));
   if (smUrls.length) console.log(`Sitemap: ${smUrls.length} URLs · orphans (in sitemap, no inlink found): ${orphans.length} · crawled but not in sitemap: ${notInSitemap.length} · in sitemap, not reachable: ${sitemapNotCrawled.length}`);
-  const bad = recs.filter((r) => r.status !== 200 && r.status !== "robots");
+  const bad = recs.filter((r) => r.status !== 200 && r.status !== "robots" && r.status !== "non-html");
   if (bad.length) console.log(c.yellow(`Non-200 URLs (${bad.length}):`), bad.slice(0, 15).map((r) => `${r.status} ${r.url}`).join("\n  "));
+  const nonHtml = recs.filter((r) => r.status === "non-html");
+  if (nonHtml.length) console.log(c.dim(`Skipped ${nonHtml.length} non-HTML response(s): ${nonHtml.slice(0, 5).map((r) => `${r.contentType} ${r.url}`).join(" · ")}`));
   console.log(c.dim(`written ${outFile}${args.csv ? " (+ .csv)" : ""} — feed it to content-gap.mjs / market.mjs`));
 })();

@@ -1,0 +1,265 @@
+{
+  "$comment": "rank-first config for the tools at the repo root (citation-share.mjs, market.mjs, ai-runs.mjs, serp.mjs…). Generated 2026-10-29 by apps/web/scripts/rank-config.mjs from src/lib/routes.js and data/facts.json (only fields with a real value; no [[FACT NEEDED]] field is guessed), plus a competitors list copied from scoreboard/competitors.csv for reference. Since 2026-10-29 it also writes nap.mobile, brand.alternateNames (the forms of the name that count as the brand in an answer or a map-pack listing: « Coco Vanille », « Cocovanille », scoreboard/README.md §3), facts (the facts file ai-runs.mjs reads, relative to this file) and market (where the measurement searches from: google.ca located on Granby, AI web search from Québec on America/Toronto time, North American phone numbers; without a market block the tools fall back to their Moroccan defaults). The tools read competitors from scoreboard/competitors.csv, not from this file. Regenerate with: node apps/web/scripts/rank-config.mjs --out site.config.json (it drops $comment and competitors).",
+  "site": "https://cocovanillegranby.com",
+  "languages": {
+    "default": "fr",
+    "others": [
+      "en"
+    ],
+    "hreflang": {
+      "fr": "fr-CA",
+      "en": "en-CA"
+    }
+  },
+  "urlPolicy": {
+    "trailingSlash": true,
+    "www": false
+  },
+  "brand": {
+    "name": "Pâtisserie Coco Vanille",
+    "alternateNames": [
+      "Coco Vanille",
+      "Cocovanille"
+    ]
+  },
+  "pages": [
+    {
+      "path": "/",
+      "alt": {
+        "en": "/en/"
+      },
+      "type": "home"
+    },
+    {
+      "path": "/carte/",
+      "alt": {
+        "en": "/en/menu/"
+      }
+    },
+    {
+      "path": "/commander/",
+      "alt": {
+        "en": "/en/order/"
+      }
+    },
+    {
+      "path": "/nous-trouver/",
+      "alt": {
+        "en": "/en/visit/"
+      },
+      "type": "contact"
+    },
+    {
+      "path": "/a-propos/",
+      "alt": {
+        "en": "/en/about/"
+      },
+      "type": "about"
+    },
+    {
+      "path": "/a-propos/chef/",
+      "alt": {
+        "en": "/en/about/chef/"
+      }
+    },
+    {
+      "path": "/prix/",
+      "alt": {
+        "en": "/en/prices/"
+      }
+    },
+    {
+      "path": "/gateau-pour-demain/",
+      "alt": {
+        "en": "/en/cake-for-tomorrow/"
+      }
+    },
+    {
+      "path": "/gateaux-personnalises-granby/",
+      "alt": {
+        "en": "/en/custom-cakes-granby/"
+      }
+    },
+    {
+      "path": "/buches-de-noel/",
+      "alt": {
+        "en": "/en/yule-logs/"
+      }
+    },
+    {
+      "path": "/allergenes/",
+      "alt": {
+        "en": "/en/allergens/"
+      }
+    },
+    {
+      "path": "/faq/",
+      "alt": {
+        "en": "/en/faq/"
+      }
+    },
+    {
+      "path": "/calculateur-portions-gateau/",
+      "alt": {
+        "en": "/en/cake-serving-calculator/"
+      }
+    },
+    {
+      "path": "/viennoiseries/",
+      "alt": {
+        "en": "/en/viennoiseries/"
+      }
+    },
+    {
+      "path": "/pains-baguettes/",
+      "alt": {
+        "en": "/en/bread/"
+      }
+    },
+    {
+      "path": "/gateaux/",
+      "alt": {
+        "en": "/en/cakes/"
+      }
+    },
+    {
+      "path": "/patisseries/",
+      "alt": {
+        "en": "/en/pastries/"
+      }
+    },
+    {
+      "path": "/confidentialite/",
+      "alt": {
+        "en": "/en/privacy/"
+      },
+      "type": "legal"
+    },
+    {
+      "path": "/conditions-de-vente/",
+      "alt": {
+        "en": "/en/terms-of-sale/"
+      },
+      "type": "legal"
+    },
+    {
+      "path": "/temoins/",
+      "alt": {
+        "en": "/en/cookies/"
+      },
+      "type": "legal"
+    },
+    {
+      "path": "/accessibilite/",
+      "alt": {
+        "en": "/en/accessibility/"
+      },
+      "type": "legal"
+    }
+  ],
+  "nap": {
+    "city": "Granby",
+    "phone": "+1-450-372-7177",
+    "mobile": "+1-438-528-7818"
+  },
+  "category": {
+    "city": {
+      "fr": "Granby"
+    }
+  },
+  "geo": {
+    "lat": 45.3995807,
+    "lng": -72.7250821
+  },
+  "sameAs": [
+    "https://www.facebook.com/PatisserieCocoVanille/"
+  ],
+  "facts": "data/facts.json",
+  "market": {
+    "country": "CA",
+    "region": "Quebec",
+    "gl": "ca",
+    "googleDomain": "google.ca",
+    "location": "Granby,Quebec,Canada",
+    "timezone": "America/Toronto",
+    "phonePattern": "(?<!\\d)(?:\\+?1[\\s.-]?)?\\(?[2-9]\\d{2}\\)?[\\s.-]?[2-9]\\d{2}[\\s.-]?\\d{4}(?!\\d)",
+    "phoneDigits": 10
+  },
+  "competitors": [
+    {
+      "name": "Cake Design Granby",
+      "domain": "cakegranby.ca",
+      "role": "custom cakes online (cart + pickup slot)"
+    },
+    {
+      "name": "Avec un Grand A",
+      "domain": "avecungranda.com",
+      "role": "pâtisserie with online ordering and prices"
+    },
+    {
+      "name": "Rose Gâteaux",
+      "domain": "rosegateaux.com",
+      "role": "custom-cake studio (weddings specialty), by appointment"
+    },
+    {
+      "name": "Mont Rose",
+      "domain": null,
+      "role": "walk-in pâtisserie-café (3-shop chain)"
+    },
+    {
+      "name": "Mélisse",
+      "domain": null,
+      "role": "pâtisserie-café (status unclear)"
+    },
+    {
+      "name": "Café ORÉE",
+      "domain": null,
+      "role": "café-pâtisserie (matcha, pastries)"
+    },
+    {
+      "name": "La Mie Bretonne",
+      "domain": null,
+      "role": "boulangerie artisanale / café (Granby branch)"
+    },
+    {
+      "name": "Le Marmiton",
+      "domain": "lemarmiton.ca",
+      "role": "caterer that also makes custom cakes"
+    },
+    {
+      "name": "Délices Sucrés Granby",
+      "domain": "delicessucresgranby.my.canva.site",
+      "role": "custom cakes, last-minute orders (home-based? UNVERIFIED)"
+    },
+    {
+      "name": "Maître Glacier",
+      "domain": "granby.maitreglacier.com",
+      "role": "ice-cream cakes (head office in Granby); price floor"
+    },
+    {
+      "name": "IGA",
+      "domain": "iga.net",
+      "role": "supermarket price floor"
+    },
+    {
+      "name": "Les Crudélices",
+      "domain": "lescrudelices.ca",
+      "role": "raw, vegan, gluten-free pâtisserie (niche, order-only)"
+    },
+    {
+      "name": "Pain-Pain",
+      "domain": null,
+      "role": "CLOSED 2026-06-16; tracked only because lists and answers still name it"
+    },
+    {
+      "name": "Si Petit Soit-il",
+      "domain": null,
+      "role": "regional (Bromont): custom-designed cakes"
+    },
+    {
+      "name": "Mlles Gâteaux",
+      "domain": "mllesgateaux.com",
+      "role": "Montréal custom cakes; AI-answer filler for the region (hypothesis)"
+    }
+  ]
+}

@@ -10,6 +10,18 @@ How this was made, and its limits:
 
 ---
 
+## Update 2026-10-27 (Yahya: Google listing hours, Facebook bio)
+
+Relayed in chat by Yahya (operator) on 2026-10-27. Our searches did not reopen these pages; the status below says so.
+
+| Fact | Value | Status | Use |
+|---|---|---|---|
+| Hours (Google listing) | Mon–Tue closed · Wed–Sat 8:30–17:30 · Sun 9:30–17:00 | verified (owner-published, relayed) | **Site-published hours** (seed + Studio « Boutique & heures »); mirror on GBP, Facebook, Apple, Bing, directories. Supersedes §3. Closest earlier source: RestoMontreal (Sunday 9:00 there). Owner sign-off welcome (14 H1) |
+| Facebook bio | « Coco•vanille — Pâtisserie 🍰 & Café ☕️ — 🎂 Gâteaux sur commande — 📞 (450) 372-7177 — 🎨 Ateliers créatifs sur réservation — 📱 (438) 528-7818 » | verified (owner-published, relayed) | Café, cakes to order and creative workshops on the site; the share link (`facebook.com/share/…`) is not stored, the canonical page stays `facebook.com/PatisserieCocoVanille/` |
+| Mobile | 438-528-7818 | verified (owner-published, relayed) | Shown as « Cellulaire » only: whether it takes texts or atelier bookings is not confirmed (14 N1) |
+| Operating status | Current listing hours + bio | consistent with trading | S1 answered in practice; owner confirmation still welcome |
+| Pasted strategy (BrandHub.ma) | Google 4.9/5 from 40+ reviews per RestoMontreal 2026-10-15 (matches §0.2); RestoMontreal 4.8/5 from 26; mentions of chocolate mousse, verrines, dessert trays, sandwiches, a gluten-free Boston cake, framboisier; FindGlocal hours Wed–Fri 9–17, Sat 9–16 | unverified (secondary; sources not reopened) | Not in copy or schema. Products go to the owner (14 N4). « Sans gluten » is a regulated claim (07 A-6, A-7). Ratings on-site only after reading Google directly, never `aggregateRating` |
+
 ## 0. Bottom line (decision-relevant)
 
 1. **The legal entity is real and was active in 2026.** *Pâtisserie Coco Vanille inc.* has NEQ 1177082220. It was incorporated in November 2021, its activity code is 6013 "Boulangeries et pâtisseries", and its address is 3 rue Court, Granby J2G 4Y6. Its last annual update declaration was filed on **2026-01-24 (for 2025)**. One aggregator reports it "not in liquidation as of 2026-05-31". (opengovca, b2bhint; both are search summaries, and the REQ itself was not opened)
@@ -108,6 +120,7 @@ Fix list once the owner approves:
 
 | Source | Mon | Tue | Wed | Thu | Fri | Sat | Sun | Source date |
 |---|---|---|---|---|---|---|---|---|
+| **Google listing, relayed by Yahya (site-published)** | closed | closed | 8:30–17:30 | 8:30–17:30 | 8:30–17:30 | 8:30–17:30 | 9:30–17:00 | 2026-10-27 |
 | RestoMontreal | closed | closed | 8:30–17:30 | 8:30–17:30 (another summary: 8:30–18:30) | 8:30–17:30 | 8:30–17:30 | 9:00–17:00 (another summary: 9:00–17:30) | undated (page title says "2026"; a title year, not data) |
 | Three Best Rated (FR) | closed | closed | closed | 9:00–16:30 | 9:00–16:30 | 9:00–15:00 | closed | 2025 listing |
 | Allbiz | closed | closed | closed | 9:00–16:30 | 9:00–16:30 | 9:00–15:00 | closed | undated |

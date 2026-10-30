@@ -6,17 +6,25 @@
 // mentions per competitor ("share of model"). Keys via env: OPENAI_API_KEY, PERPLEXITY_API_KEY, GEMINI_API_KEY, ANTHROPIC_API_KEY.
 // Model ids change: OPENAI_MODEL (default gpt-5.4), PERPLEXITY_PRESET (fast|low|medium|high; PERPLEXITY_MODEL=sonar → legacy chat-completions until 2026-09-27), GEMINI_MODEL (gemini-2.5-flash), ANTHROPIC_MODEL (claude-sonnet-5).
 // Field names follow each vendor's API reference as of 2026; a missing field leaves the value blank (never guessed). Raw JSON is saved per call.
-// Usage: node ai-runs.mjs [--engines openai,perplexity,gemini,anthropic] [--ids C1,C5] [--week 2026-W40] [--prompts scoreboard/prompts.csv]
-//        [--competitors scoreboard/competitors.csv] [--no-verify-mentions] [--from-dir ai/2026-W40] [--dry-run] [--delay 1500]
+// Where the engines search from: the "market" block of site.config.json (country, region, timezone; city = nap.city; Gemini gets the geo
+// point), else the Moroccan defaults (lib.mjs MOROCCO). Wrong phone numbers are found with the market's phonePattern and compared with
+// nap.phone / nap.whatsapp / nap.mobile. Facts: "facts" in site.config.json (a path relative to that file), else ./facts.json.
+// The brand counts as named when the answer contains brand.name, brand.nameAr or one of brand.alternateNames (site.config.json).
+// Check the location, facts file and prompt list with --dry-run (no request) before any paid run.
+// Usage: node ai-runs.mjs [--engines openai,perplexity,gemini,anthropic] [--ids C1,C5] [--type local] [--skip-type candidate] [--week 2026-W40]
+//        [--prompts scoreboard/prompts.csv] [--competitors scoreboard/competitors.csv] [--facts data/facts.json] [--no-verify-mentions]
+//        [--country CA --region Quebec --city Granby --timezone America/Toronto] [--from-dir ai/2026-W40] [--dry-run] [--delay 1500] [--help]
 // Writes: ai/<week>/<engine>-<id>.json, scoreboard/runs/<week>-ai.csv, ai/<week>/answers.md, fanout.csv, share-of-model.csv, facts-propagation.csv, mentions.csv
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { loadConfig, parseArgs, csvObjects, toCsv, fetchText, stripTags, c, isoWeek } from "./lib.mjs";
+import { join, dirname, resolve } from "node:path";
+import { loadConfig, parseArgs, csvObjects, toCsv, fetchText, stripTags, c, isoWeek, marketConfig, phoneNumbers, printUsage, brandNameList } from "./lib.mjs";
 
 const args = parseArgs(process.argv.slice(2));
-let cfg = null; try { cfg = loadConfig(args.config ?? "site.config.json"); } catch {}
+if (args.help) { printUsage(import.meta.url); process.exit(0); }
+const configFile = args.config ?? "site.config.json";
+let cfg = null; try { cfg = loadConfig(configFile); } catch {}
 const brandHost = (args.brand ?? (cfg ? new URL(cfg.site).host : "")).replace(/^www\./, "").toLowerCase();
-const brandNames = [args["brand-name"] ?? cfg?.brand?.name, cfg?.brand?.nameAr].filter(Boolean).map((s) => s.toLowerCase());
+const brandNames = brandNameList(cfg, args["brand-name"]); // brand.name (or --brand-name), nameAr and alternateNames: any of them = brand named
 if (!brandHost || !brandNames.length) { console.error("Need site.config.json (site + brand.name) or --brand <host> --brand-name <name>"); process.exit(1); }
 const week = args.week ?? isoWeek();
 const dir = args["from-dir"] ?? join("ai", week);
@@ -26,7 +34,11 @@ const norm = (u) => { try { return new URL(u).host.replace(/^www\./, "").toLower
 const isBrand = (h) => norm(h) === brandHost || norm(h).endsWith("." + brandHost);
 const named = (text) => brandNames.some((n) => text.toLowerCase().includes(n));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const city = cfg?.nap?.city ?? "Casablanca";
+const market = marketConfig(cfg, { country: args.country, region: args.region, city: args.city, timezone: args.timezone });
+const city = market.city || (market.fallback ? "Casablanca" : undefined);
+// the approximate user location of each engine's web search (undefined fields are dropped from the JSON body)
+const where = { country: market.country || undefined, region: market.region || undefined, city, timezone: market.timezone || undefined };
+const geo = typeof cfg?.geo?.lat === "number" && typeof cfg?.geo?.lng === "number" ? { latitude: cfg.geo.lat, longitude: cfg.geo.lng } : null;
 
 // ---------- engines: each returns { text, citations: [url…], queries: [q…], raw } ----------
 async function postJson(url, body, headers) {
@@ -41,7 +53,7 @@ async function postJson(url, body, headers) {
 }
 const ENGINES = {
   openai: { label: "ChatGPT", key: "OPENAI_API_KEY", async run(prompt) {
-    const raw = await postJson("https://api.openai.com/v1/responses", { model: process.env.OPENAI_MODEL ?? "gpt-5.4", input: prompt, tools: [{ type: "web_search", user_location: { type: "approximate", country: "MA", city } }] }, { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` });
+    const raw = await postJson("https://api.openai.com/v1/responses", { model: process.env.OPENAI_MODEL ?? "gpt-5.4", input: prompt, tools: [{ type: "web_search", user_location: { type: "approximate", ...where } }] }, { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` });
     const items = raw.output ?? [];
     const queries = [...new Set(items.filter((i) => i.type === "web_search_call").flatMap((i) => [...(i.action?.queries ?? []), i.action?.query]).filter(Boolean))]; // action.query is deprecated in favour of action.queries[]
     const msgs = items.filter((i) => i.type === "message").flatMap((i) => i.content ?? []).filter((p) => p.type === "output_text");
@@ -53,10 +65,10 @@ const ENGINES = {
     // Agent API (docs.perplexity.ai/api-reference/agent-post): presets fast|low|medium|high replace the sonar model ids.
     // The Sonar chat-completions endpoint is supported until 2026-09-27 only; PERPLEXITY_MODEL=sonar forces that legacy path.
     if (process.env.PERPLEXITY_MODEL) {
-      const raw = await postJson("https://api.perplexity.ai/chat/completions", { model: process.env.PERPLEXITY_MODEL, messages: [{ role: "user", content: prompt }], web_search_options: { user_location: { country: "MA" } } }, { Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}` });
+      const raw = await postJson("https://api.perplexity.ai/chat/completions", { model: process.env.PERPLEXITY_MODEL, messages: [{ role: "user", content: prompt }], web_search_options: { user_location: { country: where.country } } }, { Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}` });
       return { text: raw.choices?.[0]?.message?.content ?? "", citations: raw.citations ?? (raw.search_results ?? []).map((r) => r.url), queries: [], raw };
     }
-    const raw = await postJson("https://api.perplexity.ai/v1/agent", { preset: process.env.PERPLEXITY_PRESET ?? "fast", input: prompt, tools: [{ type: "web_search", user_location: { country: "MA", city } }] }, { Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}` });
+    const raw = await postJson("https://api.perplexity.ai/v1/agent", { preset: process.env.PERPLEXITY_PRESET ?? "fast", input: prompt, tools: [{ type: "web_search", user_location: { country: where.country, city } }] }, { Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}` });
     const items = raw.output ?? [];
     const msgs = items.filter((i) => i.type === "message").flatMap((i) => i.content ?? []).filter((p) => p.type === "output_text");
     const text = msgs.map((p) => p.text).join("\n");
@@ -68,7 +80,8 @@ const ENGINES = {
   } },
   gemini: { label: "Gemini", key: "GEMINI_API_KEY", async run(prompt) {
     const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
-    const raw = await postJson(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, { contents: [{ parts: [{ text: prompt }] }], tools: [{ google_search: {} }] }, { "x-goog-api-key": process.env.GEMINI_API_KEY });
+    // google_search takes no country: the user location is toolConfig.retrievalConfig.latLng (the geo point of site.config.json).
+    const raw = await postJson(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, { contents: [{ parts: [{ text: prompt }] }], tools: [{ google_search: {} }], ...(geo ? { toolConfig: { retrievalConfig: { latLng: geo } } } : {}) }, { "x-goog-api-key": process.env.GEMINI_API_KEY });
     const cand = raw.candidates?.[0] ?? {};
     const text = (cand.content?.parts ?? []).map((p) => p.text ?? "").join("\n");
     const gm = cand.groundingMetadata ?? {};
@@ -77,7 +90,7 @@ const ENGINES = {
     return { text, citations, queries: gm.webSearchQueries ?? [], raw };
   } },
   anthropic: { label: "Claude", key: "ANTHROPIC_API_KEY", async run(prompt) {
-    const raw = await postJson("https://api.anthropic.com/v1/messages", { model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-5", max_tokens: 1500, messages: [{ role: "user", content: prompt }], tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 5, user_location: { type: "approximate", country: "MA", city, timezone: "Africa/Casablanca" } }] }, { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" });
+    const raw = await postJson("https://api.anthropic.com/v1/messages", { model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-5", max_tokens: 1500, messages: [{ role: "user", content: prompt }], tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 5, user_location: { type: "approximate", ...where } }] }, { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" });
     const blocks = raw.content ?? [];
     const text = blocks.filter((b) => b.type === "text").map((b) => b.text).join("\n");
     const cited = blocks.filter((b) => b.type === "text").flatMap((b) => (b.citations ?? []).map((ci) => ci.url)).filter(Boolean);
@@ -88,11 +101,15 @@ const ENGINES = {
 };
 
 // ---------- facts and competitors ----------
-const facts = existsSync("facts.json") ? JSON.parse(readFileSync("facts.json", "utf8")) : {};
+// facts file: --facts, else "facts" in site.config.json (relative to that file: data/facts.json here; an absolute path is kept), else ./facts.json
+const factsFile = args.facts ?? (cfg?.facts ? resolve(dirname(configFile), cfg.facts) : "facts.json");
+if (!existsSync(factsFile)) console.log(c.yellow(`No facts file at ${factsFile} (set "facts" in site.config.json or pass --facts): repeated facts and numbers to verify are not checked.`));
+const facts = existsSync(factsFile) ? JSON.parse(readFileSync(factsFile, "utf8")) : {};
 const factValues = []; // [id, value string with a digit]
 if (Array.isArray(facts.facts)) for (const f of facts.facts) { if (f?.id && f.value !== undefined && f.value !== "" && /\d/.test(String(f.value))) factValues.push([f.id, String(f.value)]); }
 else (function walk(o, path = "") { if (!o || typeof o !== "object") return; for (const [k, v] of Object.entries(o)) { if (v && typeof v === "object") walk(v, path ? `${path}.${k}` : k); else if (typeof v === "string" && /\d/.test(v) && v.length < 80) factValues.push([path ? `${path}.${k}` : k, v]); else if (typeof v === "number") factValues.push([path ? `${path}.${k}` : k, String(v)]); } })(facts);
-const napDigits = [cfg?.nap?.phone, cfg?.nap?.whatsapp].filter(Boolean).map((p) => p.replace(/\D/g, "").slice(-9));
+// our own numbers in the market's format; a number the pattern cannot read keeps its last phoneDigits digits
+const napDigits = [cfg?.nap?.phone, cfg?.nap?.whatsapp, cfg?.nap?.mobile].filter(Boolean).flatMap((p) => { const found = phoneNumbers(p, market); return found.length ? found : [String(p).replace(/\D/g, "").slice(-(market.phoneDigits || 9))]; });
 const compFile = args.competitors ?? "scoreboard/competitors.csv";
 const competitors = existsSync(compFile) ? csvObjects(readFileSync(compFile, "utf8")).map((r) => ({ name: (r.name ?? "").toLowerCase(), domain: norm(r.domain ?? "") })).filter((r) => r.name || r.domain) : [];
 
@@ -101,10 +118,14 @@ const competitors = existsSync(compFile) ? csvObjects(readFileSync(compFile, "ut
   if (!existsSync(promptsFile)) { console.error(`No prompts file: ${promptsFile}`); process.exit(1); }
   let prompts = csvObjects(readFileSync(promptsFile, "utf8")).filter((p) => p.prompt);
   if (args.ids) { const ids = new Set(String(args.ids).split(",")); prompts = prompts.filter((p) => ids.has(p.id)); }
+  if (args.type) { const types = new Set(String(args.type).split(",")); prompts = prompts.filter((p) => types.has(p.type)); }
+  if (args["skip-type"]) { const skip = new Set(String(args["skip-type"]).split(",")); prompts = prompts.filter((p) => !skip.has(p.type)); }
   const wanted = String(args.engines ?? "openai,perplexity,gemini,anthropic").split(",").map((s) => s.trim()).filter((e) => ENGINES[e]);
   const engines = wanted.filter((e) => args["from-dir"] || args["dry-run"] || process.env[ENGINES[e].key]);
   for (const e of wanted) if (!engines.includes(e)) console.log(c.yellow(`${ENGINES[e].label}: no ${ENGINES[e].key} in env — skipped (record it by hand in scoreboard/runs/${week}.csv)`));
   if (!engines.length) { console.error("No engine available."); process.exit(1); }
+  const flags = ["country", "region", "city", "timezone"].some((k) => typeof args[k] === "string" && args[k]) ? " + command-line options" : "";
+  console.log(c.dim(`Search location (${market.fallback ? "Moroccan defaults: no market block in site.config.json" : "site.config.json market"}${flags}): ${JSON.stringify(where)} · Gemini: ${geo ? `latLng ${geo.latitude},${geo.longitude}` : "no geo point, no location"} · phones: ${market.phonePattern ? `${market.fallback ? "Moroccan (+212)" : "market"} pattern, ours ${napDigits.join(", ") || "none in nap"}` : "no pattern (not checked)"} · facts: ${factsFile} · ${prompts.length} prompts`));
   const rows = [], fanout = [], answers = [], propagation = [], mentionRows = [];
   const shareModel = new Map(); // engine|host -> { citations, mentions }
   const pageCache = new Map();
@@ -146,7 +167,7 @@ const competitors = existsSync(compFile) ? csvObjects(readFileSync(compFile, "ut
       if (isNamed) { const k = `${eng.label}|${brandHost}`; const s = shareModel.get(k) ?? { engine: eng.label, host: brandHost, citations: 0, mentions: 0 }; s.mentions++; shareModel.set(k, s); }
       // fact propagation and numbers attributed to the brand
       const repeated = factValues.filter(([, v]) => lower.includes(v.toLowerCase())).map(([id]) => id);
-      const phones = (res.text.match(/(?:\+212|00212|0)[\s.-]?[5-7](?:[\s.-]?\d){8}/g) ?? []).map((x) => x.replace(/\D/g, "").slice(-9));
+      const phones = phoneNumbers(res.text, market);
       const wrongPhone = phones.filter((d) => napDigits.length && !napDigits.includes(d));
       const brandSentences = res.text.split(/(?<=[.!?؟])\s+/).filter((s) => named(s) && /\d/.test(s));
       const toVerify = brandSentences.filter((s) => { const nums = s.match(/\d[\d\s.,]*\d|\d/g) ?? []; return nums.some((n) => n.length >= 2 && !factValues.some(([, v]) => v.replace(/\s/g, "").includes(n.replace(/\s/g, "")))); });

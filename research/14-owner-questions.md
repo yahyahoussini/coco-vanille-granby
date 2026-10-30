@@ -37,11 +37,21 @@ Answer formats: **Y/N** · **photo** · **list** · **table** (a sheet or a phot
 | S9 | Has a trademark been filed for "COCO VANILLE" or "COCOVANILLE"? | Check before printing boxes or signage; a pending application already counts under the Charter. The CIPO search itself is an operator task · 07 X-2, §8 | Y/N + file number | Later |
 | S10 | Still an exhibitor at the Marché public de Granby in 2026? Which days? | Partner link and market-day post; the 2026 exhibitor status is unverified · 01 §9.5, §12 #16; 11 §3 | Y/N + days | Later |
 
+## 1b. New since 2026-10-27 (Facebook bio, chat, strategy)
+
+| # | Question | Why it matters · source | Format | Priority |
+|---|---|---|---|---|
+| N1 | Which number takes texts, and which one takes atelier bookings: 450-372-7177 or 438-528-7818? | The site shows the mobile as « Cellulaire » only and promises no texting until you say so · 01 update 2026-10-27; sessions/04 #11 | text | Week 1 |
+| N2 | Creative workshops (« Ateliers créatifs sur réservation »): themes, ages, duration, group size, price, dates, how to book | The FAQ and the chat say « sur réservation » and leave a visible marker for the rest · 01 update 2026-10-27 | text | Week 2 |
+| N3 | Café: drinks offered, seats, can people sit and eat in? | « Pâtisserie & Café » is on the site; nothing else is claimed · 01 update 2026-10-27 | text | Week 2 |
+| N4 | Which of these are current: chocolate mousse, verrines, dessert trays, sandwiches/lunch, framboisier, Boston cake? Any « sans gluten » product, and how is cross-contact handled? | A pasted strategy names them from public posts (unverified); « sans gluten » is a regulated claim · 01 update 2026-10-27; 07 A-6, A-7 | list + process | Week 2 |
+| N5 | « Écrivez-nous » (the site's own chat): who answers, from which phone, during opening hours only? Keep it on, or pause it in Studio › Messages? | Replies count in the owner's daily Studio time (16 §1.3) · sessions/04 #10 | Y/N + names | Week 1 |
+
 ## 2. NAP and hours (H)
 
 | ID | Question | Why it matters (what it blocks · file) | Format | Priority |
 |---|---|---|---|---|
-| H1 | Current opening hours for each day, and the closed days | Six conflicting schedules exist online, and an AI answer already repeats the older « mercredi au dimanche » one. Hours set the pickup windows (84 a week if the shop opens 3 days, est.) and the weekly maintenance window (Monday 03:00 assumed) · 01 §3; 05 §0.3; 12 A3; 10 §3.1; 17 §8.1 | table Mon–Sun | **BLOCKER** |
+| H1 | ~~Current opening hours for each day, and the closed days~~ **Answered by the Google listing (relayed by Yahya, 2026-10-27): Mon–Tue closed, Wed–Sat 8:30–17:30, Sun 9:30–17:00. Owner: confirm, or correct in Studio « Boutique & heures ».** | Six conflicting schedules exist online, and an AI answer already repeats the older « mercredi au dimanche » one. Hours set the pickup windows (84 a week if the shop opens 3 days, est.) and the weekly maintenance window (Monday 03:00 assumed) · 01 §3; 05 §0.3; 12 A3; 10 §3.1; 17 §8.1 | table Mon–Sun | **BLOCKER** |
 | H2 | Holiday hours from 2026-12-24 to 2027-01-02, seasonal closures, and open/closed for each Québec statutory holiday (Studio pre-loads them « à confirmer ») | Special hours must reach GBP, Apple, Bing and Facebook by **2026-12-01**. Noël is Friday 2026-12-25; Jour de l'An is Friday 2027-01-01 · 12 E9, §6; 04 §6; 10 §3.4; 16 G18 | date table | **BLOCKER** (final version by week 5) |
 | H3 | Is 450-372-5917 an old line, a second line, or an error? | One Yellow Pages result shows it; the citation cleanup runs in week 2 · 01 §2.2, §12 #4 | text | Week 1 |
 | H4 | Business email address, if any | Footer, schema `email`, contact page. None was found online · 01 §1, §12 #7 | address or "aucune" | Week 1 |

@@ -146,7 +146,6 @@ Rule for every account: **the bakery owns it**; you get an admin or manager role
 |---|---|---|
 | SerpApi key (Granby-located results) | ≈ US$25/month | Weekly 30-prompt Google runs |
 | AI API keys: OpenAI, Perplexity, Gemini, Anthropic | Pay per use (≈ 540 calls a week, price [[FACT NEEDED]]) | Weekly AI-citation runs |
-| Semrush API units | Per Semrush plan | Keyword volumes (Semrush returned "no API units" on 2026-10-25) |
 
 ### 3.8 Money
 

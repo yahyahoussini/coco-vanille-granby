@@ -15,13 +15,14 @@
       "postalCode": "J2G 4Y6",
       "addressCountry": "CA"
     },
-    "geo": { "latitude": 45.3995807, "longitude": -72.7250821, "status": "unverified (brief's Google Maps pointer; Maps not openable)" },
+    "geo": { "latitude": 45.3995807, "longitude": -72.7250821, "status": "verified 2026-10-29 (research/20c G-1…G-3: 10.6 m from OpenStreetMap's « 3, Rue Court », the same Google pin as Wanderlog; good to about ±15 m, not a door location)" },
     "telephone": "+1-450-372-7177",
     "telephoneDisplay": "450-372-7177",
+    "telephoneMobile": "+1-438-528-7818 (Facebook bio; use not confirmed: calls, texts or atelier bookings, research/14 N1)",
     "email": "[[FACT NEEDED: email]]",
     "url": "[[FACT NEEDED: domain — none found]]",
-    "openingHours": "[[FACT NEEDED: current hours — 6 conflicting schedules, see fact hours.*]]",
-    "operatingStatus": "[[FACT NEEDED: confirm open in Oct 2026; RestoMontreal still flags 'may be temporarily closed'; latest evidence = 2026 reviews cited in a RestoMontreal summary (snapshot 2026-07-15/2026-08-01) + REQ annual update filed 2026-01-24]]",
+    "openingHours": "Mo–Tu closed; We–Sa 08:30–17:30; Su 09:30–17:00 (Google listing relayed by Yahya 2026-10-27; site-published; owner sign-off welcome, research/14 H1)",
+    "operatingStatus": "Trading: current Google listing hours and Facebook bio relayed by Yahya on 2026-10-27 (owner confirmation welcome, research/14 S1)",
     "foundingDate": "[[FACT NEEDED: shop opening date — corporation registered 2021-11-09]]",
     "founder": "[[FACT NEEDED: owner/chef name, role, background]]",
     "priceRange": "[[FACT NEEDED: owner price range — directory shows '$ & $$' (unverified)]]",
@@ -684,6 +685,80 @@
         { "url": "https://www.travelprofy.com/montreal/granby-zoo", "says": "83.74 km, about 1 h 12 min", "date": "undated" }
       ],
       "notes": ""
+    },
+    {
+      "id": "parking.downtown",
+      "value": "Municipal parking is free in downtown Granby (no meters since 2021-06-12; the only paid public lot is the hospital's). The municipal Centre-Court lot, between rue Court and rue du Centre, is about 100 m from 3 rue Court: 4-hour and 2-hour spaces limited Monday to Friday, and rows with no time limit. Rue Court: 2-hour street parking. Johnson lot (18 rue Johnson), across rue Principale: about 150 m",
+      "status": "verified (City by-law 1885-1990, consolidation revised 2026-09-18; lot plans in force since 2026-06-12); the distances are computed on OpenStreetMap (unverified, always « environ »)",
+      "sources": [
+        { "url": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf", "says": "Art. 56 and annex F (only the Hôpital de Granby lot is « à péage »); annex E (meters) repealed by by-law 1043-2021; annexes BB (Centre-Court), AA (Johnson) and Y (downtown streets)", "date": "2026-09-18" }
+      ],
+      "notes": "research/20c P-1…P-13 (twin: data/research-place.json). On the site from 2026-10-29 (research/21 §6). Not published: the two accessible spaces of Centre-Court until the City says who may use them (P-6), and « le plus proche » (Johnson's address is about as close on foot). Re-check after the draft by-laws tabled on 2026-10-19 (P-15, P-16) and the 2026 rue Court active-mobility works (W-2)."
+    },
+    {
+      "id": "distance.zoo",
+      "value": "About 5 to 8 minutes by car, 3 to 4 km depending on the route, between the Zoo de Granby's P1 lot and 3 rue Court, not counting traffic; the Zoo's visitor address is 1050, boulevard David-Bouchard Nord, Granby J2H 0Y6",
+      "status": "verified (the range two routing engines agree on, computed; the address is on the Zoo's own page)",
+      "sources": [
+        { "url": "https://router.project-osrm.org/route/v1/driving/-72.7253607,45.4196974;-72.7250821,45.3995807?overview=false&steps=true", "says": "3,000.7 m, 300.9 s (about 5 minutes)", "date": "2026-10-29" },
+        { "url": "https://valhalla1.openstreetmap.de/route", "says": "3.833 km, 454.8 s (about 8 minutes)", "date": "2026-10-29" },
+        { "url": "https://www.zoodegranby.com/horaire", "says": "1050 boul. David-Bouchard N, Granby, QC, J2H 0Y6", "date": "2026-10-29" }
+      ],
+      "notes": "research/20c Z-1…Z-8. Never a single figure, always « environ ». Never the Zoo's postal address (525, rue St-Hubert) for directions. Re-run the routes once a year (20c §9, item 8)."
+    },
+    {
+      "id": "hours.google_listing",
+      "value": "Mon–Tue closed; Wed–Sat 8:30–17:30; Sun 9:30–17:00",
+      "status": "verified (owner-published, relayed)",
+      "sources": [
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+      ],
+      "notes": "Site-published from 2026-10-27 (seed + Studio « Boutique & heures »); supersedes research/01 §3. Closest earlier source: RestoMontreal (Sunday 9:00 there)."
+    },
+    {
+      "id": "phone.mobile",
+      "value": "+1-438-528-7818 (438-528-7818)",
+      "status": "verified (owner-published, relayed)",
+      "sources": [
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+      ],
+      "notes": "Shown as « Cellulaire » only; texting and atelier bookings not promised until the owner says which number takes them (research/14 N1)."
+    },
+    {
+      "id": "service.cafe",
+      "value": "Pâtisserie & Café",
+      "status": "verified (owner-published, relayed)",
+      "sources": [
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+      ],
+      "notes": "Consistent with the small café of research/01 §0.4; seat count still unverified (research/14 N3)."
+    },
+    {
+      "id": "service.custom_cakes_bio",
+      "value": "Gâteaux sur commande",
+      "status": "verified (owner-published, relayed)",
+      "sources": [
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+      ],
+      "notes": "Offer confirmed; volume, lead time and prices still needed (research/14)."
+    },
+    {
+      "id": "service.ateliers",
+      "value": "Ateliers créatifs sur réservation",
+      "status": "verified (owner-published, relayed)",
+      "sources": [
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+      ],
+      "notes": "Themes, ages, duration, price and dates are [[FACT NEEDED]] (research/14 N2)."
+    },
+    {
+      "id": "strategy.claims_2026_10_27",
+      "value": "Google 4.9/5 from 40+ reviews (per RestoMontreal, 2026-10-15); RestoMontreal 4.8/5 from 26 reviews; mentions of chocolate mousse, verrines, dessert trays, sandwiches, a gluten-free Boston cake, framboisier; FindGlocal hours Wed–Fri 9–17, Sat 9–16",
+      "status": "unverified",
+      "sources": [
+        { "url": null, "says": "SEO/GEO/AEO strategy pasted by Yahya (BrandHub.ma); its sources were not reopened", "date": "2026-10-27" }
+      ],
+      "notes": "Not used in copy or schema. Products go to the owner (research/14 N4); « sans gluten » is a regulated claim (research/07 A-6, A-7). Ratings on-site only after reading Google directly, never aggregateRating."
     }
   ],
   "fact_needed": [
@@ -700,14 +775,14 @@
     "Wedding cakes offered? tiers, delivery, set-up",
     "Delivery offered? radius, fee, days",
     "Allergen policy (nuts, gluten); MAPAQ permit number/category",
-    "Seating count, Wi-Fi, parking (with photos)",
+    "Seating count, Wi-Fi, which door customers use and its access (steps, threshold, door width), photos of the door and the parking (public parking answered 2026-10-29: fact parking.downtown, research/20c)",
     "Current exact Google review count (RestoMontreal showed '40+' in mid-2026); context and fix for the cake-order complaint (reportedly Jan 2026: chocolate ordered, vanilla received)",
     "2026 participation at the Marché public de Granby",
     "Spanish-speaking staff/customers (justifies ES tier and WhatsApp on ES pages)",
     "Directors/shareholders from REQ (if a Person/founder entity is wanted)",
     "Granby 2021 Spanish mother-tongue and home-language counts (StatCan detailed table, CSD 2447017)",
     "Road distances from 3 rue Court to Shefford, Saint-Alphonse-de-Granby, Roxton Pond, Saint-Paul-d'Abbotsford, Sainte-Cécile-de-Milton, Waterloo (compute from verified geo)",
-    "Walking distance from 3 rue Court to the Marché public, Zoo de Granby and Lac Boivin"
+    "Walking distance from 3 rue Court to the Marché public and Lac Boivin: one engine each so far (Marché public about 160 m on foot, CINLB about 5 minutes by car; research/20c S-2, S-3). The Zoo is answered (fact distance.zoo)"
   ],
   "verification_log": {
     "date": "2026-10-25",

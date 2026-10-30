@@ -1,0 +1,466 @@
+[
+  {
+    "id": "domain.com.status",
+    "value": "cocovanillegranby.com is not registered: Verisign RDAP answered HTTP 404 at 2026-10-29T13:11:01Z; the control google.com answered 200",
+    "label": "verified",
+    "source": "https://rdap.verisign.com/com/v1/domain/cocovanillegranby.com",
+    "seen": "2026-10-29",
+    "note": "Registry lookup with curl. Confirms research/20a §7 (404 at 10:32 and 10:47 UTC the same morning). Launch blocker: register today in the corporation's name (research/21 §3, research/14 T2)."
+  },
+  {
+    "id": "domain.ca.status",
+    "value": "cocovanillegranby.ca is not registered: CIRA RDAP answered HTTP 404 at 2026-10-29T13:11:05Z; the control granby.ca answered 200",
+    "label": "verified",
+    "source": "https://rdap.ca.fury.ca/rdap/domain/cocovanillegranby.ca",
+    "seen": "2026-10-29",
+    "note": "Registry lookup with curl. Confirms research/20a §7."
+  },
+  {
+    "id": "domain.cocovanille_ca.status",
+    "value": "cocovanille.ca is not registered: CIRA RDAP answered HTTP 404 at 2026-10-29T13:11:05Z",
+    "label": "verified",
+    "source": "https://rdap.ca.fury.ca/rdap/domain/cocovanille.ca",
+    "seen": "2026-10-29",
+    "note": "Defensive name proposed in research/20a ID-3; registering it is the owner's yes or no (research/20e §7). cocovanille.com belongs to a third party (research/20a §7)."
+  },
+  {
+    "id": "price.com.registry",
+    "value": "The .com registry (wholesale) price rises from US$10.26 to US$10.97 per domain-year on 2026-11-01 (Verisign's notice of April 2026; about +6.9 %)",
+    "label": "verified",
+    "source": "https://app.edgar.tools/filing/1014473/0001014473-26-000019/q12026earningsrelease.htm",
+    "seen": "2026-10-29",
+    "note": "Official (Verisign's Q1 2026 results and a filing), seen via search summary; trade press says the same. Registering before 2026-11-01 keeps year one at the old price."
+  },
+  {
+    "id": "price.com.icann_fee",
+    "value": "A US$0.20 ICANN fee per .com domain-year brings the registrar's cost to about US$11.17 from 2026-11-01",
+    "label": "unverified",
+    "source": "https://tldes.com/pages/com-price-increase-2026",
+    "seen": "2026-10-29",
+    "note": "Third party, via search summary. Used in the cost floor (research/20e §4) as the .com renewal price at an at-cost registrar (est.)."
+  },
+  {
+    "id": "registrar.cloudflare.ca",
+    "value": ".ca is in Cloudflare Registrar's list of registrable TLDs, under « TLDs Recently added »; registry CIRA. The page lists no prices",
+    "label": "verified",
+    "source": "https://www.cloudflare.com/tld-policies/",
+    "seen": "2026-10-29",
+    "note": "Direct read. The page does not say whether .ca transfers are supported. It adds that some TLDs carry extra registrant requirements (for .ca: CIRA's Canadian Presence Requirements)."
+  },
+  {
+    "id": "registrar.cloudflare.at_cost",
+    "value": "Cloudflare Registrar sells registrations and renewals at the wholesale price, with no markup",
+    "label": "verified",
+    "source": "https://www.cloudflare.com/press-releases/2018/cloudflare-launches-the-first-domain-registrar-you-can-love",
+    "seen": "2026-10-29",
+    "note": "Official (Cloudflare's registrar pages), via search summary. Prices appear only in the Cloudflare dashboard. Tax treatment for Canadian buyers was not checked."
+  },
+  {
+    "id": "registrar.cloudflare.prices",
+    "value": "Cloudflare Registrar: .ca US$9.19 a year (registration, renewal and transfer); .com US$10.46 a year",
+    "label": "unverified",
+    "source": "https://costgoat.com/pricing/cloudflare-domains",
+    "seen": "2026-10-29",
+    "note": "Aggregator (updated 2026-10-20), via search summary; domainoffer.net shows the same .ca renewal (US$9.19) on 2026-10-29. US$10.46 = the old .com registry price US$10.26 + US$0.20 (est.); expect about US$11.17 from 2026-11-01."
+  },
+  {
+    "id": "registrar.cloudflare.nameservers",
+    "value": "Domains registered through Cloudflare Registrar must use Cloudflare's nameservers",
+    "label": "unverified",
+    "source": "https://domainoffer.net/tld/ca",
+    "seen": "2026-10-29",
+    "note": "Aggregator, via search summary. Fits research/17 §10.5 (Cloudflare DNS, DNS-only). Consequence: DNS and registrar move together."
+  },
+  {
+    "id": "registrar.ca.others",
+    "value": ".ca at other registrars, USD, first year / renewal: Porkbun 8.77 / 9.18 (transfer 8.98); CanSpace 8.54 / 9.25 (transfer 8.54); Gandi 8.99 / 39.98; Namecheap 9.58 / 11.98, WHOIS privacy included",
+    "label": "unverified",
+    "source": "https://domainoffer.net/tld/ca",
+    "seen": "2026-10-29",
+    "note": "Aggregator, direct read (prices updated 2026-10-29 12:58; the currency filter defaults to USD). The Namecheap figures come from a search summary of the same site. Hover, Webnames and Rebel were not shown. CanSpace is the Canadian fallback (research/20e §1)."
+  },
+  {
+    "id": "cira.cpr.corporation",
+    "value": "CIRA's Canadian Presence Requirements include « Canadian corporation: a corporation under the laws of Canada or any province or territory of Canada ». Pâtisserie Coco Vanille inc. (société par actions under Québec law, NEQ 1177082220) qualifies",
+    "label": "verified",
+    "source": "https://www.cira.ca/en/?p=45244",
+    "seen": "2026-10-29",
+    "note": "CIRA's own page via search summary (direct read HTTP 403); the same wording appears in registrar guides (PlanetHoster KB https://kb.planethoster.com/en/?p=5507, OpenSRS). The corporation's form and NEQ: research/20a §1."
+  },
+  {
+    "id": "cira.registrant_name",
+    "value": "A corporation registers a .ca under its full legal name, with its jurisdiction",
+    "label": "unverified",
+    "source": "https://www.a2hosting.com/kb/getting-started-guide/registering-a-domain1/requirements-for-.ca-domains",
+    "seen": "2026-10-29",
+    "note": "Third-party registrar guide (as in research/17 §10.1). Use « Pâtisserie Coco Vanille inc. » exactly as at the Registraire; whether the registrar's form accepts « â » is an open item (research/20e §7)."
+  },
+  {
+    "id": "cira.audit",
+    "value": "CIRA can ask a registrant for proof of Canadian presence at any time (Registrant Information Validation); a domain not proven is deleted about two months after the audit starts",
+    "label": "unverified",
+    "source": "https://misk.com/kb/ca-presence-requirements",
+    "seen": "2026-10-29",
+    "note": "Registrar guide, via search summary. Keep the registrant email a monitored role address (bonjour@) so an audit email is not missed."
+  },
+  {
+    "id": "cira.whois",
+    "value": "WHOIS privacy is automatic for individual .ca registrants only. A corporation's registrant information is shown; a non-individual can ask for suppression only by certifying a legitimate privacy need",
+    "label": "verified",
+    "source": "https://cira.ca/?page_id=3",
+    "seen": "2026-10-29",
+    "note": "CIRA Privacy Policy v2.1 (2020-03-09) via search summary, plus CanSpace's KB (privacy not available to corporations, https://www.canspace.ca/clients/knowledgebase/5/How-do-I-change-WHOIS-privacy-options.html) and CIRA's answers to ICANN. The current policy text was not read. Consequence: register with the shop's public phone and a role email, never a personal one."
+  },
+  {
+    "id": "vps.ovh.bhs",
+    "value": "OVHcloud's Canadian VPS page: « Votre VPS localisé à Beauharnois (Québec) »",
+    "label": "verified",
+    "source": "https://www.ovhcloud.com/fr-ca/vps/vps-canada/",
+    "seen": "2026-10-29",
+    "note": "Direct read. The en-ca twin says only « located in Canada »."
+  },
+  {
+    "id": "vps.ovh.plans",
+    "value": "OVHcloud VPS (Canada): VPS-1 2 vCores, 4 GB, 40 GB NVMe, 500 Mbit/s, from $6.20 a month; VPS-2 4 vCores, 8 GB, 75 GB NVMe, 1 Gbit/s, from $11.64; VPS-3 6 vCores, 12 GB, 100 GB, 2 Gbit/s, from $16.83; VPS-4 8 vCores, 24 GB, 200 GB, 3 Gbit/s, from $32.21. All: unlimited traffic, daily backup of the previous 24 hours",
+    "label": "verified",
+    "source": "https://www.ovhcloud.com/en-ca/vps/vps-canada/",
+    "seen": "2026-10-29",
+    "note": "Direct read. The page prints « $ » with no currency; the « from » price is the 12-month price (see vps.ovh.vps2_cad). Settles research/17's contested mapping: VPS-2 is the 4-core / 8 GB plan."
+  },
+  {
+    "id": "vps.ovh.vps2_cad",
+    "value": "Plan vps-2027-model2 « VPS-2 2027 », Canadian subsidiary, currency CAD, tax excluded: C$13.70 a month with no commitment; C$13.01 a month on 6 months prepaid; C$11.64 a month on 12 months prepaid; installation fee 0",
+    "label": "verified",
+    "source": "https://ca.api.ovh.com/1.0/order/catalog/public/vps?ovhSubsidiary=CA",
+    "seen": "2026-10-29",
+    "note": "OVHcloud's public order catalogue, direct read (raw catalogue values ÷ 100,000,000). The specs come from the VPS page (vps.ovh.plans), whose « from $11.64 » matches the 12-month price. 12 months prepaid = C$139.68 (est.)."
+  },
+  {
+    "id": "vps.ovh.datacentres",
+    "value": "Datacentres offered for vps-2027-model2: BHS, DE, EU-SOUTH-MIL, EU-WEST-RBX, GRA, SBG, SGP, SYD, UK, WAW, YNM. No Toronto site",
+    "label": "verified",
+    "source": "https://ca.api.ovh.com/1.0/order/catalog/public/vps?ovhSubsidiary=CA",
+    "seen": "2026-10-29",
+    "note": "Only the first 100,000 of 6.3 million characters were read; the plan's datacentre list was in that part. Lowers risk R28 (research/15): pick BHS on the order and check the summary."
+  },
+  {
+    "id": "vps.ovh.options",
+    "value": "OVHcloud VPS options: premium automatic backup from $1.80 a month (restore from the last 7 days); snapshots from $0.50 a month; the daily backup is free",
+    "label": "verified",
+    "source": "https://www.ovhcloud.com/en-ca/vps/",
+    "seen": "2026-10-29",
+    "note": "Direct read. Currency printed only as « $ »; CAD by inference from the Canadian catalogue. Provider backups sit in the same datacentre: not an off-site backup (research/17 §7.4)."
+  },
+  {
+    "id": "vps.ovh.history",
+    "value": "The en-ca page already showed VPS-2 « from $11.64 » on 2026-10-25 (research/17 §7.3). The 4-core / 8 GB « VPS-1 2026 » benchmarked in September 2025 (6.49 €) is now marked deprecated",
+    "label": "unverified",
+    "source": "https://www.vpsbenchmarks.com/hosters/ovhcloud/plans/vps-1",
+    "seen": "2026-10-29",
+    "note": "Third party, via search summary. Explains research/17's plan-name conflict: the range was renamed (« 2027 » plans)."
+  },
+  {
+    "id": "vps.lightsail",
+    "value": "AWS Lightsail Linux bundles: General Purpose 8 GB = 2 vCPU, 160 GB SSD, 5 TB, US$44 a month; General Purpose 16 GB = 4 vCPU, 320 GB, 6 TB, US$84; Compute Optimized 8 GB = 4 vCPU, 320 GB, 6 TB, US$84",
+    "label": "verified",
+    "source": "https://aws.amazon.com/lightsail/pricing/",
+    "seen": "2026-10-29",
+    "note": "Direct read. The page does not say whether bundle prices differ by Region (only some Asia-Pacific and São Paulo bundles get half the transfer). Lightsail runs in ca-central-1 (Montréal): the only other Québec VPS option found, at about 4.5 times (US$44, 2 vCPU) to 8.6 times (US$84, 4 vCPU) OVHcloud's month-to-month price (est., at 1 USD = 1.4036 CAD)."
+  },
+  {
+    "id": "vps.vultr",
+    "value": "Vultr vc2-4c-8gb: 4 vCPU, 8 GB, 160 GB, 4 TB bandwidth, US$40 a month, offered in Toronto (yto)",
+    "label": "verified",
+    "source": "https://api.vultr.com/v2/plans?type=vc2&per_page=50",
+    "seen": "2026-10-29",
+    "note": "Vultr's public plans API, direct read (vultr.com/pricing answered 403). Toronto is outside Québec: s. 17 ÉFVP."
+  },
+  {
+    "id": "vps.linode",
+    "value": "Akamai/Linode 8GB (g6-standard-4): 4 vCPU, 8 GB, 160 GB, 5 TB transfer, US$48 a month; regional prices differ only for id-cgk (Jakarta) and br-gru (São Paulo), so Toronto (ca-central) is at list",
+    "label": "verified",
+    "source": "https://api.linode.com/v4/linode/types",
+    "seen": "2026-10-29",
+    "note": "Linode's public API, direct read. Dedicated 8 GB (g6-dedicated-4): US$72. Toronto is outside Québec."
+  },
+  {
+    "id": "vps.digitalocean",
+    "value": "DigitalOcean Basic droplet 8 GiB: 4 vCPU, 160 GiB SSD, 5,000 GiB transfer, US$48 a month; backups +20 % of the droplet price (weekly) or +30 % (daily)",
+    "label": "verified",
+    "source": "https://www.digitalocean.com/pricing/droplets",
+    "seen": "2026-10-29",
+    "note": "Direct read. Toronto (TOR1) is listed as a datacentre; the page does not say the price is the same in every region. Outside Québec."
+  },
+  {
+    "id": "vps.montreal_others",
+    "value": "No 4 vCPU / 8 GB price was found for other Montréal providers (Leaseweb, Vexxhost, PlanetHoster, Hostinger); a directory lists unnamed Montréal 4-core / 8 GB plans at US$10.74–20 a month",
+    "label": "unverified",
+    "source": "https://hostadvice.com/vps/montreal/",
+    "seen": "2026-10-29",
+    "note": "Search summary (directory updated 2026-07-27); providers and datacentres not confirmed. Not pursued: OVHcloud BHS already meets the need."
+  },
+  {
+    "id": "aws.ca_central_1.city",
+    "value": "AWS Canada (Central), ca-central-1, opened in December 2016, is in Montréal, Québec",
+    "label": "verified",
+    "source": "https://www.datacenterdynamics.com/en/news/aws-launches-second-cloud-region-in-canada/",
+    "seen": "2026-10-29",
+    "note": "Two independent sources: trade press on AWS's December 2023 Canada West (Calgary) launch, via search summary (direct reads of DatacenterDynamics and Business Wire answered 403), and the region's published coordinates 45.5088, -73.5878 (https://cloudprice.net/aws/region/ca-central-1). AWS's own 2016 launch post names no city; it says the grid is 99 % hydropower (https://aws.amazon.com/blogs/aws/now-open-aws-canada-central-region/). Closes research/17 §7.2's [[VERIFY]]."
+  },
+  {
+    "id": "backup.ovh.bhs",
+    "value": "OVHcloud Object Storage at Beauharnois: region code bhs, 1-AZ, classes High Performance, Standard and Infrequent Access; endpoint https://s3.bhs.io.cloud.ovh.net. Toronto (ca-east-tor) has the same classes; Cold Archive is in Paris only",
+    "label": "verified",
+    "source": "https://docs.ovhcloud.com/en/guides/storage-and-backup/object-storage/s3-location",
+    "seen": "2026-10-29",
+    "note": "Direct read (first 100,000 of 241,719 characters). Closes research/17 §7.4's [[VERIFY that S3 Standard is offered in BHS]]. Use it as the ovhbhs rclone remote (infra/README step 7)."
+  },
+  {
+    "id": "backup.ovh.egress",
+    "value": "OVHcloud Object Storage: « there are no charges for API calls, incoming traffic, or outgoing traffic »; Standard classes bill a minimum of 1 hour of storage",
+    "label": "verified",
+    "source": "https://www.ovhcloud.com/en-ca/public-cloud/object-storage/",
+    "seen": "2026-10-29",
+    "note": "Direct read. The page shows no per-GB price (it links to the price page, which was truncated)."
+  },
+  {
+    "id": "backup.ovh.price",
+    "value": "OVHcloud's FAQ example for 1-AZ storage: 0.00000972 EUR per GB-hour (about €7.1 per TB-month; region not named). A third party gives about US$0.0081 per GB-month",
+    "label": "unverified",
+    "source": "https://docs.ovhcloud.com/en/guides/storage-and-backup/object-storage/s3-faq",
+    "seen": "2026-10-29",
+    "note": "The FAQ (updated 2026-03-06, direct read) uses the figure as a worked example, not as a price list; third party: https://tools.cloudtweaks.com/company/ovhcloud-object-storage (May 2026, via summary). The BHS price in CAD is an open item. The cost floor uses US$0.0081 (est.)."
+  },
+  {
+    "id": "backup.s3.ca_central_1",
+    "value": "Amazon S3 Standard in ca-central-1 costs about US$0.025 per GB-month (us-east-1: US$0.023)",
+    "label": "unverified",
+    "source": "https://costgoat.com/pricing/amazon-s3",
+    "seen": "2026-10-29",
+    "note": "Third-party calculator, via search summary (the summary's attribution). Consistent with AWS's own Lightsail page, which charges US$0.025 per GB for storage overage in Canada (Central) (backup.lightsail.ca). Requests and egress are extra. Use it as the s3ca rclone remote."
+  },
+  {
+    "id": "backup.lightsail.ca",
+    "value": "Lightsail object storage bundles: US$1 a month for 5 GB (25 GB transfer), US$3 for 100 GB (250 GB), US$5 for 250 GB (500 GB). Overage in Canada (Central): US$0.025 per GB stored, US$0.09 per GB transferred",
+    "label": "verified",
+    "source": "https://aws.amazon.com/lightsail/pricing/",
+    "seen": "2026-10-29",
+    "note": "Direct read. Confirms Lightsail buckets exist in Canada (Central). A fixed-price alternative to S3 for backup copy 1."
+  },
+  {
+    "id": "backup.backblaze.ca",
+    "value": "Backblaze B2's Canadian region (Canada East) is in Toronto and opened in January 2025; the price is the same in every region, about US$6.95 per TB-month",
+    "label": "unverified",
+    "source": "https://businesswire.com/news/home/20250107873977/en/5767705/Backblaze-Launches-New-Data-Center-in-Canada-Now-Open-for-Business",
+    "seen": "2026-10-29",
+    "note": "Press release and a third-party price (https://upstash.com/blog/backblaze-b2-pricing-explained-2026), both via search summary. Toronto is outside Québec, so not chosen."
+  },
+  {
+    "id": "backup.wasabi.ca",
+    "value": "Wasabi's ca-central-1 region is in Toronto; US$7.99 per TB-month pay as you go, with a 1 TB minimum",
+    "label": "unverified",
+    "source": "https://wasabi.com/locations",
+    "seen": "2026-10-29",
+    "note": "Region via search summary; the price and the minimum come from research/17 §7.4 (Wasabi FAQ). Outside Québec, and the minimum is poor value for under 50 GB."
+  },
+  {
+    "id": "mail.m365.residency",
+    "value": "« If Customer provisions its tenant in … Canada … Microsoft will store the following Customer Data at rest only within that Geo: Exchange Online mailbox content (e-mail body, calendar entries, and the content of e-mail attachments) ». The actual location shows in the admin center: Settings › Org settings › Organization profile › Data location",
+    "label": "verified",
+    "source": "https://learn.microsoft.com/en-us/microsoft-365/enterprise/m365-dr-service-exo",
+    "seen": "2026-10-29",
+    "note": "Microsoft Learn, updated 2026-10-08, direct read, quoting the Product Terms. No city is named; which Canadian datacentres hold the data was not checked, so the literal s. 17 reading (research/07 P4) still asks for a light ÉFVP. The tenant must be created with country Canada."
+  },
+  {
+    "id": "mail.m365.shared",
+    "value": "A Microsoft 365 shared mailbox stores up to 50 GB without a licence; a person who opens it needs a licensed Exchange Online mailbox; up to 25 users; its own sign-in should stay blocked",
+    "label": "verified",
+    "source": "https://learn.microsoft.com/en-us/microsoft-365/admin/email/about-shared-mailboxes",
+    "seen": "2026-10-29",
+    "note": "Microsoft Learn (2026-03-13), direct read. Basis for bonjour@ and confidentialite@ as free shared mailboxes opened through the owner's one licence (research/21 A1, A2)."
+  },
+  {
+    "id": "mail.m365.eop1",
+    "value": "Microsoft Exchange Online (Plan 1): C$5.40 per user per month, paid yearly",
+    "label": "verified",
+    "source": "https://www.microsoft.com/en-ca/microsoft-365/exchange/compare-microsoft-exchange-online-plans",
+    "seen": "2026-10-29",
+    "note": "Official page, via search summary; the direct read timed out. A footnote mentions a discount offer from 2026-07-01 to 2026-09-30 (whether it covered Plan 1 is unclear). No sign of a 2026 increase for this plan in Canada was found. Confirm at checkout."
+  },
+  {
+    "id": "mail.m365.basic",
+    "value": "Microsoft 365 Business Basic: C$8.10 per user per month, paid yearly, on the en-ca plan chooser, against C$9.50 read on 2026-10-25; the US list price went from US$6 to US$7 on 2026-07-01",
+    "label": "unverified",
+    "source": "https://www.microsoft.com/en-ca/microsoft-365/business/microsoft-365-plan-chooser",
+    "seen": "2026-10-29",
+    "note": "Conflict. The C$8.10 comes from a search summary of Microsoft's page (direct read timed out); C$9.50 is research/17 §9.2; the US increase comes from third parties (https://bestructured.com/how-much-does-office-365-cost/). Not recommended: Teams and the Office web apps are not needed."
+  },
+  {
+    "id": "mail.google.starter",
+    "value": "Google Workspace Business Starter: C$9.20 per user per month on the annual plan, C$11 on the flexible plan",
+    "label": "unverified",
+    "source": "https://workspace.google.com/intl/fr_ca/pricing.html",
+    "seen": "2026-10-29",
+    "note": "A Google page for Canada via search summary (undated), the same figures research/17 saw on 2026-10-25. Today's direct reads returned euro prices (€6.80; 10 % off for the first 20 users for 12 months from 2026-11-12), so the CAD price was not readable."
+  },
+  {
+    "id": "mail.google.regions",
+    "value": "« Enterprise data regions » is listed only under Enterprise; Business Starter, Standard and Plus have no data-region feature",
+    "label": "verified",
+    "source": "https://workspace.google.com/intl/en_ca/pricing",
+    "seen": "2026-10-29",
+    "note": "Direct read (served in euros). Where Business-plan mail is stored was not checked; treat it as outside Québec (s. 17 ÉFVP)."
+  },
+  {
+    "id": "mail.zoho.dc",
+    "value": "Zoho lists two Canadian data centres: Toronto (primary) and Montréal (secondary). The country chosen at sign-up picks the data centre",
+    "label": "verified",
+    "source": "https://www.zoho.com/know-your-datacenter.html",
+    "seen": "2026-10-29",
+    "note": "Direct read. Opened in November 2023 (https://channelbuzz.ca/2023/11/zoho-launches-first-two-canadian-data-centres-in-montreal-and-toronto-41941/, via summary). The page does not list which Zoho services run there."
+  },
+  {
+    "id": "mail.zoho.lite",
+    "value": "Zoho Mail Lite: US$1 per user per month, billed annually",
+    "label": "unverified",
+    "source": "https://www.capterra.com/p/174694/Zoho-Mail/pricing/",
+    "seen": "2026-10-29",
+    "note": "Third parties (Capterra, TrustRadius) and Zoho's USD price sheet, via search summary. Whether Zoho Mail is hosted in the Canadian data centre is not stated. The cost-floor alternative to Exchange Online."
+  },
+  {
+    "id": "ses.region",
+    "value": "Amazon SES runs in ca-central-1: API email.ca-central-1.amazonaws.com, SMTP email-smtp.ca-central-1.amazonaws.com, receiving inbound-smtp.ca-central-1.amazonaws.com. DKIM records point to dkim.amazonses.com; the custom MAIL FROM feedback endpoint is feedback-smtp.ca-central-1.amazonses.com. Default quotas per Region: 200 emails per 24 hours and 1 per second (adjustable)",
+    "label": "verified",
+    "source": "https://docs.aws.amazon.com/general/latest/gr/ses.html",
+    "seen": "2026-10-29",
+    "note": "Direct read. Closes research/17 §9.1's [[VERIFY SES availability]]. The DNS values go into infra/README's DNS table (research/20e §5, step 8)."
+  },
+  {
+    "id": "ses.price",
+    "value": "Amazon SES: à la carte US$0.10 per 1,000 outbound emails; Essentials US$0.16 per 1,000 (0–10 M a month), no fixed fee; Pro US$0.22 per 1,000 + US$105 per account per Region per month; Enterprise US$0.23 + US$500. New accounts, and account-Regions with no metered SES use since 2025-06-01, start on Essentials from 2026-07-21. Attachments US$0.12 per GB; standard dedicated IP US$24.95 a month; new AWS customers get up to US$200 in Free Tier credits",
+    "label": "verified",
+    "source": "https://aws.amazon.com/ses/pricing/",
+    "seen": "2026-10-29",
+    "note": "Direct read. Confirms research/17 §9.1's plan rates and its unverified start date. At bakery volume (up to 1,000 emails a month) Essentials costs under US$0.20 a month (est.)."
+  },
+  {
+    "id": "ses.region_price",
+    "value": "The SES pricing page does not say that rates differ by Region; the plans' fixed fees are charged per account per Region",
+    "label": "verified",
+    "source": "https://aws.amazon.com/ses/pricing/",
+    "seen": "2026-10-29",
+    "note": "Direct read. A third party says the à la carte rate is the same in every commercial Region (search summary). No ca-central-1 rate was seen separately."
+  },
+  {
+    "id": "twilio.ca.sms",
+    "value": "Twilio, Canada, per segment: SMS outbound and inbound US$0.0083 on long codes and toll-free numbers; short codes US$0.0315; MMS outbound US$0.022",
+    "label": "verified",
+    "source": "https://www.twilio.com/en-us/sms/pricing/ca",
+    "seen": "2026-10-29",
+    "note": "Direct read; the page says pricing is current as of October 2026 and prints « $ » with no currency code (USD by inference from the en-us page). Replaces research/10's US$0.0079 (UNVERIFIED (FC))."
+  },
+  {
+    "id": "twilio.ca.numbers",
+    "value": "Twilio, Canada, numbers per month: long code US$1.15; toll-free US$2.15 (bring your own number: US$0.50); random short code US$1,000, billed quarterly, plus a one-time setup fee",
+    "label": "verified",
+    "source": "https://www.twilio.com/en-us/sms/pricing/ca",
+    "seen": "2026-10-29",
+    "note": "Direct read. The toll-free number is the recommended sender (research/10 §6, research/16b)."
+  },
+  {
+    "id": "twilio.ca.carrier_fees",
+    "value": "Twilio carrier fees for Canadian carriers, two values each: Bell & Virgin 0.0087 / 0.0323; Rogers & Fido 0.0084 / 0.017; Telus 0.0073 / 0.0146; Freedom Mobile 0.0067 / 0.0089; Videotron 0.0067 / 0.0089; all others 0.0064 / 0.0079",
+    "label": "unverified",
+    "source": "https://www.twilio.com/en-us/sms/pricing/ca",
+    "seen": "2026-10-29",
+    "note": "Direct read, but the page's column headers do not map clearly to the values. The first value is read as the outbound SMS fee and the second as MMS (inference). Fees are added automatically by the recipient's carrier. The cost floor uses 0.0064–0.0087 per segment (est.)."
+  },
+  {
+    "id": "twilio.tfv",
+    "value": "Unverified toll-free numbers have been blocked from texting the US and Canada since 2024-01-31 (restricted numbers since 2023-11-08); toll-free verification is free; review takes about 3–5 business days",
+    "label": "verified",
+    "source": "https://support.twilio.com/hc/en-us/articles/5377174717595",
+    "seen": "2026-10-29",
+    "note": "Twilio's support FAQ, via search summary. Voice, and texts to numbers outside the US and Canada, are not affected."
+  },
+  {
+    "id": "twilio.tfv_brn",
+    "value": "Since 2026-02-17 a business registration number is required on every new toll-free verification, for every business type except sole proprietorships; the Canadian registration-authority options are CBN (Canadian Business Number) and PROVINCIAL_NUMBER",
+    "label": "verified",
+    "source": "https://www.twilio.com/docs/messaging/api/tollfree-verification-resource",
+    "seen": "2026-10-29",
+    "note": "Twilio's changelog and API reference, via search summary; a third party (Whitespark) gives 2026-02-10. Whether the NEQ (1177082220) is accepted as the provincial number is not stated, so the corporation's CRA Business Number is asked for ([[FACT NEEDED]], research/20e §7)."
+  },
+  {
+    "id": "twilio.regions",
+    "value": "Twilio operates the Regions US1, IE1 and AU1; there is no Canadian region (a support article about Voice says a Canadian CA1 region is « not currently supported »); workloads default to US1, and Twilio does not guarantee that data stays in the selected Region during the rollout",
+    "label": "verified",
+    "source": "https://www.twilio.com/docs/global-infrastructure",
+    "seen": "2026-10-29",
+    "note": "Twilio docs and support article (https://support.twilio.com/hc/en-us/articles/51810214523803-Resolving-Missing-Canada-CA1-Outbound-Voice-Region-in-the-Twilio-Console), via search summary. Consequence: SMS data leaves Québec, so an ÉFVP + Twilio's data agreement are needed (research/07 §2)."
+  },
+  {
+    "id": "stripe.ca.cards",
+    "value": "Stripe Canada: 2.9 % + CA$0.30 per successful domestic card transaction (wallets are priced as cards); +0.8 % for international cards; +2 % when currency conversion applies; +0.5 % for manually entered cards",
+    "label": "verified",
+    "source": "https://stripe.com/en-ca/pricing",
+    "seen": "2026-10-29",
+    "note": "Direct read. Unchanged from research/10 §1.1. A C$45 order costs C$1.61 in fees (est.)."
+  },
+  {
+    "id": "stripe.ca.disputes",
+    "value": "Stripe Canada: dispute received fee CA$15.00; dispute countered fee CA$15.00, refunded only if the dispute is won",
+    "label": "verified",
+    "source": "https://stripe.com/en-ca/pricing",
+    "seen": "2026-10-29",
+    "note": "Direct read. Answers research/10 §14 #2 (dispute fee). Smart Disputes, optional, charges 30 % of the disputed amount on wins."
+  },
+  {
+    "id": "stripe.ca.refunds",
+    "value": "Stripe Canada: no refund fee for most payment methods (bank-transfer refunds may have one), but the original processing, Connect and currency-conversion fees are not returned",
+    "label": "verified",
+    "source": "https://stripe.com/en-ca/pricing",
+    "seen": "2026-10-29",
+    "note": "Direct read. Matters for the custom-cake deposit (research/21 A4): a refunded deposit still costs its processing fee."
+  },
+  {
+    "id": "stripe.ca.fixed",
+    "value": "Stripe Canada: no setup or monthly fee; Payment Links and Checkout included; in person (Terminal) 2.7 % + CA$0.05, Interac debit CA$0.15, readers from CA$79",
+    "label": "verified",
+    "source": "https://stripe.com/en-ca/pricing",
+    "seen": "2026-10-29",
+    "note": "Direct read. A custom Checkout domain costs US$10 a month (not needed). The page lists no separate online Interac rate."
+  },
+  {
+    "id": "github.free",
+    "value": "GitHub Free: 2,000 Actions minutes a month for private repositories (unlimited for public ones); 500 MB of Packages storage and 1 GB of transfer a month; « Container image storage and bandwidth for the Container registry is currently free »",
+    "label": "verified",
+    "source": "https://docs.github.com/en/billing/concepts/product-billing/github-packages",
+    "seen": "2026-10-29",
+    "note": "Direct read for the registry sentence and the 500 MB / 1 GB; the 2,000 minutes come from GitHub's billing docs via search summary (https://docs.github.com/billing/managing-billing-for-your-products/managing-billing-for-github-actions). The page does not say whether « currently free » covers private images. The repo's visibility was not checked."
+  },
+  {
+    "id": "monitor.free",
+    "value": "Healthchecks.io's free Hobbyist plan: 20 checks. Better Stack's free plan: 10 monitors and 10 heartbeats, checks every 3 minutes (one source says 30 seconds)",
+    "label": "unverified",
+    "source": "https://betterstack.com/community/comparisons/better-stack-vs-healthchecks-io/",
+    "seen": "2026-10-29",
+    "note": "Third-party comparisons, via search summary (Better Stack's own comparison page; Product Compass). Enough for the 4 uptime checks and 2 heartbeats of infra/README step 13."
+  },
+  {
+    "id": "fx.usdcad",
+    "value": "Bank of Canada daily average exchange rate on 2026-10-28: 1 USD = 1.4036 CAD (range 1.3993–1.4038 from 2026-10-22 to 2026-10-28)",
+    "label": "verified",
+    "source": "https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?recent=5",
+    "seen": "2026-10-29",
+    "note": "Official API, direct read. Used only for the cost floor (research/20e §4)."
+  },
+  {
+    "id": "cost.floor",
+    "value": "Monthly cost floor before GST/QST and card fees: about C$21.03 with the VPS prepaid for 12 months, or C$23.09 month to month, while SMS is off; about C$28.18–28.82 (prepaid) or C$30.24–30.88 (month to month) once SMS runs at 200 segments a month",
+    "label": "unverified",
+    "source": "research/20e-infra-and-accounts.md §4",
+    "seen": "2026-10-29",
+    "note": "(est.) Computed in research/20e §4 from the rows above: VPS-2 C$11.64 or C$13.70; .com US$11.17 + .ca US$9.19 a year; Exchange Online (Plan 1) C$5.40; 30 GB at US$0.025 + US$0.0081 per GB-month; 1,000 SES emails at US$0.16 per 1,000; Twilio toll-free US$2.15 + 200 × (US$0.0083 + US$0.0064–0.0087); USD × 1.4036. Replaces research/17 §11's C$25–55."
+  }
+]

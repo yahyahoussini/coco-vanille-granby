@@ -1,0 +1,1291 @@
+{
+ "seen": "2026-10-29T15:54:10.587Z",
+ "method": "Google suggestqueries (client=firefox, gl=ca, hl=fr|en) and Bing osjson (mkt=fr-CA|en-CA), from a machine in Morocco; suggestions, not volumes",
+ "rows": [
+  {
+   "q": "pâtisserie granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "pâtisserie granby",
+    "pâtisserie granby rue principale",
+    "pâtisserie granby ouvert actuellement",
+    "patisserie granby gateau",
+    "pâtisserie granby rue court",
+    "patisserie granby trompe l oeil",
+    "patisserie granby rue denison",
+    "dessert granby",
+    "nouvelle patisserie granby",
+    "boulangerie patisserie granby"
+   ],
+   "bing": [
+    "pâtisserie granby",
+    "pâtisserie à granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "boulangerie granby",
+    "boulanger granby",
+    "nouvelle boulangerie granby",
+    "boulangerie patisserie granby",
+    "boulangerie racine granby",
+    "meilleure boulangerie granby",
+    "emploi boulangerie granby",
+    "café boulangerie granby",
+    "boulangerie bretonne granby",
+    "boulangerie ange granby"
+   ],
+   "bing": [
+    "boulangerie granby",
+    "boulangerie à granby"
+   ]
+  },
+  {
+   "q": "gâteau granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "gâteau granby",
+    "dessert granby",
+    "gâteau anniversaire granby",
+    "rose gateau granby",
+    "gateau fete granby",
+    "gateau personnalisé granby",
+    "gateau iga granby",
+    "gateau fromage granby",
+    "choco gateau granby",
+    "gateau mariage granby"
+   ],
+   "bing": [
+    "gateau granby",
+    "rose gâteau granby"
+   ]
+  },
+  {
+   "q": "gâteau anniversaire granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "gâteau anniversaire granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau personnalisé granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "gateau personnalisé granby",
+    "cake design granby",
+    "gâteau personnalisé iga granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau de fête granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "gateau de fete granby"
+   ],
+   "bing": [
+    "facebook ville de granby",
+    "caféine et co granby",
+    "café de la gare granby",
+    "festival au lac de granby",
+    "activité à faire à granby",
+    "brunch du dimanche granby",
+    "la fillette de granby",
+    "simple et délicieux granby",
+    "la fille de granby",
+    "la ville de granby",
+    "petite fille de granby",
+    "activité ville de granby"
+   ]
+  },
+  {
+   "q": "croissant granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "croissant granby",
+    "meilleur croissant granby"
+   ],
+   "bing": [
+    "croissant granby"
+   ]
+  },
+  {
+   "q": "café granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "café granby",
+    "café granby rue principale",
+    "café granby rue guy",
+    "cafe co granby",
+    "cafe granby bulle",
+    "restaurant granby livraison",
+    "restaurant granby",
+    "restaurant granby apportez votre vin",
+    "restaurant granby rue principale",
+    "restaurant granby familiale"
+   ],
+   "bing": [
+    "café granby",
+    "café grancy",
+    "café grancy lausanne",
+    "café grancy menu",
+    "café gran batey",
+    "café brulerie granby",
+    "granby café bulle"
+   ]
+  },
+  {
+   "q": "café centre-ville granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "restaurant centre ville granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "déjeuner granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "déjeuner granby",
+    "dejeuner granby les mieux notés",
+    "restaurant granby livraison",
+    "restaurant granby",
+    "restaurant granby apportez votre vin",
+    "restaurant granby rue principale",
+    "brunch granby",
+    "restaurant granby familiale",
+    "restaurant granby ouvert actuellement",
+    "restaurant granby ouvert"
+   ],
+   "bing": [
+    "déjeuner granby",
+    "déjeuner à granby"
+   ]
+  },
+  {
+   "q": "pâtisserie zoo de granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [],
+   "bing": [
+    "boutique zoo de granby",
+    "boutique en ligne zoo de granby",
+    "le zoo de granby",
+    "zoo de granby adresse",
+    "zoo de granby ouverture",
+    "logo zoo de granby",
+    "zoo de granby site officiel",
+    "ouverture du zoo de granby",
+    "zoo de granby horaire",
+    "zoo granby heures ouverture",
+    "zoo de granby prix",
+    "zoo de granby carte"
+   ]
+  },
+  {
+   "q": "restaurant près du zoo de granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "restaurant près du zoo de granby",
+    "restaurant du zoo de granby"
+   ],
+   "bing": [
+    "zoo de granby ville de granby",
+    "ouverture du zoo de granby",
+    "plan du zoo de granby",
+    "zoo de granby ouverture",
+    "adresse zoo de granby",
+    "horaire zoo de granby",
+    "carte du zoo de granby",
+    "zoo de granby hébergement",
+    "zoo de granby site officiel",
+    "hotel zoo de granby",
+    "zoo de granby avis",
+    "zoo de granby horaire et tarif"
+   ]
+  },
+  {
+   "q": "quoi manger granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "quoi manger granby",
+    "quoi manger au zoo de granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "msemen",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "msemen",
+    "msemen marocain",
+    "msemen recette",
+    "msemen montreal",
+    "msemen recette marocaine",
+    "msemen farci",
+    "msemen origine",
+    "msemen calories",
+    "msemen algerien",
+    "msemen vieux port"
+   ],
+   "bing": [
+    "msemen marocain",
+    "msemen recette",
+    "msemen farci",
+    "msemen algérien",
+    "msemen origine",
+    "msemen antwerpen",
+    "msemen moroccan",
+    "memento",
+    "msemen rezept",
+    "msemen recipe easy",
+    "msemen recipe with honey",
+    "msemen recipe step by step"
+   ]
+  },
+  {
+   "q": "msemen granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "harcha",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "harcha",
+    "harcha marocaine",
+    "harcha recette",
+    "harcha thermomix",
+    "harcha calories",
+    "harcha choumicha",
+    "horchata",
+    "harcha au four",
+    "archambault",
+    "archambault laval"
+   ],
+   "bing": [
+    "harcha marocaine",
+    "harchaoui",
+    "harchat pooja",
+    "harchandpur",
+    "harchat vrat 2026",
+    "horchata",
+    "harcharan singh",
+    "harchat kab hai",
+    "harchand singh longowal",
+    "harchak chiropractic philipsburg",
+    "harchat 2026 date",
+    "harcharan singh brar"
+   ]
+  },
+  {
+   "q": "pâtisserie marocaine",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "pâtisserie marocaine",
+    "pâtisserie marocaine montréal",
+    "pâtisserie marocaine traditionnelle",
+    "pâtisserie marocaine corne de gazelle",
+    "pâtisserie marocaine laval",
+    "pâtisserie marocaine brossard",
+    "pâtisserie marocaine nom",
+    "pâtisserie marocaine autour de moi",
+    "pâtisserie marocaine casablanca",
+    "pâtisserie marocaine liste"
+   ],
+   "bing": [
+    "pâtisserie marocaine",
+    "pâtisserie marocaine recette",
+    "pâtisserie marocaine montréal",
+    "pâtisserie marocaine laval",
+    "patisserie marocaine en ligne",
+    "la pâtisserie marocaine",
+    "pâtisserie orientale marocaine"
+   ]
+  },
+  {
+   "q": "pâtisserie marocaine granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "coco vanille",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "coco vanille",
+    "coco vanille mancera",
+    "coco vanille granby",
+    "coco vanille chambly",
+    "coco vanille parfum",
+    "coco vanille roanne",
+    "coco vanille institut",
+    "coco vanille homme",
+    "coco vanille collection privée",
+    "coco vanille bijoux"
+   ],
+   "bing": [
+    "coco vanille",
+    "coco vanille mancera",
+    "coco vanille roanne",
+    "coco vanille parfum",
+    "coco vanille perfume",
+    "coco vanille soap",
+    "coco vanille candle",
+    "coco vanille body lotion",
+    "coco vanille bijoux",
+    "coco vanille edp",
+    "coco vanille granby",
+    "coco vanille ciboure"
+   ]
+  },
+  {
+   "q": "coco vanille granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "coco vanille granby",
+    "pâtisserie coco vanille granby"
+   ],
+   "bing": [
+    "coco vanille granby"
+   ]
+  },
+  {
+   "q": "bûche de noël granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "buche de noel granby"
+   ],
+   "bing": [
+    "marché de noël granby",
+    "parade de noel granby",
+    "boucherie du mont granby",
+    "brunch du dimanche granby",
+    "la buche de noel",
+    "boîte à lunch granby",
+    "bûche de noël grand chef",
+    "bûche de noël génoise",
+    "buche de noel ganache"
+   ]
+  },
+  {
+   "q": "atelier peinture granby",
+   "lang": "fr",
+   "kind": "seed",
+   "google": [
+    "atelier peinture granby",
+    "atelier créatif granby",
+    "cours peinture granby",
+    "atelier d art granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "bakery granby",
+   "lang": "en",
+   "kind": "seed",
+   "google": [
+    "bakery granby",
+    "bakery granby ct",
+    "bakery granby co",
+    "bakery granby ma",
+    "bakery granby street",
+    "bakery granby street norfolk va",
+    "julien's bakery granby ct",
+    "julien's bakery granby",
+    "rollin bakery granby",
+    "julien's bakery granby ct opening date"
+   ],
+   "bing": [
+    "bakery granby ct",
+    "bakery granbury texas",
+    "bakery granbury",
+    "bakery grand rapids mi",
+    "bakery grand junction colorado",
+    "bakery grand case st martin",
+    "bakery grand indonesia",
+    "bakery grand forks nd",
+    "bakery grand marais",
+    "bakery grand ledge mi"
+   ]
+  },
+  {
+   "q": "granby bakery",
+   "lang": "en",
+   "kind": "seed",
+   "google": [
+    "granby bakery",
+    "granby bakery ct",
+    "bakery granby co",
+    "bakery granby ma",
+    "bakery granby street",
+    "bakery granby street norfolk va",
+    "east granby bakery",
+    "juliens granby bakery",
+    "granby french bakery",
+    "granby farm bakery"
+   ],
+   "bing": [
+    "granby bakery",
+    "granby bakery ct",
+    "granbury bakery",
+    "granny bakery",
+    "granny bakery valencia",
+    "julien's bakery granby ct",
+    "julien's bakery granby",
+    "granby co bakery"
+   ]
+  },
+  {
+   "q": "cake granby quebec",
+   "lang": "en",
+   "kind": "seed",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "coffee granby quebec",
+   "lang": "en",
+   "kind": "seed",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "granby zoo restaurant",
+   "lang": "en",
+   "kind": "seed",
+   "google": [
+    "granby zoo restaurants",
+    "granby zoo restaurants menu",
+    "granby quebec restaurants",
+    "granby zoo food",
+    "granby zoo food menu",
+    "granby zoo food options",
+    "granby zoo promo code",
+    "granby zoo hours",
+    "granby zoo hours of operation",
+    "granby zoo prices"
+   ],
+   "bing": []
+  },
+  {
+   "q": "breakfast granby quebec",
+   "lang": "en",
+   "kind": "seed",
+   "google": [
+    "breakfast in granby quebec",
+    "bed and breakfast granby quebec"
+   ],
+   "bing": [
+    "hotels granby quebec with breakfast",
+    "bed and breakfast in granby quebec"
+   ]
+  },
+  {
+   "q": "moroccan bakery quebec",
+   "lang": "en",
+   "kind": "seed",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "things to do granby quebec",
+   "lang": "en",
+   "kind": "seed",
+   "google": [
+    "things to do granby quebec",
+    "things to do in granby quebec with kids",
+    "things to see in granby quebec",
+    "things to do in granby qc",
+    "fun things to do in granby quebec",
+    "what is there to do in granby",
+    "how far is granby from montreal"
+   ],
+   "bing": [
+    "things to do in granby quebec",
+    "things to do in granby",
+    "best restaurants in granby quebec",
+    "things to do in old quebec",
+    "things to do in old quebec canada",
+    "what to do in old quebec",
+    "hotels in granby quebec",
+    "camping granby quebec activities",
+    "camping granby quebec attractions",
+    "can you find granby in quebec",
+    "things to do in granby colorado",
+    "what to do in granby colorado"
+   ]
+  },
+  {
+   "q": "pâtisserie granby a",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie a granby",
+    "dessert a granby",
+    "pâtisserie granby ouvert actuellement",
+    "dessert avec granny smith",
+    "patisserie grand a granby",
+    "nouvelle patisserie a granby"
+   ],
+   "bing": [
+    "pâtisserie à granby"
+   ]
+  },
+  {
+   "q": "pâtisserie granby b",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie boulangerie granby",
+    "patisserie rue breton granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby c",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "pâtisserie granby rue court",
+    "mont rose pâtisserie & café granby",
+    "cafe patisserie granby",
+    "cours patisserie granby",
+    "dessert granby ct"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby d",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie granby rue denison",
+    "dep patisserie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby e",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "emploi patisserie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby f",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "pâtisserie francaise granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby g",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie granby gateau",
+    "patisserie sans gluten granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby h",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby i",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie iga granby",
+    "patisserie italienne granby"
+   ],
+   "bing": [
+    "pâtisserie à granby"
+   ]
+  },
+  {
+   "q": "pâtisserie granby j",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby k",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby l",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie granby trompe l oeil",
+    "patisserie sans lactose granby",
+    "dessert granby street leicester"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby m",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie melisse granby",
+    "meilleure patisserie granby",
+    "dessert met granny smith"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby n",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "nouvelle patisserie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby o",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "pâtisserie granby ouvert actuellement",
+    "patisserie rue granby",
+    "pâtisserie à granby",
+    "patisserie granby trompe l oeil",
+    "dessert on granby street"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby p",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "pâtisserie granby rue principale",
+    "dessert pomme granny",
+    "dessert pomme granny smith",
+    "dessert place granby street",
+    "dessert places granby street leicester",
+    "café orée pâtisserie granby photos"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby q",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "café orée pâtisserie granby qc"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby r",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "pâtisserie granby rue principale",
+    "pâtisserie granby rue court",
+    "patisserie granby rue denison",
+    "patisserie rose granby",
+    "patisserie mont rose granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby s",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "dessert granny smith",
+    "dessert granny smith apples",
+    "dessert granby street leicester",
+    "dessert shop granby street leicester",
+    "dessert shop granby street",
+    "dessert places granby street leicester"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby t",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie granby trompe l oeil"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby u",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "dessert using granny smith apples"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby v",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "patisserie vegan granby",
+    "pâtisserie coco vanille granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby w",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "dessert with granny smith apples",
+    "dessert with granny smith apples and snickers"
+   ],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby x",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby y",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "pâtisserie granby z",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby a",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie artisanale granby",
+    "boulangerie a granby",
+    "boulangerie ange granby",
+    "boulangerie granby ouvert actuellement",
+    "pain pain boulangerie artisanale granby qc",
+    "pain pain boulangerie artisanale granby menu",
+    "pain pain boulangerie artisanale granby photos"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby b",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie bretonne granby",
+    "granny boulangerie barista restaurant",
+    "boulangerie mie bretonne granby"
+   ],
+   "bing": [
+    "boulangerie la mie bretonne granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby c",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie chez granny",
+    "café boulangerie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby d",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby e",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "emploi boulangerie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby f",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby g",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie sans gluten granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby h",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby i",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby j",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby k",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby l",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": [
+    "boulangerie la mie bretonne granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby m",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie st methode granby",
+    "boulangerie multi marques granby",
+    "meilleure boulangerie granby"
+   ],
+   "bing": [
+    "boulangerie la mie bretonne granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby n",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "nouvelle boulangerie granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby o",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie granby ouvert actuellement",
+    "boulangerie à granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby p",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie patisserie granby",
+    "boulangerie granby rue principale",
+    "boulangerie pain pain granby"
+   ],
+   "bing": [
+    "boulangerie pain pain granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby q",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby r",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boulangerie granby rue principale",
+    "boulangerie racine granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby s",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": [
+    "boulangerie st-méthode granby"
+   ]
+  },
+  {
+   "q": "boulangerie granby t",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby u",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby v",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby w",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby x",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby y",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "boulangerie granby z",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby a",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gâteau anniversaire granby",
+    "gateau a granby",
+    "dessert a granby",
+    "dessert avec granny smith"
+   ],
+   "bing": [
+    "rose gâteau granby"
+   ]
+  },
+  {
+   "q": "gâteau granby b",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "boutique gateau granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby c",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau carotte granby",
+    "gateau cupcake granby",
+    "choco gateau granby",
+    "dessert granby ct"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby d",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "cake design granby",
+    "decoration gateau granby"
+   ],
+   "bing": [
+    "décoration gâteau granby"
+   ]
+  },
+  {
+   "q": "gâteau granby e",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby f",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau fete granby",
+    "gateau fromage granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby g",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau sans gluten granby",
+    "cake gypsy granby ct",
+    "cake gypsy granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby h",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby i",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau iga granby",
+    "gâteau personnalisé iga granby"
+   ],
+   "bing": [
+    "rose gâteau granby"
+   ]
+  },
+  {
+   "q": "gâteau granby j",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby k",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby l",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "granny gateau lu",
+    "gateau sans lactose granby",
+    "dessert granby street leicester"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby m",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau mariage granby",
+    "gateau sur mesure granby",
+    "magasin gateau granby",
+    "meilleur gateau granby",
+    "dessert met granny smith"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby n",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau foret noire granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby o",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gâteau à granby",
+    "gateau trompe l'oeil granby",
+    "dessert on granby street"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby p",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau personnalisé granby",
+    "gateau pomme granny smith",
+    "gateau pomme granny",
+    "dessert pomme granny",
+    "dessert pomme granny smith",
+    "cake pop granby",
+    "patisserie gateau granby"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby q",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "rose gateaux granby qc"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby r",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau rue robinson granby",
+    "rose gateau granby"
+   ],
+   "bing": [
+    "rose gâteau granby"
+   ]
+  },
+  {
+   "q": "gâteau granby s",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "gateau granny smith",
+    "dessert granny smith",
+    "gateau pomme granny smith",
+    "recette gâteau granny smith",
+    "dessert granny smith apples",
+    "cake shop granby",
+    "dessert granby street leicester"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby t",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby u",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "dessert using granny smith apples"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby v",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby w",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [
+    "dessert with granny smith apples",
+    "dessert with granny smith apples and snickers"
+   ],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby x",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby y",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  },
+  {
+   "q": "gâteau granby z",
+   "lang": "fr",
+   "kind": "a-z",
+   "google": [],
+   "bing": []
+  }
+ ]
+}

@@ -5,25 +5,33 @@
 // Field names follow the SerpApi Google / Google Maps / Related Questions / AI Overview JSON as documented in 2026; if a field is
 // missing in a response, the value stays blank rather than guessed — check the raw JSON in serp/<week>/.
 // Usage:
-//   node serp.mjs [--prompts scoreboard/prompts.csv] [--ids C1,C5] [--type local] [--week 2026-W40] [--location "Casablanca, Casablanca-Settat, Morocco"]
-//                 [--gl ma] [--domain google.co.ma] [--device mobile] [--paa-depth 0] [--aio] [--pages 1] [--from-dir serp/2026-W40] [--dry-run]
+//   node serp.mjs [--prompts scoreboard/prompts.csv] [--ids C1,C5] [--type local] [--skip-type candidate] [--week 2026-W40] [--location "Granby,Quebec,Canada"]
+//                 [--gl ca] [--domain google.ca] [--device mobile] [--paa-depth 0] [--aio] [--pages 1] [--from-dir serp/2026-W40] [--dry-run] [--help]
 //   node serp.mjs local-grid --query "location voiture casablanca" --center 33.5731,-7.5898 [--radius-km 3] [--grid 5] [--zoom 14] [--place-id ChIJ…]
+// Defaults: gl, google_domain and location come from the "market" block of site.config.json, else the Moroccan fallback (gl=ma,
+// google.co.ma, a Moroccan location); hl is each prompt's lang (fr, en, es, ar), else the site's default language. --dry-run lists
+// each search with its settings and spends nothing. A local-pack or grid listing is ours when its title contains brand.name,
+// brand.nameAr or one of brand.alternateNames (the Business Profile may use another form of the name), or links to our domain.
 // Writes: serp/<week>/<id>.json (raw), scoreboard/runs/<week>-google.csv (Google + AI Overview rows for citation-share.mjs),
 //         serp/<week>/serp-map.md (docs/16 §1), share-of-voice.csv, paa.csv, listicles.csv, local-pack.csv, grid-<slug>.csv + .svg
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { loadConfig, parseArgs, csvObjects, toCsv, c, isoWeek } from "./lib.mjs";
+import { loadConfig, parseArgs, csvObjects, toCsv, c, isoWeek, marketConfig, langCode, printUsage, brandNameList } from "./lib.mjs";
 
 const args = parseArgs(process.argv.slice(2));
+if (args.help) { printUsage(import.meta.url); process.exit(0); }
 const mode = args._[0] === "local-grid" ? "local-grid" : "serp";
 let cfg = null; try { cfg = loadConfig(args.config ?? "site.config.json"); } catch {}
+const market = marketConfig(cfg);
+const defaultLang = cfg?.languages?.default ?? "fr";
+const hlFor = (p) => langCode(p.lang, defaultLang); // EN prompts get hl=en, ES prompts hl=es, never the French interface by default
 const brandHost = (args.brand ?? (cfg ? new URL(cfg.site).host : "")).replace(/^www\./, "").toLowerCase();
-const brandName = (args["brand-name"] ?? cfg?.brand?.name ?? "").toLowerCase();
+const brandNames = brandNameList(cfg, args["brand-name"]); // brand.name (or --brand-name), nameAr, alternateNames: a pack listing under another form of the name is ours too
 const KEY = process.env.SERPAPI_KEY ?? args.key;
 const week = args.week ?? isoWeek();
 const norm = (u) => { try { return new URL(u).host.replace(/^www\./, "").toLowerCase(); } catch { return String(u ?? "").replace(/^www\./, "").toLowerCase(); } };
 const isBrand = (h) => !!brandHost && (norm(h) === brandHost || norm(h).endsWith("." + brandHost));
-const nameMatch = (t) => !!brandName && String(t ?? "").toLowerCase().includes(brandName);
+const nameMatch = (t) => brandNames.some((n) => String(t ?? "").toLowerCase().includes(n));
 
 async function serpapi(params) {
   if (!KEY) throw new Error("SERPAPI_KEY missing (env) — see docs/12-setup-mesure.md → API.");
@@ -36,19 +44,24 @@ async function serpapi(params) {
   return json;
 }
 
-// SerpApi canonical location name (free endpoint, no key): serp/locations.json caches the answer per city.
+// SerpApi canonical location name (free endpoint, no key): serp/locations.json caches the answer per city. The market block's
+// "location" is used as it is (no lookup); without a market block the Moroccan fallback applies.
 async function canonicalLocation(city) {
-  if (!city) return "Morocco";
+  if (market.location) return market.location;
+  if (!city) return market.fallback ? "Morocco" : "";
   const cacheFile = join("serp", "locations.json");
+  const key = market.fallback ? city : `${market.country}:${city}`;
   let cache = {}; try { cache = JSON.parse(readFileSync(cacheFile, "utf8")); } catch {}
-  if (cache[city]) return cache[city];
+  if (cache[key]) return cache[key];
   try {
     const res = await fetch(`https://serpapi.com/locations.json?q=${encodeURIComponent(city)}&limit=5`, { signal: AbortSignal.timeout(15000) });
     const list = await res.json();
-    const hit = (Array.isArray(list) ? list : []).find((l) => /morocco/i.test(l.canonical_name ?? "")) ?? (Array.isArray(list) ? list[0] : null);
-    if (hit?.canonical_name) { cache[city] = hit.canonical_name; mkdirSync("serp", { recursive: true }); writeFileSync(cacheFile, JSON.stringify(cache, null, 1)); return hit.canonical_name; }
+    const all = Array.isArray(list) ? list : [];
+    const hit = all.find((l) => market.country && String(l.country_code ?? "").toUpperCase() === market.country) ?? (market.fallback ? all.find((l) => /morocco/i.test(l.canonical_name ?? "")) : null) ?? all[0] ?? null;
+    if (hit?.canonical_name) { cache[key] = hit.canonical_name; mkdirSync("serp", { recursive: true }); writeFileSync(cacheFile, JSON.stringify(cache, null, 1)); return hit.canonical_name; }
   } catch {}
-  return `${city},Casablanca-Settat,Morocco`.includes("Casablanca") ? "Casablanca,Casablanca-Settat,Morocco" : `${city}, Morocco`;
+  if (!market.fallback) return city;
+  return /casablanca/i.test(city) ? "Casablanca,Casablanca-Settat,Morocco" : `${city}, Morocco`;
 }
 
 // ---------- analysis of one Google SERP ----------
@@ -92,20 +105,23 @@ async function runSerp() {
   if (!existsSync(promptsFile)) { console.error(`No prompts file: ${promptsFile}`); process.exit(1); }
   let prompts = csvObjects(readFileSync(promptsFile, "utf8")).filter((p) => p.prompt);
   if (args.ids) { const ids = new Set(String(args.ids).split(",")); prompts = prompts.filter((p) => ids.has(p.id)); }
-  if (args.type) prompts = prompts.filter((p) => p.type === args.type);
+  if (args.type) { const types = new Set(String(args.type).split(",")); prompts = prompts.filter((p) => types.has(p.type)); }
+  if (args["skip-type"]) { const skip = new Set(String(args["skip-type"]).split(",")); prompts = prompts.filter((p) => !skip.has(p.type)); }
   const dir = args["from-dir"] ?? join("serp", week);
   mkdirSync(dir, { recursive: true });
-  const city = cfg?.nap?.city ?? cfg?.category?.city?.fr;
-  const location = args.location ?? (await canonicalLocation(city)); // SerpApi wants its canonical name ("Casablanca,Casablanca-Settat,Morocco"); resolved once via locations.json and cached
+  const city = market.city; // nap.city, else category.city.fr
+  const location = args.location ?? (await canonicalLocation(city)); // SerpApi wants its canonical name ("Granby,Quebec,Canada"); the market block gives it, else resolved once via locations.json and cached
+  const gl = args.gl ?? market.gl, domain = args.domain ?? market.googleDomain;
+  console.log(c.dim(`SERP settings (${market.fallback ? "Moroccan defaults: no market block in site.config.json" : "site.config.json market"}): location "${location}" · gl=${gl} · ${domain} · hl per prompt lang · ${prompts.length} prompts`));
   const rows = [], mapRows = [], sov = new Map(), paaRows = [], listicles = [], packRows = [], perPrompt = [];
   for (const p of prompts) {
     const file = join(dir, `${p.id}.json`);
     let json;
     if (existsSync(file) && (args["from-dir"] || !args.refresh)) json = JSON.parse(readFileSync(file, "utf8"));
-    else if (args["dry-run"]) { console.log(`would query: ${p.id} "${p.prompt}" (${location}, hl=${p.lang === "ar" ? "ar" : "fr"})`); continue; }
+    else if (args["dry-run"]) { console.log(`would query: ${p.id} "${p.prompt}" (${location}, gl=${gl}, ${domain}, hl=${hlFor(p)})`); continue; }
     else {
       try {
-        const base = { engine: "google", q: p.prompt, location, gl: args.gl ?? "ma", hl: p.lang === "ar" ? "ar" : "fr", google_domain: args.domain ?? "google.co.ma", device: args.device ?? "mobile" };
+        const base = { engine: "google", q: p.prompt, location, gl, hl: hlFor(p), google_domain: domain, device: args.device ?? "mobile" };
         json = await serpapi(base);
         // Google serves 10 results per page ("num" is gone): --pages 2 fetches positions 11–20 with start=10 (one more search per prompt)
         for (let pg = 1; pg < +(args.pages ?? 1); pg++) { try { const more = await serpapi({ ...base, start: pg * 10 }); json.organic_results = [...(json.organic_results ?? []), ...(more.organic_results ?? [])]; } catch (e) { json.page_error = e.message; break; } }
@@ -165,7 +181,7 @@ async function runGrid() {
     let json;
     if (existsSync(file)) json = JSON.parse(readFileSync(file, "utf8"));
     else if (args["dry-run"]) { console.log(`would query maps at ${pt.lat.toFixed(4)},${pt.lng.toFixed(4)}`); continue; }
-    else { try { json = await serpapi({ engine: "google_maps", q, ll: `@${pt.lat.toFixed(6)},${pt.lng.toFixed(6)},${zoom}z`, type: "search", hl: args.hl ?? "fr" }); writeFileSync(file, JSON.stringify(json, null, 1)); } catch (e) { console.log(c.yellow(`grid ${pt.i},${pt.j}: ${e.message}`)); continue; } }
+    else { try { json = await serpapi({ engine: "google_maps", q, ll: `@${pt.lat.toFixed(6)},${pt.lng.toFixed(6)},${zoom}z`, type: "search", hl: args.hl ?? defaultLang }); writeFileSync(file, JSON.stringify(json, null, 1)); } catch (e) { console.log(c.yellow(`grid ${pt.i},${pt.j}: ${e.message}`)); continue; } }
     const list = json.local_results ?? (json.place_results ? [json.place_results] : []); // a single-business match comes back as place_results
     const idx = list.findIndex((r) => (args["place-id"] && r.place_id === args["place-id"]) || nameMatch(r.title) || isBrand(r.website ?? ""));
     results.push({ i: pt.i, j: pt.j, lat: pt.lat.toFixed(5), lng: pt.lng.toFixed(5), rank: idx >= 0 ? idx + 1 : "", top: list.slice(0, 3).map((r) => r.title).join(" | ") });

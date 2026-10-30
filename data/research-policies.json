@@ -1,0 +1,522 @@
+[
+  {
+    "id": "law.lpc.s13_no_preset_penalty",
+    "value": "LPC s. 13, first paragraph as replaced in 2009: « Est interdite la stipulation qui impose au consommateur, dans le cas de l'inexécution de son obligation, le paiement de frais, de pénalités ou de dommages, dont le montant ou le pourcentage est fixé à l'avance dans le contrat, autres que l'intérêt couru. »",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "Row L-1 of research/20d. Official text of the amending act (Projet de loi n° 60, S.Q. 2009, c. 51, s. 3; PDF p. 6), sanctioned 2009-12-04. Later amendments, if any, not seen (Légis Québec HTTP 403). The 2nd paragraph exempts only the long-term sale or lease of a car. Effect: no « acompte non remboursable », no fixed retention, no « solde dû si annulation à moins de X jours »."
+  },
+  {
+    "id": "law.lpc.s11_4_no_exclusion_ccq_2125_2129",
+    "value": "LPC s. 11.4 (added 2009): « Est interdite la stipulation qui exclut en tout ou en partie l'application des articles 2125 et 2129 du Code civil relatifs à la résiliation des contrats d'entreprise ou de services. »",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "Row L-2. S.Q. 2009, c. 51, s. 2 (PDF p. 6). Effect: if a custom cake is a contract for work, the customer may cancel at any time and the shop keeps only what Civil Code art. 2129 allows."
+  },
+  {
+    "id": "law.ccq.2125_2129_termination",
+    "value": "Civil Code arts. 2125 and 2129: the client may terminate a contract for work unilaterally, even once work has begun. The client pays the value of the work performed, pro rata to the agreed price, plus the reasonable expenses actually incurred. The provider repays any advance above what it earned. Injury means actual loss only, never lost profit",
+    "label": "unverified",
+    "source": "http://langlois.ca/en/insights/specific-regime-termination-contract-enterprise-contract-services-pros-cons/",
+    "seen": "2026-10-29",
+    "note": "Row L-3. Law-firm summary (Langlois, 2016-08-22), read directly; the Code's text was not seen (Légis Québec HTTP 403). The rule can be waived between businesses; LPC s. 11.4 bars that in consumer contracts. Basis of the refund wording in research/20d §3.2."
+  },
+  {
+    "id": "law.opc.deposit_no_preset_penalty",
+    "value": "OPC: « Vous n'avez pas le droit de déterminer à l'avance une pénalité » (agreements, contracts and policies alike). Banned example: « l'annulation d'une mise de côté oblige le consommateur à payer 20 % du montant total de la facture ». « Vous pourriez par contre réclamer une somme d'argent pour compenser les dommages que vous avez vraiment subis. » Disagreement: the courts decide",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/commercant/secteur/bien-consommation/vetement/echange-remboursement/acompte/",
+    "seen": "2026-10-29",
+    "note": "Row L-4. OPC merchant page, updated 2025-03-04. Same rule on the OPC consumer page (EN, updated 2026-07-30): 'merchants cannot set in advance the penalty they will charge if you cancel an agreement' (https://www.opc.gouv.qc.ca/en/consumer/topic/exchanging-layaways/layaway-down-payment/). Neither page cites an article."
+  },
+  {
+    "id": "law.opc.deposit_size",
+    "value": "OPC advice to consumers: 'You should try to negotiate the lowest possible amount', because 'a low down payment means a smaller loss if the store closes its doors or goes bankrupt'. No legal cap on a deposit's size was found",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/en/consumer/topic/exchanging-layaways/layaway-down-payment/",
+    "seen": "2026-10-29",
+    "note": "Row L-5. OPC page updated 2026-07-30. 'No cap' is absence of evidence. Effect: the 30 % deposit (research/21 A4) is moderate and lawful in amount."
+  },
+  {
+    "id": "law.distance.regime_2007",
+    "value": "Distance contracts, in force 2007-12-15. Before the contract the merchant discloses: identity and contact details, a detailed description, an itemised price with taxes, the total and the payment terms, « la date ou les délais d'exécution de son obligation principale », the delivery mode and place where relevant, and its cancellation, return and refund policies. The consumer can accept, refuse or correct errors. A copy of the contract comes within 15 days. The consumer may cancel within 7 days of receiving the copy if a disclosure was missing (30 days if no copy), or at any time before delivery if nothing was delivered within 30 days of the contract date. Refund within 15 days; credit-card chargeback within 60 days",
+    "label": "verified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "Row L-6. OPC Lettre d'affaires, December 2007, read from the PDF (4 pages). Confirms research/07 rows C-2 to C-5 (Partly or UNVERIFIED there), where the regime applies: perishables are exempt (law.distance.perishables_exempt)."
+  },
+  {
+    "id": "law.distance.prepayment_credit_card_only",
+    "value": "Payment before delivery on a distance contract: « le commerçant ne peut percevoir un paiement du consommateur ou lui offrir de percevoir un tel paiement avant d'exécuter son obligation principale, sauf s'il s'agit d'un paiement par carte de crédit ». Exceptions include « contrat de vente de biens susceptibles de dépérir rapidement »",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/commercant/pratique-commerce/contrats-distance/paiement",
+    "seen": "2026-10-29",
+    "note": "Row L-7. OPC merchant page « Moment du paiement », modified 2023-08-10 (« Vous pouvez percevoir ou offrir de percevoir un paiement avant d'avoir livré le bien ou fourni le service dans un seul cas : si le consommateur paie par carte de crédit. »), plus the OPC 2007 letter. Article number not seen. Effect: debit, Interac e-Transfer or cash deposits on online or phone orders are barred unless the order is exempt; counsel decides for custom cakes."
+  },
+  {
+    "id": "law.distance.performance_presumption",
+    "value": "« Un commerçant est présumé avoir exécuté son obligation principale […] lorsqu'il a tenté de l'exécuter à la date indiquée au contrat […] et qu'il a été empêché de le faire en raison des agissements ou de la négligence du consommateur. »",
+    "label": "verified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "Row L-8. OPC letter, December 2007, p. 3. Supports research/21 A6: an order ready during its slot counts as performed (by analogy where the distance regime is excluded)."
+  },
+  {
+    "id": "law.distance.perishables_exempt",
+    "value": "The distance-contract rules do not apply to « un contrat relatif à l'achat de biens susceptibles de dépérir rapidement ». Draft regulation: « 6.1. La section I.1 du chapitre III du Titre I de la Loi ne s'applique pas : (…) b) au contrat de vente de biens susceptibles de dépérir rapidement; »",
+    "label": "verified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "Row L-9. The exemption is in the OPC 2007 letter (p. 4) and among the exceptions on the OPC « Moment du paiement » page (2023-08-10). The article number s. 6.1 b) comes from the draft, in the OPC comments table of its 2021 access-to-information release (https://cdn.opc.gouv.qc.ca/media/documents/a-propos/AccesInformation/2021/344001991_Document8.pdf); the regulation in force was not seen. The OPC says the exemption covers « l'ensemble des biens susceptibles de dépérir rapidement », not only food, because the merchant « ne pourrait les remettre en vente en cas d'annulation ». Effect: for fresh goods, the conditions' 15-day refund, chargeback and cancellation when the date differs are the shop's own promises. Counsel decides whether a custom cake is covered."
+  },
+  {
+    "id": "law.ccq.2103_sale_or_work",
+    "value": "« Il y a contrat de vente, et non contrat d'entreprise ou de service, lorsque l'ouvrage ou le service n'est qu'un accessoire par rapport à la valeur des biens fournis » (Civil Code art. 2103)",
+    "label": "unverified",
+    "source": "https://www.legisquebec.gouv.qc.ca/fr/document/lc/CCQ-1991",
+    "seen": "2026-10-29",
+    "note": "Row L-10. Prior knowledge; the Code's text was not read (Légis Québec HTTP 403). Open question for counsel: is a decorated custom cake a sale, and so exempt as a perishable, or a contract for work, where LPC s. 11.4 and arts. 2125/2129 govern cancellation?"
+  },
+  {
+    "id": "law.lpc.prepaid_cards_187",
+    "value": "LPC ss. 187.1–187.4 (added 2009). 187.2: before the sale the merchant gives « des conditions d'utilisation de la carte de même que de la manière dont le solde pourra en être vérifié », in writing if not on the card. 187.3: « Sous réserve de ce qui peut être prévu par règlement, est interdite la stipulation prévoyant une date de péremption de la carte prépayée sauf si le contrat prévoit une utilisation illimitée d'un service. » 187.4: « Sous réserve de ce qui peut être prévu par règlement, aucuns frais ne peuvent être réclamés du consommateur pour la délivrance ou l'utilisation de la carte prépayée. »",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "Row L-11. S.Q. 2009, c. 51, s. 9 (PDF p. 7). 187.1 defines a prepaid card as « un certificat, une carte ou tout instrument d'échange » bought in advance from one or several merchants. Effect: a counter card must come with its conditions of use and a way to check the balance."
+  },
+  {
+    "id": "law.lpc.s187_5_balance_refund",
+    "value": "LPC s. 187.5: the merchant refunds the card balance on request « lorsque ce solde est inférieur au montant ou au pourcentage déterminé par règlement »",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "Row L-12. Verified as the 2009 text. No regulatory threshold was seen, and the OPC pages read do not mention one: counsel, only if the shop sells cards."
+  },
+  {
+    "id": "law.opc.giftcard_no_expiry",
+    "value": "Gift cards usable as cash: merchants may not indicate 'an expiry date' or set 'a period after which the card can no longer be used'. 'As long as it has not been used, a card that was paid $50 will always keep its value.' Expiry is allowed only on cards for unlimited use of a service and on cell-phone cards",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/en/consumer/good-service/prepaid-card/cash/expiration/",
+    "seen": "2026-10-29",
+    "note": "Row L-13. OPC page updated 2025-03-04. The OPC rules page (updated 2025-04-09) agrees: https://www.opc.gouv.qc.ca/en/consumer/topic/contract/rules/card/"
+  },
+  {
+    "id": "law.opc.giftcard_fees",
+    "value": "Activation or usage fees are allowed only on financial-institution cards and on shopping-centre or regional cards (3,50 $ at issue, or 2,50 $ a month from the 15th month if unused). No such fees on any other card usable as cash. Replacement is free when the merchant requires it. A lost or stolen card may carry a replacement fee if the policy was disclosed before purchase. Customisation fees are allowed",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/en/consumer/good-service/prepaid-card/cash/fee/",
+    "seen": "2026-10-29",
+    "note": "Row L-14. OPC page updated 2021-05-03. Effect: « au Québec, une carte-cadeau n'a ni date d'expiration ni frais » (research/21 A5) is too broad as a statement of law; see decision.A5.gift_cards."
+  },
+  {
+    "id": "law.opc.giftcard_specific_good",
+    "value": "A card for a specific good or service has no expiry date (« Vous n'avez pas le droit d'indiquer une date d'expiration »). A supplement may be charged from a set date only if the card shows « la valeur du bien ou du service au moment de la vente de la carte » and « la date à partir de laquelle vous pourrez exiger un supplément »",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/commercant/secteur/carte-prepayee/carte/date-dexpiration",
+    "seen": "2026-10-29",
+    "note": "Row L-15. OPC merchant page updated 2025-03-04. Relevant only if the shop ever sells a card for a named product (e.g. one cake)."
+  },
+  {
+    "id": "law.delivery.no_duty",
+    "value": "No rule requires a bakery to deliver. The distance-contract disclosure list asks for the delivery mode, carrier and place only « le cas échéant »",
+    "label": "verified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "Row L-16. OPC letter, December 2007, p. 1. 'No rule' is absence of evidence. Effect: research/21 A3 (pickup only) is lawful."
+  },
+  {
+    "id": "law.lpc.other_2009_articles",
+    "value": "Also in the 2009 text: s. 11.2 limits clauses that let the merchant change the contract alone; s. 19.1 says a clause « inapplicable au Québec » must be « immédiatement précédée, de manière évidente et explicite, d'une mention à ce sujet »; s. 224, 2nd paragraph: the advertised price includes « le total des sommes que le consommateur devra débourser », and may leave out only the QST and GST",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "Row L-17. S.Q. 2009, c. 51, ss. 2, 4 and 12. Matches the site: it never moves a confirmed date alone, and its prices are all-in (research/07 C-9). Never print a banned clause, even with a warning."
+  },
+  {
+    "id": "law.loi25.person_in_charge",
+    "value": "By default « la personne ayant la plus haute autorité dans l'entreprise »; « Cette fonction peut cependant être déléguée par écrit, en tout ou en partie ». « Le titre et les coordonnées du responsable » « doivent être publiés sur le site Web de l'entreprise ». A name is not required",
+    "label": "verified",
+    "source": "https://www.cai.gouv.qc.ca/protection-renseignements-personnels/information-entreprises-privees/responsable-protection-renseignements-personnels-entreprise",
+    "seen": "2026-10-29",
+    "note": "Row L-18. CAI page, undated (© 2026). Effect: research/21 A1 (title and email, name only if entered) is lawful. research/07 P1 moves from Partly to Confirmed."
+  },
+  {
+    "id": "law.loi25.access_response_30_days",
+    "value": "« Le responsable doit évaluer les demandes d'accès et de rectification et y répondre dans les 30 jours »",
+    "label": "verified",
+    "source": "https://www.cai.gouv.qc.ca/protection-renseignements-personnels/information-entreprises-privees/responsable-protection-renseignements-personnels-entreprise",
+    "seen": "2026-10-29",
+    "note": "Row L-19. Answers the privacy-page marker « délai de réponse aux demandes d'accès »: 30 jours. See answer.privacy.access_response."
+  },
+  {
+    "id": "law.loi25.privacy_policy_guide",
+    "value": "CAI guide: a privacy policy is required since 2023-09-22 when personal information is collected by technological means. « Pour commencer, vous devez indiquer le nom de votre entreprise, la date d'entrée en vigueur de la politique et la date de la dernière mise à jour. » The name of the person in charge is optional. The rights to state include « De déposer une plainte selon le processus prévu dans votre politique et vos pratiques de gouvernance ». Retention and destruction rules and the complaint process belong in the governance policy, of which « vous devez au minimum publier des informations détaillées »",
+    "label": "verified",
+    "source": "https://www.cai.gouv.qc.ca/uploads/pdfs/CAI_GU_POL_Confidentialite.pdf",
+    "seen": "2026-10-29",
+    "note": "Row L-20. CAI PDF, guide pp. 2–8, read from the saved file. Effect: the privacy page should name the shop's own complaint route before the CAI, and show an effective date next to the update date (research/20d §3.6)."
+  },
+  {
+    "id": "law.tax.retention_6_years",
+    "value": "Revenu Québec: « Vous devez conserver ces registres et ces pièces justificatives pendant les six années suivant la fin de la dernière année à laquelle ils se rapportent, à moins d'un avis contraire de notre part ». Longer for records needed in an objection or appeal; earlier destruction only with written permission",
+    "label": "unverified",
+    "source": "https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/regles-de-base-relatives-a-lapplication-de-la-tpstvh-et-de-la-tvq/tenue-de-registres-et-pieces-justificatives/",
+    "seen": "2026-10-29",
+    "note": "Row L-21. Search summaries of five Revenu Québec pages, all agreeing; the direct read returned HTTP 403. Answers the privacy marker on tax retention once the accountant confirms it. See answer.privacy.tax_retention."
+  },
+  {
+    "id": "law.casl.review_request_cem",
+    "value": "Whether a review-request email is a commercial electronic message is not settled. The test is whether 'the purpose or one of the purposes of the message is to encourage participation in a commercial activity'. A message that seeks consent is itself a commercial message",
+    "label": "unverified",
+    "source": "https://barrysookman.com/2013/12/18/crtc-faq-on-casl/",
+    "seen": "2026-10-29",
+    "note": "Row L-22. Search summaries of law-firm pages (also https://www.torys.com/our-latest-thinking/publications/2016/07/crtc-releases-guidelines-on-casl-consent-records); the CRTC pages returned HTTP 403. No change to the build: it asks for express consent (consent_review_request), sends one request per order and offers no incentive (research/07 E-4)."
+  },
+  {
+    "id": "law.casl.express_consent_elements",
+    "value": "An express-consent request states the purpose, who is asking, their contact details, and that consent can be withdrawn (CRTC Compliance and Enforcement Information Bulletin 2012-548)",
+    "label": "unverified",
+    "source": "https://crtc.gc.ca/eng/archive/2012/2012-548.htm",
+    "seen": "2026-10-29",
+    "note": "Row L-23. Prior knowledge; the bulletin returned HTTP 403. The checkout already says « Facultatif. Vous pouvez changer d’idée en tout temps. » on the shop's own page."
+  },
+  {
+    "id": "law.food.gluten_free_claim",
+    "value": "A gluten-free claim is 'any representation in labelling or advertising that states, suggests or implies that a food is gluten-free'. Brand names, pictures, logos and slogans are assessed the same way. Cross-contamination is kept 'as low as reasonably achievable' and 'must not surpass 20 ppm'. Gluten added on purpose: never gluten-free",
+    "label": "verified",
+    "source": "https://inspection.canada.ca/en/food-labels/labelling/industry/allergens-and-gluten/gluten-free-claims",
+    "seen": "2026-10-29",
+    "note": "Row L-24. CFIA page, modified 2024-03-22. It does not mention restaurants, social media or « options » wording; reading « Options sans gluten » as a claim is an inference ('suggests'). research/21 A9 stands."
+  },
+  {
+    "id": "law.food.lactose_free_claim",
+    "value": "Lactose claims are 'not prohibited under the FDR [B.01.502(2)(d), FDR]', and the regulations set no criteria. CFIA guideline: 'lactose-free means that there is no detectable lactose in the food using an acceptable analytical method'; 'lactose reduced' means a reduction of 25 % or more",
+    "label": "verified",
+    "source": "https://inspection.canada.ca/en/food-labels/labelling/industry/composition-and-quality",
+    "seen": "2026-10-29",
+    "note": "Row L-25. CFIA page, modified 2025-01-15. Closes research/20b §0.8, where the « sans lactose » rules had not been checked. The shop's Instagram line « Options sans gluten et/ou sans lactose » (20b S-21) makes both claims."
+  },
+  {
+    "id": "market.granby.avec_un_grand_a.lead_time",
+    "value": "Menu cakes (6–8 or 10–12 portions, « Plage de prix : 45.00$ à 65.00$ »): « Sur commande seulement. Prévoir un délai de 48h heures ouvrables. »",
+    "label": "verified",
+    "source": "https://www.avecungranda.com/product/gateau-vanille-et-sucre-a-la-creme/",
+    "seen": "2026-10-29",
+    "note": "Row M-1. Own site, 581 rue Breton, Granby. The online-order page (https://www.avecungranda.com/commande-en-ligne/) lists cakes with a cart. No deposit, cancellation or message rule on the pages read. Benchmark: lead time, next day."
+  },
+  {
+    "id": "market.granby.cake_design.cancellation",
+    "value": "« ANNULATION : Aucun remboursement, ni crédit ne sera accordé. » Changes of flavour, quantity or date until « 7 jours de calendrier AVANT la date de votre réservation »; after that, no changes and no new date, and the customer may « venir chercher votre gâteau et le congeler pour usage ultérieur »",
+    "label": "verified",
+    "source": "https://www.cakegranby.ca/policies/refund-policy",
+    "seen": "2026-10-29",
+    "note": "Row M-2. Own refund-policy page (© 2026), 194 rue Denison Est, Granby. Verified as what the shop publishes, not as lawful. The « aucun remboursement » clause is the kind of fixed-in-advance term the OPC and LPC s. 13 describe: the site must not copy it. Benchmark: change deadline, order not picked up."
+  },
+  {
+    "id": "market.granby.cake_design.catalogue",
+    "value": "Online catalogue with a cart (51 products, e.g. « Gâteaux sur Mesure (16 portions et +) », « Soumission (25pers.+) »). The terms of service are a generic template naming another operator",
+    "label": "verified",
+    "source": "https://www.cakegranby.ca/collections/all",
+    "seen": "2026-10-29",
+    "note": "Row M-3. The custom-order page (https://www.cakegranby.ca/pages/commande-speciale) returned HTTP 429 on four attempts, so its lead time and deposit were not seen. Full payment in the cart is an inference (checkout not read)."
+  },
+  {
+    "id": "market.granby.rose_gateaux.lead_time",
+    "value": "« il faut généralement commander avec un minimum de 3 semaines d'avance »; « nous demandons un minimum de 1 semaine à l'avance pour tout changement de conception »; « le prix débute à 6,50$ par portion »; signature cakes « un minimum de 12 parts »",
+    "label": "verified",
+    "source": "https://www.rosegateaux.com/prix.html",
+    "seen": "2026-10-29",
+    "note": "Row M-4. Own price page (footer © 2022), 160 rue Robinson Sud, Granby. No deposit or cancellation rule published. Benchmark: custom lead time, change deadline."
+  },
+  {
+    "id": "market.granby.delivery",
+    "value": "None of Avec un Grand A, Cake Design Granby or Rose Gâteaux mentions a delivery service on the pages read",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/fr-gâteaux-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Row M-5. Absence of evidence. Rose Gâteaux claims a service area in research/03, but its price page does not mention delivery. Coco Vanille is not on the delivery apps (20b T-6). Benchmark for A3."
+  },
+  {
+    "id": "market.granby.maitre_glacier",
+    "value": "Ice-cream cakes sold online, 36,50 $ to 46 $; no notice period and no message field on the pages read",
+    "label": "unverified",
+    "source": "https://granby.maitreglacier.com/categorie-produit/gateaux-2/gateaux-a-la-creme-glacee/",
+    "seen": "2026-10-29",
+    "note": "Row M-6. Granby store site, 667 rue Dufferin. research/03 had recorded 48 h notice by phone for some cakes; not seen today. maitreglacier.com did not resolve."
+  },
+  {
+    "id": "market.granby.mont_rose",
+    "value": "No ordering policy found for Mont Rose Pâtisserie & Café, 190 rue Principale, Granby",
+    "label": "unverified",
+    "source": "https://www.restomontreal.ca/resto/mont-rose-patisserie-cafe-granby/23174/en/",
+    "seen": "2026-10-29",
+    "note": "Row M-7. Absence of evidence (search 12; research/03 §1 row 4)."
+  },
+  {
+    "id": "market.granby.coco_vanille_next_day",
+    "value": "Coco Vanille, as a third party reports it: 'just order by phone and your order will be ready the next day'",
+    "label": "unverified",
+    "source": "https://threebestrated.ca/bakeries-in-granby-qc",
+    "seen": "2026-10-29",
+    "note": "Row M-8. research/20b T-1 (2025 listing). Not a shop statement. The next-day rule stays the owner's (research/21 §5 item 3)."
+  },
+  {
+    "id": "market.qc.premiere_moisson.lead_times",
+    "value": "« vous devez simplement respecter le délai minimum qui varie entre 2, 24 ou 48 heures, selon le(s) produit(s) sélectionné(s) »",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/faq",
+    "seen": "2026-10-29",
+    "note": "Row M-9. Own FAQ, undated. Québec bakery chain. Benchmark: lead time, next day."
+  },
+  {
+    "id": "market.qc.premiere_moisson.cancellation",
+    "value": "« L'annulation d'une commande doit être faite au moins 48 heures avant l'heure de cueillette ou de livraison prévue. » « Si la commande a été payée d'avance, elle vous sera remboursée. »",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/politique-d-echange-remboursement-et-livraison",
+    "seen": "2026-10-29",
+    "note": "Row M-10. Own policy page, undated. The FAQ says instead that changes or cancellation « peut être faite dans un délai de 24 heures (48 heures pour les commandes de traiteur) »; the two pages differ. Benchmark: free-cancellation window."
+  },
+  {
+    "id": "market.qc.premiere_moisson.not_picked_up",
+    "value": "A delivery refused, or nobody home: « vous devrez aller cueillir votre commande en magasin dans les 24 heures suivant l'heure de livraison prévue »; after that the order goes with the day's unsold goods to a donation, without refund",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/politique-d-echange-remboursement-et-livraison",
+    "seen": "2026-10-29",
+    "note": "Row M-11. Own policy page. The donation and no-refund part is a paraphrase of the reader's summary. Benchmark for A6."
+  },
+  {
+    "id": "market.qc.premiere_moisson.delivery",
+    "value": "Première Moisson delivers (« aucune marchandise ne sera laissée à la porte »)",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/politique-d-echange-remboursement-et-livraison",
+    "seen": "2026-10-29",
+    "note": "Row M-12. Benchmark for A3: the chains deliver, small Granby shops do not publish delivery."
+  },
+  {
+    "id": "market.qc.premiere_moisson.gift_cards",
+    "value": "The cards « n'ont aucune date d'expiration et ne font l'objet d'aucuns frais »; « Les cartes perdues ou volées ne seront pas remplacées »; they « ne peuvent être remboursées ou échangées contre de l'argent comptant »; usable in participating stores only; balance checked online",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/cartes-cadeaux/modalites-d-utilisation",
+    "seen": "2026-10-29",
+    "note": "Row M-13. Own terms, undated. Benchmark for A5 and for gift cards at the counter."
+  },
+  {
+    "id": "market.qc.st_martin.delivery",
+    "value": "« Des douceurs artisanales prêtes à être livrées ou à retirer. » No lead time, deposit or message rule on the pages read",
+    "label": "verified",
+    "source": "https://patisseriestmartin.com/",
+    "seen": "2026-10-29",
+    "note": "Row M-14. Own site (Laval and Montréal); also read: https://patisseriestmartin.com/nos-gateaux/. Benchmark for A3."
+  },
+  {
+    "id": "market.qc.cafe_bazin.lead_time",
+    "value": "Café Bazin (Montréal): whole cakes « doivent être commandés au moins 24 heures à l'avance »; the guide adds that « plusieurs pâtisseries travaillent uniquement sur commande »",
+    "label": "unverified",
+    "source": "https://tastet.ca/listes/ou-trouver-les-meilleurs-gateaux-danniversaire-a-montreal-nos-suggestions/",
+    "seen": "2026-10-29",
+    "note": "Row M-15. Third-party guide (Tastet, updated 2026-10-17), read directly. Benchmark: lead time for menu cakes."
+  },
+  {
+    "id": "market.qc.ma_patisserie.lead_time",
+    "value": "Ma Pâtisserie (L'Ancienne-Lorette): wedding cakes 6 to 12 months ahead; cupcakes and other occasion cakes at least 3 to 4 weeks",
+    "label": "unverified",
+    "source": "https://www.weddingwire.ca/wedding-cakes/ma-patisserie--e16269",
+    "seen": "2026-10-29",
+    "note": "Row M-16. WeddingWire listing, search summary. Benchmark: custom lead time. Coco Vanille offers no wedding cakes."
+  },
+  {
+    "id": "market.qc.la_gatisserie.lead_time",
+    "value": "La Gâtisserie (Montréal): one month's minimum notice",
+    "label": "unverified",
+    "source": "https://www.weddingwire.ca/wedding-cakes/la-gatisserie--e2141",
+    "seen": "2026-10-29",
+    "note": "Row M-17. WeddingWire listing, search summary. Benchmark: custom lead time."
+  },
+  {
+    "id": "market.other.az_cake_design.deposit",
+    "value": "30 % deposit, « Sans acompte, la date n'est pas réservée »; cancelled more than 30 days before, the deposit is kept as a credit; within 30 days, it is kept and not refunded",
+    "label": "unverified",
+    "source": "https://form.jotform.com/230825029481859",
+    "seen": "2026-10-29",
+    "note": "Row M-18. Search summary of a Jotform order form; its place was not established (probably France). Its cancellation terms are of the fixed-in-advance kind the OPC bans in Québec. Benchmark: deposit percentage only."
+  },
+  {
+    "id": "market.other.atelier_brimbelle.deposit",
+    "value": "50 % at acceptance of the quote to hold the date; balance at delivery",
+    "label": "unverified",
+    "source": "https://www.mariages.net/wedding-cake/atelier-brimbelle--e407723",
+    "seen": "2026-10-29",
+    "note": "Row M-19. Search summary; a French business, not Québec. Benchmark: deposit percentage."
+  },
+  {
+    "id": "market.message_length",
+    "value": "No Québec bakery limit on the cake message was found. Outside Québec: 30 characters (a TableCheck booking page); 3 lines of 12 characters (a US shop)",
+    "label": "unverified",
+    "source": "https://www.tablecheck.com/fr/shops/auralenti/reserve",
+    "seen": "2026-10-29",
+    "note": "Row M-20. Searches 21 and 25; none on the Première Moisson, Avec un Grand A, Maître Glacier or St-Martin pages read. The non-Québec examples are search summaries. Site context: the request form accepts 60 characters (REQUEST_LIMITS.cakeMessage); the per-product cakeMessageMax is unset in production; the demo catalogue's 30 is never shipped. The owner decides."
+  },
+  {
+    "id": "market.next_day_cutoff",
+    "value": "No Québec bakery reached publishes a next-day cut-off hour",
+    "label": "unverified",
+    "source": "https://tastet.ca/listes/ou-trouver-les-meilleurs-gateaux-danniversaire-a-montreal-nos-suggestions/",
+    "seen": "2026-10-29",
+    "note": "Row M-21. Absence of evidence (search 20 and the pages in rows M-1 to M-17). The source is the closest page read, not a cut-off. The owner decides."
+  },
+  {
+    "id": "market.deposit_percent_quebec",
+    "value": "No Québec or Granby bakery reached publishes a deposit percentage",
+    "label": "unverified",
+    "source": "https://www.rosegateaux.com/prix.html",
+    "seen": "2026-10-29",
+    "note": "Row M-22. Absence of evidence (searches 1, 14, 15, 22; rows M-1 to M-4, M-9 to M-17). The source is one of the pages read that publishes no deposit. research/15 D12 had found only US or global forum figures (20–30 %)."
+  },
+  {
+    "id": "decision.A3.delivery",
+    "value": "Lawful and in line with the market: pickup only (« non offerte; toutes les commandes se récupèrent à la boutique »). No correction needed. Optional copy fix for the « Livrez-vous? » answers, which repeat themselves: FR « Non : la boutique ne livre pas. Toutes les commandes se récupèrent au 3, rue Court, à Granby. » EN “No: the shop does not deliver. Every order is picked up at 3 rue Court, Granby.”",
+    "label": "unverified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.1. Analysis on rows L-16 (verified) and M-5, M-12, M-14. Labelled unverified because 'no duty to deliver' rests on absence of evidence."
+  },
+  {
+    "id": "decision.A4.deposit_refund_wording",
+    "value": "30 % is lawful (no cap) and in line with the market (no local percentage; 30 % and 50 % on the two forms found). The refund rule may only deduct actual costs. Wording to replace the conditions marker « règle de remboursement de l’acompte, à rédiger avec l’avocat »: FR « L’acompte réserve votre date et s’applique au prix du gâteau. Si vous annulez, la boutique vous rembourse l’acompte, moins les frais qu’elle a réellement engagés pour votre gâteau avant l’annulation, comme les ingrédients ou les décorations achetés pour vous et le travail déjà fait; elle vous en remet le détail par écrit. Le remboursement est versé dans les 15 jours suivant l’annulation. » EN “The deposit holds your date and is applied to the price of the cake. If you cancel, the shop refunds the deposit, less the costs it actually incurred for your cake before you cancelled, such as ingredients or decorations bought for you and work already done; it gives you the details in writing. The refund is paid within 15 days of the cancellation.”",
+    "label": "unverified",
+    "source": "https://www.opc.gouv.qc.ca/commercant/secteur/bien-consommation/vetement/echange-remboursement/acompte/",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.2. Analysis on rows L-1 to L-5 (L-1, L-2, L-4, L-5 verified; L-3 a law-firm summary). The wording restates the legal default, so the agency can adopt it now; counsel signs it off. Never write « non remboursable » or a fixed retention, and never turn the deposit into a credit the customer did not choose (art. 2129 requires repaying the excess; analysis). Payment-method condition: see decision.A4.payment_method."
+  },
+  {
+    "id": "decision.A4.cancel_faq",
+    "value": "Correct the conditions FAQ « Puis-je annuler une commande en ligne à n’importe quel moment? »: FR « Non, sauf pour un gâteau personnalisé : au Québec, il n’existe pas de droit général d’annuler un achat en ligne, et l’annulation suit les règles ci-dessus. Un gâteau personnalisé peut être annulé en tout temps; l’acompte est alors remboursé, moins les frais déjà engagés pour votre gâteau. » EN “No, except for a custom cake: Québec has no general right to cancel an online purchase, and cancellation follows the rules above. A custom cake can be cancelled at any time; the deposit is then refunded, less the costs already incurred for your cake.”",
+    "label": "unverified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.2. Today's « Non : au Québec, il n’existe pas de droit général… » is incomplete for a custom cake treated as a contract for work (LPC s. 11.4; Civil Code art. 2125). The wording is safe either way: if a custom cake is a sale, it gives the customer more than the law does."
+  },
+  {
+    "id": "decision.A4.payment_method",
+    "value": "Until counsel decides whether a custom cake is a « vente de biens susceptibles de dépérir rapidement », take custom-cake deposits on online or phone orders by credit card only: no Interac e-Transfer or debit deposits",
+    "label": "unverified",
+    "source": "https://www.opc.gouv.qc.ca/commercant/pratique-commerce/contrats-distance/paiement",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.2 and §5 (lawyer item 1). Rows L-7, L-9 (verified) and L-10 (prior knowledge). A hosted checkout or payment link may otherwise accept debit cards, or wallets that hold them."
+  },
+  {
+    "id": "decision.A5.gift_cards",
+    "value": "The shop part is fine; the law sentence is over-broad. FAQ « Vendez-vous des cartes-cadeaux? »: FR « Le site ne vend pas de cartes-cadeaux pour l’instant; pour savoir si la boutique en offre au comptoir, appelez au 450-372-7177. Au Québec, la carte-cadeau d’un commerce n’a pas de date d’expiration, et aucuns frais ne peuvent être exigés pour sa délivrance ou son utilisation. » EN “The website does not sell gift cards for now; to find out whether the shop offers them at the counter, call 450-372-7177. In Québec, a shop’s gift card has no expiry date, and no fee can be charged to issue or use it.”",
+    "label": "verified",
+    "source": "https://www.opc.gouv.qc.ca/en/consumer/good-service/prepaid-card/cash/fee/",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.3. Rows L-11, L-13, L-14 (all verified). Fees remain allowed on shopping-centre and bank cards, and so do replacement fees for a lost card (if disclosed) and customisation fees, so « ni frais » overstates the law. In line with the market (M-13)."
+  },
+  {
+    "id": "decision.A5.gift_cards_conditions",
+    "value": "Conditions of sale FAQ « Les cartes-cadeaux expirent-elles? »: FR « Non : au Québec, la carte-cadeau d’un commerce n’a pas de date d’expiration, et aucuns frais ne peuvent être exigés pour sa délivrance ou son utilisation. Le site ne vend pas de cartes-cadeaux pour l’instant; pour la boutique, appelez au 450-372-7177. » EN “No: in Québec, a shop’s gift card has no expiry date, and no fee can be charged to issue or use it. The website does not sell gift cards for now; for the shop, call 450-372-7177.”",
+    "label": "verified",
+    "source": "https://www.publicationsduquebec.gouv.qc.ca/fileadmin/Fichiers_client/lois_et_reglements/LoisAnnuelles/fr/2009/2009C51F.PDF",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.3. LPC ss. 187.3 and 187.4 (2009 text). If the shop sells cards at the counter, it gives the buyer the conditions of use and how to check the balance (s. 187.2)."
+  },
+  {
+    "id": "decision.A6.not_picked_up_faq",
+    "value": "Lawful if the order was ready, and in line with the market. FAQ « Que se passe-t-il si j’arrive après ma plage de cueillette? »: FR « Appelez la boutique au 450-372-7177 : la commande reste prête jusqu’à la fermeture le jour prévu, et vous pouvez convenir d’une autre heure ce jour-là. Les produits frais ne peuvent pas être gardés au-delà de ce jour; comme la commande a été préparée pour vous, le montant payé n’est alors pas remboursé. » EN “Call the shop at 450-372-7177: the order stays ready until closing on the planned day, and you can agree on another time that day. Fresh products cannot be kept beyond that day; because the order was made for you, the amount paid is then not refunded.”",
+    "label": "unverified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.4. Analysis on row L-8 (verified, applied by analogy) and rows M-2 and M-11. Adds the reason and removes the clause « appelez … pour convenir d’une autre heure », which appears twice. Counsel confirms the case of a custom cake paid by deposit only. Optional, the owner's choice: « Le solde d’un gâteau personnalisé n’est pas réclamé. »"
+  },
+  {
+    "id": "decision.A6.not_picked_up_conditions",
+    "value": "Conditions of sale, « Comment se passe la cueillette? » body: FR « Commande non récupérée pendant la plage : la commande reste prête jusqu’à la fermeture de la boutique le jour prévu; appelez au 450-372-7177 pour convenir d’une autre heure ce jour-là. Les produits frais ne peuvent pas être gardés au-delà de ce jour; comme la commande a été préparée pour vous, le montant payé n’est alors pas remboursé. » EN “Order not picked up during the slot: the order stays ready until the shop closes on the planned day; call 450-372-7177 to agree on another time that day. Fresh products cannot be kept beyond that day; because the order was made for you, the amount paid is then not refunded.”",
+    "label": "unverified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.4. Same analysis as decision.A6.not_picked_up_faq; counsel signs it off with the conditions."
+  },
+  {
+    "id": "decision.new.chargeback_sentence",
+    "value": "For fresh goods the distance-contract regime is excluded, so the 60-day chargeback may not be a statutory right. Replace « vous pouvez demander à l’émetteur de votre carte de crédit d’annuler le paiement, dans les 60 jours » with FR « Si un remboursement dû n’est pas fait, vous pouvez aussi vous adresser à l’émetteur de votre carte de crédit. » EN “If a refund that is owed is not made, you can also contact your credit-card issuer.” Keep the 15-day refund and the « never moves a date alone » rule as the shop's own promises",
+    "label": "unverified",
+    "source": "https://cdn.opc.gouv.qc.ca/media/documents/commercant/secteur/bien-consommation/la-regles-contrats-distance.pdf",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.5. Rows L-6 and L-9 (verified). For counsel: if custom cakes are not exempt, keep the 60-day sentence for them."
+  },
+  {
+    "id": "decision.A1.person_in_charge",
+    "value": "Lawful as built: the title « Propriétaire, responsable de la protection des renseignements personnels » and confidentialite@cocovanillegranby.com meet the CAI's « titre et coordonnées »; a name is optional",
+    "label": "verified",
+    "source": "https://www.cai.gouv.qc.ca/protection-renseignements-personnels/information-entreprises-privees/responsable-protection-renseignements-personnels-entreprise",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.6. Row L-18. The mailbox works only once cocovanillegranby.com is registered (research/21 §3, launch blocker)."
+  },
+  {
+    "id": "decision.A9.claims",
+    "value": "Stands: the site makes no free-from claim, and its sentence describes the site. Tell the owner that the Instagram line claims both « sans gluten » (20 ppm, cross-contact included) and « sans lactose » (no detectable lactose)",
+    "label": "verified",
+    "source": "https://inspection.canada.ca/en/food-labels/labelling/industry/allergens-and-gluten/gluten-free-claims",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.6. Rows L-24 and L-25 (CFIA, verified)."
+  },
+  {
+    "id": "answer.privacy.access_response",
+    "value": "Privacy page marker « délai de réponse aux demandes d’accès »: « 30 jours » / “30 days”",
+    "label": "verified",
+    "source": "https://www.cai.gouv.qc.ca/protection-renseignements-personnels/information-entreprises-privees/responsable-protection-renseignements-personnels-entreprise",
+    "seen": "2026-10-29",
+    "note": "Row L-19. A public legal source answers this marker (house rule: markers stay until a public or owner source answers them)."
+  },
+  {
+    "id": "answer.privacy.tax_retention",
+    "value": "Privacy page marker « durée de conservation exigée par les règles fiscales »: « 6 ans après la fin de l’année à laquelle les documents se rapportent » / “6 years after the end of the year the records relate to”",
+    "label": "unverified",
+    "source": "https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/regles-de-base-relatives-a-lapplication-de-la-tpstvh-et-de-la-tvq/tenue-de-registres-et-pieces-justificatives/",
+    "seen": "2026-10-29",
+    "note": "Row L-21: search summaries of Revenu Québec pages (direct read HTTP 403). Fill the marker once the accountant confirms it."
+  },
+  {
+    "id": "answer.privacy.complaint_route",
+    "value": "Before « Si vous n’êtes pas satisfait… », add the shop's own complaint route: « Pour une plainte sur la protection de vos renseignements, écrivez à la personne responsable; elle vous répond par écrit. » Also show an effective date (« En vigueur le … ») next to the update date",
+    "label": "unverified",
+    "source": "https://www.cai.gouv.qc.ca/uploads/pdfs/CAI_GU_POL_Confidentialite.pdf",
+    "seen": "2026-10-29",
+    "note": "research/20d §3.6. Row L-20 (verified) asks for a complaint process and an effective date; the wording is an agency proposal for counsel. Every page's meta line shows « Publié le » (the record's creation date) and « Mis à jour le »."
+  },
+  {
+    "id": "benchmark.open.next_day",
+    "value": "Next day: the shop itself, per a third party, ready the next day by phone (2025). Première Moisson: minimum 2, 24 or 48 h by product. Café Bazin: whole cakes at least 24 h. Avec un Grand A (Granby): 48 business hours. No published cut-off hour found",
+    "label": "unverified",
+    "source": "http://premieremoisson.com/fr/faq",
+    "seen": "2026-10-29",
+    "note": "research/20d §4. Rows M-1, M-8, M-9, M-15, M-21 (mixed labels). The owner decides (research/21 §5 item 3)."
+  },
+  {
+    "id": "benchmark.open.lead_times",
+    "value": "Menu cakes: 24 h to 48 h (or 48 business hours). Ice-cream cakes: 48 h by phone (Maître Glacier, per research/03). Custom decorated cakes: about 3 weeks (Rose Gâteaux, Granby), 3 to 4 weeks (Ma Pâtisserie), 1 month (La Gâtisserie). Change deadline: 7 days (Cake Design Granby), 1 week (Rose Gâteaux), 24 or 48 h (Première Moisson)",
+    "label": "unverified",
+    "source": "https://www.rosegateaux.com/prix.html",
+    "seen": "2026-10-29",
+    "note": "research/20d §4. Rows M-1, M-2, M-4, M-6, M-9, M-10, M-15 to M-17 (mixed labels). The owner decides. Legal bound: the shop never changes an order alone (LPC s. 11.2), and charges no fixed fee for a late change (LPC s. 13)."
+  },
+  {
+    "id": "benchmark.open.message_length",
+    "value": "No Québec benchmark for the cake message length; outside Québec 30 characters, or 3 lines of 12",
+    "label": "unverified",
+    "source": "https://www.tablecheck.com/fr/shops/auralenti/reserve",
+    "seen": "2026-10-29",
+    "note": "research/20d §4. Row M-20. The owner sets cakeMessageMax per product; the request form accepts 60 characters today."
+  },
+  {
+    "id": "benchmark.open.free_cancellation",
+    "value": "Free-cancellation window: at least 48 h before pickup, prepaid orders refunded (Première Moisson). Optional for the shop: without one, the actual-cost rule of decision.A4.deposit_refund_wording applies alone",
+    "label": "verified",
+    "source": "http://premieremoisson.com/fr/politique-d-echange-remboursement-et-livraison",
+    "seen": "2026-10-29",
+    "note": "research/20d §4. Row M-10. Legal bound: after the window, a custom cake allows only actual costs (LPC ss. 11.4, 13); a standard order may be refused cancellation and handed over, but never with a fixed penalty."
+  }
+]

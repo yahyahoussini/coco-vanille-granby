@@ -15,7 +15,8 @@ Both will be self-hosted on the owner's VPS. Goals, in order: SEO/AEO/GEO first,
 
 | Part | Where | Status |
 |---|---|---|
-| Public site (FR/EN, ES behind `ENABLE_ES`) | `apps/web/src/app/(site-*)`, `src/components/site`, `src/components/templates`, `src/seed/content.js` | Built: page contract, schema graph, hreflang, sitemap, robots, llms.txt, OG cards, calculator, seasonal pages, legal drafts (lawyer review pending) |
+| Public site (FR/EN, ES behind `ENABLE_ES`) | `apps/web/src/app/(site-*)`, `src/components/site`, `src/components/templates`, `src/seed/content.js` | Built: page contract, schema graph, hreflang, sitemap, robots, llms.txt, OG cards, calculator, seasonal pages, legal drafts (lawyer review pending). Design « Vanille & Cacao » from the round logo (`public/brand/`, `research/sessions/04-design-direction.md`): logo stage, tab bar on phones, motion layer `src/components/site/Motion.js` (reveal, parallax, pointer effects; off with reduced motion). Premium phone pass (2026-10-29): sticky app bar with a « Menu » sheet (popover, works without JavaScript), swipe rails, compact product rows, a fixed « Ajouter » bar on product pages with a − 1 + stepper, « Lire la suite » folds, today's row in every hours table; phone pages 25–45 % shorter with the same HTML text. Styles split by area: `site.css` (tokens, shell), `content.css`, `home.css`, `catalogue.css`, `ordering.css`, `chat.css` |
+| « Écrivez-nous » (direct chat) | `src/lib/chat`, `src/app/svc/clavardage`, `src/components/site/chat`, Studio › Messages | Built: first-party chat (own database, no third party), instant answers from published facts, replies from Studio (optional copy by texto/courriel on request), 90-day purge in the worker, never on payment pages |
 | Ordering | `src/lib/ordering`, `src/lib/payments`, `src/lib/messaging`, `src/worker`, `src/app/svc` | Built: pickup availability, slots + capacity with a DB lock, GST/QST, « Ma boîte », LPC checkout, Stripe + mock, custom-cake request → quote → deposit, SMS/email adapters, worker |
 | Coco Studio (`admin.cocovanillegranby.com`) | `src/app/(studio)`, `src/lib/studio`, `src/components/studio` | Built: 6 daily screens, Cette semaine, Plus, Agence, roles + step-up, PIN, passkey, undo, offline outbox, live updates, PWA, audit log |
 | Data model | `src/collections`, `src/globals`, `src/migrations` | Payload 3 on Postgres 16; initial migration committed |
@@ -28,13 +29,20 @@ cd apps/web
 cp .env.example .env            # set DATABASE_URI and PAYLOAD_SECRET
 npm ci
 npm run migrate && npm run seed
+SEED_DEMO=true npm run seed:demo-catalogue   # optional: 6 test products + photos (local only; SEED_DEMO=clean … then npm run seed removes them)
 npm run build && npm start      # public: http://localhost:3000 · Studio: http://admin.localhost:3000
+                                # on a busy laptop or a small VPS: NEXT_BUILD_WORKERS=2 npm run build
 npm test                        # unit tests
 npx playwright test --project=public
 node scripts/gate.mjs           # rank-first gate: 0 FAIL except [[FACT NEEDED]] markers
 ```
 
 Verified on 2026-10-26 on a fresh database: 413 unit tests, 23 infra tests, 77 public + 6 ordering + 41 Studio browser tests, gate PASS (54 pages; the only FAILs are owner-fact markers).
+
+Verified again on 2026-10-29 after the premium phone pass, on the production build (`NEXT_BUILD_WORKERS=2`): 472 unit tests (469 pass; the one failure is the Windows-only path case in media.test.js; 1 skipped, 1 todo), 23 gate and infra tests, 79 public browser tests (the worker test is skipped without `DATABASE_URI` in the runner), 41 Studio browser tests (on the seeds named in test/e2e/studio/auth.spec.js; the closure test T4 needs a database without leftover closures or `closure` messages), gate PASS (54 pages; 90 FAILs, all owner-fact markers). After the agency decisions of the same day (research/21: privacy officer title and contact, shop email, delivery, deposit, gift cards, unclaimed orders, the shop's published workshops and drinks, Instagram), the gate serves 66 pages, still PASS (101 FAILs, all owner-fact markers; allergens, prices and lead times lead the owner's list in `apps/web/reports/gate/owner-todo.md`).
+
+Verified again on the evening of 2026-10-29, after the fixes from the phone and desktop design reviews, the law check of the decisions (research/20d) and the local content (research/22d: the « Depuis le Zoo de Granby » page, the Moroccan specialities, seating, the Zoo and the workshop line in the JSON-LD): 474 unit tests (471 pass; the same Windows-only failure; 1 skipped, 1 todo), 81 public browser tests (1 skipped), 41 Studio browser tests (40 in the full run on a clean demo database; the accessibility scan of the 14 daily screens passed on its own once its timeout was raised to 3 minutes for a busy laptop), gate PASS (68 pages; 101 FAILs, all owner-fact markers). Run the Studio suite on a database without the public suite's test orders (`SEED_DEMO=clean` the demo catalogue first, then the seeds named in test/e2e/studio/auth.spec.js).
+Verified again on 2026-10-30, after « Faits du site » (Studio › Plus: the 95 facts the copy waits for, answered in French and English, filling the pages at once; collection `site-facts`, migration `20261030_120000_site_facts`), the agency's legal and tax decisions (research/21 §8: no lawyer or accountant step, the owner validates) and the payment step's prefilled card form and wallets first: 480 unit tests (477 pass; the same Windows-only failure; 1 skipped, 1 todo), 81 public browser tests (1 skipped), 43 Studio browser tests, gate PASS (68 pages; 97 FAILs, all owner-fact markers). The client deck « de A à Z » is in the client folder (`Coco Vanille - Presentation de A a Z.pptx`).
 
 Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in research/16) plus systems and automation. This repo is the system's business intelligence: one facts file, one decision log, one risk register, one owner-question list. Persuasion stays ethical: real prices, real capacity, real reviews, never fake urgency (research/02 §7–§8, research/07).
 
@@ -52,6 +60,8 @@ Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in
 - `research/requirements-2026-10-25.md` and `research/plan-*.md`: the owner's inputs, stored as provided by Yahya (formatting only). Their claims are reviewed in research/12 and research/18.
 - `research/01`–`18`: one research track per file. Each has a method-and-limits header, a bottom line, the body, open items, a search queue and Sources. Numbers 09 and 13 are not used.
 - `data/`: machine-readable twins of the research files (CSV, JSON).
+- `docs/`: the client operating documents in Québec French (00–20), with the client strategy `docs/STRATEGIE-SEO-AEO-GEO.md`, the local plan `docs/20-seo-geo-aeo-local.md` and an index in `docs/README.md`.
+- `scoreboard/`: the weekly SEO · AEO · GEO measurement (prompts, competitors, runs; the single source of truth for `.github/workflows/weekly.yml`), described in `scoreboard/README.md`; `site.config.json` and `tools/` hold the Québec market settings.
 - **Precedence:** files with a verification pass win over files without one; research wins over the owner plans (research/12 lists each conflict); research/12 §3 merged decisions bind until the owner overrules one in writing.
 - **Labels used everywhere:** verified / conflict / unverified / needed (research/01) · Confirmed / Partly / Not found / Contradicted (research/06, 18) · **UNVERIFIED** = no source or a secondary one only · **UNVERIFIED (FC)** = flagged by the fact-check, not re-confirmed · **(est.)** = an estimate · **[[FACT NEEDED: …]]** = only the owner (or a professional) can supply it; the publish guard blocks it from going live.
 
@@ -106,8 +116,8 @@ Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in
 
 - **WebSearch summaries only.** WebFetch and curl were blocked, so no page was opened directly. Every web fact comes from a search-result summary.
 - **US-located.** Results are not a Granby-localized Google page: no map pack, no People Also Ask, no AI Overview was seen.
-- **Not reachable:** Instagram, Facebook posts and Google Maps. GBP data appears only where directories mirror it; the Instagram handle @coco_vanillegranby never surfaced.
-- **Semrush:** no API units were available, so no Semrush data was used (research/18 records "Semrush not used").
+- **Not reachable:** Instagram, Facebook posts and Google Maps. GBP data appears only where directories mirror it; the Instagram handle @coco_vanillegranby never surfaced then (it was verified on 2026-10-29, research/20b §0.1).
+- **No paid keyword tool.** No Semrush or other paid volume data is used. Demand comes from Google and Bing autocomplete (`data/autocomplete-local-2026-10-29.json`, research/22b §5), the Monday measurement and, after launch, Search Console.
 - **Search budget:** about 200 WebSearch calls per turn, shared by every agent. Several tracks hit it: 02 and 04 ran 0 searches in their main pass, 05 stopped at 17 of 33 prompts, 16b's fact-check search was refused. Each file lists its unrun queries in a search queue.
 - **No demand volumes.** Keyword demand is a prior (high / medium / low), to replace with Keyword Planner, Search Console and a Granby PAA harvest.
 - **Every fact is sourced or marked.** A URL in the file's Sources, or a label (UNVERIFIED, (est.), [[FACT NEEDED]]). Nothing marked goes into client copy.

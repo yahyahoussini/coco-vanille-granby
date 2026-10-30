@@ -1,0 +1,370 @@
+[
+  {
+    "id": "parking.fee.downtown",
+    "value": "Municipal parking in downtown Granby has no fee: payment is required only in public lots listed « à péage » in annex F of by-law 1885-1990, and the only one listed is the Hôpital de Granby's (205, boulevard Leclerc Ouest); the parking-meter annex (E) was repealed",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-1 of research/20c. Art. 56 and annexes E and F of the consolidated by-law (revised 2026-09-18). « Gratuit » is a reading of the official text, not a sentence the City publishes: no City page on downtown parking was found (granby.ca/fr/stationnement returns 404). The codification has no official sanction; the adopted by-laws and the street signs prevail."
+  },
+  {
+    "id": "parking.fee.history",
+    "value": "In 2020 the by-law made downtown meters bearing a « Gratuit » sticker free, limited to 2 hours; by-law 1043-2021 (adopted 2021-06-07, in force 2021-06-12) then repealed art. 65 and annex E (meters), replaced art. 56 (paid zones) and added annex Y (downtown street parking)",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-2. Historical table of the codification. A Granby Express article (April 2019, via BAnQ, search summary) reported the City's plan to remove the meters (see parking.history.press_2019)."
+  },
+  {
+    "id": "parking.lot.centre_court.identity",
+    "value": "Nearest municipal lot: « Stationnement Centre-Ville, entre les rues Court et Centre (41, rue Centre) », owned by the City; the by-law also calls it « Centre-Court »",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-3. Annex F-A item 1.0, art. 49, art. 45.3, art. 49.14 and annex BB; the annex Y map labels « Stationnement Centre-Court » between rue Court and rue du Centre."
+  },
+  {
+    "id": "parking.lot.centre_court.rules",
+    "value": "Plan « Centre-Court » (annex BB), in force since 2026-06-12 (by-law 1479-2026): « Autorisé 4 h (8h-18h, Lun à Ven) » (central rows; 37 spaces per the draft); « Autorisé 2 h (8h-17h, Lun à Ven) »; one strip « Autorisé 2 h »; rows « Autorisé » with no time limit; two spaces « Réservé aux personnes handicapées »; rows reserved for permits « 40 rue Court » and « 12 rue Court »; one row « Interdit (1er Nov. au 30 Avr.) excepté véhicules munis d'un permis; Autorisé 2 h (8h-17h, Lun à Ven, 1er Mai au 31 Oct.) »; « Privé » spaces",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-4. Codification p. 142 (annex BB; plan revised 2026-06-03; amendment table « 1479-2026 — 2026-06-12 »); art. 49.14 cites by-law 1479-2026, art. 9. The number 37 comes from art. 8 of the draft tabled 2026-05-25: https://www.granby.ca/sites/default/files/2026-05/13.1-0-2026modregcirc-annexes-y-o-aa-bb.pdf"
+  },
+  {
+    "id": "parking.lot.centre_court.weekend",
+    "value": "The 4-hour and 2-hour (8 h–17 h) limits in the Centre-Court lot apply Monday to Friday only: on Saturday and Sunday those spaces have no time limit",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-5. Reading of the plan's labels (« Lun à Ven »). The plain « Autorisé 2 h » strip and the permit and reserved rows are not limited to weekdays. The signs on site prevail. The shop opens Wednesday to Sunday."
+  },
+  {
+    "id": "parking.lot.centre_court.accessible",
+    "value": "The Centre-Court plan labels two spaces « Réservé aux personnes handicapées »; art. 45.3 b) also reserves twelve vignette spaces in this lot for the Édifice Pierrette-Robichaud-Lafleur, « dont deux cases pour personnes handicapées »",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-6. Both texts are official, but it is unclear whether the two labelled spaces are open to any SAAQ vignette holder or belong to the building's twelve (art. 45.3 b, by-law 1409-2025): ask the City before publishing them (research/20c §9, item 5). Art. 45.01 (by-law 1479-2026) sets the vignette rule for reserved spaces."
+  },
+  {
+    "id": "parking.lot.centre_court.walk",
+    "value": "About 120 m on foot (≈ 2 min) from the shop to the Centre-Court lot: 97 m along rue Court, then 21 m on the driveway facing rue Victoria; 75–105 m in a straight line to the lot's aisles",
+    "label": "unverified",
+    "source": "https://routing.openstreetmap.de/routed-foot/route/v1/driving/-72.7250821,45.3995807;-72.724982,45.400522?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row P-7. Computed on OSM data (FOSSGIS OSRM foot; OSM ways 750434137, 742331596, 704899543). The City's plan does not show the lot's entrances; OSM also shows driveways from rue Principale and rue du Centre. Keep « environ » in copy."
+  },
+  {
+    "id": "parking.street.rue_court",
+    "value": "Rue Court, west side, from near rue Principale to beyond the Centre-Court lot: 2-hour street parking; a « Zone débarcadère 30 min » further north",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-8. Annex Y map (codification p. 139, amended up to by-law 1479-2026), published at 1430 × 953 px: the orange class is legible and every orange class means 2 hours for a customer, but whether the limit applies 8 h–18 h only, and the red segment at the corner, cannot be read reliably. The signs prevail."
+  },
+  {
+    "id": "parking.street.rue_principale",
+    "value": "Rue Principale at the rue Court corner: the north side (the shop's side) is marked « Stationnement interdit »; the south side is in the 1-hour (8 h–18 h) class; one space reserved for people with reduced mobility on the north side, east of rue Court",
+    "label": "unverified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-9. Low-resolution reading of annex Y. Not for copy."
+  },
+  {
+    "id": "parking.lot.johnson",
+    "value": "« Stationnement Johnson (18, rue Johnson) », owned by the City, between rue Saint-Joseph and rue Johnson: large rows « Autorisé » (no time limit); « Autorisé 4 h (8h-18h, Lun à Ven) » (27 spaces per the draft); « Autorisé 2 h (8h-17h, Lun à Ven) »; « Autorisé 1 h »; « Réservé aux personnes handicapées »; « Réservé aux véhicules électriques 4 h »; winter permit rows",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-10. Annex AA (codification p. 141; by-law 1479-2026 in force 2026-06-12 and by-law 1488-2026 in force 2026-07-10); the number 27 from art. 6 of the draft. Distances (computed on OSM, unverified): 120 m on foot to the listed address, about 210 m to the middle of the lot; « environ 150 m » in copy."
+  },
+  {
+    "id": "parking.lot.victoria_palace",
+    "value": "Lots off rue Victoria, east of rue Court (behind the Palace and the Sainte-Famille church; annex O, in force 2026-06-12): rows « Autorisé » (no time limit) along rue Victoria; « Autorisé 4 h (8h-17h, Lun à Ven) » except for holders of a « Palace » vignette; 35 spaces of 4 h (8 h–18 h, Monday to Friday) in the Sainte-Famille church lot; spaces « Réservé aux personnes handicapées »",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-11. Codification p. 129 (annex O) and art. 49.2; annex F-A item 11.0 lists « Stationnement à l'arrière du Palace (135, rue Principale) » as a City-owned public lot; the number 35 from art. 5 of the draft of 1479-2026."
+  },
+  {
+    "id": "parking.ev.victoria",
+    "value": "2 street spaces reserved for electric vehicles while charging, rue Victoria from rue Court to rue Dufferin, north side",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-12. Art. 45.25 (by-law 1244-2023). The Johnson lot also has « Réservé aux véhicules électriques 4 h » spaces (annex AA)."
+  },
+  {
+    "id": "parking.holiday_2026",
+    "value": "Time limits lifted from the first Monday of December to 3 January in the Centre-Ville/Centre-Court (41, rue du Centre), Johnson (18, rue Johnson), Phoenix (315, rue Principale) and Centre Notre-Dame (252, rue Principale) lots: for 2026–2027, Monday 7 December 2026 to Sunday 3 January 2027",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-13. Art. 49 (by-laws 0083-2008 and 0822-2018): « le stationnement est permis en tout temps entre le 1er lundi du mois de décembre de chaque année et le 3 janvier suivant ». The 2026 dates are computed. Reserved spaces stay reserved."
+  },
+  {
+    "id": "parking.winter_night",
+    "value": "From 1 November to 30 April, no parking on public roads, or in the public lots the by-law lists, between 1:00 and 6:30 when the City triggers a snow-removal operation. Operations are announced the day before on granby.ca, by citizen alert and at 450-776-8366. Minimum fine 30 $ plus costs; towing possible",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2025-11/codification1171-2022_stationnementnuit_aj12122022.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-14. By-law 1171-2022, art. 3, 4, 6 and 9 (as amended by 1184-2022). Outside the shop's opening hours: it matters for staff who park overnight, not for customers."
+  },
+  {
+    "id": "parking.draft.84_court",
+    "value": "Draft by-law (notice of motion 2026-10-19), not in force: the lot at 84, rue Court (« appartenant au Centre d'action bénévole de Granby inc. ») would be reserved for vignette-holding tenants of the Édifice Pierrette-Robichaud-Lafleur",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-10/0-2026modregcirc-annexes-c-l-q-y-f-cc.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-15. Verified as a draft only. Never send customers to that lot. Re-check its adoption in December."
+  },
+  {
+    "id": "parking.draft.snow_spaces",
+    "value": "Draft by-law (2026-10-19), not in force: 57 spaces in the Phoenix, Johnson and Centre-Court lots would allow parking between 1:00 and 6:30 during snow operations",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-10/0-2026_modreg1171-2022_stationnementnuit.pdf",
+    "seen": "2026-10-29",
+    "note": "Row P-16. Verified as a draft only."
+  },
+  {
+    "id": "parking.third_party.turo",
+    "value": "A Turo travel guide says street parking on rue Principale is « généralement avec des parcomètres », recommends a « stationnement Blanchard » and says many public lots are free on weekends",
+    "label": "unverified",
+    "source": "https://turo.com/ca/fr/voiture-location/canada/granby-qc",
+    "seen": "2026-10-29",
+    "note": "Row P-17. Search summary. Contradicted by the by-law (parking.fee.downtown, parking.fee.history). Not used."
+  },
+  {
+    "id": "parking.history.press_2019",
+    "value": "Granby Express (April 2019): the City planned to remove the parking meters in favour of time-limited spaces",
+    "label": "unverified",
+    "source": "https://collections.banq.qc.ca/document/s/t/x-rM5824lmqA4DioFB6Nuw",
+    "seen": "2026-10-29",
+    "note": "Row P-18. Search summary of a BAnQ copy; not opened (security page, research/20a). Which BAnQ document holds the article is uncertain."
+  },
+  {
+    "id": "zoo.address.visitor",
+    "value": "1050, boulevard David-Bouchard Nord, Granby (Québec) J2H 0Y6",
+    "label": "verified",
+    "source": "https://www.zoodegranby.com/horaire",
+    "seen": "2026-10-29",
+    "note": "Row Z-1. Printed « 1050 boul. David-Bouchard N, Granby, QC, J2H 0Y6. » on the Zoo's « Horaire et directions » page (address block and public-transit section). Use this address for directions."
+  },
+  {
+    "id": "zoo.address.postal",
+    "value": "525, rue St-Hubert, Granby (Québec) J2G 5P3; (450) 372-9113",
+    "label": "verified",
+    "source": "https://www.zoodegranby.com/contactez-nous",
+    "seen": "2026-10-29",
+    "note": "Row Z-2. The Zoo's contact page. A postal address: not for directions. It explains the J2G 5P3 seen on a Wikipedia mirror."
+  },
+  {
+    "id": "zoo.parking",
+    "value": "Lot P1: « Stationnement gratuit disponible sur place. » On busier days, two alternative lots with shuttles (« Entrée rue Dufferin », « Entrée rue des Colombes »)",
+    "label": "verified",
+    "source": "https://www.zoodegranby.com/horaire",
+    "seen": "2026-10-29",
+    "note": "Row Z-3. « Lors des journées plus achalandées, le Zoo de Granby offre deux stationnements alternatifs avec services de navettes. » The alternative lots were not routed."
+  },
+  {
+    "id": "zoo.p1.point",
+    "value": "Zoo de Granby P1: 45.4196974, -72.7253607 (Nominatim; OSM way 338552937, tagged fee=no, access=customers)",
+    "label": "verified",
+    "source": "https://www.openstreetmap.org/way/338552937",
+    "seen": "2026-10-29",
+    "note": "Row Z-4. Observed in OSM. Nominatim has no point for « 1050 boulevard David-Bouchard Nord » (it returns road segments only), so the routes start at P1, where the Zoo sends drivers."
+  },
+  {
+    "id": "zoo.drive.osrm",
+    "value": "Zoo P1 → 3, rue Court by car: 3,000.7 m, 300.9 s → « environ 5 minutes » (environ 3,0 km), via rue Saint-Hubert and rue Principale",
+    "label": "unverified",
+    "source": "https://router.project-osrm.org/route/v1/driving/-72.7253607,45.4196974;-72.7250821,45.3995807?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row Z-5. OSRM demo server, car profile, queried 2026-10-29 13:06 UTC. Destination: the shop's point 45.3995807, -72.7250821 (snapped 17 m to rue Court); to Nominatim's « 3, Rue Court » point instead: 2,990.3 m, 299.3 s. Free flow: no traffic, no waiting at lights, no time to park. One engine only: see zoo.drive.range."
+  },
+  {
+    "id": "zoo.drive.osrm_return",
+    "value": "3, rue Court → Zoo P1 by car: 2,878.3 m, 263.0 s → « environ 4 minutes »; from the Zoo's mapped centroid (OSM way 76938457) to the shop: 3,161.7 m, 340.0 s (« environ 6 minutes »)",
+    "label": "unverified",
+    "source": "https://router.project-osrm.org/route/v1/driving/-72.7250821,45.3995807;-72.7253607,45.4196974?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row Z-6. OSRM demo, same method. The centroid origin snapped 135 m to the nearest road."
+  },
+  {
+    "id": "zoo.drive.valhalla",
+    "value": "Zoo P1 → 3, rue Court by car: 3.833 km, 454.8 s → « environ 8 minutes », via boulevard David-Bouchard Nord, rue Dufferin and rue Principale",
+    "label": "unverified",
+    "source": "https://valhalla1.openstreetmap.de/route",
+    "seen": "2026-10-29",
+    "note": "Row Z-7. Valhalla (FOSSGIS), auto costing, queried 2026-10-29 13:14 UTC with locations P1 (45.4196974, -72.7253607) → shop (45.3995807, -72.7250821). It takes a different route from OSRM's."
+  },
+  {
+    "id": "zoo.drive.range",
+    "value": "5 to 8 minutes by car and 3 to 4 km between the Zoo's P1 lot and 3, rue Court, depending on the route and before traffic; straight line 2.2 km (2,237 m)",
+    "label": "verified",
+    "source": "https://router.project-osrm.org/route/v1/driving/-72.7253607,45.4196974;-72.7250821,45.3995807?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row Z-8. Computed: the bound on which both engines agree (zoo.drive.osrm, zoo.drive.valhalla). Recommended wording: « environ 5 à 8 minutes en auto (3 à 4 km) » / « about 5 to 8 minutes by car (3 to 4 km) ». Never a single figure without « environ »."
+  },
+  {
+    "id": "zoo.bus",
+    "value": "City bus Circuit Nord: stop 27 « Saint-Hubert/Zoo » (moved in summer) ↔ Terminus Centre-ville, two departures an hour at the Zoo stop on weekdays (:16 and :46). Regular fare 3,25 $, reduced 3 $; children 12 and under ride free when accompanied. Service: Monday–Wednesday 6 h 30–19 h 30, Thursday–Friday 6 h 30–22 h, Saturday–Sunday 8 h–18 h 30",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-07/depliant_transport-urbain-26x26_juillet2026-hr.pdf",
+    "seen": "2026-10-29",
+    "note": "Row Z-9. City of Granby transit brochure, July 2026. The timetable layout is dense; depending on the direction, the summer stop moves to rue Dorion or rue Bégin."
+  },
+  {
+    "id": "access.terminus.walk",
+    "value": "Terminus Centre-ville (rue du Centre) to the shop: about 290 m on foot (≈ 4 min), via rue du Centre and rue Principale",
+    "label": "unverified",
+    "source": "https://routing.openstreetmap.de/routed-foot/route/v1/driving/-72.7250821,45.3995807;-72.7269,45.4008?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row Z-10. Computed on OSM (way 580993446 « Terminus Centre », operator Ville de Granby). One engine."
+  },
+  {
+    "id": "access.entrance",
+    "value": "No public description of the entrance (steps, threshold, door width, door type, ramp, which door) and no Google accessibility attribute in any copy we could read",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row A-1. Absence of evidence. Checked: the 12 visible Instagram captions (research/20b), Wanderlog (no accessibility attribute), Kéroul (the shop is not listed) and 5 searches; RestoMontreal returned HTTP 403; Google Maps does not open here. The site keeps [[FACT NEEDED: marches, largeur de porte et accès en fauteuil roulant]]. Route: owner fact (research/14 H5)."
+  },
+  {
+    "id": "access.osm",
+    "value": "OpenStreetMap has no wheelchair=* or entrance=* tag at 3, rue Court, and no point for the shop",
+    "label": "verified",
+    "source": "https://api.openstreetmap.org/api/0.6/map.json?bbox=-72.7290,45.3972,-72.7210,45.4022",
+    "seen": "2026-10-29",
+    "note": "Row A-2. Observed in the OSM data on 2026-10-29 (13:02 UTC)."
+  },
+  {
+    "id": "access.context.keroul",
+    "value": "Context only, not about no. 3: Kéroul's 2022 evaluations rate Pain-Pain Boulangerie Artisanale (120, rue Principale) partly accessible (a threshold that is too high, no automatic door opener) and Tartes et Clafoutis (189, rue Principale) not accessible",
+    "label": "unverified",
+    "source": "https://www.keroul.qc.ca/fr/voyage/etablissement/13854-pain-pain-boulangerie-artisanale",
+    "seen": "2026-10-29",
+    "note": "Row A-3. Search summaries (Tartes et Clafoutis: https://www.keroul.qc.ca/fr/voyage/etablissement/13853-tartes-et-clafoutis). This says nothing about the shop. A Kéroul evaluation of the shop would give it a public accessibility record (a suggestion, not a decision)."
+  },
+  {
+    "id": "geo.coords.check",
+    "value": "45.3995807, -72.7250821 is consistent with 3, rue Court: 10.6 m from Nominatim's « 3, Rue Court » (45.3995025, -72.7251600), on the odd-numbered (east) side of rue Court, 35 m from the rue Principale junction",
+    "label": "verified",
+    "source": "https://nominatim.openstreetmap.org/search?format=jsonv2&street=3%20rue%20Court&city=Granby&state=Qu%C3%A9bec&country=Canada",
+    "seen": "2026-10-29",
+    "note": "Row G-1. Two independent datasets agree: OSM's address interpolation (NRCan CanVec 10.0, imported 2024-03-12) and the Google pin (geo.coords.google_copy). The point is 16 m from the CanVec point « 1 rue Court » (45.399457, -72.7251861) and 17 m from the street centreline, so the pin sits inside the building. For data/facts.json entity.geo: unverified → verified; no change to the schema values."
+  },
+  {
+    "id": "geo.coords.google_copy",
+    "value": "Wanderlog's Google-sourced map shows 45.399581, -72.725082",
+    "label": "verified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row G-2. Observed on the page. It is the same Google pin as the brief's pointer (identical to six decimals), so it counts as one source."
+  },
+  {
+    "id": "geo.osm.interpolation",
+    "value": "OSM's rue Court addresses are an odd-number interpolation from no. 1 to no. 37 (way 1261961939, addr:interpolation=odd, source NRCan-CanVec-10.0, 2024-03-12), about 98 m long (≈ 5.5 m per odd number); reverse geocoding the shop's point returns « 7, Rue Court » on the same line",
+    "label": "verified",
+    "source": "https://www.openstreetmap.org/way/1261961939",
+    "seen": "2026-10-29",
+    "note": "Row G-3. The OSM check is good to about ±15 m: enough for geo, not a door location."
+  },
+  {
+    "id": "geo.osm.no_poi",
+    "value": "OpenStreetMap has no point for the shop: nothing named « Coco Vanille » or « Cocovanille » within 600 m, and a Nominatim search for « Coco Vanille Granby » is empty; the nearby OSM points « DaTeresa » (13 Court) and « Madame Hortense » (141, rue Principale, last edited 2016) may be stale",
+    "label": "verified",
+    "source": "https://api.openstreetmap.org/api/0.6/map.json?bbox=-72.7290,45.3972,-72.7210,45.4022",
+    "seen": "2026-10-29",
+    "note": "Row G-4. Observed in OSM. The staleness is unverified (RestoMontreal lists Da Teresa as permanently closed, research/20a). Suggestion for the citations step: add the shop to OSM with the owner's OK (row S-4)."
+  },
+  {
+    "id": "geo.osm.postcode",
+    "value": "Nominatim displays J2G 4W9 for the interpolated « 3, Rue Court » (computed, not tagged); OSM's rue Court segment and the DaTeresa point show J2G 4Y6, as does the register",
+    "label": "verified",
+    "source": "https://nominatim.openstreetmap.org/search?format=jsonv2&street=3%20rue%20Court&city=Granby&state=Qu%C3%A9bec&country=Canada",
+    "seen": "2026-10-29",
+    "note": "Row G-5. The site keeps J2G 4Y6 (research/20a)."
+  },
+  {
+    "id": "landmark.public",
+    "value": "No public source describes a landmark at or next to the shop's door",
+    "label": "unverified",
+    "source": "https://wanderlog.com/place/details/13122992/p%C3%A2tisserie-cocovanille",
+    "seen": "2026-10-29",
+    "note": "Row L-1. Absence of evidence. Searched: reviews, directories, owner posts and the press, in English and French (« près », « à côté », « en face », « Palace »). Route: owner fact (research/14 H5, S3)."
+  },
+  {
+    "id": "landmark.candidates",
+    "value": "Candidates from the maps (not a public description): the corner of rue Principale (about 35 m); Le Palace de Granby, 135, rue Principale (about 40–50 m, on the same east side of rue Court); Église Sainte-Famille (about 110 m); St. George's church across rue Principale (about 100 m)",
+    "label": "unverified",
+    "source": "https://www.openstreetmap.org/node/4399965403",
+    "seen": "2026-10-29",
+    "note": "Row L-2. Inference from OSM and annex Y. Publish « à quelques pas de la rue Principale » at most, and a landmark only after the owner or a storefront photo confirms it."
+  },
+  {
+    "id": "landmark.palace.address",
+    "value": "Le Palace de Granby: 135, rue Principale, Granby J2G 2V1",
+    "label": "verified",
+    "source": "https://www.quebecvacances.com/fr/attractions/le-palace-de-granby",
+    "seen": "2026-10-29",
+    "note": "Row L-3. Several listings agree (Québec Vacances; Sortir au Québec: https://sortirauquebec.com/en/listing/auditorium-theatre/le-palace-de-granby/), seen in a search summary."
+  },
+  {
+    "id": "works.principale_phase3",
+    "value": "2026 sewer and water-main works « Rue Principale Phase 3 », from rue Laval Nord to rue Saint-Hubert (0,30 km); no dates given",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-04/voirie-20-04-2026_vf_sw-1-1.pdf",
+    "seen": "2026-10-29",
+    "note": "Row W-1. The City's « Travaux de voirie 2026 » deck (2026-04-20); the City's works page leaves the dates blank. By OSM positions, the segment is 0.7 km or more west of rue Court and not on OSRM's route from the Zoo (inference, unverified)."
+  },
+  {
+    "id": "works.active_mobility_court",
+    "value": "Rue Court is listed in the City's 2026 active-mobility network (« Rues diverses », 2,18 km, with avenue du Parc and others); the type of work and the dates are not given",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-04/voirie-20-04-2026_vf_sw-1-1.pdf",
+    "seen": "2026-10-29",
+    "note": "Row W-2. The effect on street parking on rue Court is unknown: re-check before each seasonal update of /nous-trouver/."
+  },
+  {
+    "id": "traffic.one_way",
+    "value": "Rue Victoria between rue Dufferin and rue Court: « Interdiction de conduire dans la direction est-ouest »; avenue du Parc between rue Dufferin and rue Court: « Interdiction de conduire dans la direction est » (by-law 1483-2026, in force 2026-06-26)",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-09/codification-circulation-1885-1990_maj18sept2026.pdf",
+    "seen": "2026-10-29",
+    "note": "Row W-3. Annex B, items 8.0 and 18.0."
+  },
+  {
+    "id": "works.dufferin",
+    "value": "Rue Dufferin repaving « De la rue Court à la rue Bourget » (0,5 km; 2025 work to be completed); not at the shop",
+    "label": "verified",
+    "source": "https://www.granby.ca/sites/default/files/2026-04/voirie-20-04-2026_vf_sw-1-1.pdf",
+    "seen": "2026-10-29",
+    "note": "Row W-4. Rue Court meets rue Dufferin further north."
+  },
+  {
+    "id": "side.hygge_factory",
+    "value": "Restaurant Guru lists « Pâtisserie Hygge Factory », 17 Rue Court, Granby (« Wheelchair accessible »; no hours, no reviews; « Updated on: Sep 13, 2026 »)",
+    "label": "unverified",
+    "source": "https://restaurantguru.com/Patisserie-Hygge-Factory-Granby",
+    "seen": "2026-10-29",
+    "note": "Row S-1. No second source found. If it is real, a second pastry listing on the same street could confuse visitors and AI answers: ask the owner (research/20c §9, item 4); the citations step."
+  },
+  {
+    "id": "side.walk.marche_public",
+    "value": "The shop to the Marché public (176, rue Principale, place du Marché): about 160 m on foot (≈ 2 min)",
+    "label": "unverified",
+    "source": "https://routing.openstreetmap.de/routed-foot/route/v1/driving/-72.7250821,45.3995807;-72.7267718,45.3997744?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row S-2. Computed on OSM (one engine). Answers part of the data/facts.json fact_needed item « Walking distance from 3 rue Court to the Marché public, Zoo de Granby and Lac Boivin »."
+  },
+  {
+    "id": "side.drive.cinlb",
+    "value": "The shop to the CINLB, 700, rue Drummond (lac Boivin): about 3.5 km, « environ 5 minutes » by car, via rue Principale and rue Drummond",
+    "label": "unverified",
+    "source": "https://router.project-osrm.org/route/v1/driving/-72.7250821,45.3995807;-72.6915423,45.4131443?overview=false&steps=true",
+    "seen": "2026-10-29",
+    "note": "Row S-3. OSRM demo, one engine, free flow (3,463.6 m, 310.2 s)."
+  }
+]

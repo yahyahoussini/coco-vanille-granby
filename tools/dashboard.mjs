@@ -3,7 +3,7 @@
 // (top-3 share, snippet share, AI citation share, map pack), the definition-of-first status, review velocity, share of voice vs
 // competitors, leads from GA4 exports, and the next moves from the market map. No dependencies, no external requests — it opens
 // from a file, an e-mail attachment or a private URL. Run after `npm run score` (reads scoreboard/summary.csv).
-// Usage: node dashboard.mjs [--out reports/dashboard.html] [--week 2026-W40]
+// Usage: node dashboard.mjs [--out reports/dashboard.html] [--week 2026-W40] [--market scoreboard/market/2026-W40.md]
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { loadConfig, parseArgs, csvObjects, c, isoDate } from "./lib.mjs";
@@ -24,7 +24,8 @@ const gsc = existsSync("gsc") ? readdirSync("gsc").filter((f) => f.endsWith("-po
 const positions = gsc ? readCsv(join("gsc", gsc)) : [];
 const ga4 = existsSync("ga4") ? readdirSync("ga4").filter((f) => f.endsWith("-leads.csv")).sort().at(-1) : null;
 const leads = ga4 ? readCsv(join("ga4", ga4)) : [];
-const market = existsSync("docs/19-marche-et-concurrence.md") ? readFileSync("docs/19-marche-et-concurrence.md", "utf8") : "";
+const marketFile = args.market ?? "docs/19-marche-et-concurrence.md"; // weekly.mjs passes this week's scoreboard/market/<week>.md
+const market = existsSync(marketFile) ? readFileSync(marketFile, "utf8") : "";
 const moves = (market.match(/## 4\. Les dix coups[\s\S]*?\n(?=## 5)/)?.[0] ?? "").split("\n").filter((l) => /^\d+\. /.test(l)).map((l) => l.replace(/\*\*/g, ""));
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 

@@ -15,6 +15,43 @@ export function loadConfig(path = "site.config.json") {
   return cfg;
 }
 
+// ---------- market (where the measurement searches from) ----------
+// The tools were written for Morocco: these values stay the fallback when site.config.json has no "market" block. A "market" block
+// replaces them all, e.g. Québec: { "country": "CA", "region": "Quebec", "gl": "ca", "googleDomain": "google.ca", "location":
+// "Granby,Quebec,Canada", "timezone": "America/Toronto", "phonePattern": "<RegExp source>", "phoneDigits": 10 } (a missing gl is
+// the country code; city comes from nap.city). The interface language (hl) is never a market setting: it is each prompt's lang.
+export const MOROCCO = { country: "MA", region: "", gl: "ma", googleDomain: "google.co.ma", location: "", timezone: "Africa/Casablanca", phonePattern: "(?:\\+212|00212|0)[\\s.-]?[5-7](?:[\\s.-]?\\d){8}", phoneDigits: 9 };
+export function marketConfig(cfg, overrides = {}) {
+  const block = cfg?.market && typeof cfg.market === "object" ? cfg.market : null;
+  const m = { ...(block ?? MOROCCO) };
+  for (const [k, v] of Object.entries(overrides)) if (typeof v === "string" && v) m[k] = v; // CLI flags (--country CA …) win
+  m.country = String(m.country ?? "").toUpperCase();
+  m.gl = String(m.gl || m.country).toLowerCase();
+  m.city = m.city || cfg?.nap?.city || cfg?.category?.city?.fr || "";
+  m.phoneDigits = +m.phoneDigits || 0;
+  m.fallback = !block; // true = Moroccan defaults
+  return m;
+}
+
+// Phone numbers in a text (the market's phonePattern), each as its last phoneDigits digits: what the national and the
+// international forms of one number share ((450) 770-7246 = +1 450-770-7246; 0522… = +212 522…).
+export function phoneNumbers(text, market = MOROCCO) {
+  if (!market.phonePattern) return [];
+  const keep = +market.phoneDigits || 9;
+  return (String(text ?? "").match(new RegExp(market.phonePattern, "g")) ?? []).map((x) => x.replace(/\D/g, "").slice(-keep));
+}
+
+// Interface language of a prompt: its lang column ("fr", "en", "es", "ar"; "FR|EN" → "fr"), else the site's default language.
+export const langCode = (lang, fallback = "fr") => String(lang ?? "").trim().toLowerCase().match(/^[a-z]{2}(?![a-z])/)?.[0] ?? fallback;
+
+// ---------- brand names (ai-runs.mjs, serp.mjs, market.mjs) ----------
+// What counts as the brand in an answer or a listing title: brand.name (or a --brand-name override), brand.nameAr and brand.alternateNames
+// (the other forms people and Google write, e.g. a Business Profile titled differently from the site), lower-cased, found as substrings.
+export function brandNameList(cfg, name) {
+  const b = cfg?.brand ?? {};
+  return [...new Set([name ?? b.name, b.nameAr, ...(Array.isArray(b.alternateNames) ? b.alternateNames : [])].filter((s) => typeof s === "string" && s.trim()).map((s) => s.trim().toLowerCase()))];
+}
+
 // ---------- crawlers ----------
 // One authoritative list. Each entry: user-agent token, owner, what it feeds.
 export const CRAWLERS = [
@@ -209,6 +246,63 @@ export function toCsv(rows, columns) {
   return [columns.join(","), ...rows.map((r) => columns.map((c) => esc(r[c])).join(","))].join("\n") + "\n";
 }
 
+// ---------- scoreboard runs (citation-share.mjs, market.mjs) ----------
+// Files per week in scoreboard/runs/: <week>-gsc.csv (gsc-api.mjs), <week>-google.csv (serp.mjs), <week>-ai.csv (ai-runs.mjs), <week>.csv (hand-filled).
+// Precedence for the same (week, prompt, engine): hand-filled <week>.csv > <week>-google.csv (SerpApi) / <week>-ai.csv > <week>-gsc.csv (average position only).
+export const runsRank = (f) => (/-gsc\.csv$/.test(f) ? 0 : /-(google|ai)\.csv$/.test(f) ? 1 : 2);
+// A proxy row (notes start with "PROXY": measured another way, e.g. from another country) never meets a real week in a trend.
+export const isProxyRow = (r) => /^\s*PROXY\b/i.test(r?.notes ?? "");
+
+// One case per (week, prompt, engine): the best source wins, and every row of that source is kept as a run of the case, so three
+// passes recorded as three rows stay three runs (never overwritten) and the 2-of-3 rule can be applied (holds).
+// files: [{ name: "2026-W45.csv", rows: csvObjects(...) }]
+export function runCases(files) {
+  const cases = new Map();
+  for (const f of [...files].sort((a, b) => runsRank(a.name) - runsRank(b.name) || a.name.localeCompare(b.name))) {
+    const rank = runsRank(f.name);
+    for (const r of f.rows) {
+      const row = { ...r, week: r.week || f.name.replace(/(-google|-ai|-gsc)?\.csv$/, "") };
+      const key = `${row.week}|${row.prompt_id}|${(row.engine ?? "").toLowerCase()}`;
+      const k = cases.get(key);
+      if (!k || k.rank < rank) cases.set(key, { week: row.week, prompt_id: row.prompt_id, engine: row.engine, rank, runs: [row] });
+      else if (k.rank === rank) k.runs.push(row);
+    }
+  }
+  return [...cases.values()];
+}
+
+// A case holds when its predicate holds on most of its runs: 1 of 1, 2 of 2, 2 of 3 (scoreboard/README.md §2, step 3).
+export const holds = (runs, pred) => runs.filter(pred).length * 2 > runs.length;
+
+// The Google position most runs reach (0 = not found, counted as last): the median run; of two runs, the worse one.
+export function casePosition(runs) {
+  const pos = runs.map((r) => +r.google_position || Infinity).sort((a, b) => a - b);
+  const p = pos[Math.floor(pos.length / 2)];
+  return Number.isFinite(p) ? p : 0;
+}
+
+// The case as one row, for readers that take one row per case (market.mjs): each column keeps what most runs agree on (else
+// blank), cited_domains the domains most runs cite, google_position the median run.
+export function caseRow(k) {
+  if (k.runs.length === 1) return k.runs[0];
+  const isYes = (v) => /^(y|yes|oui|1|true)$/i.test((v ?? "").trim());
+  const filled = (col) => k.runs.filter((r) => (r[col] ?? "").trim() !== "");
+  const yesNo = (col) => (filled(col).length ? (holds(filled(col), (r) => isYes(r[col])) ? "yes" : "no") : "");
+  const major = (col) => { const n = new Map(); for (const r of k.runs) { const v = (r[col] ?? "").trim(); n.set(v, (n.get(v) ?? 0) + 1); } const [v, count] = [...n.entries()].sort((a, b) => b[1] - a[1])[0]; return count * 2 > k.runs.length ? v : ""; };
+  const domains = (r) => (r.cited_domains ?? "").split(";").map((d) => d.trim()).filter(Boolean);
+  const cited = [...new Set(k.runs.flatMap(domains))].filter((d) => holds(k.runs, (r) => domains(r).includes(d)));
+  return { ...k.runs[0], google_position: String(casePosition(k.runs)), snippet_owner: major("snippet_owner"), ai_overview_cited: yesNo("ai_overview_cited"), cited_domains: cited.join(";"), brand_named: yesNo("brand_named"), brand_position: major("brand_position"), third_party_names_us: yesNo("third_party_names_us"), map_pack: yesNo("map_pack"), notes: `${k.runs.length} runs` };
+}
+
+// Reads <dir>/*.csv — never a subfolder: runs/proxy/ keeps the proxy weeks apart. Proxy rows found at the top level are left out
+// (and counted) unless { proxy: true }.
+export function readRuns(dir = "scoreboard/runs", { proxy = false } = {}) {
+  const files = existsSync(dir) ? readdirSync(dir, { withFileTypes: true }).filter((e) => e.isFile() && e.name.endsWith(".csv")).map((e) => { const text = readFileSync(join(dir, e.name), "utf8"); return { name: e.name, rows: text.trim() ? csvObjects(text) : [] }; }) : [];
+  let proxySkipped = 0;
+  if (!proxy) for (const f of files) { const kept = f.rows.filter((r) => !isProxyRow(r)); proxySkipped += f.rows.length - kept.length; f.rows = kept; }
+  return { cases: runCases(files), files: files.length, proxySkipped };
+}
+
 // ---------- fetch ----------
 export async function fetchText(url, { ua = "rank-first-audit/1.0 (+https://github.com/)", timeoutMs = 20000, redirect = "follow" } = {}) {
   const ctrl = new AbortController();
@@ -228,6 +322,13 @@ export const c = {
   dim: (s) => `\x1b[2m${s}\x1b[0m`,
   bold: (s) => `\x1b[1m${s}\x1b[0m`,
 };
+
+// --help: prints the script's header comment (its usage) instead of running it — no request, nothing written.
+export function printUsage(metaUrl) {
+  const out = [];
+  for (const l of readFileSync(new URL(metaUrl), "utf8").split(/\r?\n/).slice(1)) { if (!l.startsWith("//")) break; out.push(l.replace(/^\/\/ ?/, "")); }
+  console.log(out.join("\n"));
+}
 
 export function parseArgs(argv) {
   const args = { _: [] };
