@@ -1,5 +1,6 @@
 // Ordering interface copy. Québec French is the source; EN/ES adapt it. « vous », « cueillette », « acompte » (16 §0).
 const fr = {
+  steps: { label: 'Étapes de votre commande', box: 'Boîte', day: 'Date', you: 'Coordonnées', pay: 'Paiement', done: '(étape terminée)' },
   pageTitles: { box: 'Ma boîte', checkout: 'Vos coordonnées et le récapitulatif', pay: 'Paiement', thanks: 'Merci!', requestThanks: 'Merci, votre demande est envoyée', pending: 'Paiement en cours de confirmation' },
   metaTitles: { box: 'Ma boîte · Coco Vanille', checkout: 'Récapitulatif et paiement · Coco Vanille', thanks: 'Merci · Coco Vanille' },
   request: {
@@ -45,7 +46,8 @@ const fr = {
     qty: 'Quantité',
     add: 'Ajouter à ma boîte',
     viewBox: (n) => `Voir ma boîte (${n})`,
-    taxes: 'taxes en sus s’il y a lieu',
+    taxes: 'taxes en sus',
+    from: 'dès',
   },
   box: {
     empty: 'Votre boîte est vide pour le moment.',
@@ -69,6 +71,7 @@ const fr = {
     totalsTitle: 'Combien ça coûte?',
     totalsNote: 'Aucuns frais de service, d’emballage ou de carte. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu.',
     continue: 'Continuer',
+    totalLine: (amount) => `Total avec les taxes : ${amount}`,
     pickWindow: 'Choisissez une plage pour continuer.',
     share: 'Lien de cette boîte',
     shareHint: 'Ce lien rouvre votre boîte sur un autre appareil.',
@@ -126,6 +129,7 @@ const fr = {
     total: 'À payer maintenant',
     card: 'Payer par carte',
     button: (amount) => `Payer ${amount}`,
+    orCard: 'ou payez par carte',
     mockNote: 'Paiement simulé : environnement de test, aucune carte n’est débitée.',
     secure: 'La carte est saisie sur la page sécurisée du processeur de paiement; la boutique ne voit jamais son numéro.',
     processing: 'Paiement en cours…',
@@ -174,6 +178,7 @@ const fr = {
 
 const en = {
   ...fr,
+  steps: { label: 'Your order, step by step', box: 'Box', day: 'Date', you: 'Details', pay: 'Payment', done: '(step done)' },
   pageTitles: { box: 'My box', checkout: 'Your details and summary', pay: 'Payment', thanks: 'Thank you!', requestThanks: 'Thank you, your request is sent', pending: 'Payment being confirmed' },
   metaTitles: { box: 'My box · Coco Vanille', checkout: 'Summary and payment · Coco Vanille', thanks: 'Thank you · Coco Vanille' },
   request: {
@@ -220,7 +225,8 @@ const en = {
     qty: 'Quantity',
     add: 'Add to my box',
     viewBox: (n) => `See my box (${n})`,
-    taxes: 'plus taxes where applicable',
+    taxes: 'plus taxes',
+    from: 'from',
   },
   box: {
     empty: 'Your box is empty for now.',
@@ -244,6 +250,7 @@ const en = {
     totalsTitle: 'How much is it?',
     totalsNote: 'No service, packaging or card fees. Only GST and QST are added where they apply.',
     continue: 'Continue',
+    totalLine: (amount) => `Total with taxes: ${amount}`,
     pickWindow: 'Pick a slot to continue.',
     share: 'Link to this box',
     shareHint: 'This link reopens your box on another device.',
@@ -302,6 +309,7 @@ const en = {
     total: 'To pay now',
     card: 'Pay by card',
     button: (amount) => `Pay ${amount}`,
+    orCard: 'or pay by card',
     mockNote: 'Simulated payment: test environment, no card is charged.',
     secure: 'The card is entered on the payment processor’s secure page; the shop never sees its number.',
     processing: 'Processing…',
@@ -349,6 +357,7 @@ const en = {
 }
 
 const es = {
+  steps: { label: 'Su pedido, paso a paso', box: 'Caja', day: 'Fecha', you: 'Datos', pay: 'Pago', done: '(paso completado)' },
   pageTitles: { box: 'Mi caja', checkout: 'Sus datos y el resumen', pay: 'Pago', thanks: '¡Gracias!', requestThanks: 'Gracias, su solicitud fue enviada', pending: 'Pago en confirmación' },
   metaTitles: { box: 'Mi caja · Coco Vanille', checkout: 'Resumen y pago · Coco Vanille', thanks: 'Gracias · Coco Vanille' },
   request: {
@@ -395,7 +404,8 @@ const es = {
     qty: 'Cantidad',
     add: 'Añadir a mi caja',
     viewBox: (n) => `Ver mi caja (${n})`,
-    taxes: 'impuestos aparte si corresponde',
+    taxes: 'impuestos aparte',
+    from: 'desde',
   },
   box: {
     empty: 'Su caja está vacía por ahora.',
@@ -419,6 +429,7 @@ const es = {
     totalsTitle: '¿Cuánto cuesta?',
     totalsNote: 'Sin cargos de servicio, de embalaje ni de tarjeta. Solo se añaden la GST y la QST si corresponde.',
     continue: 'Continuar',
+    totalLine: (amount) => `Total con impuestos: ${amount}`,
     pickWindow: 'Elija una franja para continuar.',
     share: 'Enlace de esta caja',
     shareHint: 'Este enlace vuelve a abrir su caja en otro dispositivo.',
@@ -476,6 +487,7 @@ const es = {
     total: 'A pagar ahora',
     card: 'Pagar con tarjeta',
     button: (amount) => `Pagar ${amount}`,
+    orCard: 'o pague con tarjeta',
     mockNote: 'Pago simulado: entorno de prueba, no se cobra ninguna tarjeta.',
     secure: 'La tarjeta se introduce en la página segura del procesador de pagos; la tienda nunca ve su número.',
     processing: 'Pago en curso…',

@@ -9,6 +9,8 @@ import { shopActions } from './shop.js'
 import { requestActions } from './requests.js'
 import { reviewActions } from './reviews.js'
 import { peopleActions } from './people.js'
+import { chatActions } from './chat.js'
+import { factActions } from './facts.js'
 import { Refusal } from './util.js'
 
 // Snackbar ≥ 5 s (16a P4); the server keeps accepting « Annuler » a little longer while the snackbar has focus,
@@ -16,7 +18,7 @@ import { Refusal } from './util.js'
 export const UNDO_VISIBLE_SECONDS = 8
 export const UNDO_SECONDS = 30
 
-export const REGISTRY = { ...orderActions, ...catalogActions, ...shopActions, ...requestActions, ...reviewActions, ...peopleActions }
+export const REGISTRY = { ...orderActions, ...catalogActions, ...shopActions, ...requestActions, ...reviewActions, ...peopleActions, ...chatActions, ...factActions }
 
 const fail = (code, message, status = 409, extra = {}) => ({ ok: false, code, message, status, ...extra })
 

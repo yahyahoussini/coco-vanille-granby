@@ -1,5 +1,6 @@
 // Form building blocks: every control has a visible label, its hint and error tied with aria-describedby,
 // and a 48 px target (WCAG 2.2 AA, 2.5.8). Errors are text, never colour alone.
+import { Icon } from '../site/Icon'
 
 export function describedBy(id, { hint, error } = {}) {
   const ids = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean)
@@ -52,14 +53,19 @@ export function ErrorSummary({ id, title, errors }) {
   if (!errors?.length) return null
   return (
     <div className="error-summary" role="alert" aria-labelledby={`${id}-title`} tabIndex={-1} id={id}>
-      <p className="error-summary-title" id={`${id}-title`}>
-        {title}
-      </p>
-      <ul>
-        {errors.map((e, i) => (
-          <li key={i}>{e.field ? <a href={`#${e.field}`}>{e.text}</a> : e.text}</li>
-        ))}
-      </ul>
+      <span className="error-summary-icon" aria-hidden="true">
+        <Icon name="alert" size={22} />
+      </span>
+      <div className="error-summary-body">
+        <p className="error-summary-title" id={`${id}-title`}>
+          {title}
+        </p>
+        <ul>
+          {errors.map((e, i) => (
+            <li key={i}>{e.field ? <a href={`#${e.field}`}>{e.text}</a> : e.text}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

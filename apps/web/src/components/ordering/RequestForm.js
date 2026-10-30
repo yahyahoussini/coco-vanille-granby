@@ -4,11 +4,23 @@ import { localParts, addDays } from '@/lib/studio/time'
 import { REQUEST_LIMITS } from '@/lib/ordering/requests'
 import { errorText } from '@/lib/ordering/errors'
 import { privacyPath } from '@/lib/ordering/paths'
+import { Icon } from '../site/Icon'
 import { orderingCopy } from './copy'
 import { Field, CheckboxField, ErrorSummary, describedBy } from './Field'
 import { MessagePreview } from './MessagePreview'
 
 const errorFor = (code, locale) => orderingCopy(locale).errors[code] || errorText(code, locale)
+
+function Legend({ icon, children }) {
+  return (
+    <legend>
+      <span className="legend-icon" aria-hidden="true">
+        <Icon name={icon} size={20} />
+      </span>
+      {children}
+    </legend>
+  )
+}
 
 export function RequestForm({ locale = 'fr', business, draft, now = new Date() }) {
   const c = orderingCopy(locale).request
@@ -23,19 +35,26 @@ export function RequestForm({ locale = 'fr', business, draft, now = new Date() }
 
   return (
     <section className="order-request" aria-labelledby="demande">
-      <h2 id="demande">{c.title}</h2>
-      <p>{c.intro}</p>
+      <div className="request-head">
+        <span className="request-emblem icon-badge" aria-hidden="true">
+          <Icon name="cake" size={30} strokeWidth={1.5} />
+        </span>
+        <div className="request-head-text">
+          <h2 id="demande">{c.title}</h2>
+          <p>{c.intro}</p>
+        </div>
+      </div>
       <form className="order-form" method="post" action="/svc/demande/" encType="multipart/form-data" id="demande-form">
         <ErrorSummary id="demande-erreurs" title={c.errorsTitle} errors={errors} />
-        {errors.length > 0 && <p className="field-hint">{c.photosAgain}</p>}
+        {errors.length > 0 && <p className="field-hint form-hint-again">{c.photosAgain}</p>}
         <input type="hidden" name="locale" value={locale} />
         <div className="hp" aria-hidden="true">
           <label htmlFor="f-site">Site web</label>
           <input id="f-site" name="site_web" type="text" tabIndex={-1} autoComplete="off" />
         </div>
 
-        <fieldset>
-          <legend>{c.cake}</legend>
+        <fieldset className="form-group">
+          <Legend icon="cake">{c.cake}</Legend>
           <Field id="f-occasion" label={c.occasion} hint={c.occasionHint} error={err('occasion')}>
             <input {...field('occasion')} type="text" required maxLength={REQUEST_LIMITS.occasion} list="occasions" defaultValue={values.occasion || ''} autoComplete="off" />
             <datalist id="occasions">
@@ -44,12 +63,14 @@ export function RequestForm({ locale = 'fr', business, draft, now = new Date() }
               ))}
             </datalist>
           </Field>
-          <Field id="f-guests" label={c.guests} error={err('guests')}>
-            <input {...noHint('guests')} type="number" inputMode="numeric" required min={1} max={REQUEST_LIMITS.guestsMax} step={1} defaultValue={values.guests ?? ''} className="input-short" />
-          </Field>
-          <Field id="f-eventDate" label={c.date} hint={c.dateHint} error={err('eventDate')}>
-            <input {...field('eventDate')} type="date" required min={addDays(today, 1)} max={addDays(today, REQUEST_LIMITS.daysAhead)} defaultValue={values.eventDate || ''} className="input-date" />
-          </Field>
+          <div className="field-row">
+            <Field id="f-guests" label={c.guests} error={err('guests')}>
+              <input {...noHint('guests')} type="number" inputMode="numeric" required min={1} max={REQUEST_LIMITS.guestsMax} step={1} defaultValue={values.guests ?? ''} className="input-short" />
+            </Field>
+            <Field id="f-eventDate" label={c.date} hint={c.dateHint} error={err('eventDate')}>
+              <input {...field('eventDate')} type="date" required min={addDays(today, 1)} max={addDays(today, REQUEST_LIMITS.daysAhead)} defaultValue={values.eventDate || ''} className="input-date" />
+            </Field>
+          </div>
           <Field id="f-flavour" label={c.flavour} hint={c.flavourHint} error={err('flavour')}>
             <input {...field('flavour')} type="text" maxLength={REQUEST_LIMITS.flavour} defaultValue={values.flavour || ''} />
           </Field>
@@ -62,15 +83,15 @@ export function RequestForm({ locale = 'fr', business, draft, now = new Date() }
           <Field id="f-details" label={c.details} optional optionalLabel={optional} error={err('details')}>
             <textarea {...noHint('details')} rows={4} maxLength={REQUEST_LIMITS.details} defaultValue={values.details || ''} />
           </Field>
-          <Field id="f-photos" label={c.photos} hint={c.photosHint} error={err('photos')}>
+          <Field id="f-photos" label={c.photos} hint={c.photosHint} error={err('photos')} className="field-file">
             <input {...field('photos')} type="file" multiple accept="image/jpeg,image/png,image/webp" />
           </Field>
           <CheckboxField id="f-hasAllergy" name="hasAllergy" label={c.allergy} hint={c.allergyHint} defaultChecked={Boolean(values.hasAllergy)} />
         </fieldset>
 
-        <fieldset>
-          <legend>{c.you}</legend>
-          <div className="field-row">
+        <fieldset className="form-group">
+          <Legend icon="users">{c.you}</Legend>
+          <div className="field-row field-row-pair">
             <Field id="f-firstName" label={c.firstName} error={err('firstName')}>
               <input {...noHint('firstName')} type="text" required maxLength={60} autoComplete="given-name" defaultValue={values.firstName || ''} />
             </Field>
@@ -88,17 +109,21 @@ export function RequestForm({ locale = 'fr', business, draft, now = new Date() }
           </div>
         </fieldset>
 
-        <p className="small">
-          {c.privacy} <a href={privacyPath(locale)}>{c.privacyLink}</a>
-        </p>
-        <button type="submit" className="btn btn-primary">
-          {c.submit}
-        </button>
-        {phone && (
-          <p className="order-call">
-            {c.orCall} <a href={`tel:${business.phone}`}>{phone}</a>
+        <div className="form-submit">
+          <p className="small form-privacy">
+            {c.privacy} <a href={privacyPath(locale)}>{c.privacyLink}</a>
           </p>
-        )}
+          <button type="submit" className="btn btn-primary form-submit-btn">
+            <Icon name="send" size={20} />
+            {c.submit}
+          </button>
+          {phone && (
+            <p className="order-call">
+              <Icon name="phone" size={18} />
+              {c.orCall} <a href={`tel:${business.phone}`}>{phone}</a>
+            </p>
+          )}
+        </div>
       </form>
     </section>
   )

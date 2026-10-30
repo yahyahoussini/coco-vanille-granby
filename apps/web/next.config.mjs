@@ -19,6 +19,10 @@ const STRIPE_CSP = [
 ].join('; ')
 const CHECKOUT_PATHS = ['/commander/paiement', '/en/order/checkout', '/es/pedidos/pago']
 
+// A slow or busy machine (a laptop, a small VPS): NEXT_BUILD_WORKERS=2 limits the static-generation workers, so
+// each worker's database pool (src/payload.config.js: 10 connections, 15 s wait) does not starve the others.
+const buildWorkers = Number(process.env.NEXT_BUILD_WORKERS) || 0
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -33,7 +37,10 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   images: { formats: ['image/avif', 'image/webp'] },
   // src/proxy.js runs for /svc/demande/ too: let it read a cake request with its 3 photos (nginx allows 32m).
-  experimental: { proxyClientMaxBodySize: '32mb' },
+  experimental: {
+    proxyClientMaxBodySize: '32mb',
+    ...(buildWorkers ? { cpus: buildWorkers, staticGenerationMaxConcurrency: 4, staticGenerationRetryCount: 2 } : {}),
+  },
   async headers() {
     return [
       {

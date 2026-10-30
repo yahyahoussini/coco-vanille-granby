@@ -2,7 +2,7 @@
 // late answers, unpicked orders after closing, failed textos, the display-case photo, holidays to confirm.
 import { canSee } from './roles.js'
 import { answerTimer, stars, customerName, money } from './format.js'
-import { shortDay, addDays, localParts, closingOf, toMinutes, dayBounds } from './time.js'
+import { shortDay, addDays, localParts, closingOf, toMinutes, dayBounds, relative } from './time.js'
 import { holidaySuggestions } from '../ordering/holidays.js'
 
 export const MAX_CARDS = 3
@@ -38,6 +38,26 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
     for (const r of rev.docs) {
       const t = answerTimer(new Date(new Date(r.receivedAt).getTime() + 24 * 3600000), now)
       cards.push({ key: `rev-${r.id}`, rank: r.rating <= 3 ? 1 : 3, tone: r.rating <= 3 ? 'warn' : undefined, title: `Avis ${r.rating}★ · brouillon prêt`, why: t.text, href: `/avis/#avis-${r.id}`, action: 'Ouvrir', label: stars(r.rating) })
+    }
+  }
+
+  // « Écrivez-nous »: someone wrote on the site and waits for the shop (one card: that person, or how many).
+  if (canSee(user, 'messages')) {
+    const inbox = await payload.find({ collection: 'conversations', where: { unreadForShop: { greater_than: 0 } }, sort: '-lastMessageAt', limit: 3, depth: 0, overrideAccess: true }).catch(() => null)
+    const latest = inbox?.docs?.[0]
+    if (latest) {
+      const n = inbox.totalDocs || inbox.docs.length
+      const said = String((latest.messages || []).filter((m) => m.from === 'client').at(-1)?.text || '').replace(/\s+/g, ' ')
+      const waiting = inbox.docs.some((c) => now.getTime() - new Date(c.lastMessageAt).getTime() > 2 * 3600000)
+      cards.push({
+        key: 'chat',
+        rank: 1,
+        tone: waiting ? 'warn' : undefined,
+        title: n > 1 ? `${n} messages du site à lire` : `Message du site · ${latest.name || 'internaute'}`,
+        why: `${n > 1 ? 'Dernier : ' : ''}« ${said.length > 80 ? `${said.slice(0, 79)}…` : said} » · ${relative(latest.lastMessageAt, now)}`,
+        href: n > 1 ? '/messages/' : `/messages/${latest.id}/`,
+        action: 'Répondre',
+      })
     }
   }
 

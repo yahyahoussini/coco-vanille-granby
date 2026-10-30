@@ -33,6 +33,15 @@ export const Business = {
     { name: 'categorySentence', type: 'textarea', localized: true },
     { name: 'phone', type: 'text', admin: { description: 'Format E.164, ex. +14503727177' } },
     { name: 'phoneDisplay', type: 'text' },
+    {
+      name: 'mobile',
+      type: 'text',
+      admin: {
+        description:
+          'Cellulaire, format E.164, ex. +14385287818. Usage non confirmé (appels? textos? réservations d’ateliers?) : affiché comme « Cellulaire », sans promettre de réponse par texto. Jamais dans les données structurées (JSON-LD).',
+      },
+    },
+    { name: 'mobileDisplay', type: 'text', admin: { description: 'Cellulaire tel qu’affiché, ex. 438-528-7818.' } },
     { name: 'email', type: 'email' },
     {
       name: 'address',
@@ -134,6 +143,12 @@ export const Shop = {
         { name: 'quoteValidHours', type: 'number', defaultValue: 72 },
         { name: 'termsVersion', type: 'text' },
       ],
+    },
+    // « Écrivez-nous », the site's own chat (Studio › Messages). Off: no new conversation, the button leaves the site.
+    {
+      name: 'chat',
+      type: 'group',
+      fields: [{ name: 'enabled', type: 'checkbox', defaultValue: true, admin: { description: 'Afficher « Écrivez-nous » sur le site. Décoché : plus de nouvelle conversation; celles en cours restent dans Studio › Messages.' } }],
     },
   ],
 }

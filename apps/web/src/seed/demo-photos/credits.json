@@ -1,0 +1,82 @@
+{
+  "croissant-au-beurre": {
+    "author": "Kobby Mendez",
+    "profile": "https://unsplash.com/@kobbymendez",
+    "source": "https://unsplash.com/photos/bread-on-brown-wooden-tray-beside-white-ceramic-mug-iyM-XTsTiek",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Deux croissants dorés dans une assiette noire, à côté d'un verre de lait",
+      "en": "Two golden croissants on a black plate beside a glass of milk"
+    }
+  },
+  "croissant-aux-amandes": {
+    "author": "Redd Francisco",
+    "profile": "https://unsplash.com/@reddfrancisco",
+    "source": "https://unsplash.com/photos/brown-and-white-bread-on-white-textile-5HC8MhpE7dA",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Croissants garnis d'amandes effilées sur un plateau de marbre",
+      "en": "Croissants topped with sliced almonds on a marble tray"
+    }
+  },
+  "paris-brest": {
+    "author": "Christian Agbede",
+    "profile": "https://unsplash.com/@chriscreations__",
+    "source": "https://unsplash.com/photos/a-cream-filled-pastry-ring-with-sliced-almonds-cB3IP8hbyhE",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Couronne de pâte à choux garnie de crème, sur une assiette rose",
+      "en": "Choux pastry ring filled with cream on a pink plate"
+    }
+  },
+  "vol-au-vent": {
+    "author": "Anima Visual",
+    "profile": "https://unsplash.com/@animavisual",
+    "source": "https://unsplash.com/photos/a-white-plate-topped-with-food-on-top-of-a-wooden-table-pn7dIk2kiYw",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Vol-au-vent garni de crevettes en sauce crémeuse, dans une assiette blanche",
+      "en": "Vol-au-vent filled with shrimp in a creamy sauce on a white plate"
+    }
+  },
+  "shortcake-aux-fraises": {
+    "author": "WKH Studio",
+    "profile": "https://unsplash.com/@wkhstudio",
+    "source": "https://unsplash.com/photos/square-strawberry-shortcake-with-a-single-strawberry-on-top-bFFg_Ba4WTQ",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Part de gâteau à la crème fouettée et aux fraises, une fraise sur le dessus",
+      "en": "Slice of cake layered with whipped cream and strawberries, a strawberry on top"
+    }
+  },
+  "eclair-au-chocolat": {
+    "author": "mae black",
+    "profile": "https://unsplash.com/@maeblack",
+    "source": "https://unsplash.com/photos/chocolate-eclairs-with-coffee-and-scattered-beans-JLLUwi6kCFg",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Éclairs glacés au chocolat décorés de rosettes et de grains de café",
+      "en": "Chocolate-glazed éclairs decorated with rosettes and coffee beans"
+    }
+  },
+  "macarons": {
+    "author": "Heather Barnes",
+    "profile": "https://unsplash.com/@heatherbarnes",
+    "source": "https://unsplash.com/photos/macarons-on-table-WbZesfqwR-A",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Pile de macarons rose, mauve et vert, entourée de macarons jaunes et roses",
+      "en": "Stack of pink, purple and green macarons with yellow and pink macarons around it"
+    }
+  },
+  "gateau-au-chocolat": {
+    "author": "kaouther djouada",
+    "profile": "https://unsplash.com/@__kaouther_",
+    "source": "https://unsplash.com/photos/chocolate-mousse-cake-with-sugar-pearls-hcEDfkiVmMI",
+    "license": "Unsplash License",
+    "alt": {
+      "fr": "Gâteau étagé au chocolat nappé de chocolat coulant et de petites perles",
+      "en": "Layered chocolate cake with a chocolate drip and small decorative pearls"
+    }
+  }
+}

@@ -5,11 +5,15 @@ export const metadata = { title: 'Plus · Coco Studio' }
 
 // Plus (16 §2.1): everything that is not a daily tab, filtered by role.
 export default async function Plus() {
-  const { user } = await studioPage('plus')
+  const { user, payload } = await studioPage('plus')
+  // « Écrivez-nous » (Studio › Messages): conversations with unread visitor messages, also the « Plus » tab badge.
+  const unread = canSee(user, 'messages') ? ((await payload.count({ collection: 'conversations', where: { unreadForShop: { greater_than: 0 } }, overrideAccess: true }).catch(() => null))?.totalDocs ?? 0) : 0
   const links = [
+    ['messages', '/messages/', 'Messages du site', '« Écrivez-nous » : répondre aux visiteurs'],
     ['boutique', '/boutique/', 'Boutique & heures', 'Fermeture, délai, pause, heures, capacité'],
     ['semaine', '/semaine/', 'Cette semaine', '5 chiffres et 3 actions au plus'],
     ['vitrine', '/vitrine/', 'Vitrine', 'Épuisé, photo du jour'],
+    ['faits', '/plus/faits/', 'Faits du site', 'Les réponses que le site attend, par sujet'],
     ['produits', '/plus/produits/', 'Produits', 'Prix, allergènes, taxes'],
     ['question', '/plus/question/', 'Noter une question de client', 'Pour la FAQ du site'],
     ['agence', '/agence/', 'Agence', 'Rapports et système'],
@@ -27,6 +31,12 @@ export default async function Plus() {
             <a href={href}>
               <span>
                 {label}
+                {key === 'messages' && unread > 0 && (
+                  <span className="badge">
+                    {unread}
+                    <span className="sr-only"> non lus</span>
+                  </span>
+                )}
                 <small>{hint}</small>
               </span>
               <span aria-hidden="true">›</span>

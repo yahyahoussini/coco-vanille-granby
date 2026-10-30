@@ -37,8 +37,11 @@ async function startPolling(payload) {
   state.mode = 'poll'
   const read = async () => {
     const r = await payload.find({ collection: 'orders', sort: '-updatedAt', limit: 1, depth: 0, overrideAccess: true, select: { updatedAt: true, status: true } }).catch(() => null)
+    // « Écrivez-nous » messages too (lib/chat/server.js), so an open Messages screen refreshes without LISTEN.
+    const c = await payload.find({ collection: 'conversations', sort: '-updatedAt', limit: 1, depth: 0, overrideAccess: true, select: { updatedAt: true } }).catch(() => null)
     const doc = r?.docs?.[0]
-    const mark = doc ? `${doc.id}:${doc.updatedAt}` : null
+    const chat = c?.docs?.[0]
+    const mark = `${doc ? `${doc.id}:${doc.updatedAt}` : ''}|${chat ? `${chat.id}:${chat.updatedAt}` : ''}`
     if (state.last !== null && mark !== state.last) emit({ id: doc?.id, op: 'POLL', status: doc?.status })
     state.last = mark
   }
@@ -91,3 +94,11 @@ export async function subscribe(payload, fn) {
 }
 
 export const liveMode = () => state.mode
+
+// A hint sent by app code rather than the orders trigger (a visitor's « Écrivez-nous » message, a reply): NOTIFY
+// on the same channel reaches the studio process from the public one. Without Postgres (tests), this process only.
+export async function notifyLive(payload, msg) {
+  const pool = payload?.db?.pool
+  if (pool?.query) return void (await pool.query('select pg_notify($1, $2)', [CHANNEL, JSON.stringify(msg)]))
+  emit(msg)
+}

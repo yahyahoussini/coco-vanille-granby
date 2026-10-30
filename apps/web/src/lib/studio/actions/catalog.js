@@ -199,14 +199,15 @@ export const catalogActions = {
       const taxClass = ['pending', 'zero', 'taxable', 'rule'].includes(input.taxClass) ? input.taxClass : null
       if (!taxClass) refuse('tax_class', 'Choisissez une classe de taxe.', 422)
       const approvedOn = str(input.approvedOn, 10)
-      if (taxClass !== 'pending' && !/^\d{4}-\d{2}-\d{2}$/.test(approvedOn)) refuse('approval_required', 'Indiquez la date d’approbation du comptable.', 422)
+      // The rule is written next to the choice in Studio; a check date (an accountant's, or the owner's) is optional.
+      if (approvedOn && !/^\d{4}-\d{2}-\d{2}$/.test(approvedOn)) refuse('approval_date', 'La date doit être au format AAAA-MM-JJ.', 422)
       await saveProduct(ctx, product, { taxClass })
       return {
         entity: 'products',
         entityId: product.id,
         before: { taxClass: product.taxClass },
         after: { taxClass, approvedByAccountantOn: approvedOn || null },
-        summary: sentence(ctx.user, ctx.device, `a mis la classe de taxe de ${product.title} à « ${taxClass} »${approvedOn ? ` (approuvé par le comptable le ${approvedOn})` : ''}`, ctx.now),
+        summary: sentence(ctx.user, ctx.device, `a mis la classe de taxe de ${product.title} à « ${taxClass} »${approvedOn ? ` (vérifiée le ${approvedOn})` : ''}`, ctx.now),
         message: `Classe de taxe de ${product.title} enregistrée.`,
         noUndo: true,
       }

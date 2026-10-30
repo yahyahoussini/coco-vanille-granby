@@ -64,6 +64,9 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays 
     '@id': BAKERY_ID,
     name: business.name,
     alternateName: business.alternateName,
+    // The registered name, as in every page's footer (Registraire, NEQ 1177082220): it tells the shop apart from the
+    // perfume and the other « Coco Vanille » businesses.
+    legalName: business.legalName,
     description: business.categorySentence,
     url: `${SITE_ORIGIN}/`,
     telephone: business.phone,
@@ -83,15 +86,28 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays 
     specialOpeningHoursSpecification: special,
     sameAs: (business.sameAs || []).filter((s) => s.verified).map((s) => s.url),
     knowsLanguage: (business.languagesServed || ['fr']).map((l) => HTML_LANG[l]),
-    inLanguage: HTML_LANG[locale],
+    // The cell number, shown in every footer, books the creative workshops (the shop's reel of 2026-10-22, 20b S-19).
+    // inLanguage is not a LocalBusiness property (schema.org): the WebPage node carries the page's language.
+    contactPoint: business.mobile
+      ? { '@type': 'ContactPoint', telephone: business.mobile, contactType: locale === 'en' ? 'Creative workshop bookings' : 'Réservation des ateliers créatifs', availableLanguage: 'fr-CA' }
+      : undefined,
   }
+}
+
+// The Zoo de Granby, named by the Zoo page (research/22d §4.5): its visitor address from the Zoo's own « Horaire et
+// directions » page; no hours, prices or ratings (they are not ours, and they change).
+export const ZOO_DE_GRANBY = {
+  '@type': 'Zoo',
+  name: 'Zoo de Granby',
+  url: 'https://www.zoodegranby.com/',
+  address: { '@type': 'PostalAddress', streetAddress: '1050, boulevard David-Bouchard Nord', addressLocality: 'Granby', addressRegion: 'QC', postalCode: 'J2H 0Y6', addressCountry: 'CA' },
 }
 
 export function websiteNode() {
   return { '@type': 'WebSite', '@id': WEBSITE_ID, url: `${SITE_ORIGIN}/`, name: 'Pâtisserie Coco Vanille', publisher: { '@id': BAKERY_ID } }
 }
 
-export function webPageNode({ url, name, description, locale, dateModified, type = 'WebPage' }) {
+export function webPageNode({ url, name, description, locale, dateModified, type = 'WebPage', mentions }) {
   return {
     '@type': type,
     '@id': `${url}#webpage`,
@@ -101,6 +117,7 @@ export function webPageNode({ url, name, description, locale, dateModified, type
     inLanguage: HTML_LANG[locale],
     isPartOf: { '@id': WEBSITE_ID },
     about: { '@id': BAKERY_ID },
+    mentions,
     dateModified,
   }
 }

@@ -10,6 +10,8 @@ export const PAGES = [
   { key: 'carte', template: 'menu', status: 'core', parent: 'home', paths: { fr: '/carte/', en: '/en/menu/' } },
   { key: 'commander', template: 'order', status: 'core', parent: 'home', paths: { fr: '/commander/', en: '/en/order/', es: '/es/pedidos/' } },
   { key: 'nous-trouver', template: 'visit', status: 'core', parent: 'home', paths: { fr: '/nous-trouver/', en: '/en/visit/', es: '/es/como-llegar/' } },
+  // Visitors of the Zoo de Granby: one page, under Nous trouver (research/22d §1; Spanish stays off).
+  { key: 'zoo-de-granby', template: 'content', status: 'core', parent: 'nous-trouver', paths: { fr: '/nous-trouver/zoo-de-granby/', en: '/en/visit/granby-zoo/' } },
   { key: 'a-propos', template: 'about', status: 'core', parent: 'home', paths: { fr: '/a-propos/', en: '/en/about/', es: '/es/nosotros/' } },
   { key: 'chef', template: 'content', status: 'conditional', parent: 'a-propos', condition: 'Consentement photo + biographie du chef', paths: { fr: '/a-propos/chef/', en: '/en/about/chef/' } },
   { key: 'prix', template: 'prices', status: 'conditional', parent: 'home', condition: 'Grille de prix du propriétaire', paths: { fr: '/prix/', en: '/en/prices/', es: '/es/precios/' } },

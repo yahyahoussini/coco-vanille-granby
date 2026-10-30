@@ -25,9 +25,11 @@ export const SCREENS = {
   semaine: [P, G, A], // Gérant·e: read
   produits: [P, G, A, T],
   question: [P, G, C, A],
+  faits: [P, G, A, T],
   reglages: [P, G, C, A, T],
   agence: [P, A], // Propriétaire: read
   plus: [P, G, C, A, T],
+  messages: [P, G, C], // « Écrivez-nous »: the people who serve customers; never Agence or Traduction (Loi 25)
 }
 
 // Server-side action guard. A role missing from a list is refused, whatever the screen shows.
@@ -68,6 +70,10 @@ export const ACTIONS = {
   'review.answered': [P, G],
   'review.later': [P, G],
   'question.create': [P, G, C, A],
+  'fact.answer': [P, G, A, T],
+  'chat.reply': [P, G, C],
+  'chat.close': [P, G, C],
+  'chat.enabled': [P, G],
   'settings.deposit': [P],
   'settings.reviewLink': [P],
   'settings.mayClose': [P],

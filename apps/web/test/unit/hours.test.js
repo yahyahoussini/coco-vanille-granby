@@ -3,6 +3,7 @@ import test, { describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { upcomingSpecialDays, openState, pillSchedule } from '../../src/components/site/hours.js'
 import { bakeryNode, graph } from '../../src/lib/schema.js'
+import { HOURS } from '../../src/seed/content.js'
 
 // Placeholder hours for tests only, never owner facts.
 const at = (iso, hhmm) => new Date(`${iso}T${hhmm}:00-04:00`)
@@ -63,6 +64,26 @@ describe('open now (pill)', () => {
     assert.deepEqual(Object.keys(p).sort(), ['closure', 'hours', 'specialDays'])
     assert.deepEqual(p.closure, { active: true, until: '2026-10-30T13:00:00.000Z' })
     assert.equal(p.specialDays.length, 1)
+  })
+})
+
+// The real week seeded on 2026-10-27 (the shop's Google listing, research/01 « Update 2026-10-27 »). Dates in EDT.
+describe('the seeded week in the « Ouvert » pill', () => {
+  const real = { hours: HOURS, specialDays: [], closure: { active: false } }
+  test('closed Monday and Tuesday, all day', () => {
+    assert.deepEqual(openState(real, at('2026-10-26', '10:00')), { open: false })
+    assert.deepEqual(openState(real, at('2026-10-27', '15:54')), { open: false })
+  })
+  test('Wednesday to Saturday: open from 8:30 until 17:30', () => {
+    assert.deepEqual(openState(real, at('2026-10-28', '08:29')), { open: false })
+    assert.deepEqual(openState(real, at('2026-10-28', '08:30')), { open: true, closes: '17:30' })
+    assert.deepEqual(openState(real, at('2026-10-31', '17:29')), { open: true, closes: '17:30' })
+    assert.deepEqual(openState(real, at('2026-10-31', '17:30')), { open: false })
+  })
+  test('Sunday: open from 9:30 until 17:00', () => {
+    assert.deepEqual(openState(real, at('2026-10-25', '09:15')), { open: false })
+    assert.deepEqual(openState(real, at('2026-10-25', '09:30')), { open: true, closes: '17:00' })
+    assert.deepEqual(openState(real, at('2026-10-25', '17:00')), { open: false })
   })
 })
 

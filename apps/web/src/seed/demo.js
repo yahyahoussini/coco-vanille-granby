@@ -8,6 +8,7 @@
 // Re-seeding without demo = `SEED_DEMO=clean npm run seed:demo && npm run seed`.
 import { getPayload } from 'payload'
 import config from '../payload.config.js'
+import { PRODUCTS, POOLS } from './demo-data.js'
 
 const mode = process.env.SEED_DEMO
 if (mode !== 'true' && mode !== 'clean') {
@@ -22,48 +23,7 @@ if (process.env.NODE_ENV === 'production' || /^https:\/\/(www\.)?cocovanillegran
 
 const payload = await getPayload({ config })
 const SYS = { overrideAccess: true, depth: 0 }
-const DEMO = '(démo)'
-const DEMO_EN = '(demo)'
-
 const everyDay = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
-// Demo catalogue facts, by French slug. Prices in cents before taxes; weights per serving for the tax rule.
-const PRODUCTS = {
-  'gateau-aux-framboises': {
-    taxClass: 'rule',
-    leadTimeHours: 48,
-    cakeMessageMax: 30,
-    everSold: true,
-    variants: [
-      { fr: `6 po ${DEMO}`, en: `6-inch ${DEMO_EN}`, sizeInches: 6, portionsMin: 8, portionsMax: 10, priceCents: 3800, unitWeightGrams: 1100 },
-      { fr: `8 po ${DEMO}`, en: `8-inch ${DEMO_EN}`, sizeInches: 8, portionsMin: 12, portionsMax: 16, priceCents: 5200, unitWeightGrams: 1700 },
-    ],
-  },
-  'shortcake-aux-fraises': {
-    taxClass: 'rule',
-    leadTimeHours: 48,
-    cakeMessageMax: 30,
-    variants: [{ fr: `8 po ${DEMO}`, en: `8-inch ${DEMO_EN}`, sizeInches: 8, portionsMin: 12, portionsMax: 14, priceCents: 4800, unitWeightGrams: 1500 }],
-  },
-  'paris-brest': {
-    taxClass: 'rule',
-    leadTimeHours: 24,
-    variants: [{ fr: `Individuel ${DEMO}`, en: `Single ${DEMO_EN}`, portionsMin: 1, priceCents: 650, unitWeightGrams: 180 }],
-  },
-  'croissant-aux-amandes': {
-    taxClass: 'rule',
-    leadTimeHours: 24,
-    variants: [{ fr: `À l’unité ${DEMO}`, en: `Each ${DEMO_EN}`, portionsMin: 1, priceCents: 425, unitWeightGrams: 110 }],
-  },
-  baguette: {
-    taxClass: 'zero',
-    leadTimeHours: 24,
-    variants: [{ fr: `Baguette ${DEMO}`, en: `Baguette ${DEMO_EN}`, priceCents: 400, unitWeightGrams: 250 }],
-  },
-  // Vol-au-vent stays out of online sale on purpose: heated food is 07 §6 row 9 (ASK the accountant).
-}
-
-const POOLS = { gateaux: 6, viennoiseries: 120, pains: 80, patisseries: 40 }
 
 async function bySlug(slug) {
   const res = await payload.find({ collection: 'products', where: { slug: { equals: slug } }, locale: 'fr', limit: 1, ...SYS })

@@ -4,7 +4,7 @@
 import '@/styles/ordering.css'
 import { notFound } from 'next/navigation'
 import { marker } from '@/lib/facts'
-import { money, clock } from '@/lib/i18n'
+import { money, clock, keepTogether } from '@/lib/i18n'
 import { payloadClient, getProducts } from '@/lib/data'
 import { dayOf, localParts } from '@/lib/studio/time'
 import { offerStates } from '@/lib/ordering/create-order'
@@ -13,12 +13,14 @@ import { senderFacts } from '@/lib/messaging/templates'
 import { totalsRows } from '@/lib/ordering/totals'
 import { termsPath, Q } from '@/lib/ordering/paths'
 import { AnswerBlock, Sections, Faq, MetaLine, Unbroken } from '../site/Contract'
+import { Icon } from '../site/Icon'
 import { orderingCopy } from '../ordering/copy'
 import { RequestForm } from '../ordering/RequestForm'
 import { ProductOrderList } from '../ordering/ProductOrderList'
 import { AutoRefresh } from '../ordering/AutoRefresh'
 import { requestContext } from '../ordering/server'
 import { BoxTemplate, CheckoutTemplate } from '../ordering/BoxCheckout'
+import { KeepPhone } from '../catalogue/KeepPhone'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const one = (v) => (Array.isArray(v) ? v[0] : v)
@@ -39,7 +41,7 @@ async function OrderTemplate({ locale, business, shop, doc }) {
       <AnswerBlock text={doc?.answer} />
       {enabled && <ProductOrderList locale={locale} products={products} states={states} shop={shop} boxToken={ctx.boxToken} boxItems={ctx.boxItems} />}
       <RequestForm locale={locale} business={business} draft={ctx.draft} />
-      <Sections sections={doc?.sections} />
+      <Sections sections={doc?.sections} locale={locale} />
       <Faq items={doc?.faq} locale={locale} />
       <MetaLine doc={doc} locale={locale} />
     </article>
@@ -59,11 +61,14 @@ function RequestThanks({ request, locale, business }) {
   const when = localParts(new Date(request.answerBy))
   const answer = `${longDayLabel(when.iso, locale)}, ${clock(`${String(when.hh).padStart(2, '0')}:${String(when.mm).padStart(2, '0')}`, locale)}`
   return (
-    <article className="wrap page ordering thanks">
+    <article className="wrap page ordering thanks request-thanks">
+      <span className="thanks-emblem icon-badge" aria-hidden="true">
+        <Icon name="check" size={34} strokeWidth={2} />
+      </span>
       <h1>{s.pageTitles.requestThanks}</h1>
       <p className="answer">{t.requestText(answer)}</p>
       {request.hasAllergy && <p className="notice">{t.requestAllergy}</p>}
-      <section aria-labelledby="demande-resume" className="order-summary">
+      <section aria-labelledby="demande-resume" className="order-summary summary-card">
         <h2 id="demande-resume">{locale === 'fr' ? 'Qu’avez-vous demandé?' : locale === 'es' ? '¿Qué solicitó?' : 'What did you ask for?'}</h2>
         <dl className="summary-list">
           <div>
@@ -89,8 +94,13 @@ function RequestThanks({ request, locale, business }) {
         </dl>
       </section>
       {business?.phoneDisplay && (
-        <p>
-          <a href={`tel:${business.phone}`}>{t.call(business.phoneDisplay)}</a>
+        <p className="thanks-call">
+          <Icon name="phone" size={18} />
+          <a href={`tel:${business.phone}`}>
+            <span>
+              <KeepPhone text={t.call(business.phoneDisplay)} phone={business.phoneDisplay} />
+            </span>
+          </a>
         </p>
       )}
     </article>
@@ -113,7 +123,7 @@ function OrderThanks({ order, locale, business }) {
       <h1>{title}</h1>
       {cancelled && <p className="notice">{t.cancelled}</p>}
       {!paid && !cancelled && (
-        <>
+        <div className="thanks-pending">
           <p className="answer">{t.pendingText}</p>
           <p>
             <a className="btn btn-quiet" href={`?${Q.order}=${order.accessToken}`}>
@@ -121,51 +131,84 @@ function OrderThanks({ order, locale, business }) {
             </a>
           </p>
           <AutoRefresh />
-        </>
+        </div>
       )}
       {paid && (
-        <>
-          <div className="pickup-code" aria-labelledby="code-title">
+        <div className="thanks-layout">
+          <div className="pickup-code" role="group" aria-labelledby="code-title">
             <p id="code-title" className="pickup-code-label">
               {t.code}
             </p>
             <p className="pickup-code-value">{order.pickupCode}</p>
             <p className="small">{t.codeHint}</p>
           </div>
-          <section aria-labelledby="merci-quand">
-            <h2 id="merci-quand">{t.when}</h2>
-            <p>{when}</p>
-            {order.pickupWindowStart && (
-              <p>
-                <a className="btn btn-quiet" href={`/svc/calendrier/?${Q.order}=${order.accessToken}`} download={`cueillette-${order.number}.ics`}>
-                  {t.calendar}
-                </a>
+          <div className="thanks-cards">
+            <section aria-labelledby="merci-quand" className="info-card">
+              <div className="info-card-head">
+                <span className="info-card-icon icon-badge" aria-hidden="true">
+                  <Icon name="calendar" size={24} />
+                </span>
+                <h2 id="merci-quand">{t.when}</h2>
+              </div>
+              <p className="thanks-when">{keepTogether(when)}</p>
+              {order.pickupWindowStart && (
+                <p>
+                  <a className="btn btn-quiet" href={`/svc/calendrier/?${Q.order}=${order.accessToken}`} download={`cueillette-${order.number}.ics`}>
+                    <Icon name="calendar" size={18} />
+                    {t.calendar}
+                  </a>
+                </p>
+              )}
+            </section>
+            <section aria-labelledby="merci-ou" className="info-card">
+              <div className="info-card-head">
+                <span className="info-card-icon icon-badge" aria-hidden="true">
+                  <Icon name="pin" size={24} />
+                </span>
+                <h2 id="merci-ou">{t.where}</h2>
+              </div>
+              <address>
+                {facts.name}
+                <br />
+                {keepTogether(facts.addressLine[locale] || facts.addressLine.fr)}
+              </address>
+              <p className="map-links thanks-maps">
+                {maps.google && (
+                  <a className="btn btn-quiet" href={maps.google}>
+                    <Icon name="directions" size={18} />
+                    {t.directions}
+                  </a>
+                )}
+                {maps.apple && (
+                  <a className="btn btn-quiet" href={maps.apple}>
+                    <Icon name="pin" size={18} />
+                    {t.apple}
+                  </a>
+                )}
               </p>
-            )}
-          </section>
-          <section aria-labelledby="merci-ou">
-            <h2 id="merci-ou">{t.where}</h2>
-            <address>
-              {facts.name}
-              <br />
-              {facts.addressLine[locale] || facts.addressLine.fr}
-            </address>
-            <p className="map-links">
-              {maps.google && <a href={maps.google}>{t.directions}</a>}
-              {maps.apple && <a href={maps.apple}>{t.apple}</a>}
+            </section>
+          </div>
+          {order.customer?.email && (
+            <p className="thanks-emailed">
+              <Icon name="mail" size={18} />
+              {t.emailed(order.customer.email)}
             </p>
-          </section>
-          {order.customer?.email && <p>{t.emailed(order.customer.email)}</p>}
-        </>
+          )}
+        </div>
       )}
-      <section aria-labelledby="merci-commande" className="order-summary">
+      <section aria-labelledby="merci-commande" className="order-summary summary-card">
         <h2 id="merci-commande">{locale === 'fr' ? 'Qu’avez-vous commandé?' : locale === 'es' ? '¿Qué pidió?' : 'What did you order?'}</h2>
         <ul className="summary-items">
           {(order.items || []).map((it, i) => (
             <li key={i}>
               <span>
                 {it.qty} × {it.title}
-                {it.variantLabel ? ` · ${it.variantLabel}` : ''}
+                {it.variantLabel ? (
+                  <span className="summary-variant">
+                    <span className="visually-hidden"> · </span>
+                    {it.variantLabel}
+                  </span>
+                ) : null}
                 {it.message ? <span className="small"> · « {it.message} »</span> : null}
               </span>
               <span>{money(it.unitPriceCents * it.qty, locale)}</span>
@@ -174,12 +217,19 @@ function OrderThanks({ order, locale, business }) {
         </ul>
         <TotalsTable totals={order.totals} locale={locale} id="merci-totaux" />
       </section>
-      <p>
+      {/* One link a line on a phone (the dot only joins them on a wide screen). */}
+      <p className="thanks-links">
         <a href={termsPath(locale)}>{t.terms}</a>
         {business?.phoneDisplay && (
           <>
-            {' · '}
-            <a href={`tel:${business.phone}`}>{t.call(business.phoneDisplay)}</a>
+            <span className="thanks-links-sep" aria-hidden="true">
+              {' · '}
+            </span>
+            <a href={`tel:${business.phone}`}>
+              <span>
+                <KeepPhone text={t.call(business.phoneDisplay)} phone={business.phoneDisplay} />
+              </span>
+            </a>
           </>
         )}
       </p>
@@ -226,7 +276,9 @@ async function ThanksTemplate({ locale, business, query = {} }) {
       return (
         <article className="wrap page ordering thanks">
           <h1>{s.pageTitles.pending}</h1>
-          <p className="answer">{s.thanks.pendingText}</p>
+          <div className="thanks-pending">
+            <p className="answer">{s.thanks.pendingText}</p>
+          </div>
           <AutoRefresh />
         </article>
       )

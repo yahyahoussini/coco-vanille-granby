@@ -1,0 +1,153 @@
+/* Studio › Messages (« Écrivez-nous »): the inbox rows and the thread. Studio tokens only (studio.css :root,
+   checked by test/unit/studio/contrast.test.js); targets ≥ 48 px, the reply button 64 px (.btn-primary). */
+
+.inbox {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-block-size: var(--s-tap-primary);
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--s-radius);
+  background: var(--s-paper-card);
+  border: 1px solid var(--s-line);
+  color: var(--s-ink);
+  text-decoration: none;
+}
+
+.row[data-unread] {
+  border-inline-start: 6px solid var(--s-accent);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: var(--s-paper-sunk);
+  color: var(--s-ink);
+  font-weight: 700;
+}
+
+.main {
+  display: grid;
+  gap: 0.125rem;
+  min-inline-size: 0;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.when {
+  margin-inline-start: auto;
+  color: var(--s-ink-soft);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.preview {
+  color: var(--s-ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row[data-unread] .preview {
+  color: var(--s-ink);
+  font-weight: 600;
+}
+
+/* ---------- Thread ---------- */
+.contact {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+}
+
+.contact dt {
+  color: var(--s-ink-soft);
+}
+
+.contact dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.thread {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.thread > li {
+  display: grid;
+  gap: 0.25rem;
+  max-inline-size: min(34rem, 88%);
+}
+
+.client {
+  justify-self: start;
+}
+
+.shop {
+  justify-self: end;
+  justify-items: end;
+}
+
+.bubble {
+  margin: 0;
+  padding: 0.625rem 0.875rem;
+  border-radius: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.client .bubble {
+  background: var(--s-paper-card);
+  border: 1px solid var(--s-line);
+  color: var(--s-ink);
+  border-end-start-radius: 4px;
+}
+
+.shop .bubble {
+  background: var(--s-paper-dark);
+  color: var(--s-ink-on-dark);
+  border-end-end-radius: 4px;
+}
+
+.by {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--s-ink-soft);
+}
+
+.reply textarea {
+  min-block-size: 7rem;
+}
+
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .bubble {
+    border: 1px solid CanvasText;
+  }
+}

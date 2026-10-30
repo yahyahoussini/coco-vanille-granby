@@ -16,6 +16,8 @@ test('login and PIN screens have no WCAG 2.2 AA violations', async ({ page }) =>
 })
 
 test('every daily screen has no WCAG 2.2 AA violations (one h1, labels, contrast, 24 px targets)', async ({ page }) => {
+  // Fourteen screens, each loaded and scanned in full: a busy laptop needs more than the default minute.
+  test.setTimeout(180_000)
   await login(page, OWNER)
   const found = []
   for (const path of SCREENS) {

@@ -1,0 +1,1374 @@
+/* Coco Vanille · content pages: the page contract blocks (answer, Q&A, « en bref », FAQ, conversion band, notices) used on
+   every page, then the content templates (page head, visit, fact boxes, prices, calculator, seasonal, related, 404).
+   Imported by every public layout after site.css; uses only the tokens declared in site.css :root.
+   Phones first: calm, compact rows and hairlines, every text still in the HTML. From 48rem the editorial layout
+   (raised cards, the two-column Q&A) comes back. */
+
+/* ---------- Page contract ---------- */
+
+.page {
+  padding-block-end: var(--space-4);
+}
+
+.page > p,
+.page > ul,
+.page > ol {
+  max-inline-size: var(--measure);
+}
+
+/* The answer block (first paragraph of the page): on phones a calm lead on a thin caramel rule; from 48rem the
+   raised card with its thick caramel edge. */
+
+.answer {
+  position: relative;
+  max-inline-size: var(--measure);
+  margin-block: 0 var(--space-4);
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--caramel);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* A page still waiting for its owner's facts (staging): flagged right under the answer. */
+.answer + .notice {
+  margin-block: calc(-1 * var(--space-2)) var(--space-4);
+}
+
+/* Q&A: question h2 → answer passage → details (folded under « Lire la suite » on phones, see Contract.js). */
+
+.qa {
+  max-inline-size: var(--measure);
+  margin-block: 3rem;
+}
+
+.qa h2 {
+  margin-block: 0 0.75rem;
+}
+
+/* The short caramel rule over a section's question and over the FAQ title, on every page (the home's FAQ too):
+   the same line as .section-title in site.css. */
+.qa h2::before,
+.faq h2::before {
+  content: '';
+  display: block;
+  inline-size: 2.5rem;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--caramel);
+  margin-block-end: var(--space-2);
+}
+
+.qa-answer {
+  font-weight: 460;
+}
+
+.qa ul,
+.qa ol {
+  padding-inline-start: 1.2rem;
+}
+
+.qa li + li {
+  margin-block-start: 0.35rem;
+}
+
+.qa li::marker {
+  color: var(--ink-rose);
+}
+
+/* Folded details: about four lines show, the answer above always shows whole. */
+.qa[data-clamp] {
+  --clamp-height: 7em;
+}
+
+/* The folded box is its own formatting context: its first and last margins would no longer collapse. */
+.qa .clamp-body > :first-child {
+  margin-block-start: 0;
+}
+
+.qa .clamp-body > :last-child {
+  margin-block-end: 0;
+}
+
+.qa .read-more {
+  margin-block-start: 0.25rem;
+}
+
+/* « Coco Vanille en bref »: one fact per line on a hairline, a small rose heart before each. */
+
+.key-facts {
+  position: relative;
+  max-inline-size: var(--measure);
+  margin-block: var(--space-4);
+  padding: 1.125rem var(--card-pad) 0.375rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.key-facts h2 {
+  margin-block: 0 0.25rem;
+  font-size: var(--step-1);
+}
+
+.key-facts ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.key-facts li {
+  position: relative;
+  padding-block: 0.7rem;
+  padding-inline-start: 1.5rem;
+  border-block-start: 1px solid var(--line);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.key-facts li:first-child {
+  border-block-start: 0;
+}
+
+.key-facts li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 1.05rem;
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z' fill='%23d78ca0'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* FAQ in <details> (server HTML, readable without JavaScript). Phones: hairline rows, a + that turns into −
+   in a soft caramel circle; from 48rem the raised boxes. The answer slides open where the browser can animate
+   to auto (::details-content + interpolate-size); elsewhere it simply opens. */
+
+.faq {
+  max-inline-size: var(--measure);
+  margin-block: var(--section-gap) var(--space-4);
+  interpolate-size: allow-keywords;
+}
+
+.faq h2 {
+  margin-block: 0 var(--space-2);
+}
+
+.faq details {
+  border-block-end: 1px solid var(--line);
+}
+
+.faq h2 + details {
+  border-block-start: 1px solid var(--line);
+}
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-block-size: 3.5rem;
+  padding-block: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Two bars drawn in the text colour (no image): the upright one folds away when the answer is open. */
+.faq summary::after {
+  content: '';
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  color: var(--ink-accent);
+  background:
+    linear-gradient(currentColor, currentColor) center / 0.75rem 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 0.75rem no-repeat,
+    var(--paper-caramel);
+  transition:
+    background-size var(--dur-2) var(--ease-whip),
+    rotate var(--dur-2) var(--ease-whip),
+    transform var(--dur-1) var(--ease-whip);
+}
+
+.faq details[open] > summary::after {
+  background-size:
+    0.75rem 2px,
+    2px 0;
+  rotate: 180deg;
+}
+
+.faq summary:active::after {
+  transform: var(--press);
+}
+
+.faq details p {
+  margin: 0;
+  padding: 0 3rem 1.1rem 0;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.faq details::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size var(--dur-2) var(--ease-soft),
+    content-visibility var(--dur-2) allow-discrete;
+}
+
+.faq details[open]::details-content {
+  block-size: auto;
+}
+
+/* site.css stops every transition with reduced motion, but its `*` does not reach this pseudo-element. */
+@media (prefers-reduced-motion: reduce) {
+  .faq details::details-content {
+    transition: none;
+  }
+}
+
+/* One primary action: on phones full-width buttons, stacked, primary first; from 48rem side by side. */
+
+.conversion-band {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin-block: var(--space-5) var(--space-3);
+}
+
+.conversion-band .btn {
+  inline-size: 100%;
+}
+
+.meta-line {
+  max-inline-size: var(--measure);
+  padding-block-start: var(--space-2);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.meta-line time {
+  white-space: nowrap;
+}
+
+.notice {
+  max-inline-size: var(--measure);
+  padding: 0.7rem 1rem;
+  line-height: 1.5;
+  background: var(--paper-notice);
+  border: 1px dashed var(--ink-fact);
+  border-radius: var(--radius-small);
+}
+
+.translation-notice {
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  border-style: solid;
+  border-color: var(--line);
+  background: var(--paper-raised);
+}
+
+.translation-notice a {
+  font-weight: 600;
+}
+
+/* ---------- Page head ---------- */
+
+.page-head {
+  position: relative;
+}
+
+.page-head h1 {
+  position: relative;
+  font-size: clamp(2.125rem, 1.4rem + 3vw, 2.375rem);
+  line-height: 1.08;
+  margin-block: var(--space-1) 1.125rem;
+  max-inline-size: 18ch;
+}
+
+.page-head-ornament {
+  display: none;
+  position: absolute;
+  inset-inline-end: -0.5rem;
+  inset-block-start: -0.5rem;
+  inline-size: clamp(110px, 16vw, 210px);
+  opacity: 0.95;
+  transform: rotate(-6deg);
+}
+
+/* ---------- 404: « Oups, cette page s'est émiettée » ---------- */
+
+.not-found {
+  padding-block-start: var(--space-3);
+}
+
+.not-found-art {
+  position: relative;
+  inline-size: 7rem;
+  margin-block-end: var(--space-2);
+}
+
+.not-found-art img {
+  inline-size: 100%;
+  border-radius: 50%;
+  box-shadow: var(--shadow-lift);
+  rotate: -8deg;
+}
+
+.not-found-coconut {
+  position: absolute;
+  inline-size: 2.75rem;
+  inset-inline-end: -1.6rem;
+  inset-block-end: -0.25rem;
+  rotate: 18deg;
+}
+
+.not-found h1 {
+  font-size: clamp(2.125rem, 1.4rem + 3vw, 2.375rem);
+  line-height: 1.08;
+  margin-block: var(--space-2) 1.125rem;
+  max-inline-size: 16ch;
+}
+
+.not-found-next h2 {
+  margin-block: 0 0.75rem;
+  font-size: var(--step-1);
+}
+
+/* ---------- « À consulter aussi » and the 404's ways out ---------- */
+
+.related {
+  margin-block: var(--space-4);
+}
+
+.related h2 {
+  margin-block-end: 0.75rem;
+}
+
+/* Phones: one grouped list, hairline rows, an arrow at the end. From 48rem: a grid of raised cards. */
+.start-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.start-grid li + li {
+  border-block-start: 1px solid var(--line);
+}
+
+.start-grid a {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-block-size: 3.5rem;
+  padding: 0.5rem var(--card-pad);
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: 1.125rem;
+  line-height: 1.25;
+  color: var(--ink);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--dur-1) var(--ease-soft),
+    border-color var(--dur-2) var(--ease-whip),
+    transform var(--dur-2) var(--ease-whip),
+    box-shadow var(--dur-2) var(--ease-whip);
+}
+
+.start-grid a:active {
+  background-color: var(--paper-caramel);
+}
+
+/* Inside the rounded list an outer ring would be cut: the focus ring sits inside the row. */
+.start-grid a:focus-visible {
+  outline-offset: -4px;
+}
+
+.start-grid a::after {
+  content: '→';
+  margin-inline-start: auto;
+  padding-inline-start: 0.5rem;
+  color: var(--ink-accent);
+  transition: transform var(--dur-2) var(--ease-whip);
+}
+
+.start-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background: var(--paper-caramel);
+  color: var(--ink-accent);
+}
+
+.start-label {
+  min-inline-size: 0;
+}
+
+.start-kicker {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--text-meta);
+  font-weight: 560;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+
+/* ---------- Menu hub (families) ---------- */
+
+.menu-family {
+  border-block-start: 1px solid var(--line);
+  padding-block-start: var(--space-2);
+  margin-block-start: var(--space-3);
+}
+
+.menu-family h3 a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--target);
+  color: var(--ink);
+}
+
+/* ---------- Visit page ---------- */
+
+/* Phones: one card, the drawn map as a short banner on top, then rows (icon · label · value) and the week's
+   hours (today's row is marked site-wide: TodayHours + site.css). From 48rem: map, details and hours side by side. */
+
+.visit-card {
+  position: relative;
+  display: grid;
+  margin-block: var(--space-3) var(--space-4);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.visit-card h2 {
+  margin-block: 0 0.5rem;
+  font-size: var(--step-1);
+}
+
+/* A drawn map (streets in cream on sage), no tiles and no third party: the buttons open real maps. */
+
+.visit-map {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-block-size: 7.5rem;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, transparent 46%, rgb(255 252 247 / 0.95) 46% 52%, transparent 52%),
+    linear-gradient(0deg, transparent 58%, rgb(255 252 247 / 0.95) 58% 63%, transparent 63%),
+    linear-gradient(32deg, transparent 22%, rgb(255 252 247 / 0.75) 22% 25%, transparent 25%),
+    linear-gradient(-58deg, transparent 70%, rgb(255 252 247 / 0.7) 70% 72.5%, transparent 72.5%),
+    var(--paper-pistache);
+}
+
+.visit-map-pin {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper-raised);
+  box-shadow:
+    0 0 0 6px rgb(215 140 160 / 0.35),
+    0 14px 24px -12px rgb(59 36 28 / 0.7);
+}
+
+.visit-map-pin .icon {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+}
+
+.visit-map-palm {
+  position: absolute;
+  inline-size: 55%;
+  inset-inline-end: -12%;
+  inset-block-end: -18%;
+  color: rgb(126 139 102 / 0.35);
+  rotate: -30deg;
+}
+
+.visit-body {
+  padding: var(--card-pad) var(--card-pad) 0.25rem;
+}
+
+/* A row: a round icon, then what it is and its value. */
+.visit-row {
+  position: relative;
+  min-block-size: 3.75rem;
+  padding-block: 0.6rem;
+  padding-inline-start: 3.25rem;
+}
+
+.visit-row-icon {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: var(--paper-caramel);
+  color: var(--ink-accent);
+}
+
+.visit-card address {
+  margin-block: 0 0.5rem;
+  line-height: 1.45;
+}
+
+.map-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0 0.75rem;
+  container-type: inline-size;
+}
+
+.map-links span {
+  flex-basis: 100%;
+  color: var(--ink-soft);
+  font-size: var(--text-meta);
+}
+
+/* The two map apps side by side, equal widths. */
+.map-links .btn {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  min-block-size: var(--target);
+  gap: 0.45rem;
+  padding-inline: 0.75rem;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+
+/* The narrowest phones keep the words and drop the pictures. */
+@container (max-width: 19rem) {
+  .map-links .btn .icon {
+    display: none;
+  }
+
+  .map-links .btn {
+    padding-inline: 0.5rem;
+  }
+}
+
+.visit-facts {
+  margin: 0;
+  display: grid;
+}
+
+.visit-facts .visit-row {
+  display: grid;
+  align-content: center;
+  gap: 0.05rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.visit-facts dt {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.visit-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.visit-hours-panel {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  justify-items: start;
+  padding: 0.875rem var(--card-pad) var(--card-pad);
+  border-block-start: 1px solid var(--line);
+}
+
+/* Phones: no box in the card, hairline rows. site.css insets the cells by --hours-inset and steps the table out by
+   as much, so the days line up with the card's text and today's blush band keeps some air around its words; at
+   0.5rem the band stands as far from the card's edge as from its words. */
+.visit-hours-panel .hours {
+  --hours-inset: 0.5rem;
+}
+
+.visit-hours-panel .hours caption {
+  padding-block: 0.25rem 0.4rem;
+}
+
+.visit-hours-panel .hours th,
+.visit-hours-panel .hours td {
+  padding-block: 0.55rem;
+}
+
+/* ---------- Fact boxes (about identity, legal identity) ---------- */
+
+.fact-box {
+  max-inline-size: var(--measure);
+  margin-block: var(--space-4);
+  padding: 1.125rem var(--card-pad) 0.25rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.fact-box h2 {
+  margin-block: 0 0.25rem;
+  font-size: var(--step-1);
+}
+
+.fact-box dl {
+  margin: 0;
+  display: grid;
+}
+
+.fact-box dl div {
+  position: relative;
+  display: grid;
+  gap: 0.1rem;
+  padding-block: 0.65rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.fact-box dl div:first-child {
+  border-block-start: 0;
+}
+
+.fact-box dt {
+  font-size: var(--text-meta);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.fact-box dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Allergens: one row per product on phones, the table from 48rem ---------- */
+
+.allergen-scroll:focus-visible {
+  outline-offset: 2px;
+}
+
+/* ---------- Prices ---------- */
+
+.prices > h2 {
+  margin-block: var(--space-4) var(--space-2);
+}
+
+.prices .table-scroll + .table-scroll {
+  margin-block-start: var(--space-3);
+}
+
+.prices-as-of {
+  font-weight: 560;
+}
+
+/* ---------- Calculator (cake moment: rose accents) ---------- */
+
+.calc-form {
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgb(255 252 247 / 0.7), transparent 70%),
+    var(--paper-blush);
+  border-radius: var(--radius-lg);
+  padding: var(--card-pad);
+  max-inline-size: var(--measure);
+  margin-block: var(--space-4);
+  border: 1px solid var(--line);
+}
+
+.calc-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.calc-form legend {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  font-weight: 540;
+  letter-spacing: -0.01em;
+  padding: 0;
+  margin-block-end: 0.75rem;
+}
+
+.calc-form label {
+  display: block;
+  font-weight: 600;
+  margin-block-end: 0.35rem;
+}
+
+/* The field takes the room, the button keeps its words. */
+.calc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  margin-block-end: 0.5rem;
+}
+
+.calc-row input {
+  inline-size: 100%;
+  min-block-size: 3.25rem;
+  padding-inline: 1rem;
+  font: inherit;
+  font-size: max(16px, 1.125rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 2px solid var(--control-border);
+  border-radius: var(--radius);
+}
+
+.calc-row .btn {
+  min-block-size: 3.25rem;
+  padding-inline: 1.4rem;
+}
+
+.calc-row input[aria-invalid='true'] {
+  border-color: var(--ink-fact);
+}
+
+.calc-form .small {
+  margin: 0;
+}
+
+.form-error {
+  color: var(--ink-fact);
+  font-weight: 600;
+}
+
+.calc-form .form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin: 0.75rem 0 0;
+}
+
+.calc-form .form-error .icon {
+  margin-block-start: 0.15em;
+}
+
+.calc-results > h2 {
+  margin-block: var(--space-4) var(--space-2);
+}
+
+/* The best fit, as the answer card: badge, cake, then its size, servings and price. */
+.calc-best {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+  max-inline-size: var(--measure);
+  margin-block: 0 var(--space-3);
+  padding: var(--card-pad);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--rose);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.calc-best-name {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  line-height: 1.25;
+}
+
+.calc-best-detail {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Seasonal (« Bientôt » → « Précommandes ouvertes » → « Complet » → « De retour en … ») ---------- */
+
+.season-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--card-pad);
+  max-inline-size: var(--measure);
+  margin-block: var(--space-4);
+}
+
+.season-card h2 {
+  margin-block: 0 0.75rem;
+  font-size: var(--step-1);
+}
+
+.season-card h3 {
+  font-size: var(--step-0);
+  margin-block: var(--space-2) 0.5rem;
+}
+
+.season-card > :last-child {
+  margin-block-end: 0;
+}
+
+.season-badge {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  border-radius: 999px;
+  padding-inline: 0.9rem;
+  margin-block-end: 0.75rem;
+  font-weight: 650;
+  background: var(--paper-sunk);
+  color: var(--ink);
+}
+
+.season-open .season-badge {
+  background: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+.season-soon .season-badge {
+  background: var(--paper-pistache);
+}
+
+.season-full .season-badge {
+  background: var(--ink);
+  color: var(--paper-raised);
+}
+
+.pickup-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.pickup-dates li {
+  background: var(--paper-sunk);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  white-space: nowrap;
+}
+
+.season-products > h2 {
+  margin-block: var(--space-4) var(--space-2);
+}
+
+/* ---------- Phones only: whole rows to tap ---------- */
+
+@media (max-width: 47.99rem) {
+  /* A row with a link (phone, email, page) is one big target; a chevron says so. */
+  .visit-facts a::after,
+  .fact-box dd a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .visit-facts .visit-row:has(a),
+  .fact-box dl div:has(a) {
+    padding-inline-end: 1.75rem;
+  }
+
+  .visit-facts .visit-row:has(a)::after,
+  .fact-box dl div:has(a)::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: 0.4rem;
+    inset-block-start: 50%;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-block-start: 2px solid var(--caramel);
+    border-inline-end: 2px solid var(--caramel);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .visit-facts a,
+  .fact-box dd a {
+    text-decoration-color: var(--line);
+  }
+
+  /* Prices: each category's caption is the heading of its group of sizes, held close to its group (0.5rem) and
+     a little further from the group before it (1.25rem); the section title sits 0.75rem over the first heading.
+     The sizes themselves are SizesTable's (catalogue.css). */
+  .prices > h2 {
+    margin-block-end: 0.75rem;
+  }
+
+  .prices .table-scroll {
+    margin-block: 0;
+  }
+
+  .prices .table-scroll + .table-scroll {
+    margin-block-start: 1.25rem;
+  }
+
+  .prices table.sizes caption {
+    padding: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: var(--step-1);
+    font-weight: 540;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .prices-as-of {
+    margin-block-start: var(--space-2);
+  }
+
+  .visit-facts .visit-row:has(a):active,
+  .fact-box dl div:has(a):active {
+    background: rgb(201 149 88 / 0.08);
+  }
+
+  /* Allergens: each product is one row of a grouped list (the element stays a table, roles keep it one). */
+  .allergen-scroll {
+    overflow: visible;
+  }
+
+  .allergen-table,
+  .allergen-table caption,
+  .allergen-table tbody,
+  .allergen-table tr,
+  .allergen-table th,
+  .allergen-table td {
+    display: block;
+  }
+
+  .allergen-table {
+    overflow: hidden;
+  }
+
+  .allergen-table caption {
+    padding: 0.85rem var(--card-pad) 0.35rem;
+  }
+
+  .allergen-table thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .allergen-table tbody tr {
+    padding: 0.75rem var(--card-pad);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .allergen-table tbody th,
+  .allergen-table tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .allergen-table tbody th {
+    margin-block-end: 0.3rem;
+    font-weight: 650;
+  }
+
+  .allergen-table tbody th a {
+    min-block-size: 2.25rem;
+    margin-block: -0.4rem;
+  }
+
+  /* Each value on its own line, after its column header (shown again for the eye, empty alternative text:
+     not read twice). */
+  .allergen-table tbody td {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    column-gap: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .allergen-table tbody td + td {
+    margin-block-start: 0.2rem;
+  }
+
+  .allergen-table tbody td::before {
+    content: attr(data-label);
+    content: attr(data-label) / '';
+    color: var(--ink-soft);
+  }
+}
+
+/* ---------- From 48rem: the editorial desktop ---------- */
+
+@media (min-width: 48rem) {
+  .page {
+    padding-block-end: var(--space-5);
+  }
+
+  .answer {
+    font-size: var(--step-1);
+    margin-block: var(--space-2) var(--space-4);
+    padding: 1.25rem 1.5rem 1.25rem 1.6rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-inline-start: 4px solid var(--caramel);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .qa {
+    margin-block: var(--space-5);
+  }
+
+  .qa h2 {
+    margin-block: 0 var(--space-2);
+  }
+
+  .qa-answer {
+    font-weight: 560;
+    font-size: calc(var(--step-0) * 1.04);
+  }
+
+  .key-facts {
+    padding: 1.6rem 1.6rem 1rem;
+    margin-block: var(--space-5);
+    box-shadow: var(--shadow);
+  }
+
+  .key-facts h2 {
+    margin-block: 0 var(--space-1);
+  }
+
+  .key-facts li {
+    padding-inline-start: 1.75rem;
+    border-block-start-style: dashed;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .key-facts li::before {
+    inset-block-start: 1.05rem;
+    inline-size: 0.9rem;
+    block-size: 0.9rem;
+  }
+
+  .faq {
+    margin-block: var(--space-5);
+  }
+
+  .faq h2 {
+    margin-block-end: var(--space-3);
+  }
+
+  .faq details,
+  .faq h2 + details {
+    margin-block: 0.65rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition:
+      border-color var(--dur-2) var(--ease-soft),
+      box-shadow var(--dur-2) var(--ease-soft);
+  }
+
+  .faq details:hover {
+    border-color: var(--caramel);
+  }
+
+  .faq details[open] {
+    border-color: var(--caramel);
+    box-shadow: var(--shadow);
+  }
+
+  .faq summary {
+    min-block-size: 60px;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius);
+  }
+
+  .faq details p {
+    padding: 0 1.25rem 1.25rem;
+  }
+
+  .conversion-band {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .conversion-band .btn {
+    inline-size: auto;
+  }
+
+  .page-head {
+    padding-block: clamp(0.5rem, 2vw, 1.5rem) 0;
+  }
+
+  .page-head h1 {
+    font-size: var(--step-3);
+    line-height: 1.1;
+    margin-block: var(--space-2) var(--space-3);
+    max-inline-size: min(18ch, calc(100% - 12rem));
+  }
+
+  .page-head-ornament {
+    display: block;
+  }
+
+  .not-found {
+    padding-block-start: var(--space-4);
+  }
+
+  .not-found-art {
+    inline-size: 160px;
+  }
+
+  .not-found-coconut {
+    inline-size: 64px;
+    inset-inline-end: -36px;
+    inset-block-end: -6px;
+  }
+
+  .not-found h1 {
+    font-size: var(--step-3);
+    line-height: 1.1;
+    margin-block: var(--space-2) var(--space-3);
+  }
+
+  .not-found-next h2 {
+    margin-block-end: var(--space-2);
+    font-size: var(--step-2);
+  }
+
+  /* 16rem: four and one, or three and two, never five cards of 230 px where the label ran under the arrow. Every card
+     the same height, the label kept to one line. */
+  .start-grid {
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    grid-auto-rows: 1fr;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .start-grid li + li {
+    border-block-start: 0;
+  }
+
+  .start-grid a {
+    justify-content: space-between;
+    gap: 1rem;
+    min-block-size: 68px;
+    padding-inline: var(--space-3);
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: var(--step-1);
+  }
+
+  .start-grid a:focus-visible {
+    outline-offset: 3px;
+  }
+
+  .start-grid a:active {
+    background-color: var(--paper-raised);
+  }
+
+  .start-label {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .start-grid a {
+    block-size: 100%;
+  }
+
+  .start-grid a:hover {
+    border-color: var(--caramel);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .start-grid a:hover::after {
+    transform: translateX(4px);
+  }
+
+  .related h2 {
+    margin-block-end: var(--space-2);
+  }
+
+  .visit-card {
+    gap: var(--space-3);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: var(--shadow);
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  }
+
+  .visit-card h2 {
+    margin-block: 0 var(--space-2);
+    font-size: var(--step-2);
+  }
+
+  .visit-map {
+    min-block-size: 12rem;
+    border-radius: var(--radius);
+  }
+
+  .visit-map-pin {
+    inline-size: 4.25rem;
+    block-size: 4.25rem;
+    box-shadow:
+      0 0 0 8px rgb(215 140 160 / 0.35),
+      0 18px 30px -14px rgb(59 36 28 / 0.7);
+  }
+
+  .visit-map-pin .icon {
+    inline-size: auto;
+    block-size: auto;
+  }
+
+  .visit-body {
+    padding: 0;
+  }
+
+  .visit-hours-panel {
+    grid-column: 1 / -1;
+    gap: 0.75rem;
+    padding: 0;
+    border-block-start: 0;
+  }
+
+  /* The table is a box again (site.css), today's band inside its border. */
+  .visit-hours-panel .hours caption {
+    padding-block: var(--space-1);
+  }
+
+  .visit-hours-panel .hours th,
+  .visit-hours-panel .hours td {
+    padding: 0.75rem var(--space-2);
+  }
+
+  .fact-box {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: var(--shadow);
+  }
+
+  .fact-box h2 {
+    margin-block-end: var(--space-1);
+  }
+
+  .fact-box dl {
+    margin-block: var(--space-2) 0;
+  }
+
+  .fact-box dl div {
+    padding-block: 0.5rem;
+    border-block-start: 0;
+    border-block-end: 1px dashed var(--line);
+  }
+
+  .fact-box dl div:last-child {
+    border-block-end: 0;
+  }
+
+  .fact-box dd a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--target);
+  }
+
+  .calc-form {
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .calc-form legend {
+    font-size: var(--step-2);
+    margin-block-end: var(--space-2);
+  }
+
+  .calc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-block-end: var(--space-1);
+  }
+
+  .calc-row input {
+    inline-size: 8rem;
+    min-block-size: 56px;
+    padding-inline: var(--space-2);
+    font-size: max(16px, var(--step-1));
+  }
+
+  .calc-row .btn {
+    min-block-size: 56px;
+  }
+
+  .season-card {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    box-shadow: var(--shadow);
+  }
+}
+
+@media (min-width: 60rem) {
+  /* Editorial Q&A: the question stays beside its answer while you read, 1.5rem under the header's bottom edge
+     (--sticky-top: 76px at the top of the page, 62px once scrolled). */
+
+  .qa:not(:has(.product-grid, .menu-families, .catalogue-slot, table)) {
+    display: grid;
+    grid-template-columns: minmax(0, 21rem) minmax(0, 40rem);
+    column-gap: var(--space-5);
+    max-inline-size: none;
+  }
+
+  .qa:not(:has(.product-grid, .menu-families, .catalogue-slot, table)) > h2 {
+    font-size: clamp(1.45rem, 1.2rem + 0.6vw, 1.8rem);
+    grid-column: 1;
+    grid-row: 1 / span 12;
+    align-self: start;
+    position: sticky;
+    inset-block-start: calc(var(--sticky-top) + 1.5rem);
+    transition: inset-block-start var(--dur-2) var(--ease-whip);
+  }
+
+  .qa:not(:has(.product-grid, .menu-families, .catalogue-slot, table)) > :not(h2) {
+    grid-column: 2;
+  }
+
+  .visit-card {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 19rem);
+    align-items: start;
+  }
+
+  .visit-hours-panel {
+    grid-column: auto;
+  }
+}

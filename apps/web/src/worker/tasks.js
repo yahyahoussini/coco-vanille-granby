@@ -1,6 +1,7 @@
 // Worker jobs (APP_ROLE=worker, `npm run worker`): every tick sends the messages whose undo window is over,
 // expires payment holds and quotes, marks orders not picked up after closing; once a night, the retention job
-// deletes allergy notes 30 days after pickup (07 O9). Each job is idempotent, so a restart is harmless.
+// deletes allergy notes 30 days after pickup (07 O9) and « Écrivez-nous » conversations 90 days after their last
+// message (research/sessions/04 #10). Each job is idempotent, so a restart is harmless.
 import { localParts, addDays, dayBounds, dayOf, closingOf, zonedTime } from '../lib/studio/time.js'
 import { canTransition } from '../lib/ordering/state.js'
 import { cancelIntent } from '../lib/payments/stripe.js'
@@ -10,6 +11,7 @@ import { withCapacityLock } from '../lib/ordering/context.js'
 import { holdIsLive } from '../lib/ordering/capacity.js'
 import { HOLD_EXPIRED } from '../lib/payments/settle.js'
 import { closedForPickup } from '../lib/studio/closure.js'
+import { purgeConversations } from '../lib/chat/server.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 export const MAX_ATTEMPTS = 5
@@ -147,6 +149,9 @@ export async function tick(payload, { now = new Date(), senders, nightly = false
   Object.assign(summary, await expireQuotes(payload, { now }))
   Object.assign(summary, await markNotPickedUp(payload, { now }))
   Object.assign(summary, await sendDueMessages(payload, { now, senders }))
-  if (nightly) Object.assign(summary, await retention(payload, { now }))
+  if (nightly) {
+    Object.assign(summary, await retention(payload, { now }))
+    Object.assign(summary, await purgeConversations(payload, { now }))
+  }
   return summary
 }

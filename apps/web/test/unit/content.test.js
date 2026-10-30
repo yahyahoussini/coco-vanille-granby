@@ -2,9 +2,10 @@
 // v1 §7, rank-first 02-page-contract, 00 §10.1. Every page, every locale.
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { pages } from '../../src/seed/content.js'
+import { pages, HOURS, HOURS_FR, HOURS_EN } from '../../src/seed/content.js'
 import { pageByKey } from '../../src/lib/routes.js'
 import { MARKER_RE } from '../../src/lib/facts.js'
+import { hoursSummary, WEEK } from '../../src/components/site/hours.js'
 
 const MARKERS = new RegExp(MARKER_RE.source, 'g')
 
@@ -97,7 +98,8 @@ describe('page contract, per page and locale', () => {
 
       assert.ok(copy.changeNote?.trim(), 'changeNote')
       if (LEGAL.includes(page.key)) {
-        assert.match(JSON.stringify(copy), /révision par un avocat/, 'legal page carries the lawyer-review marker')
+        // Written by the Agency, approved by the owner (decision of 2026-10-30): no « lawyer » marker blocks the page.
+        assert.doesNotMatch(JSON.stringify(copy), /révision par un avocat/, 'legal page publishes without a lawyer marker')
         if (locale !== 'fr') assert.match(JSON.stringify(copy), /French version prevails|versión francesa prevalece/, 'translation says the French version prevails')
       }
     })
@@ -143,5 +145,96 @@ describe('across pages', () => {
   test('the word counter counts a marker as one word', () => {
     assert.equal(countWords('Heures : [[FACT NEEDED: heures confirmées par le propriétaire]].'), 2)
     assert.equal(countWords('La Pâtisserie Coco Vanille, au 3, rue Court.'), 8)
+  })
+
+  test('no copy prints a code value or a doubled period', () => {
+    for (const e of entries) {
+      const text = JSON.stringify(e.copy)
+      assert.doesNotMatch(text, /\bundefined\b|\bnull\b|NaN|\[object Object\]/, `${label(e)}: code value in the copy`)
+      assert.doesNotMatch(text, /[^.]\.\.(?!\.)/, `${label(e)}: doubled period (e.g. « p.m.. »)`)
+    }
+  })
+})
+
+// Owner-published facts relayed by Yahya on 2026-10-27 (research/01 « Update 2026-10-27 »).
+const copyOf = (key, locale) => pages.find((p) => p.key === key).locales[locale]
+const plain = (value) => (typeof value === 'string' ? value : JSON.stringify(value)).replace(/ /g, ' ')
+
+describe('hours: one record for the seed, the copy and the hours table', () => {
+  test('the record is a valid week: known days, HH:MM, opens before closes, one row per day', () => {
+    const days = HOURS.map((h) => h.day)
+    assert.equal(new Set(days).size, days.length, 'a day appears twice')
+    for (const h of HOURS) {
+      assert.ok(WEEK.includes(h.day), h.day)
+      assert.match(h.opens, /^([01]\d|2[0-3]):[0-5]\d$/)
+      assert.match(h.closes, /^([01]\d|2[0-3]):[0-5]\d$/)
+      assert.ok(h.opens < h.closes, `${h.day}: opens after it closes`)
+    }
+  })
+
+  test('it is the Google listing schedule supplied on 2026-10-27: Wed–Sat 8:30–17:30, Sun 9:30–17:00, closed Mon–Tue', () => {
+    assert.deepEqual(HOURS, [
+      { day: 'Wednesday', opens: '08:30', closes: '17:30' },
+      { day: 'Thursday', opens: '08:30', closes: '17:30' },
+      { day: 'Friday', opens: '08:30', closes: '17:30' },
+      { day: 'Saturday', opens: '08:30', closes: '17:30' },
+      { day: 'Sunday', opens: '09:30', closes: '17:00' },
+    ])
+  })
+
+  test('the sentences are hoursSummary() of that record, plus the closed days', () => {
+    assert.equal(HOURS_FR, `${hoursSummary(HOURS, 'fr')}; fermé le lundi et le mardi`)
+    assert.equal(HOURS_EN, `${hoursSummary(HOURS, 'en')}; closed Monday and Tuesday`)
+    assert.equal(HOURS_FR, 'du mercredi au samedi de 8 h 30 à 17 h 30, et le dimanche de 9 h 30 à 17 h; fermé le lundi et le mardi')
+  })
+
+  test('the answer blocks that give hours carry the real schedule, never the old marker', () => {
+    for (const key of ['home', 'nous-trouver']) {
+      // plain(): the French copy keeps « 8 h 30 » together with non-breaking spaces (frTypo).
+      assert.ok(plain(copyOf(key, 'fr').answer).includes(HOURS_FR), `${key} (fr)`)
+      assert.ok(copyOf(key, 'en').answer.includes(HOURS_EN), `${key} (en)`)
+    }
+    for (const e of entries) assert.doesNotMatch(plain(e.copy), /heures d’ouverture confirmées|opening hours confirmed/, label(e))
+  })
+
+  test('holiday hours are still unknown, so they stay a marker', () => {
+    assert.match(plain(copyOf('nous-trouver', 'fr')), /\[\[FACT NEEDED: heures des Fêtes 2026\]\]/)
+    assert.match(plain(copyOf('nous-trouver', 'en')), /\[\[FACT NEEDED: 2026 holiday hours\]\]/)
+  })
+})
+
+describe('café, ateliers and the « Écrivez-nous » chat', () => {
+  test('the coffee FAQ answers yes from the Facebook bio and keeps menu and seating as a marker', () => {
+    const fr = copyOf('carte', 'fr').faq.find((f) => f.question === 'Servez-vous du café sur place?')
+    assert.match(plain(fr.answer), /^Oui : .*« Pâtisserie & Café ».*\[\[FACT NEEDED: [^\]]*places assises\]\]/)
+    const en = copyOf('carte', 'en').faq.find((f) => f.question === 'Do you serve coffee in the shop?')
+    assert.match(en.answer, /^Yes: .*« Pâtisserie & Café ».*\[\[FACT NEEDED: [^\]]*seats\]\]/)
+  })
+
+  test('workshops: by reservation, booked at the number the shop publishes, its published details, the rest a marker (FR and EN)', () => {
+    // The shop's own reel of 2026-10-22 (research/20b §0.4): booked at the cell number, 2 h 30, 37 $ per person.
+    const fr = copyOf('faq', 'fr').sections.find((s) => s.heading === 'Offrez-vous des ateliers?')
+    assert.ok(fr, 'FAQ page has the workshops question')
+    assert.match(fr.answer, /ateliers créatifs sur réservation/)
+    assert.match(fr.answer, /438-528-7818/)
+    assert.match(plain(fr.answer), /2 h 30 et coûte 37 \$ par personne/)
+    assert.match(fr.answer, /\[\[FACT NEEDED: âges et heures de début des ateliers\]\]/)
+    const en = copyOf('faq', 'en').sections.find((s) => s.heading === 'Do you offer workshops?')
+    assert.ok(en, 'English FAQ page has the workshops question')
+    assert.match(en.answer, /creative workshops by reservation.*\$37 per person.*438-528-7818.*\[\[FACT NEEDED: [^\]]+\]\]/)
+  })
+
+  test('the privacy policy covers the chat: what, why, where, 90 days, replies only on request', () => {
+    for (const [locale, name, kept, asked] of [
+      ['fr', '« Écrivez-nous »', /supprimés 90 jours après le dernier message/, /seulement si vous la demandez/],
+      ['en', '“Message us”', /deleted 90 days after the last message/, /only sent if you ask for one/],
+    ]) {
+      const text = plain(copyOf('confidentialite', locale))
+      assert.ok(text.includes(name), `${locale}: names the chat`)
+      assert.match(text, kept, `${locale}: retention`)
+      assert.match(text, asked, `${locale}: reply only on request`)
+      assert.match(text, /clavardage externe|outside chat service/, `${locale}: no outside chat service`)
+      assert.match(text, /OVHcloud/, `${locale}: names its host`)
+    }
   })
 })

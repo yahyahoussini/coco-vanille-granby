@@ -37,7 +37,8 @@ describe('access matrix (16 §2.2)', () => {
 
   test('Agence acts on nothing in the shop', () => {
     for (const a of Object.keys(ACTIONS)) {
-      if (['question.create', 'device.mode'].includes(a)) continue
+      // fact.answer is site copy, not the shop: the agency types the owner's answers into « Faits du site ».
+      if (['question.create', 'device.mode', 'fact.answer'].includes(a)) continue
       assert.equal(can(agency, a), false, a)
     }
   })

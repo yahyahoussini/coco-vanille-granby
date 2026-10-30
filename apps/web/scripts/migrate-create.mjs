@@ -15,6 +15,8 @@ const before = new Set(existsSync(dir) ? readdirSync(dir) : [])
 const r = spawnSync('npx', ['payload', 'migrate:create', ...process.argv.slice(2)], {
   stdio: 'inherit',
   env: { ...process.env, PAYLOAD_CONFIG_PATH: 'src/payload.config.js', NODE_ENV: process.env.NODE_ENV || 'production' },
+  // Windows runs npx through its .cmd shim, which needs a shell.
+  shell: process.platform === 'win32',
 })
 if (r.status !== 0) process.exit(r.status ?? 1)
 

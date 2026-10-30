@@ -74,11 +74,13 @@ test.describe('uploads on the public host (/media/)', () => {
     }
   })
 
+  // Uploads are /media/<file>; the only other images are static files: the logo (public/brand/) and the
+  // labelled ambiance photos (public/photos/, src/lib/photos.js).
   test('public pages reference uploads as /media/<file>, never through /api', async () => {
     for (const path of ['/', '/carte/', '/gateaux/']) {
       const res = await raw(`${PUBLIC_URL}${path}`)
       expect(res.body, path).not.toMatch(/\/api\/media\//)
-      for (const m of res.body.matchAll(/<img[^>]+src="([^"]+)"/g)) expect(m[1], path).toMatch(/^\/media\/[^/]+$/)
+      for (const m of res.body.matchAll(/<img[^>]+src="([^"]+)"/g)) expect(m[1], path).toMatch(/^\/(media\/[^/]+|brand\/logo-badge-\d+\.(webp|avif|png)|photos\/[a-z]+-\d+\.(webp|avif))$/)
     }
   })
 })

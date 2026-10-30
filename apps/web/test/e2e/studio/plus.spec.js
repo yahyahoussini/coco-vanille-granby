@@ -5,6 +5,18 @@ import { OWNER, MARC, AGENCY, LEA, login, sql } from './support.js'
 
 test.describe.configure({ mode: 'serial' })
 
+// The allergen test checks the Baguette's list as a person would. Undo it afterwards: a list checked by a test must
+// never reach the public /allergenes/ table, the screenshots or a deploy (allergens are owner facts, 07 A-1). The
+// saved versions too: the next save (a seed) starts from the latest version and would bring the check back.
+test.afterAll(async () => {
+  const baguette = `select _parent_id from products_locales where _locale = 'fr' and slug = 'baguette'`
+  const versions = `select id from _products_v where parent_id in (${baguette})`
+  await sql(`delete from products_rels where path in ('allergens', 'mayContain') and parent_id in (${baguette})`)
+  await sql(`update products set allergens_verified_by_id = null, allergens_verified_at = null where id in (${baguette})`)
+  await sql(`delete from _products_v_rels where path in ('version.allergens', 'version.mayContain') and parent_id in (${versions})`)
+  await sql(`update _products_v set version_allergens_verified_by_id = null, version_allergens_verified_at = null where parent_id in (${baguette})`)
+})
+
 test('Cette semaine: 5 numbers, at most 3 cards, the Système tile', async ({ page }) => {
   await login(page, OWNER)
   await page.goto('/semaine/')

@@ -3,6 +3,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { buildLlmsTxt, factLines } from '../../src/components/site/llms.js'
 import { bakeryNode, graph } from '../../src/lib/schema.js'
+import { HOURS } from '../../src/seed/content.js'
 
 const business = {
   name: 'Pâtisserie Coco Vanille',
@@ -38,6 +39,13 @@ test('every fact line comes from the Bakery node; unverified profiles and missin
 test('hours appear only when the hours record exists', () => {
   const shop = { hours: [{ day: 'Sunday', opens: '09:00', closes: '17:00' }] }
   assert.match(factLines(business, shop).join('\n'), /Heures : le dimanche de 9 h à 17 h/)
+})
+
+test('the seeded hours read the same in llms.txt as on the site; the unconfirmed mobile number stays out', () => {
+  const seeded = { ...business, mobile: '+14385287818', mobileDisplay: '438-528-7818' }
+  const text = factLines(seeded, { hours: HOURS }).join('\n')
+  assert.match(text, /Heures : du mercredi au samedi de 8 h 30 à 17 h 30, et le dimanche de 9 h 30 à 17 h/)
+  assert.doesNotMatch(text, /438|5287818/, 'mobile use is not confirmed: not an AI-facing fact')
 })
 
 test('the file follows llmstxt.org: title, summary, sections of links, Optional last', () => {

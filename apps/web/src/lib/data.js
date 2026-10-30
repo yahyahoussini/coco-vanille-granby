@@ -5,7 +5,8 @@ import config from '@payload-config'
 import { engineContext } from '@/lib/ordering/context'
 import { productOfferState } from '@/lib/ordering/availability'
 import { LOCALES } from '@/lib/routes'
-import { publishGuard } from '@/lib/facts'
+import { publishGuard, answerMap, resolveFacts } from '@/lib/facts'
+import { factIdFor } from '@/lib/facts-catalog'
 import { servedByLocale, productReady } from '@/lib/publish'
 
 export const payloadClient = cache(async () => getPayload({ config }))
@@ -20,6 +21,17 @@ export const getShop = cache(async (locale = 'fr') => {
   return payload.findGlobal({ slug: 'shop', locale, depth: 0 })
 })
 
+// The owner's answers (Studio › « Faits du site »), read once per render. A missing table (a database not yet
+// migrated) means no answers: the markers stay, as before.
+export const getFactAnswers = cache(async (locale = 'fr') => {
+  const payload = await payloadClient()
+  const res = await payload.find({ collection: 'site-facts', limit: 1000, depth: 0, pagination: false }).catch(() => ({ docs: [] }))
+  return answerMap(res.docs, locale)
+})
+
+// Page copy with its answered [[FACT NEEDED]] slots filled (lib/facts.js resolveFacts).
+const withFacts = async (doc, locale) => (doc ? resolveFacts(doc, await getFactAnswers(locale), (label) => factIdFor(locale, label)) : doc)
+
 // Published page copy for a registry key. Drafts never reach the public site.
 export const getPageDoc = cache(async (key, locale = 'fr') => {
   const payload = await payloadClient()
@@ -30,14 +42,14 @@ export const getPageDoc = cache(async (key, locale = 'fr') => {
     limit: 1,
     depth: 1,
   })
-  return res.docs[0] || null
+  return withFacts(res.docs[0] || null, locale)
 })
 
 // Published page copy of every registry page, in one language (one query per render and language).
 export const getPagesIn = cache(async (locale = 'fr') => {
   const payload = await payloadClient()
   const res = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale, limit: 500, depth: 0, pagination: false })
-  return res.docs
+  return Promise.all(res.docs.map((d) => withFacts(d, locale)))
 })
 
 // Registry keys the site answers, per language (lib/publish.js): links and hreflang point only at these.

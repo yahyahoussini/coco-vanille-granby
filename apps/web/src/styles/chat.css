@@ -1,0 +1,650 @@
+/* « Écrivez-nous » (components/site/chat/ChatWidget.js): launcher bottom right on desktop, a panel, a full-height
+   sheet on phones (opened from the tab bar's « Écrire »). Tokens from site.css :root only. */
+
+.chat-launcher {
+  position: fixed;
+  inset-inline-end: 1.5rem;
+  inset-block-end: 1.5rem;
+  z-index: 45;
+  display: none;
+  align-items: center;
+  gap: 0.7rem;
+  min-block-size: 56px;
+  padding: 0.35rem 1.35rem 0.35rem 0.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--ink-on-accent);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 18px 40px -18px rgb(59 36 28 / 0.8);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transform: translate(var(--mag-x, 0), var(--mag-y, 0)) var(--pressed, scale(1));
+  transition:
+    transform var(--dur-2) var(--ease-whip),
+    background-color var(--dur-2) var(--ease-whip),
+    box-shadow var(--dur-2) var(--ease-whip);
+  animation: chat-pop var(--dur-3) var(--ease-whip) 600ms backwards;
+}
+
+/* The same press as the site's buttons (site.css), on top of the magnetic pull; hover only where it exists. */
+.chat-launcher:active {
+  --pressed: var(--press);
+  transition-duration: 120ms;
+}
+
+@media (hover: hover) {
+  .chat-launcher:hover {
+    background: var(--accent-strong);
+    box-shadow: 0 22px 44px -18px rgb(152 58 82 / 0.8);
+  }
+}
+
+.chat-launcher-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 46px;
+  block-size: 46px;
+  border-radius: 50%;
+  background: var(--rose);
+  color: var(--ink);
+}
+
+.chat-launcher-icon .chat-dot {
+  position: absolute;
+  inset-inline-end: 1px;
+  inset-block-start: 1px;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.chat-dot {
+  display: inline-block;
+  flex: none;
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 50%;
+  background: var(--caramel);
+}
+
+.is-open .chat-dot {
+  background: var(--live);
+}
+
+.is-closed .chat-dot {
+  background: var(--rose);
+}
+
+.chat-unread {
+  display: grid;
+  place-items: center;
+  min-inline-size: 1.6rem;
+  block-size: 1.6rem;
+  padding-inline: 0.4rem;
+  border-radius: 999px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.visually-hidden,
+.chat-hp {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Panel ---------- */
+.chat-panel {
+  position: fixed;
+  z-index: 70;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  color: var(--ink);
+  animation: chat-in var(--dur-3) var(--ease-whip);
+}
+
+/* Phones: the sheet follows the visual viewport (ChatWidget sets --chat-vh / --chat-top), so the composer stays
+   above the on-screen keyboard; dvh before the script has measured. */
+.chat-panel.is-sheet {
+  inset: var(--chat-top, 0px) 0 auto;
+  block-size: 100vh;
+  block-size: var(--chat-vh, 100dvh);
+  animation: chat-sheet-in var(--dur-2) var(--ease-whip);
+}
+
+.chat-panel[hidden] {
+  display: none;
+}
+
+.chat-panel:focus {
+  outline: none;
+}
+
+.chat-panel:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+html.chat-sheet-open {
+  overflow: hidden;
+}
+
+.chat-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.8rem;
+  min-block-size: 4.5rem;
+  padding: 0.75rem 0.75rem 0.75rem var(--gutter);
+  padding-block-start: calc(0.85rem + env(safe-area-inset-top));
+  background: var(--paper-dark);
+  color: var(--ink-on-dark);
+}
+
+.chat-avatar {
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--caramel);
+}
+
+.chat-head-text {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.chat-title {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--ink-on-dark);
+}
+
+.chat-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--ink-on-dark-soft);
+}
+
+.chat-close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: var(--target);
+  block-size: var(--target);
+  border: 0;
+  border-radius: 50%;
+  background: rgb(250 244 232 / 0.08);
+  color: var(--ink-on-dark);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .chat-close:hover {
+    background: rgb(250 244 232 / 0.18);
+  }
+}
+
+.chat-close:active {
+  transform: var(--press);
+}
+
+.chat-head :focus-visible {
+  outline-color: var(--focus-on-dark);
+}
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(70% 40% at 100% 0%, rgb(249 235 236 / 0.8), transparent 70%),
+    var(--speckle),
+    var(--paper);
+}
+
+/* As in any messaging app, a short conversation sits at the bottom, next to the topics and the composer, instead
+   of leaving an empty sheet between the welcome bubble and them. */
+.chat-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-block-start: auto;
+  padding: 1rem;
+}
+
+.chat-bubble {
+  max-inline-size: min(85%, 30rem);
+  margin: 0;
+  padding: 0.65rem 0.95rem 0.75rem;
+  border-radius: 18px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  animation: chat-bubble var(--dur-2) var(--ease-whip);
+}
+
+.chat-bubble p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.chat-author {
+  display: block;
+  margin-block-end: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
+}
+
+.chat-bubble.from-you {
+  align-self: flex-end;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
+  border-end-end-radius: 6px;
+}
+
+.chat-bubble.from-you .chat-author {
+  color: var(--ink-on-dark-soft);
+}
+
+.chat-bubble.from-shop {
+  align-self: flex-start;
+  background: var(--paper-blush);
+  border-color: transparent;
+  border-end-start-radius: 6px;
+}
+
+.chat-bubble.from-auto {
+  align-self: flex-start;
+  border-end-start-radius: 6px;
+}
+
+.chat-links {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.chat-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: 40px;
+  font-weight: 620;
+  color: var(--ink-link);
+}
+
+.chat-note {
+  align-self: center;
+  max-inline-size: 92%;
+  margin: 0.25rem 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  background: var(--paper-pistache);
+  color: var(--ink-sauge);
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+.chat-quick {
+  display: flex;
+  flex: none;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  padding: 0.625rem var(--gutter);
+  border-block-start: 1px solid var(--line);
+  background: var(--paper-raised);
+}
+
+.chat-quick::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-chip {
+  flex: none;
+  scroll-snap-align: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 44px;
+  padding-inline: 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-caramel);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--dur-1) var(--ease-whip),
+    background-color var(--dur-2) var(--ease-whip),
+    border-color var(--dur-2) var(--ease-whip);
+}
+
+.chat-chip:active {
+  transform: var(--press);
+}
+
+.chat-chip .icon {
+  color: var(--ink-accent);
+}
+
+@media (hover: hover) {
+  .chat-chip:hover {
+    background: var(--paper-blush);
+    border-color: var(--rose);
+  }
+}
+
+/* « Comment vous répondre? » */
+.chat-profile {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 1rem 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-blush);
+}
+
+.chat-profile-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 560;
+}
+
+.chat-profile-intro,
+.chat-privacy {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.chat-profile-fields {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.chat-profile label span {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 650;
+  margin-block-end: 0.2rem;
+}
+
+.chat-profile input:not([type='checkbox']) {
+  inline-size: 100%;
+  min-block-size: var(--target);
+  padding-inline: 0.85rem;
+  border: 2px solid var(--control-border);
+  border-radius: 12px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: max(16px, 1rem);
+}
+
+.chat-consent {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: var(--target);
+  font-size: 0.9rem;
+}
+
+.chat-consent input {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  accent-color: var(--accent);
+}
+
+.chat-consent span {
+  margin: 0;
+  font-weight: 500 !important;
+}
+
+.chat-profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Composer */
+.chat-composer {
+  display: grid;
+  flex: none;
+  gap: 0.5rem;
+  padding: 0.75rem var(--gutter);
+  padding-block-end: calc(0.75rem + env(safe-area-inset-bottom));
+  border-block-start: 1px solid var(--line);
+  background: var(--paper-raised);
+}
+
+.chat-composer textarea {
+  inline-size: 100%;
+  min-block-size: 3.25rem;
+  max-block-size: 8rem;
+  resize: none;
+  field-sizing: content;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--control-border);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: max(16px, 1rem);
+  line-height: 1.45;
+}
+
+.chat-composer textarea:focus-visible {
+  outline-offset: 1px;
+}
+
+.chat-composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.chat-counter {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.chat-link-button {
+  min-block-size: var(--target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-link);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.chat-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: var(--target);
+  padding-inline: 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--ink-on-accent);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--dur-1) var(--ease-whip),
+    background-color var(--dur-2) var(--ease-whip);
+}
+
+@media (hover: hover) {
+  .chat-send:hover {
+    background: var(--accent-strong);
+  }
+}
+
+.chat-send:active {
+  transform: var(--press);
+}
+
+.chat-send:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.chat-error {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  background: var(--paper-notice);
+  color: var(--ink-fact);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+@keyframes chat-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+/* Phones: the sheet rises from the tab bar, like a native modal. */
+@keyframes chat-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes chat-bubble {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes chat-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+  }
+}
+
+/* Desktop: a floating panel above the launcher. A light ring keeps the launcher distinct over the dark footer. */
+@media (min-width: 60rem) {
+  .chat-launcher {
+    display: inline-flex;
+    box-shadow:
+      0 0 0 3px var(--paper-raised),
+      0 18px 40px -18px rgb(59 36 28 / 0.8);
+  }
+
+  /* The launcher's corner is kept free at the end of the page and under a focused element (site.css reads
+     --bar-space for the footer's foot and html's scroll-padding), as the tab bar's is on phones. */
+  :root:has(.chat-launcher) {
+    --bar-space: calc(56px + 2rem);
+  }
+
+  /* While a product's « Ajouter à ma boîte » form is on screen (LivePrice), the launcher waits: it sat on the button
+     at laptop widths. It is back as soon as the form scrolls away. */
+  :root[data-buy-in-view] .chat-launcher {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem);
+  }
+
+  /* Laptop widths: the round icon only, the words kept as the button's accessible name. */
+  @media (max-width: 89.99rem) {
+    .chat-launcher {
+      padding: 0.35rem;
+    }
+
+    .chat-launcher-label {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .chat-panel {
+    inset: auto 1.5rem 6.25rem auto;
+    inline-size: min(26rem, calc(100vw - 3rem));
+    /* Never over the header row: the panel stops below the top bar and the header on shorter screens (800 px). */
+    block-size: min(40rem, calc(100vh - 6.25rem - var(--header-height) - var(--topbar-height) - 1rem));
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    box-shadow: 0 40px 80px -30px rgb(59 36 28 / 0.55);
+  }
+
+  .chat-head {
+    padding-block-start: 0.85rem;
+  }
+
+  .chat-composer {
+    padding-block-end: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-launcher,
+  .chat-panel,
+  .chat-bubble {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media print {
+  .chat-launcher,
+  .chat-panel {
+    display: none !important;
+  }
+}

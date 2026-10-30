@@ -5,7 +5,7 @@ import { containsMarker, publishGuard, marker } from '@/lib/facts'
 import { readyCopy, servedAlternates, productServed } from '@/lib/publish'
 import { productTitle, productDescription } from '@/lib/meta'
 import { t } from '@/lib/i18n'
-import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode } from '@/lib/schema'
+import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode, ZOO_DE_GRANBY } from '@/lib/schema'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { StickyBar } from './StickyBar'
@@ -17,6 +17,9 @@ import { closureNotice } from '@/lib/studio/closure'
 import { upcomingSpecialDays } from './hours'
 import { RelatedPages } from './Related'
 import { notFoundMetadata } from './NotFoundPage'
+import { Motion } from './Motion'
+import { ChatWidget } from './chat/ChatWidget'
+import { chatFacts } from '@/lib/chat/facts'
 
 // Resolves "/<locale>/<segments>/" to a registry page or a product page.
 async function resolve(locale, segments) {
@@ -141,6 +144,9 @@ export async function SitePage({ locale, segments = [], query }) {
   }
 
   const url = `${SITE_ORIGIN}${hit.path}`
+  // Payment pages run only the processor's scripts (10 §1.4): no chat there.
+  const checkout = hit.kind === 'page' && hit.page.template === 'checkout'
+  const chat = !checkout && shop?.chat?.enabled !== false
   // Canonical + hreflang as real <link> tags (React 19 hoists them to <head>). Next's metadata API
   // strips the trailing slash from the root URL; these must match the sitemap byte for byte.
   const languages = hit.kind === 'product' ? await productAlternates(hit.product, served) : servedAlternates(hit.page.key, served)
@@ -148,7 +154,14 @@ export async function SitePage({ locale, segments = [], query }) {
   const pageNodes = [
     bakeryNode(business, shop, locale, upcomingSpecialDays(shop)),
     websiteNode(),
-    webPageNode({ url, name: pageName, description: doc?.description || props.product?.summary, locale, dateModified: doc?.updatedAt || props.product?.updatedAt }),
+    webPageNode({
+      url,
+      name: pageName,
+      description: doc?.description || props.product?.summary,
+      locale,
+      dateModified: doc?.updatedAt || props.product?.updatedAt,
+      mentions: hit.kind === 'page' && hit.page.key === 'zoo-de-granby' ? ZOO_DE_GRANBY : undefined,
+    }),
     breadcrumbNode(url, crumbs),
   ]
   const extra = Template.schema ? await Template.schema({ ...props, url }) : []
@@ -159,7 +172,7 @@ export async function SitePage({ locale, segments = [], query }) {
       {Object.entries(languages).map(([lang, href]) => (
         <link key={lang} rel="alternate" hrefLang={lang} href={href} />
       ))}
-      <Header locale={locale} pageKey={pageKey} served={served} alternates={languages} />
+      <Header locale={locale} pageKey={pageKey} served={served} alternates={languages} business={business} shop={shop} product={hit.kind === 'product'} />
       <main id="contenu" className="site-main">
         <div className="wrap">
           {notice && (
@@ -172,8 +185,10 @@ export async function SitePage({ locale, segments = [], query }) {
         <Template {...props} />
         <RelatedPages pageKey={pageKey} locale={locale} served={served[locale]} />
       </main>
-      <Footer business={business} shop={shop} locale={locale} served={served} />
-      <StickyBar business={business} locale={locale} served={served} />
+      <Footer business={business} shop={shop} locale={locale} served={served} chat={chat} />
+      <StickyBar business={business} locale={locale} served={served} chat={chat} pageKey={pageKey} product={hit.kind === 'product'} />
+      {!checkout && <ChatWidget locale={locale} facts={chatFacts({ business, shop, locale, served })} />}
+      <Motion />
       <JsonLd data={graph([...pageNodes, ...extra])} />
     </>
   )

@@ -1,0 +1,1613 @@
+/* Coco Vanille · home page (hero and logo stage, ribbon, intro, services, vitrine, categories, cake band, visit, Q&A
+   and FAQ, finale). Imported by every public layout after site.css; uses only the tokens declared in site.css :root.
+   Phones (< 48rem) get their own versions of the desktop pieces — a photo card instead of the arch, service rows,
+   swipe rails, compact steps, one visit card and a compact Q&A run — in « phones only » blocks, so the desktop
+   composition is untouched.
+   Lists that become a .rail on phones (site.css) only get their grid or flex layout from 48rem. */
+
+/* Link chips stay one line even where the ordering day chips (a column layout) share the name. */
+
+.hero-chips .chip,
+.start-links .chip {
+  flex-direction: row;
+  min-inline-size: 0;
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-weight: 560;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ---------- Home: one rhythm and one section head ---------- */
+
+/* Every block of the page starts one --section-gap below the previous one; titles add no top margin of their own. */
+
+.home .wrap > :is(section, nav) {
+  margin-block: var(--section-gap) 0;
+}
+
+.home .section-title {
+  margin-block: 0 var(--space-3);
+}
+
+/* The FAQ title (its caramel rule comes from content.css) keeps the same air below as the section titles. */
+
+.home .faq h2 {
+  margin-block: 0 var(--space-3);
+}
+
+/* A title with a link: on phones the rule and the link share the first line and the title takes the whole width
+   under them; from 48rem the link sits on the title's last baseline. */
+
+.home-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 1.25rem auto;
+  align-items: center;
+  column-gap: var(--space-2);
+  margin-block-end: var(--space-3);
+}
+
+.home-head::before {
+  content: '';
+  grid-area: 1 / 1;
+  inline-size: 2.5rem;
+  block-size: 2px;
+  background: var(--caramel);
+}
+
+.home-head .section-title {
+  grid-area: 2 / 1 / 3 / 3;
+  margin: 0.4375rem 0 0;
+}
+
+.home-head .section-title::before {
+  display: none;
+}
+
+/* A 48 px target that takes only the rule's line: the negative margins keep the title where it is. */
+
+.home-head-link {
+  grid-area: 1 / 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-block-size: var(--target);
+  margin-block: -0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 620;
+  color: var(--ink-link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-head-link:hover {
+  text-decoration: underline;
+}
+
+.home-head-link .icon {
+  transition: transform var(--dur-2) var(--ease-whip);
+}
+
+.home-head-link:hover .icon {
+  transform: translateX(4px);
+}
+
+/* Photo of the day from Studio « Vitrine » (16 §3.3), real photos only. */
+
+.vitrine-photo {
+  margin: 0 0 var(--space-3);
+}
+
+.vitrine-photo img {
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--radius-lg);
+  background: var(--paper-sunk);
+}
+
+.vitrine-photo figcaption {
+  margin-block-start: var(--space-1);
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+/* ---------- Home: hero and the logo stage ---------- */
+
+.hero {
+  position: relative;
+  background:
+    radial-gradient(55% 65% at 88% 18%, rgb(249 235 236 / 0.95), transparent 70%),
+    radial-gradient(45% 55% at 6% 92%, rgb(246 233 214 / 0.95), transparent 70%),
+    var(--speckle),
+    var(--paper);
+}
+
+.hero-grid {
+  display: grid;
+  gap: var(--space-4);
+  align-items: center;
+  padding-block: clamp(1.25rem, 4vw, 4rem) clamp(3rem, 7vw, 6rem);
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  min-inline-size: 0;
+}
+
+.home h1 {
+  font-size: clamp(2.5rem, 1.45rem + 3.4vw, 4.4rem);
+  font-weight: 470;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-inline-size: 13ch;
+  margin-block: var(--space-2) var(--space-3);
+}
+
+.h1-accent {
+  display: block;
+  color: var(--ink-rose);
+  font-weight: 380;
+  font-variation-settings: 'SOFT' 100;
+}
+
+.hero-deck {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  line-height: 1.5;
+  max-inline-size: 34rem;
+  color: var(--ink-soft);
+  margin-block-end: var(--space-3);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-block-end: var(--space-3);
+}
+
+.hero-actions .btn {
+  flex: 1 1 15rem;
+}
+
+.hero-chips {
+  list-style: none;
+}
+
+.hero-stage {
+  position: relative;
+  inline-size: min(100%, 33rem);
+  aspect-ratio: 1 / 1.04;
+  justify-self: center;
+}
+
+.stage-arch {
+  position: absolute;
+  inset: 5% 9% 0;
+  border-radius: 999px 999px 44px 44px;
+  background:
+    radial-gradient(70% 50% at 50% 30%, rgb(255 252 247 / 0.9), transparent 75%),
+    linear-gradient(180deg, var(--paper-blush) 0%, var(--paper-caramel) 100%);
+  box-shadow:
+    inset 0 0 0 1.5px rgb(201 149 88 / 0.6),
+    0 40px 70px -40px rgb(59 36 28 / 0.45);
+  transform: translateY(var(--parallax, 0));
+}
+
+.stage-arch::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: inherit;
+  border: 1px solid rgb(201 149 88 / 0.5);
+}
+
+.stage-badge {
+  position: absolute;
+  inset: 13% 11% 11%;
+  display: grid;
+  place-items: center;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform var(--dur-3) var(--ease-whip);
+}
+
+.stage-badge picture {
+  display: contents;
+}
+
+.stage-logo {
+  grid-area: 1 / 1;
+  inline-size: 76%;
+  block-size: auto;
+  border-radius: 50%;
+  background: var(--paper-raised);
+  box-shadow:
+    0 0 0 8px rgb(255 252 247 / 0.55),
+    0 34px 60px -30px rgb(59 36 28 / 0.6);
+}
+
+.stage-spin {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.stage-ring {
+  inline-size: 100%;
+  block-size: auto;
+  transform: rotate(calc(var(--progress, 0) * 200deg));
+  transition: transform 160ms linear;
+}
+
+.stage-ring text {
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: 650;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  fill: var(--ink-accent);
+}
+
+.stage-palm,
+.stage-vanilla,
+.stage-coconut,
+.stage-chip {
+  position: absolute;
+  translate: var(--depth-x, 0) var(--depth-y, 0);
+  transition: translate var(--dur-3) var(--ease-whip);
+  animation: rise var(--dur-3) var(--ease-whip) backwards;
+}
+
+.stage-palm {
+  inline-size: 46%;
+  inset-block-start: -3%;
+  inset-inline-start: -5%;
+  color: var(--sauge);
+  rotate: -14deg;
+  animation-delay: 120ms;
+}
+
+.stage-vanilla {
+  inline-size: 46%;
+  inset-block-end: 1%;
+  inset-inline-end: -5%;
+  rotate: -4deg;
+  animation-delay: 220ms;
+}
+
+.stage-coconut {
+  inline-size: 21%;
+  inset-block-end: 9%;
+  inset-inline-start: 1%;
+  rotate: 14deg;
+  filter: drop-shadow(0 16px 18px rgb(59 36 28 / 0.28));
+  animation-delay: 300ms;
+}
+
+.stage-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.05rem;
+  border-radius: 999px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lift);
+  font-size: 0.92rem;
+  font-weight: 620;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.stage-chip .icon {
+  color: var(--ink-rose);
+}
+
+.stage-chip-cake {
+  inset-block-start: 15%;
+  inset-inline-end: -1%;
+  animation-delay: 380ms;
+}
+
+.stage-chip-cafe {
+  inset-block-end: 27%;
+  inset-inline-start: -3%;
+  animation-delay: 460ms;
+}
+
+/* With a photo: the arch becomes a window on it, the logo turns into a seal at its foot. */
+
+.hero-stage.has-photo .stage-arch {
+  overflow: hidden;
+  inset: 3% 6% 6% 12%;
+}
+
+.stage-photo {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-caramel);
+}
+
+/* The one place the « Photo d'illustration » pill moves (site.css puts it top end, 8px in): the arch's round top
+   would cut that corner off, so it sits on the straight edge. */
+.stage-photo .stock-photo-label {
+  inset-block-start: 38%;
+  inset-inline-end: 0.9rem;
+}
+
+.hero-stage.has-photo .stage-arch::after {
+  z-index: 1;
+  border-color: rgb(255 252 247 / 0.7);
+}
+
+.hero-stage.has-photo .stage-badge {
+  inset: auto auto -2% -3%;
+  inline-size: 50%;
+  aspect-ratio: 1;
+}
+
+.hero-stage.has-photo .stage-logo {
+  inline-size: 74%;
+}
+
+.hero-stage.has-photo .stage-palm {
+  inset-block-start: -5%;
+  inset-inline-start: auto;
+  inset-inline-end: -8%;
+  inline-size: 40%;
+  rotate: 60deg;
+}
+
+.hero-stage.has-photo .stage-coconut {
+  display: none;
+}
+
+.hero-stage.has-photo .stage-vanilla {
+  inline-size: 38%;
+  inset-block-end: -8%;
+  inset-inline-end: -9%;
+}
+
+.hero-stage.has-photo .stage-chip-cake {
+  inset-block-start: 10%;
+  inset-inline-end: auto;
+  inset-inline-start: 2%;
+}
+
+.hero-stage.has-photo .stage-chip-cafe {
+  inset-block-end: 30%;
+  inset-inline-start: auto;
+  inset-inline-end: -2%;
+}
+
+/* Phones only: the photo first, as a wide card with the logo as its seal; then the eyebrow on one line, the title,
+   a short deck, the two actions stacked (never wrapped) and the shop's chips on one swipeable line. */
+
+@media (max-width: 47.99rem) {
+  .hero-grid {
+    gap: 1.25rem;
+    padding-block: 0.75rem 2.25rem;
+  }
+
+  .hero-stage {
+    order: -1;
+    inline-size: 100%;
+    aspect-ratio: 16 / 10;
+  }
+
+  .stage-arch,
+  .hero-stage.has-photo .stage-arch {
+    inset: 0;
+    border-radius: var(--radius-lg);
+    transform: none;
+    box-shadow: var(--shadow);
+  }
+
+  .stage-arch::after {
+    inset: 0.5rem;
+    border-radius: calc(var(--radius-lg) - 0.5rem);
+  }
+
+  .stage-photo img {
+    object-position: 50% 42%;
+  }
+
+  /* Inside the card's inner ring (0.5rem in), never across it. */
+  .stage-photo .stock-photo-label {
+    inset-block-start: 0.875rem;
+    inset-inline-end: 0.875rem;
+  }
+
+  .stage-spin,
+  .stage-palm,
+  .stage-coconut,
+  .stage-chip {
+    display: none;
+  }
+
+  .stage-badge,
+  .hero-stage.has-photo .stage-badge {
+    inset: auto auto 0.875rem 0.875rem;
+    inline-size: clamp(4.75rem, 22vw, 6rem);
+    aspect-ratio: 1;
+    transform: none;
+  }
+
+  .stage-logo,
+  .hero-stage.has-photo .stage-logo {
+    inline-size: 100%;
+    box-shadow:
+      0 0 0 3px rgb(255 252 247 / 0.9),
+      0 14px 26px -12px rgb(59 36 28 / 0.6);
+  }
+
+  /* Without a photo the card holds the logo alone, centred. */
+  .hero-stage:not(.has-photo) .stage-badge {
+    inset: 12% 0;
+    inline-size: auto;
+  }
+
+  .hero-stage:not(.has-photo) .stage-logo {
+    inline-size: auto;
+    block-size: 100%;
+  }
+
+  .stage-vanilla,
+  .hero-stage.has-photo .stage-vanilla {
+    inline-size: 5.25rem;
+    inset-block-end: -1.4rem;
+    inset-inline-end: -0.5rem;
+    rotate: -8deg;
+  }
+
+  .hero-eyebrow {
+    gap: 0.625rem;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+
+  .hero-eyebrow::before {
+    inline-size: 1.5rem;
+  }
+
+  /* The address part of the eyebrow: read, not shown (the street chip below says it). */
+  .eyebrow-more {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .home h1 {
+    font-size: clamp(2.25rem, 1.5rem + 3.4vw, 2.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    max-inline-size: 15ch;
+    margin-block: 0.75rem;
+  }
+
+  .hero-deck {
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    margin-block-end: 1.25rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-block-end: 0.75rem;
+  }
+
+  .hero-actions .btn {
+    flex: none;
+    min-block-size: 3.25rem;
+    padding-inline: 1.25rem;
+    white-space: nowrap;
+  }
+
+  .hero-chips.rail {
+    --rail-item: max-content;
+    --rail-gap: 0.5rem;
+    align-items: center;
+    padding-block: 0.4rem 0.5rem;
+  }
+}
+
+/* The ribbon of what the shop makes, moved by the scroll (never on its own). */
+
+.marquee {
+  position: relative;
+  z-index: 2;
+  margin-block: -2.4rem 0;
+  margin-inline: -2vw;
+  padding-block: 1rem;
+  background: var(--paper-dark);
+  color: var(--ink-on-dark);
+  rotate: -1.4deg;
+  box-shadow: 0 18px 40px -26px rgb(59 36 28 / 0.8);
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  inline-size: max-content;
+  translate: calc(var(--progress, 0) * -38%) 0;
+  transition: translate 160ms linear;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  padding-inline-end: 2rem;
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  font-weight: 440;
+  white-space: nowrap;
+}
+
+.marquee-heart {
+  color: var(--rose);
+  fill: currentColor;
+}
+
+/* Phones only: a thin, quieter ribbon. */
+
+@media (max-width: 47.99rem) {
+  .marquee {
+    margin-block-start: -1.25rem;
+    padding-block: 0.5rem;
+    rotate: -0.8deg;
+    box-shadow: 0 10px 22px -16px rgb(59 36 28 / 0.7);
+  }
+
+  .marquee-item {
+    gap: 1rem;
+    padding-inline-end: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .marquee-heart {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+  }
+}
+
+/* ---------- Home: intro, services, vitrine, categories ---------- */
+
+.home-intro {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.home .intro-answer .answer {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: clamp(1.2rem, 1rem + 0.75vw, 1.55rem);
+  line-height: 1.5;
+  max-inline-size: 38rem;
+}
+
+.home .intro-answer .answer::before {
+  content: '“';
+  display: block;
+  block-size: 2.4rem;
+  margin-block-end: 0.5rem;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--rose);
+}
+
+.rating-strip {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.rating-star {
+  color: var(--ink-accent);
+}
+
+.rating-strip a {
+  white-space: nowrap;
+}
+
+.intro-facts .key-facts {
+  margin: 0;
+}
+
+.services-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.service {
+  padding: 1.15rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  transition:
+    transform var(--dur-2) var(--ease-whip),
+    box-shadow var(--dur-2) var(--ease-whip);
+}
+
+.service:nth-child(4n + 1) {
+  background: var(--paper-caramel);
+}
+
+.service:nth-child(4n + 2) {
+  background: var(--paper-blush);
+}
+
+.service:nth-child(4n + 3) {
+  background: var(--paper-pistache);
+}
+
+.service.has-photo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-block-size: 15rem;
+  background: var(--paper-dark);
+  border-color: transparent;
+  color: var(--ink-on-dark);
+}
+
+.service-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--paper-dark);
+}
+
+.service-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(59 36 28 / 0.2) 0%, rgb(59 36 28 / 0.88) 70%);
+}
+
+.service.has-photo h3 {
+  color: var(--ink-on-dark);
+}
+
+.service.has-photo p {
+  color: var(--ink-on-dark-soft);
+}
+
+.service h3 {
+  margin: 1.1rem 0 0.35rem;
+}
+
+.service p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.vitrine-empty {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-inline-size: 52rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--paper-raised);
+  border: 1px dashed var(--caramel);
+  border-radius: var(--radius-lg);
+}
+
+.vitrine-empty p,
+.vitrine-more {
+  margin: 0;
+}
+
+/* The sentence, then its link on a line of its own (a 48 px link inside a line would stretch that line). */
+.vitrine-empty p {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.category-cards,
+.start-links {
+  list-style: none;
+}
+
+.category-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  block-size: 100%;
+  min-block-size: 9.5rem;
+  padding: 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform var(--dur-2) var(--ease-whip),
+    box-shadow var(--dur-2) var(--ease-whip);
+}
+
+.category-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(260px circle at var(--mx, 70%) var(--my, 10%), rgb(255 252 247 / 0.85), transparent 65%);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-soft);
+}
+
+.category-card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
+}
+
+.category-card.has-photo {
+  padding: 0.5rem 0.5rem 1rem;
+  gap: 0;
+}
+
+.category-photo {
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: calc(var(--radius-lg) - 0.4rem);
+  background: var(--paper-sunk);
+}
+
+.category-photo img {
+  transition: scale var(--dur-3) var(--ease-whip);
+}
+
+.category-card.has-photo .icon-badge {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  margin: -1.5rem 0 0 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.category-card.has-photo .category-name {
+  padding-inline: 0.75rem;
+  margin-block-start: 0.5rem;
+}
+
+.category-card.has-photo .icon-arrow {
+  inset-block-start: auto;
+  inset-block-end: 1.15rem;
+  inset-inline-end: 1rem;
+}
+
+.category-name {
+  margin-block-start: auto;
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  font-weight: 480;
+  line-height: 1.1;
+}
+
+.category-card .icon-arrow {
+  position: absolute;
+  inset-block-start: 1.6rem;
+  inset-inline-end: 1.5rem;
+  color: var(--ink-accent);
+  transition: transform var(--dur-2) var(--ease-whip);
+}
+
+/* Hover effects only where a pointer hovers (a tap never leaves a card lifted); a press answers every pointer. */
+
+@media (hover: hover) {
+  .service:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .category-card:hover::after {
+    opacity: 1;
+  }
+
+  .category-card:hover .category-photo img {
+    scale: 1.06;
+  }
+
+  .category-card:hover .icon-arrow {
+    transform: translateX(4px);
+  }
+}
+
+.category-card:active {
+  transform: var(--press);
+  transition-duration: var(--dur-1);
+}
+
+/* Phones only: the intro tightened, services as rows, the categories and the start links as swipe rails. */
+
+@media (max-width: 47.99rem) {
+  .home-intro {
+    gap: 1.25rem;
+  }
+
+  .home .intro-answer .answer {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .home .intro-answer .answer::before {
+    block-size: 1.5rem;
+    margin-block-end: 0.25rem;
+    font-size: 3rem;
+  }
+
+  /* « En bref » as one card: the fade and « Lire la suite » stay inside it. */
+  .intro-facts {
+    --clamp-height: 11em;
+    padding: var(--card-pad) var(--card-pad) 0.25rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .intro-facts .key-facts {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .intro-facts .key-facts li {
+    padding-block: 0.55rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .intro-facts .key-facts li::before {
+    inset-block-start: 0.8rem;
+  }
+
+  .services-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.625rem;
+  }
+
+  /* One row per service: the ringed icon, then the title over one line of text. */
+  .service,
+  .service:nth-child(n) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: var(--radius);
+    background: var(--paper-raised);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .service .icon-badge {
+    grid-row: 1 / span 2;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    box-shadow:
+      0 0 0 1.5px var(--caramel),
+      0 0 0 4px var(--paper-raised),
+      0 0 0 5px var(--line);
+  }
+
+  .service .icon-badge .icon {
+    inline-size: 1.375rem;
+    block-size: 1.375rem;
+  }
+
+  .service:nth-child(4n + 1) .icon-badge {
+    background: var(--paper-caramel);
+  }
+
+  .service:nth-child(4n + 2) .icon-badge {
+    background: var(--paper-blush);
+  }
+
+  .service h3 {
+    align-self: end;
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .service p {
+    align-self: start;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  /* The café keeps its photo: the same row, set on the picture. */
+  .services-grid .service.has-photo {
+    min-block-size: 8.25rem;
+    align-content: end;
+    padding-block-start: 2.5rem;
+    background: var(--paper-dark);
+    box-shadow: var(--shadow);
+  }
+
+  .vitrine-photo img {
+    border-radius: var(--radius);
+  }
+
+  .vitrine-empty {
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .vitrine-empty .icon-badge {
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+  }
+
+  .vitrine-empty .icon-badge .icon {
+    inline-size: 1.375rem;
+    block-size: 1.375rem;
+  }
+
+  .category-cards {
+    --rail-item: min(64%, 15rem);
+    --rail-gap: 0.75rem;
+  }
+
+  /* A tile: the photo, then the name with a small arrow; nothing laid over the picture but its small label. */
+  .category-card,
+  .category-card.has-photo {
+    gap: 0;
+    block-size: 100%;
+    min-block-size: 0;
+    padding: 0.375rem;
+  }
+
+  .category-photo {
+    aspect-ratio: 5 / 4;
+    border-radius: calc(var(--radius-lg) - 0.375rem);
+  }
+
+  .category-card.has-photo .icon-badge {
+    display: none;
+  }
+
+  .category-name,
+  .category-card.has-photo .category-name {
+    margin: 0;
+    padding: 0.7rem 2rem 0.45rem 0.5rem;
+    font-size: 1.0625rem;
+  }
+
+  .category-card .icon-arrow,
+  .category-card.has-photo .icon-arrow {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    inset-block: auto 0.85rem;
+    inset-inline-end: 0.85rem;
+  }
+
+  /* No lift on focus inside the rail: the ring stays within the rail's padding (never clipped). */
+  .category-card:focus-visible {
+    transform: none;
+  }
+
+  /* Items of a rail are all there at once: a fade-up while swiping sideways would look broken. */
+  html.motion-ready .category-cards > li[data-reveal] {
+    opacity: 1;
+    animation: none;
+  }
+
+  .start-links {
+    --rail-item: max-content;
+    --rail-gap: 0.5rem;
+  }
+}
+
+/* ---------- Home: the cake band (bordeaux), hours and visit, finale ---------- */
+
+.cake-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-block: var(--section-gap) 0;
+  padding-block: clamp(3rem, 8vw, 6rem);
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgb(215 140 160 / 0.22), transparent 70%),
+    var(--paper-dark-rose);
+  color: var(--ink-on-dark);
+}
+
+.cake-band h2 {
+  color: var(--ink-on-dark);
+  font-size: var(--step-3);
+  margin-block: var(--space-2) 0;
+  max-inline-size: 14ch;
+}
+
+.cake-band .eyebrow {
+  color: var(--ink-on-dark-rose);
+}
+
+.cake-band .eyebrow::before {
+  background: var(--rose);
+}
+
+.cake-band :focus-visible {
+  outline-color: var(--focus-on-dark);
+}
+
+.cake-band-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cake-band-photo {
+  border-radius: var(--radius-lg);
+  aspect-ratio: 4 / 3;
+  max-inline-size: 30rem;
+  background: var(--paper-dark-raised);
+  box-shadow: 0 30px 60px -30px rgb(59 36 28 / 0.7);
+}
+
+.cake-band-palm {
+  position: absolute;
+  z-index: -1;
+  inline-size: clamp(260px, 34vw, 460px);
+  inset-inline-end: -4%;
+  inset-block-start: -10%;
+  color: rgb(168 180 154 / 0.22);
+  rotate: 168deg;
+}
+
+.cake-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.cake-steps li {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.15rem 1.35rem;
+  border-radius: var(--radius-lg);
+  background: rgb(255 252 247 / 0.07);
+  border: 1px solid rgb(240 196 204 / 0.25);
+  font-size: var(--step-0);
+  line-height: 1.5;
+}
+
+.step-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 2.9rem;
+  block-size: 2.9rem;
+  border-radius: 50%;
+  background: var(--rose);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.visit-block {
+  display: grid;
+  gap: 1.25rem;
+}
+
+/* The question, then today's live status beside it (the hours table below stays the content). */
+
+.visit-hours-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-block-end: var(--space-2);
+}
+
+.visit-hours-head h2 {
+  margin: 0;
+}
+
+/* The h2 already asks for the hours: the regular table's caption is read, not shown. */
+.visit-hours .hours:not(.hours-special) > caption {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.visit-where {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  background: var(--paper-blush);
+}
+
+.visit-where h3 {
+  margin: 0.6rem 0 0;
+  font-size: var(--step-2);
+}
+
+.visit-address {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 100;
+  font-size: var(--step-1);
+  margin: 0;
+}
+
+.visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block: 0.4rem;
+}
+
+.visit-actions .btn {
+  padding-inline: 1.25rem;
+  white-space: nowrap;
+}
+
+/* « Appeler · 450-372-7177 »: the number is read but not shown where the card is narrow (it is in the chips,
+   the topbar and the footer). */
+@media (max-width: 59.99rem) {
+  .phone-more {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+.finale {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: clamp(2rem, 6vw, 4rem) 1.5rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  background:
+    radial-gradient(60% 70% at 50% 0%, rgb(249 235 236 / 0.95), transparent 70%),
+    var(--speckle),
+    var(--paper-raised);
+  border: 1px solid var(--line);
+}
+
+.finale h2 {
+  margin: var(--space-2) 0 0;
+  font-size: var(--step-3);
+}
+
+.finale .conversion-band {
+  justify-content: center;
+  margin: var(--space-3) 0 0;
+}
+
+.finale-badge {
+  border-radius: 50%;
+  box-shadow: var(--shadow-lift);
+}
+
+.home .meta-line {
+  margin-block: var(--space-3) 0;
+}
+
+/* Phones only: compact numbered steps, the action before a cropped photo; hours and address as one card with
+   Itinéraire and Appeler side by side; a shorter finale. */
+
+@media (max-width: 47.99rem) {
+  .cake-band {
+    padding-block: 2.75rem 3rem;
+  }
+
+  .cake-band h2 {
+    margin-block-start: 0.75rem;
+    font-size: 1.75rem;
+  }
+
+  .cake-band-grid {
+    gap: 1.5rem;
+  }
+
+  .cake-steps {
+    gap: 0;
+  }
+
+  .cake-steps li {
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.875rem 0;
+    border: 0;
+    border-block-start: 1px solid rgb(240 196 204 / 0.2);
+    border-radius: 0;
+    background: none;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .cake-steps li:last-child {
+    border-block-end: 1px solid rgb(240 196 204 / 0.2);
+  }
+
+  .step-num {
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-block-start: -0.1rem;
+    font-size: 0.9375rem;
+  }
+
+  .cake-band-cta .btn {
+    inline-size: 100%;
+    min-block-size: 3.25rem;
+    padding-inline: 1.25rem;
+    white-space: nowrap;
+  }
+
+  .cake-band-photo {
+    aspect-ratio: 5 / 2;
+    border-radius: var(--radius);
+  }
+
+  .cake-band-palm {
+    inline-size: 15rem;
+    inset-block-start: -2.5rem;
+    inset-inline-end: -5rem;
+  }
+
+  .visit-block {
+    gap: 0;
+  }
+
+  .visit-block .card {
+    padding: 1.125rem;
+    box-shadow: none;
+  }
+
+  .visit-hours {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .visit-where {
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+    border-block-start: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  .visit-block .visit-where {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .visit-hours-head {
+    margin-block-end: 0.5rem;
+  }
+
+  .visit-hours-head h2 {
+    font-size: 1.375rem;
+  }
+
+  /* No box in the card: hairline rows. As in the footer (site.css), the cells keep 0.625rem of inner room for
+     today's band and the table steps out by as much, so the text lines up with the card's other lines. */
+  .visit-hours .hours {
+    inline-size: calc(100% + 1.25rem);
+    max-inline-size: none;
+    margin-inline: -0.625rem;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .visit-hours .hours th,
+  .visit-hours .hours td {
+    padding: 0.4rem 0.625rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .visit-where .icon-badge {
+    display: none;
+  }
+
+  .visit-where h3 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  .visit-address {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .visit-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    justify-self: stretch;
+    gap: 0.5rem;
+    margin-block: 0.5rem 0;
+  }
+
+  .visit-actions .btn {
+    min-block-size: var(--target);
+    padding-inline: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .finale {
+    padding: 2rem 1.25rem 1.5rem;
+  }
+
+  .finale-badge {
+    inline-size: 5rem;
+    block-size: 5rem;
+  }
+
+  .finale h2 {
+    margin-block-start: 0.75rem;
+    font-size: 1.75rem;
+  }
+
+  .finale .conversion-band {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.625rem;
+    inline-size: 100%;
+    margin-block-start: 1.25rem;
+  }
+
+  .finale .conversion-band .btn {
+    min-block-size: 3.25rem;
+  }
+}
+
+/* ---------- Home: the Q&A run and the FAQ ---------- */
+
+/* Phones only: the four questions read as one run — the caramel rule on the first, a hairline and less air
+   before each next one, smaller questions, 15 px answers, the folded list (« Lire la suite », Contract.js)
+   shorter — and the FAQ rows at the 48 px target. Every word stays in the HTML; from 48rem content.css lays
+   them out as on every page. */
+
+@media (max-width: 47.99rem) {
+  .home .qa {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .home .wrap > .qa + .qa {
+    margin-block-start: 1.25rem;
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .home .qa > h2 {
+    margin-block-end: 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .home .qa > h2::before {
+    margin-block-end: 0.75rem;
+  }
+
+  .home .qa + .qa > h2::before {
+    display: none;
+  }
+
+  .home .qa > p {
+    margin-block-end: 0.75rem;
+  }
+
+  /* About three lines of the list show before « Lire la suite ». */
+  .home .qa[data-clamp] {
+    --clamp-height: 4.65em;
+  }
+
+  .home .faq summary {
+    min-block-size: var(--target);
+    padding-block: 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.35;
+  }
+
+  .home .faq details p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+}
+
+@media (min-width: 48rem) {
+  .hero-grid {
+    padding-block-start: clamp(2rem, 5vw, 4.5rem);
+  }
+
+  .hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .home-head {
+    grid-template-rows: auto auto;
+    align-items: last baseline;
+  }
+
+  .home-head::before {
+    grid-area: 1 / 1 / 2 / 3;
+    margin-block-end: var(--space-2);
+  }
+
+  .home-head .section-title {
+    grid-area: 2 / 1;
+    margin: 0;
+  }
+
+  .home-head-link {
+    grid-area: 2 / 2;
+    margin-block: 0;
+  }
+
+  /* Four families: two by two, then one row of four from 60rem (never three and one alone). */
+  .category-cards {
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-card {
+    gap: 1.5rem;
+    min-block-size: 12rem;
+    padding: 1.5rem;
+  }
+
+  .category-name {
+    font-size: var(--step-2);
+  }
+
+  .start-links {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .services-grid {
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+
+  .service {
+    padding: 1.6rem;
+  }
+
+  .home-intro {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .visit-block {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: stretch;
+  }
+
+  /* The hours keep their rounded box here: today's band follows its corners on the first or last row. */
+  .visit-hours .hours tr:first-child > th {
+    border-start-start-radius: calc(var(--radius) - 1px);
+  }
+
+  .visit-hours .hours tr:first-child > td {
+    border-start-end-radius: calc(var(--radius) - 1px);
+  }
+
+  .visit-hours .hours tr:last-child > th {
+    border-end-start-radius: calc(var(--radius) - 1px);
+  }
+
+  .visit-hours .hours tr:last-child > td {
+    border-end-end-radius: calc(var(--radius) - 1px);
+  }
+
+  /* The page link closes the address card, level with the foot of the hours. */
+  .visit-where .link-arrow {
+    margin-block-start: auto;
+  }
+}
+
+@media (min-width: 60rem) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-5);
+  }
+
+  .hero-actions .btn {
+    flex: 0 0 auto;
+  }
+
+  .category-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* Title, action and photo on the left, the three steps centred on the right. */
+  .cake-band-grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-areas:
+      'head steps'
+      'cta steps'
+      'photo steps';
+    grid-template-rows: auto auto 1fr;
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .cake-band-head {
+    grid-area: head;
+  }
+
+  .cake-band-cta {
+    grid-area: cta;
+  }
+
+  .cake-band-photo {
+    grid-area: photo;
+  }
+
+  .cake-steps {
+    grid-area: steps;
+    align-self: center;
+  }
+}

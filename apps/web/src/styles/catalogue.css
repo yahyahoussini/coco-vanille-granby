@@ -1,0 +1,1977 @@
+/* Coco Vanille · catalogue surfaces: product cards and grids, offer badges, family chips, the menu hub and the
+   product page. Imported by every public layout after site.css; only the tokens declared in site.css :root
+   (contrast-checked pairs), mobile first, 48 px targets, nothing that moves under prefers-reduced-motion.
+   Shared primitives (.btn, .chip, .icon-badge, tables, .answer …) belong to site.css: only their placement and
+   size are set here, inside this file's own components. Phones get their own shapes (rows, rails, a sticky buy
+   bar); from 48rem the cards and the product page keep their editorial layout. */
+
+/* ---------- Family colours: the card surfaces and the chip dots ---------- */
+.media-viennoiseries,
+.family-viennoiseries {
+  --family-paper: var(--paper-caramel);
+  --family-ink: var(--ink-accent);
+}
+
+.media-pains,
+.family-pains {
+  --family-paper: var(--paper-sunk);
+  --family-ink: var(--ink-accent);
+}
+
+.media-patisseries,
+.family-patisseries {
+  --family-paper: var(--paper-blush);
+  --family-ink: var(--ink-rose);
+}
+
+.media-gateaux,
+.family-gateaux {
+  --family-paper: var(--paper-pistache);
+  --family-ink: var(--ink-sauge);
+}
+
+/* ---------- Product grid (ProductGrid layout): rows, a rail or tiles on a phone; cards from 48rem ---------- */
+ul.product-grid {
+  list-style: none;
+  margin-block: var(--space-3) var(--space-2);
+  display: grid;
+  align-items: stretch;
+}
+
+/* The list often sits in a Q&A section: its list spacing (content.css .qa li + li) never shifts a card. */
+.product-grid > .product-card {
+  margin: 0;
+}
+
+/* ---------- Product card ---------- */
+.product-card {
+  --card-inset: 0.5rem;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-inline-size: 0;
+  padding: var(--card-inset) var(--card-inset) 0.7rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition:
+    translate var(--dur-2) var(--ease-whip),
+    transform var(--dur-1) var(--ease-soft),
+    box-shadow var(--dur-2) var(--ease-whip),
+    border-color var(--dur-2) var(--ease-whip);
+}
+
+.product-card > :not(.card-media) {
+  margin-inline: 0.45rem;
+}
+
+/* Spotlight (data-spotlight sets --mx / --my under a fine pointer): a soft rose glow behind the text. */
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(22rem circle at var(--mx, 50%) var(--my, 110%), color-mix(in srgb, var(--rose) 16%, transparent), transparent 55%);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-soft);
+  pointer-events: none;
+}
+
+/* Hover is decoration for a mouse only: a tap never leaves a card « lifted ». */
+@media (hover: hover) {
+  .product-card:hover {
+    translate: 0 -4px;
+    box-shadow: var(--shadow-lift);
+    border-color: color-mix(in srgb, var(--caramel) 55%, var(--line));
+  }
+
+  .product-card:hover::before {
+    opacity: 1;
+  }
+
+  .product-card:hover .card-media img {
+    scale: 1.04;
+  }
+}
+
+.product-card:focus-within::before {
+  opacity: 1;
+}
+
+.product-card:focus-within {
+  box-shadow: var(--shadow-lift);
+}
+
+/* Touch feedback: the card gives a little under the finger (the title link covers it). */
+.product-card:has(.product-card-title a:active) {
+  transform: var(--press);
+}
+
+/* Picture area: the owner's photo, or the family's pastel « plate » with its line icon. The family colour stays
+   behind a photo while it loads, so a card is never an empty box. */
+.card-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: calc(var(--radius-lg) - var(--card-inset, 0.5rem));
+  background-color: var(--family-paper, var(--paper-sunk));
+  background-image:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--paper-raised) 78%, transparent) 0 31%, transparent 31.5%),
+    radial-gradient(circle at 50% 50%, transparent 0 36%, color-mix(in srgb, var(--caramel) 22%, transparent) 36.2% 36.8%, transparent 37%),
+    var(--speckle);
+  background-size: auto, auto, 180px;
+}
+
+.card-media.has-photo {
+  background-image: none;
+}
+
+.card-media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: scale var(--dur-3) var(--ease-whip);
+}
+
+.card-media-emblem {
+  inline-size: clamp(3.75rem, 42%, 5.5rem);
+  block-size: auto;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  color: var(--family-ink, var(--ink-accent));
+}
+
+.card-media-emblem .icon {
+  inline-size: 52%;
+  block-size: auto;
+}
+
+.product-card.is-soldout .card-media > * {
+  opacity: 0.6;
+  filter: saturate(0.4);
+}
+
+.product-card-title {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.05rem, 0.98rem + 0.3vw, 1.22rem);
+  font-weight: 540;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.product-card-title a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The whole card is the link target (≥ 48 px); the title stays the accessible name. */
+.product-card-title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.product-card-title a:focus-visible {
+  outline: none;
+}
+
+.product-card-title a:focus-visible::after {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.product-card p {
+  margin: 0;
+}
+
+.product-card-summary {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.product-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.75rem;
+  font-size: var(--text-meta);
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.product-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.product-card-meta .icon {
+  flex: none;
+  color: var(--ink-accent);
+}
+
+.product-card-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-block-start: auto;
+  padding-block-start: 0.4rem;
+}
+
+/* A missing price stays a visible marker, kept small on a card. */
+.product-card .fact-needed {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  padding: 0.2rem 0.45rem;
+  border-radius: 8px;
+}
+
+/* ---------- Price ---------- */
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.3rem;
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.price-from {
+  font-size: var(--text-meta);
+  font-weight: 560;
+  color: var(--ink-soft);
+}
+
+.price-amount {
+  font-family: var(--font-display);
+  font-variation-settings: 'SOFT' 50;
+  font-size: 1.28rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.price-tax {
+  font-size: var(--text-meta);
+  font-weight: 500;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* ---------- « + » : the same POST to « Ma boîte » as the order page ---------- */
+.card-add {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  margin: 0;
+}
+
+/* The row chevron (list layout only, below). */
+.card-go {
+  display: none;
+}
+
+.card-add-btn {
+  display: grid;
+  place-items: center;
+  inline-size: var(--target);
+  block-size: var(--target);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--ink-on-accent);
+  cursor: pointer;
+  box-shadow: 0 8px 18px -8px rgb(59 36 28 / 0.6);
+  transition:
+    background-color var(--dur-1) var(--ease-whip),
+    scale var(--dur-1) var(--ease-whip);
+}
+
+@media (hover: hover) {
+  .card-add-btn:hover {
+    background: var(--accent-strong);
+    scale: 1.07;
+  }
+}
+
+.card-add-btn:active {
+  scale: 0.94;
+}
+
+.card-add-btn:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+/* ---------- Badges (pills): the engine's words, a status dot so colour is never the only cue ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.45rem;
+  inline-size: fit-content;
+  margin: 0;
+  min-block-size: 1.9rem;
+  padding: 0.28rem 0.8rem 0.28rem 0.65rem;
+  border-radius: 999px;
+  font-size: var(--step--1);
+  font-weight: 650;
+  line-height: 1.25;
+  background: var(--paper-sunk);
+  color: var(--ink);
+}
+
+.badge::before {
+  content: '';
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* « Prête dès … »: bookable online now. */
+.badge-ready {
+  background: var(--paper-pistache);
+  color: var(--ink-ok);
+}
+
+.badge-soldout {
+  background: var(--ink);
+  color: var(--paper-raised);
+}
+
+.badge-later {
+  background: var(--paper-caramel);
+  color: var(--ink-accent);
+}
+
+.badge-instore {
+  background: var(--paper-sunk);
+  color: var(--ink-soft);
+}
+
+/* « Coco Joyeux »: a festive touch reserved for cake and birthday moments. */
+.badge-best {
+  background: var(--paper-blush);
+  color: var(--ink-link);
+}
+
+.badge .fact-needed {
+  font-size: 0.75rem;
+  background: transparent;
+  padding: 0;
+}
+
+/* ---------- Phones: the three shapes of a product list ---------- */
+@media (max-width: 47.99rem) {
+  /* Tiles two a row where they fit (default layout). The rail keeps the shared .rail of site.css. */
+  ul.product-grid:not(.rail) {
+    padding: 0;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  }
+
+  /* Less text on a card: the summary, servings and lead time are on the product page. */
+  .product-card-summary,
+  .product-card-meta {
+    display: none;
+  }
+
+  .product-card {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-media {
+    border-radius: calc(var(--radius) - var(--card-inset));
+  }
+
+  /* The engine's line, quiet on a card: its dot and words, never a pill over the photo. */
+  .product-card > .badge {
+    min-block-size: 0;
+    padding: 0;
+    gap: 0.4rem;
+    background: none;
+    font-size: var(--text-meta);
+    font-weight: 620;
+    line-height: 1.3;
+  }
+
+  .product-card > .badge::before {
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+  }
+
+  .product-card > .badge-soldout {
+    color: var(--ink);
+  }
+
+  .product-card-title {
+    font-size: 1.0625rem;
+    line-height: 1.22;
+  }
+
+  .product-card-title a {
+    display: inline;
+    min-block-size: 0;
+  }
+
+  .product-card .price-amount {
+    font-size: 1.125rem;
+  }
+
+  /* Tiles and rail cards: picture, the engine's line just under it, the name, then the price. */
+  .product-grid--grid .card-media,
+  .product-grid--rail .card-media {
+    order: -2;
+  }
+
+  .product-grid--grid .product-card > .badge,
+  .product-grid--rail .product-card > .badge {
+    order: -1;
+    margin-block-start: 0.45rem;
+  }
+
+  .product-grid--grid .product-card-title,
+  .product-grid--rail .product-card-title {
+    margin-block-start: 0.1rem;
+  }
+
+  .product-grid--grid .card-media {
+    aspect-ratio: 1;
+  }
+
+  /* Rail (home vitrine): the next card peeking at the edge; a photo a little wider than tall (5:4, as on the product
+     page), so a card stays well under half the screen. */
+  .product-grid--rail {
+    --rail-item: min(72%, 16.5rem);
+  }
+
+  .product-grid--rail .card-media {
+    aspect-ratio: 5 / 4;
+  }
+
+  .product-grid--rail .product-card {
+    padding-block-end: 0.85rem;
+  }
+
+  /* A rail scrolls sideways: its cards are simply there, never faded in one by one as a finger swipes them into
+     view (the reveal follows the page's own scroll). */
+  html.motion-ready ul.product-grid--rail > li[data-reveal] {
+    opacity: 1;
+    animation: none;
+  }
+
+  /* List (menu and category pages): compact rows, square photo on the left, the « + » at the end of the row. */
+  ul.product-grid.product-grid--list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.625rem;
+  }
+
+  .product-grid--list .product-card {
+    --thumb: clamp(5.5rem, 23vw, 6rem);
+    display: grid;
+    grid-template-columns: var(--thumb) minmax(0, 1fr) auto;
+    grid-template-rows: auto auto 1fr;
+    align-items: start;
+    gap: 0;
+    padding: var(--card-inset);
+    min-block-size: calc(var(--thumb) + 2 * var(--card-inset));
+  }
+
+  .product-grid--list .product-card > * {
+    margin: 0;
+  }
+
+  .product-grid--list .card-media {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    aspect-ratio: 1;
+    align-self: stretch;
+  }
+
+  .product-grid--list .card-media-emblem {
+    inline-size: 62%;
+  }
+
+  .product-grid--list .product-card-title,
+  .product-grid--list .product-card > .badge,
+  .product-grid--list .price {
+    grid-column: 2 / -1;
+    margin-inline-start: 0.85rem;
+  }
+
+  .product-grid--list .product-card-title {
+    grid-row: 1;
+    margin-block-start: 0.2rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .product-grid--list .product-card > .badge {
+    grid-row: 2;
+    margin-block-start: 0.3rem;
+  }
+
+  .product-grid--list .product-card-foot {
+    display: contents;
+  }
+
+  .product-grid--list .price {
+    grid-row: 3;
+    align-self: end;
+    margin-block: 0.4rem 0.3rem;
+  }
+
+  .product-grid--list .card-add {
+    grid-column: 3;
+    grid-row: 3;
+    align-self: end;
+    margin-inline-start: 0.5rem;
+  }
+
+  .product-grid--list .card-go {
+    display: grid;
+    place-items: center;
+    grid-column: 3;
+    grid-row: 3;
+    align-self: end;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    margin-inline-start: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink-soft);
+  }
+
+  /* A lighter « + » in a row (44 px, the row around it keeps the spacing). */
+  .product-grid--list .card-add-btn {
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+  }
+
+  /* With a « + » the price keeps to its own column; without one it takes the whole line. */
+  .product-grid--list .product-card:has(.card-add) .price {
+    grid-column: 2;
+  }
+}
+
+/* ---------- Family chips (menu hub and category pages): one line that sticks under the header ---------- */
+.cat-nav {
+  position: sticky;
+  inset-block-start: var(--sticky-top, 0px);
+  z-index: 4;
+  margin-block: var(--space-2);
+  margin-inline: calc(-1 * var(--gutter));
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  -webkit-backdrop-filter: saturate(1.3) blur(12px);
+  backdrop-filter: saturate(1.3) blur(12px);
+  transition: inset-block-start var(--dur-2) var(--ease-soft);
+  container-type: scroll-state;
+}
+
+.cat-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem var(--gutter);
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+}
+
+.cat-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Chips fade out at the edges as they scroll by (veils of the page colour over the gutters); at rest the first
+   and last chips sit clear of them. */
+.cat-nav::before,
+.cat-nav::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  inline-size: var(--gutter);
+  pointer-events: none;
+}
+
+.cat-nav::before {
+  inset-inline-start: 0;
+  background: linear-gradient(to right, var(--paper), transparent);
+}
+
+.cat-nav::after {
+  inset-inline-end: 0;
+  background: linear-gradient(to left, var(--paper), transparent);
+}
+
+/* Once the line is stuck under the header, a hairline separates it from the list scrolling beneath. */
+@container scroll-state(stuck: top) {
+  .cat-nav-list {
+    box-shadow: 0 1px 0 var(--line);
+  }
+}
+
+.cat-nav-list li {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: var(--target);
+  padding: 0.25rem 1.1rem 0.25rem 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgb(59 36 28 / 0.06);
+  transition:
+    background-color var(--dur-1) var(--ease-whip),
+    border-color var(--dur-1) var(--ease-whip),
+    color var(--dur-1) var(--ease-whip),
+    transform var(--dur-1) var(--ease-soft);
+}
+
+@media (hover: hover) {
+  .cat-chip:hover {
+    border-color: var(--caramel);
+  }
+}
+
+.cat-chip:active {
+  transform: var(--press);
+}
+
+.cat-chip:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+.cat-chip-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background: var(--family-paper, var(--paper-caramel));
+  color: var(--family-ink, var(--ink-accent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--caramel) 45%, transparent);
+}
+
+.cat-chip[aria-current='page'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+.cat-chip[aria-current='page'] .cat-chip-icon {
+  background: var(--paper-raised);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+/* Keyboard focus never hides under the header and the sticky chips (WCAG 2.2 2.4.11). The header's full height,
+   not the live --sticky-top: a Shift+Tab that scrolls up brings the phone header back over the chips. */
+html:has(.cat-nav) {
+  scroll-padding-block-start: calc(var(--header-height) + 4.75rem);
+}
+
+/* The product list sits in the first section's slot: it gets the full width, the section's text keeps its measure. */
+.qa:has(> .catalogue-slot) {
+  max-inline-size: none;
+}
+
+.qa:has(> .catalogue-slot) > :not(.catalogue-slot) {
+  max-inline-size: var(--measure);
+}
+
+/* ---------- Menu hub: one section per family ---------- */
+.menu-families {
+  display: grid;
+  gap: var(--space-4);
+  margin-block: var(--space-3) var(--space-2);
+}
+
+.menu-family {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-family-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.85rem;
+  row-gap: 0.3rem;
+  padding: 0.65rem 1rem 0.65rem 0.75rem;
+  border-radius: var(--radius);
+  background-color: var(--family-paper, var(--paper-sunk));
+  background-image: var(--speckle);
+  background-size: 180px;
+}
+
+.menu-family-emblem {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  color: var(--family-ink, var(--ink-accent));
+}
+
+.menu-family-emblem .icon {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+}
+
+.menu-family-titles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 0.85rem;
+  min-inline-size: 0;
+}
+
+.menu-family h3 {
+  margin: 0;
+  font-size: 1.375rem;
+}
+
+.menu-family h3 a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: var(--target);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .menu-family h3 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--caramel);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .menu-family h3 a:hover .menu-family-arrow {
+    translate: 4px 0;
+  }
+}
+
+.menu-family-arrow {
+  flex: none;
+  color: var(--family-ink, var(--ink-accent));
+  transition: translate var(--dur-2) var(--ease-whip);
+}
+
+.menu-family-count {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-family-intro {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--ink-soft);
+  max-inline-size: var(--measure);
+}
+
+.menu-family .product-grid {
+  margin-block: 0.75rem 0;
+}
+
+/* ---------- Product page ---------- */
+.product-head {
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+  margin-block: var(--space-2) var(--space-4);
+}
+
+.product-intro {
+  min-inline-size: 0;
+}
+
+.product-intro h1 {
+  margin-block: 0 var(--space-2);
+}
+
+.product-intro .answer {
+  margin-block: 0 var(--space-3);
+}
+
+/* The buying box: price, servings, the engine's badge and the one action. */
+.product-buy {
+  display: grid;
+  gap: 0.9rem;
+  padding: var(--card-pad);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  max-inline-size: 34rem;
+}
+
+.product-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.product-price .price-amount {
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.6rem);
+  line-height: 1;
+}
+
+.product-price .price-from,
+.product-price .price-tax {
+  font-size: var(--text-meta);
+}
+
+/* « à partir de » as a small kicker above the large price. */
+.product-price .price-from {
+  flex-basis: 100%;
+}
+
+.product-portions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--paper-sunk);
+  font-weight: 600;
+  font-size: var(--text-meta);
+}
+
+.product-portions .icon {
+  color: var(--ink-accent);
+}
+
+.product-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.product-badges:empty {
+  display: none;
+}
+
+.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.product-actions .btn,
+.add-btn {
+  gap: 0.6rem;
+}
+
+/* Add to « Ma boîte » from the product page (same fields and endpoint as the order page). */
+.product-add {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: end;
+  margin: 0;
+}
+
+.product-add .field-size {
+  grid-column: 1 / -1;
+}
+
+.product-add .field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.product-add label {
+  font-weight: 650;
+  font-size: var(--step--1);
+}
+
+.product-add select {
+  inline-size: 100%;
+  min-block-size: var(--target);
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  font-size: max(16px, var(--step-0));
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--control-border);
+  border-radius: 14px;
+}
+
+.product-add .btn {
+  min-block-size: 52px;
+}
+
+/* ---------- Quantity « − 1 + » (QtyStepper): the number input alone without JavaScript ---------- */
+.qty {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  inline-size: 8.5rem;
+  min-block-size: var(--target);
+  border: 2px solid var(--control-border);
+  border-radius: 999px;
+  background: var(--paper);
+  transition: border-color var(--dur-1) var(--ease-soft);
+}
+
+.qty.is-ready {
+  grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+}
+
+.qty input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: max(16px, var(--step-0));
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.qty.is-ready input {
+  padding: 0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.qty.is-ready input::-webkit-inner-spin-button,
+.qty.is-ready input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .qty:hover {
+    border-color: var(--ink);
+  }
+}
+
+.qty-btn {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-1) var(--ease-soft),
+    transform var(--dur-1) var(--ease-soft);
+}
+
+@media (hover: hover) {
+  .qty-btn:hover {
+    background: var(--paper-sunk);
+  }
+}
+
+.qty-btn:active {
+  background: var(--paper-sunk);
+  transform: var(--press);
+}
+
+.qty-btn:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+  border-radius: 50%;
+}
+
+/* At a limit the button stays focusable (aria-disabled) and simply rests. */
+.qty-btn[aria-disabled='true'] {
+  color: var(--ink-soft);
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  background: transparent;
+}
+
+/* The picture: an arch-topped frame (photo) or the family's pastel « cloche » with its line icon. */
+.product-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  border-radius: 50% 50% var(--radius-lg) var(--radius-lg) / 72.7% 72.7% var(--radius-lg) var(--radius-lg);
+  background-color: var(--family-paper, var(--paper-sunk));
+  background-image:
+    radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--paper-raised) 80%, transparent) 0 26%, transparent 26.5%),
+    radial-gradient(circle at 50% 60%, transparent 0 31%, color-mix(in srgb, var(--caramel) 30%, transparent) 31.2% 31.7%, transparent 32%),
+    var(--speckle);
+  background-size: auto, auto, 200px;
+  order: -1;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--caramel) 35%, transparent);
+}
+
+.product-media-emblem {
+  display: grid;
+  place-items: center;
+  inline-size: 7.5rem;
+  block-size: 7.5rem;
+  margin-block-start: 12%;
+  color: var(--family-ink, var(--ink-accent));
+}
+
+/* A photo on a phone: a calm rounded frame, a little wider than tall (the arch returns from 56rem). */
+.product-media.has-photo {
+  aspect-ratio: 5 / 4;
+  border-radius: var(--radius-lg);
+  background-image: none;
+  box-shadow: var(--shadow-soft);
+}
+
+.product-media.has-photo .product-figure,
+.product-media.has-photo .la-coupe-stack {
+  block-size: 100%;
+  inline-size: 100%;
+}
+
+.product-media.has-photo img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* The caption is the product's name, already the h1: kept for readers, out of the arch. */
+.product-media.has-photo figcaption {
+  position: absolute;
+  inset-block-end: 0.75rem;
+  inset-inline: 0.75rem;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  inline-size: fit-content;
+  max-inline-size: calc(100% - 1.5rem);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.product-figure {
+  margin: 0;
+}
+
+.product-figure img {
+  inline-size: 100%;
+  border-radius: var(--radius);
+}
+
+.product-figure figcaption {
+  margin-block-start: var(--space-1);
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+/* « La coupe »: the outside photo, then the cross-section revealed by a vertical cut on hover or focus.
+   Pure CSS, the two photos sit in the HTML with their own alt text and intrinsic size (no layout shift). */
+.la-coupe {
+  cursor: zoom-in;
+  border-radius: inherit;
+}
+
+.la-coupe-stack {
+  display: grid;
+  overflow: hidden;
+}
+
+.la-coupe-stack img {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.la-coupe-inside {
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 700ms var(--ease-whip);
+}
+
+.la-coupe:hover .la-coupe-inside,
+.la-coupe:focus-visible .la-coupe-inside {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Sizes table: a clean card, prices right-aligned in tabular figures (stacked into one card per size on phones). */
+.product-sizes h2,
+.product-info h2 {
+  margin-block-start: 0;
+}
+
+.sizes-scroll {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.sizes-scroll:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-lg);
+}
+
+.sizes-scroll table.sizes {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+table.sizes caption {
+  padding: var(--space-2) 1.25rem 0.5rem;
+  font-family: var(--font-ui);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+table.sizes thead th {
+  background: var(--paper-caramel);
+  color: var(--ink-accent);
+  border-block-end: 0;
+}
+
+table.sizes th,
+table.sizes td {
+  padding: 0.95rem 1.25rem;
+  vertical-align: middle;
+}
+
+table.sizes tbody th {
+  font-weight: 650;
+}
+
+table.sizes .sizes-num {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.sizes-price {
+  font-weight: 700;
+}
+
+.sizes-tax {
+  font-size: var(--text-meta);
+  color: var(--ink-soft);
+}
+
+table.sizes tbody tr {
+  transition: background-color var(--dur-1) var(--ease-soft);
+}
+
+@media (hover: hover) {
+  table.sizes tbody tr:hover {
+    background: color-mix(in srgb, var(--paper-caramel) 45%, transparent);
+  }
+}
+
+/* « Quand est-ce prêt? » and the allergens: two calm info cards. */
+.product-sizes {
+  margin-block: var(--space-4);
+}
+
+.product-info {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  margin-block: var(--space-4);
+}
+
+.info-card {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: var(--card-pad);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  max-inline-size: none;
+}
+
+.info-card p {
+  margin: 0;
+}
+
+.info-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.info-card h2 {
+  margin: 0;
+  font-size: var(--step-1);
+}
+
+.info-card-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  color: var(--ink-accent);
+}
+
+.ready-card {
+  background: linear-gradient(180deg, var(--paper-pistache), var(--paper-raised) 70%);
+}
+
+.ready-card .info-card-icon {
+  color: var(--ink-sauge);
+}
+
+.allergen-line strong {
+  font-weight: 700;
+}
+
+.info-card-note {
+  padding-block-start: 0.75rem;
+  border-block-start: 1px dashed var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.allergen-legend {
+  max-inline-size: var(--measure);
+}
+
+/* ---------- Product page buy bar (phones and tablets): the price and « Ajouter », always at hand ---------- */
+.product-buybar {
+  display: none;
+}
+
+/* « Ajouter » is shown; « à ma boîte » stays in the accessible name. */
+.product-buybar .add-btn-rest {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 59.99rem) {
+  /* The buy bar replaces the tab bar on this page: same place, same height (--bar-height), so the same room is kept
+     under the page (the footer's foot and html's scroll-padding read --bar-space): the bar's 0.6rem from the edge
+     plus 1rem of air. Set here too, so the room stays even on a page that renders no tab bar. */
+  :root:has(.product-buybar) {
+    --bar-space: calc(var(--bar-height) + 1.6rem + env(safe-area-inset-bottom));
+  }
+
+  .product-buybar {
+    position: fixed;
+    inset-inline: 0.75rem;
+    inset-block-end: calc(0.6rem + env(safe-area-inset-bottom));
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    block-size: var(--bar-height);
+    padding-inline: 1.25rem 0.5rem;
+    border-radius: 26px;
+    background: var(--paper-dark);
+    color: var(--ink-on-dark);
+    /* A hairline of light along the top edge, as on the tab bar: the bar stays distinct over the dark footer. */
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--ink-on-dark) 10%, transparent),
+      0 20px 44px -20px rgb(59 36 28 / 0.75);
+  }
+
+  body:has(.product-buybar) .sticky-bar {
+    display: none;
+  }
+
+  /* One « Ajouter » per screen: the bar's button submits the form above (form attribute). While any part of the
+     form is on screen (LivePrice sets data-buy-in-view), the bar steps aside and the form's own button shows, so the
+     bar never covers the size or the quantity. The button keeps its room (visibility), so the form never changes
+     size under the observer. Without JavaScript the bar stays, as before. */
+  :root:not(.js) .product-add .add-btn {
+    display: none;
+  }
+
+  .js:not([data-buy-in-view]) .product-add .add-btn {
+    visibility: hidden;
+  }
+
+  .product-buybar {
+    transition:
+      transform var(--dur-2) var(--ease-whip),
+      opacity var(--dur-2) var(--ease-whip),
+      visibility 0s linear 0s;
+  }
+
+  :root[data-buy-in-view] .product-buybar {
+    transform: translateY(calc(100% + 1.5rem));
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform var(--dur-2) var(--ease-whip),
+      opacity var(--dur-2) var(--ease-whip),
+      visibility 0s linear var(--dur-2);
+  }
+
+  .product-add {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block-start: 0.9rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  /* A settings row: « Quantité » on the left, the stepper on the right. */
+  .product-add .field-qty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .product-add .field-qty label {
+    font-size: var(--step-0);
+  }
+
+  .buybar-price {
+    min-inline-size: 0;
+    flex-wrap: wrap;
+    row-gap: 0.1rem;
+  }
+
+  .buybar-price .price-from {
+    color: var(--ink-on-dark-soft);
+  }
+
+  .buybar-price .price-amount {
+    color: var(--ink-on-dark);
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .buybar-price .price-tax {
+    flex-basis: 100%;
+    color: var(--ink-on-dark-soft);
+    font-size: 0.75rem;
+  }
+
+  .buybar-add {
+    flex: none;
+    min-block-size: 52px;
+    padding-inline: 1.4rem 1.6rem;
+    background: var(--rose);
+    color: var(--ink);
+    box-shadow: none;
+  }
+
+  .buybar-add::before {
+    background: var(--paper-raised);
+  }
+
+  .buybar-add:active {
+    transform: var(--press);
+  }
+
+  .buybar-add:focus-visible {
+    outline: 3px solid var(--focus-on-dark);
+    outline-offset: 3px;
+  }
+}
+
+/* ---------- Phones: the product page leads with its photo, the sizes become one small card each ---------- */
+@media (max-width: 47.99rem) {
+  .product-intro h1 {
+    margin-block-end: var(--space-1);
+  }
+
+  /* The figure's caption repeats the h1 just below it: read, not shown. */
+  .product-media.has-photo figcaption {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .product-buy {
+    border-radius: var(--radius);
+  }
+
+  .info-card {
+    gap: 0.6rem;
+    border-radius: var(--radius);
+  }
+
+  .info-card h2 {
+    font-size: 1.1875rem;
+  }
+
+  .info-card-icon {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+
+  .info-card-icon .icon {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  /* Sizes: the element stays a table (roles in SizesTable keep its semantics once its rows are blocks). */
+  .sizes-scroll {
+    overflow: visible;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  table.sizes,
+  table.sizes caption,
+  table.sizes tbody,
+  table.sizes tr,
+  table.sizes th,
+  table.sizes td {
+    display: block;
+  }
+
+  table.sizes caption {
+    padding: 0 0 0.6rem;
+    font-size: var(--text-meta);
+  }
+
+  table.sizes thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  table.sizes tbody th,
+  table.sizes tbody td {
+    padding: 0;
+    border: 0;
+    text-align: start;
+    white-space: normal;
+  }
+
+  table.sizes .sizes-price-cell {
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  table.sizes .sizes-price-cell .sizes-tax {
+    display: block;
+    font-size: 0.75rem;
+  }
+
+  table.sizes .sizes-price {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 50;
+    font-size: 1.1875rem;
+    font-weight: 600;
+  }
+
+  table.sizes td a,
+  table.sizes th a {
+    margin-block: -0.5rem;
+  }
+
+  /* One product (product page): each size is a small card, the size and its price, then the details as
+     label · value. */
+  table.sizes:not(.sizes-products) tbody {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  table.sizes:not(.sizes-products) tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.2rem 1rem;
+    padding: 0.85rem 1rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  table.sizes:not(.sizes-products) .sizes-head {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: 650;
+    font-size: 1.0625rem;
+    line-height: 1.3;
+  }
+
+  table.sizes:not(.sizes-products) .sizes-price-cell {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  table.sizes:not(.sizes-products) .sizes-detail {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-start: 0.35rem;
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  table.sizes:not(.sizes-products) .sizes-detail + .sizes-detail {
+    padding-block-start: 0.1rem;
+  }
+
+  table.sizes:not(.sizes-products) .sizes-detail:first-of-type {
+    margin-block-start: 0.3rem;
+    border-block-start: 1px solid var(--line);
+    padding-block-start: 0.55rem;
+  }
+
+  /* The label is the column header, shown again for sighted readers (empty alternative text: not read twice). */
+  table.sizes:not(.sizes-products) .sizes-detail::before {
+    content: attr(data-label);
+    content: attr(data-label) / '';
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* Several products (prices, calculator): one card per table and one compact row per size: the product and its
+     price, the size under it (the taxes note beside), then « 8 à 10 portions · 4,20 $ à 5,25 $ la portion ».
+     The units are shown for the eye only (data-unit, empty alternative text): screen readers hear the headers. */
+  table.sizes-products tbody {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  table.sizes-products tbody tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    padding: 0.75rem var(--card-pad);
+  }
+
+  table.sizes-products tbody tr + tr {
+    border-block-start: 1px solid var(--line);
+  }
+
+  table.sizes-products .sizes-head {
+    grid-area: 1 / 1 / 2 / 3;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  /* The product link keeps its 48 px target without making the line taller. */
+  table.sizes-products .sizes-head a {
+    margin-block: -0.75rem;
+  }
+
+  table.sizes-products .sizes-price-cell {
+    grid-area: 1 / 3 / 3 / 4;
+    padding-inline-start: 1rem;
+  }
+
+  table.sizes-products .sizes-detail {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+
+  table.sizes-products th.sizes-detail {
+    grid-area: 2 / 1 / 3 / 3;
+    font-weight: 500;
+  }
+
+  table.sizes-products td.sizes-detail {
+    grid-row: 3;
+    margin-block-start: 0.15rem;
+    color: var(--ink-soft);
+    text-align: start;
+    white-space: normal;
+  }
+
+  /* The price per serving runs on from the servings, under the price column too; a second line hangs after the dot. */
+  table.sizes-products td.sizes-detail ~ td.sizes-detail {
+    grid-column: 2 / 4;
+    padding-inline-start: 1.1em;
+    text-indent: -1.1em;
+  }
+
+  table.sizes-products td.sizes-detail ~ td.sizes-detail::before {
+    content: '·';
+    content: '·' / '';
+    display: inline-block;
+    inline-size: 1.1em;
+    text-align: center;
+    text-indent: 0;
+  }
+
+  table.sizes-products [data-unit]::after {
+    content: ' ' attr(data-unit);
+    content: ' ' attr(data-unit) / '';
+  }
+
+  /* No price per serving (a number still missing): nothing runs on after the servings, which keep the whole line;
+     the dash stays in the table for screen readers. */
+  table.sizes-products td.sizes-none {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  table.sizes-products td.sizes-detail:has(~ td.sizes-none) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Larger screens: four cards a row, the product head in two columns ---------- */
+@media (min-width: 48rem) {
+  /* 15.5rem: four cards a row in the 76rem column (1216 px), three at 1024 px; 14rem let a fifth one squeeze in
+     once the list lost its default indent, and badges and titles wrapped. */
+  ul.product-grid {
+    padding: 0;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  }
+
+  /* A short list (fewer cards than a row holds) shares its row instead of leaving empty columns; one or two cards
+     keep the width of three a row. A full list keeps its grid, and the menu hub one card size for every family. */
+  ul.product-grid:not(.product-grid--rail, .menu-family ul) {
+    grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  }
+
+  ul.product-grid:not(.product-grid--rail, .menu-family ul):has(> :last-child:nth-child(-n + 2)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* The home vitrine: a column count that divides its cards evenly, never one alone on a row: three a row (3, 6,
+     9 …); 4 cards two by two, then four a row for 7, 10 … once four fit (63rem). */
+  ul.product-grid--rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  ul.product-grid--rail:has(> :last-child:nth-child(4)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Where no column count fits (7, 10, 13 … cards three a row before four fit; 13, 25 … at any width), the card
+     left alone on the last row sits in the middle, as in a display case. */
+  ul.product-grid--rail:has(> :last-child:nth-child(3n + 7)) > :last-child {
+    grid-column: 2;
+  }
+
+  .product-card {
+    --card-inset: 0.55rem;
+    container: card / inline-size;
+  }
+
+  /* A card wider than any card of a full grid — a short list, the vitrine three a row — takes a landscape photo, so
+     it stands no taller than its neighbours on other pages. The query reads the card's content box: in a full grid
+     it never reaches 18rem (three a row just before four fit: 306.7 px wide, 287 px inside). */
+  @container card (min-width: 18rem) {
+    .card-media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  .product-card-summary {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  /* The engine's badge sits on the picture (it stays after the title in the reading order). */
+  .product-card > .badge {
+    position: absolute;
+    inset-block-start: calc(var(--card-inset) + 0.6rem);
+    inset-inline-start: calc(var(--card-inset) + 0.6rem);
+    z-index: 1;
+    max-inline-size: calc(100% - var(--card-inset) * 2 - 1.2rem);
+    margin: 0;
+    box-shadow: 0 4px 14px -6px rgb(59 36 28 / 0.45);
+    pointer-events: none;
+  }
+
+  /* « dès » on its own line above the price, as on the editorial cards. */
+  .product-card .price-from {
+    flex-basis: 100%;
+  }
+
+  .price-amount {
+    font-size: 1.4rem;
+  }
+
+  .menu-family-head {
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.2fr);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .menu-family-emblem {
+    inline-size: 3.6rem;
+    block-size: 3.6rem;
+  }
+
+  .menu-family-emblem .icon {
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+  }
+
+  .menu-family-titles {
+    justify-content: flex-start;
+  }
+
+  .menu-family h3 {
+    font-size: var(--step-2);
+  }
+
+  .menu-family-count {
+    font-size: var(--step--1);
+  }
+
+  .menu-family-intro {
+    grid-column: 3;
+  }
+
+  .menu-family .product-grid {
+    margin-block: var(--space-3) 0;
+  }
+
+  .cat-nav {
+    margin-inline: 0;
+  }
+
+  .cat-nav-list {
+    padding-inline: 5px;
+    scroll-padding-inline: 5px;
+  }
+
+  .cat-nav::before,
+  .cat-nav::after {
+    display: none;
+  }
+
+  .cat-chip {
+    min-block-size: 52px;
+    gap: 0.6rem;
+    padding: 0.3rem 1.15rem 0.3rem 0.32rem;
+    font-size: inherit;
+  }
+
+  .cat-chip-icon {
+    inline-size: 2.6rem;
+    block-size: 2.6rem;
+  }
+
+  .product-head {
+    gap: var(--space-3);
+    margin-block: var(--space-2) var(--space-5);
+  }
+
+  .product-buy {
+    gap: var(--space-2);
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+  }
+
+  .product-add select {
+    min-block-size: 56px;
+  }
+
+  .product-add .btn {
+    min-block-size: 56px;
+  }
+
+  .qty {
+    inline-size: 9rem;
+    min-block-size: 56px;
+  }
+
+  .qty input {
+    min-block-size: 52px;
+  }
+
+  /* Tablets (one column until 56rem): a wide frame, so the name and the price show on the first screen; the arch
+     returns with the two columns. */
+  .product-media.has-photo {
+    aspect-ratio: 16 / 10;
+    box-shadow: var(--shadow);
+  }
+
+  .product-info {
+    gap: var(--space-3);
+  }
+
+  .info-card {
+    gap: 0.75rem;
+    padding: var(--space-3);
+    box-shadow: var(--shadow);
+  }
+
+  .info-card-icon {
+    inline-size: 3.1rem;
+    block-size: 3.1rem;
+  }
+
+  .sizes-scroll {
+    box-shadow: var(--shadow);
+  }
+}
+
+@media (min-width: 56rem) {
+  .product-head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: var(--space-5);
+  }
+
+  .product-media {
+    aspect-ratio: 1;
+    border-radius: 50% 50% var(--radius-lg) var(--radius-lg) / 50% 50% var(--radius-lg) var(--radius-lg);
+  }
+
+  .product-media.has-photo {
+    aspect-ratio: 4 / 5;
+    border-radius: 50% 50% var(--radius-lg) var(--radius-lg) / 40% 40% var(--radius-lg) var(--radius-lg);
+  }
+
+  .product-media-emblem {
+    inline-size: 9.5rem;
+    block-size: 9.5rem;
+    margin-block-start: 14%;
+  }
+}
+
+/* Four vitrine cards fit a row (14rem each): 4, 7, 10, 16 … cards go four a row, so the last row is never one alone
+   (13, 25 … would leave one alone four a row too: they stay three a row, the last card in the middle). */
+@media (min-width: 63rem) {
+  ul.product-grid--rail:has(> :last-child:nth-child(3n + 4)):not(:has(> :last-child:nth-child(12n + 13))) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  ul.product-grid--rail:has(> :last-child:nth-child(3n + 4)):not(:has(> :last-child:nth-child(12n + 13))) > :last-child {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-card:hover,
+  .product-card:has(.product-card-title a:active),
+  .card-add-btn:hover,
+  .card-add-btn:active,
+  .product-card:hover .card-media img,
+  .menu-family h3 a:hover .menu-family-arrow,
+  .cat-chip:active,
+  .qty-btn:active,
+  .buybar-add:active {
+    translate: none;
+    scale: none;
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .product-card,
+  .cat-chip,
+  .info-card,
+  .sizes-scroll,
+  .product-buy,
+  .menu-family-head,
+  .product-buybar,
+  table.sizes:not(.sizes-products) tbody tr,
+  table.sizes-products tbody {
+    border: 1px solid CanvasText;
+  }
+
+  .card-add-btn,
+  .qty {
+    border: 2px solid ButtonText;
+  }
+
+  .cat-chip[aria-current='page'] {
+    outline: 3px solid Highlight;
+  }
+
+  .cat-nav::before,
+  .cat-nav::after {
+    display: none;
+  }
+}

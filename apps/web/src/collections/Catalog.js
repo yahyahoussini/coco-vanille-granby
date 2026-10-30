@@ -122,7 +122,7 @@ export const Products = {
       required: true,
       defaultValue: 'pending',
       options: [
-        { value: 'pending', label: 'À confirmer par le comptable' },
+        { value: 'pending', label: 'À choisir (vente en ligne bloquée)' },
         { value: 'zero', label: 'Détaxé (produit alimentaire de base)' },
         { value: 'taxable', label: 'Taxable (TPS + TVQ)' },
         { value: 'rule', label: 'Selon la règle des produits de boulangerie (quantité/poids)' },

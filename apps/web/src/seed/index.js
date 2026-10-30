@@ -4,7 +4,7 @@
 import { getPayload } from 'payload'
 import config from '../payload.config.js'
 import { PRIORITY_ALLERGENS } from '../collections/Catalog.js'
-import { pages as pageContent } from './content.js'
+import { pages as pageContent, HOURS, PARKING } from './content.js'
 
 const payload = await getPayload({ config })
 
@@ -14,7 +14,10 @@ async function upsert(collection, where, data, { locale = 'fr', draft = false } 
   return payload.create({ collection, data, locale, draft, depth: 0 })
 }
 
-// 1. Entity (address and phone are consistent across all sources, 01 §2.2; name spelling pending the sign photo)
+// 1. Entity (address and phone are consistent across all sources, 01 §2.2; name spelling pending the sign photo).
+// The mobile number is owner-published (Google listing / Facebook, relayed by Yahya on 2026-10-27, 01 « Update
+// 2026-10-27 »). It books the creative workshops (the shop's reel of 2026-10-22, research/20b S-19), so the JSON-LD names it
+// as that contact point only; whether it takes texts is not confirmed (14 H7).
 await payload.updateGlobal({
   slug: 'business',
   locale: 'fr',
@@ -26,20 +29,31 @@ await payload.updateGlobal({
     categorySentence: 'Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby : viennoiseries, pains et gâteaux sur commande.',
     phone: '+14503727177',
     phoneDisplay: '450-372-7177',
+    mobile: '+14385287818',
+    mobileDisplay: '438-528-7818',
     address: { street: '3, rue Court', city: 'Granby', region: 'QC', postalCode: 'J2G 4Y6', country: 'CA' },
     geo: { lat: 45.3995807, lng: -72.7250821 },
     google: { cid: '10789122976114705165', kgmid: '/g/11s3b_3rsh' },
     sameAs: [
       { url: 'https://www.facebook.com/PatisserieCocoVanille/', verified: true },
-      { url: 'https://www.instagram.com/coco_vanillegranby/', verified: false },
+      // Found and confirmed on 2026-10-29: public, active, same bio and phones as Facebook (research/20b §0.1).
+      { url: 'https://www.instagram.com/coco_vanillegranby/', verified: true },
     ],
     languagesServed: ['fr'],
+    // Agency decisions of 2026-10-29 (research/21, mandate from Yahya): both mailboxes are created on the domain at
+    // launch (docs/13). Loi 25 s. 3.2 asks for the title and contact of the person in charge, not the name; by
+    // default that person is the one with the highest authority in the business (s. 3.1).
+    email: 'bonjour@cocovanillegranby.com',
+    privacyOfficer: { title: 'Propriétaire', email: 'confidentialite@cocovanillegranby.com' },
+    // The Visit page's parking row: public facts of research/20c (the City's by-law; distances computed), applied on
+    // 2026-10-29 (research/21 §6). The page copy (content.js) gives the time limits and the second lot.
+    parking: PARKING.fr,
   },
 })
 await payload.updateGlobal({
   slug: 'business',
   locale: 'en',
-  data: { categorySentence: 'Pâtisserie Coco Vanille is a pastry shop and bakery in downtown Granby: viennoiseries, bread and cakes to order.' },
+  data: { categorySentence: 'Pâtisserie Coco Vanille is a pastry shop and bakery in downtown Granby: viennoiseries, bread and cakes to order.', parking: PARKING.en },
 })
 await payload.updateGlobal({
   slug: 'business',
@@ -47,10 +61,12 @@ await payload.updateGlobal({
   data: { categorySentence: 'Pâtisserie Coco Vanille es una pastelería y panadería en el centro de Granby: bollería, pan y pasteles por encargo.' },
 })
 
-// 2. Shop: hours unknown (6 conflicting schedules, 01 §3) → left empty on purpose.
+// 2. Shop: regular hours from the shop's Google listing, supplied by the operator on 2026-10-27 (01 « Update
+// 2026-10-27 » and §3; 15 D26). They replace the empty record kept while 6 directory schedules conflicted. The page
+// copy (content.js) is written from the same HOURS record. Holiday hours stay unknown: no special days are seeded.
 await payload.updateGlobal({
   slug: 'shop',
-  data: { hours: [], ordering: { enabled: false, windowMinutes: 15, maxPerWindow: 4, maxDaysAhead: 30, quoteValidHours: 72 } },
+  data: { hours: HOURS, ordering: { enabled: false, windowMinutes: 15, maxPerWindow: 4, maxDaysAhead: 30, quoteValidHours: 72 } },
 })
 
 // 3. Priority allergens (07 A-3)

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { BAKERY_ID, WEBSITE_ID, bakeryNode, websiteNode, webPageNode, breadcrumbNode, productNode, graph } from '../../src/lib/schema.js'
 import { marker, MARKER_RE } from '../../src/lib/facts.js'
 import { SITE_ORIGIN } from '../../src/lib/routes.js'
+import { HOURS } from '../../src/seed/content.js'
 
 // Collects every problem a crawler would see: undefined/null/'' values, markers, empty arrays/objects.
 function problems(value, path = '$') {
@@ -172,6 +173,32 @@ describe('productNode', () => {
     const keys = keysDeep(graph([productNode({ product, url })]))
     assert.ok(!keys.includes('aggregateRating'))
     assert.ok(!keys.includes('review'))
+  })
+})
+
+describe('seeded facts of 2026-10-27 in the Bakery node', () => {
+  // The seed's business record now carries the owner-published mobile number (use not confirmed).
+  const seeded = { ...business, mobile: '+14385287818', mobileDisplay: '438-528-7818' }
+
+  test('the seeded hours become one OpeningHoursSpecification per open day, Wednesday to Sunday', () => {
+    const node = graph([bakeryNode(seeded, { hours: HOURS }, 'fr')])['@graph'][0]
+    assert.deepEqual(problems(node), [])
+    assert.deepEqual(
+      node.openingHoursSpecification.map((h) => [h.dayOfWeek, h.opens, h.closes]),
+      [['Wednesday', '08:30', '17:30'], ['Thursday', '08:30', '17:30'], ['Friday', '08:30', '17:30'], ['Saturday', '08:30', '17:30'], ['Sunday', '09:30', '17:00']],
+    )
+    assert.ok(!node.openingHoursSpecification.some((h) => ['Monday', 'Tuesday'].includes(h.dayOfWeek)), 'closed days have no row')
+  })
+
+  // The cell number books the workshops (the shop's reel of 2026-10-22, research/20b S-19): it is that contact point
+  // only, never the shop's main line.
+  test('the mobile number is only the workshop contact point: telephone stays the shop line', () => {
+    const out = graph([bakeryNode(seeded, { hours: HOURS }, 'fr'), websiteNode()])
+    const bakery = out['@graph'][0]
+    assert.equal(bakery.telephone, '+14503727177')
+    assert.equal(bakery.contactPoint?.telephone, '+14385287818')
+    assert.match(bakery.contactPoint?.contactType, /ateliers/)
+    assert.doesNotMatch(JSON.stringify({ ...out, '@graph': [{ ...bakery, contactPoint: undefined }, ...out['@graph'].slice(1)] }), /438|5287818/)
   })
 })
 

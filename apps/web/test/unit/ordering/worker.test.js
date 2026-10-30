@@ -144,9 +144,10 @@ describe('expiry and pickup jobs', () => {
     assert.match(payload.store.orders[0].timeline.at(-1).note, /effacée/)
   })
 
+  // Nightly also purges « Écrivez-nous » conversations 90 days after their last message (lib/chat/server.js).
   test('one tick runs everything', async () => {
     const summary = await tick(payload, { now: NOW, senders: recorder(), nightly: true })
-    assert.deepEqual(Object.keys(summary).sort(), ['allergyNotesDeleted', 'cancelled', 'failed', 'holdsExpired', 'notPickedUp', 'quotesExpired', 'retried', 'sent'])
+    assert.deepEqual(Object.keys(summary).sort(), ['allergyNotesDeleted', 'cancelled', 'conversationsPurged', 'failed', 'holdsExpired', 'notPickedUp', 'quotesExpired', 'retried', 'sent'])
   })
 })
 

@@ -138,6 +138,9 @@ test.describe.serial('« Ma boîte » → checkout → mock payment → worker',
   let thanksUrl
 
   test('box, day and window chips, review with taxes, terms, mock payment, thanks', async ({ page }) => {
+    // Four pages and four axe scans: on a busy laptop running the suite in parallel this takes more than the
+    // default 60 s (about 26 s alone), so the whole flow gets two minutes.
+    test.setTimeout(120_000)
     // The checkout pages carry the Stripe-only CSP (next.config.mjs): nothing on them may trip it.
     const cspErrors = []
     page.on('console', (m) => {

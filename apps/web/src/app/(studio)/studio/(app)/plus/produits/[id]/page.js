@@ -162,20 +162,35 @@ export default async function Produit({ params, searchParams }) {
         <h2 id="taxe" style={{ marginTop: 0 }}>
           Taxe
         </h2>
-        <p>{{ pending: 'À confirmer par le comptable : vente en ligne bloquée.', zero: 'Détaxé', taxable: 'Taxable (TPS + TVQ)', rule: 'Selon la règle des produits de boulangerie' }[p.taxClass] || p.taxClass}</p>
+        <p>{{ pending: 'À choisir : vente en ligne bloquée.', zero: 'Détaxé', taxable: 'Taxable (TPS + TVQ)', rule: 'Selon la règle des produits de boulangerie' }[p.taxClass] || p.taxClass}</p>
+        <details className="hint-box">
+          <summary>Quelle classe choisir?</summary>
+          <ul>
+            <li>
+              <strong>Détaxé</strong> : pain, baguette, croissant nature, et tout gâteau vendu entier.
+            </li>
+            <li>
+              <strong>Règle des produits de boulangerie</strong> : viennoiseries sucrées, pâtisseries, biscuits, muffins, parts de gâteau. Indiquez le poids d’une portion dans « Avancé ». Une portion de moins de 230 g achetée à moins de 6 : TPS seulement (au Québec, la TVQ ne s’applique plus à ces produits depuis le 15 juillet 2026); 6 portions ou plus : détaxé.
+            </li>
+            <li>
+              <strong>Taxable (TPS + TVQ)</strong> : sandwichs, salé prêt à manger, boissons.
+            </li>
+          </ul>
+          <p className="meta">Sources : Revenu Québec, « Produits de boulangerie sucrés » et la détaxation du 15 juillet 2026; Agence du revenu du Canada, produits alimentaires de base.</p>
+        </details>
         {ctx.can('product.tax') && (
           <ActionForm type="product.tax" fields={{ productId: p.id }} back={back} needsNetwork>
             <div className="field">
               <label htmlFor="classe">Classe de taxe</label>
               <select id="classe" name="taxClass" defaultValue={p.taxClass}>
-                <option value="pending">À confirmer par le comptable</option>
+                <option value="pending">À choisir</option>
                 <option value="zero">Détaxé</option>
                 <option value="taxable">Taxable (TPS + TVQ)</option>
                 <option value="rule">Règle des produits de boulangerie</option>
               </select>
             </div>
             <div className="field">
-              <label htmlFor="approuve">Approuvé par le comptable le</label>
+              <label htmlFor="approuve">Vérifié le (facultatif)</label>
               <input id="approuve" name="approvedOn" type="date" />
             </div>
             {step}

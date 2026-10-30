@@ -5,7 +5,7 @@ const strings = {
     skip: 'Aller au contenu',
     nav: { carte: 'Carte', commander: 'Commander', 'nous-trouver': 'Nous trouver', 'a-propos': 'À propos' },
     // Breadcrumb names for registry pages (the last crumb uses the page h1).
-    pageNames: { gateaux: 'Gâteaux', viennoiseries: 'Viennoiseries', pains: 'Pains et baguettes', patisseries: 'Pâtisseries', prix: 'Prix', faq: 'FAQ', allergenes: 'Allergènes', calculateur: 'Calculateur de portions', 'gateaux-personnalises': 'Gâteaux personnalisés', 'gateau-pour-demain': 'Gâteau pour demain', buches: 'Bûches de Noël', chef: 'Le chef', boite: 'Ma boîte', paiement: 'Paiement', merci: 'Merci' },
+    pageNames: { gateaux: 'Gâteaux', viennoiseries: 'Viennoiseries', pains: 'Pains et baguettes', patisseries: 'Pâtisseries', prix: 'Prix', faq: 'FAQ', allergenes: 'Allergènes', calculateur: 'Calculateur de portions', 'gateaux-personnalises': 'Gâteaux personnalisés', 'gateau-pour-demain': 'Gâteau pour demain', buches: 'Bûches de Noël', chef: 'Le chef', 'zoo-de-granby': 'Depuis le Zoo de Granby', boite: 'Ma boîte', paiement: 'Paiement', merci: 'Merci' },
     actions: { order: 'Commander', directions: 'Itinéraire', call: 'Appeler', request: 'Envoyer ma demande', addToBox: 'Ajouter à ma boîte', preorder: 'Précommander' },
     breadcrumbHome: 'Accueil',
     hours: 'Heures d’ouverture',
@@ -43,6 +43,25 @@ const strings = {
     closedNow: 'Fermé',
     until: 'jusqu’à',
     weekdays: { Monday: 'lundi', Tuesday: 'mardi', Wednesday: 'mercredi', Thursday: 'jeudi', Friday: 'vendredi', Saturday: 'samedi', Sunday: 'dimanche' },
+    shell: {
+      mainNav: 'Navigation principale',
+      quickActions: 'Actions rapides',
+      brandSub: 'Pâtisserie · Granby',
+      home: 'Accueil',
+      menu: 'Carte',
+      write: 'Écrire',
+      writeLong: 'Écrivez-nous',
+      phone: 'Téléphone',
+      mobile: 'Cellulaire',
+      followUs: 'Suivez-nous',
+      openMenu: 'Menu',
+      closeMenu: 'Fermer le menu',
+      today: 'Aujourd’hui',
+      reachUs: 'Nous joindre',
+      cakes: 'Gâteaux sur commande',
+      pickupOnly: 'Cueillette en boutique seulement',
+      madeIn: 'Pâtisserie Coco Vanille · 3, rue Court, Granby',
+    },
     home: {
       eyebrow: 'Pâtisserie-boulangerie · 3, rue Court, Granby',
       vitrine: 'Qu’y a-t-il dans la vitrine aujourd’hui?',
@@ -54,12 +73,29 @@ const strings = {
       rating: (r, n, date) => `${r} sur 5 · ${n} avis Google, au ${date}`,
       seeReviews: 'Voir les avis sur Google',
       seeMenu: 'Voir toute la carte',
+      request: 'Demander une soumission',
+      chipsLabel: 'La boutique en un coup d’œil',
+      ring: 'Pâtisserie · Café · Gâteaux sur commande · Ateliers créatifs · ',
+      marquee: ['Viennoiseries', 'Pains et baguettes', 'Pâtisseries', 'Gâteaux sur commande', 'Café', 'Ateliers créatifs'],
+      // Owner-published services (Facebook bio relayed by Yahya, 2026-10-27; pickup only: research/15 D11).
+      servicesTitle: 'Ce que vous trouverez chez nous',
+      services: [
+        { icon: 'croissant', title: 'Pâtisserie-boulangerie', text: 'Viennoiseries, pains et pâtisseries.' },
+        { icon: 'cake', title: 'Gâteaux sur commande', text: 'Une demande, un prix écrit, puis votre accord.' },
+        { icon: 'coffee', title: 'Café', text: 'Pâtisserie et café sous le même toit.' },
+        { icon: 'palette', title: 'Ateliers créatifs', text: 'Sur réservation : appelez la boutique.' },
+      ],
+      cakeEyebrow: 'Gâteaux sur commande',
+      cakeTitle: 'Votre gâteau en trois étapes',
+      cakeSteps: ['Décrivez votre gâteau : l’occasion, le nombre de personnes et la date de cueillette.', 'La boutique vous répond avec un prix et un lien pour l’acompte.', 'Rien n’est préparé avant votre accord. Cueillette au 3, rue Court.'],
+      visitTitle: 'Nous trouver',
+      finale: 'À très bientôt au 3, rue Court',
     },
     brief: {
       address: (a) => `Pâtisserie Coco Vanille est située au ${a}.`,
       phone: (p) => `Pâtisserie Coco Vanille se joint au ${p}.`,
       hours: (summary) => `Pâtisserie Coco Vanille est ouverte ${summary}.`,
-      legal: (name, neq) => `Pâtisserie Coco Vanille est exploitée par ${name} (NEQ ${neq}).`,
+      legal: (name, neq) => `Pâtisserie Coco Vanille est exploitée par ${name} (NEQ ${neq}).`,
       rating: (r, n, date) => `Pâtisserie Coco Vanille a une note Google de ${r} sur 5 (${n} avis, au ${date}).`,
     },
     visit: {
@@ -80,7 +116,7 @@ const strings = {
       phone: 'Téléphone',
       email: 'Courriel',
       languages: 'Langues de service',
-      social: 'Page officielle',
+      social: 'Réseaux sociaux officiels',
     },
     offer: {
       product: 'Produit',
@@ -134,7 +170,7 @@ const strings = {
     languageName: 'English',
     skip: 'Skip to content',
     nav: { carte: 'Menu', commander: 'Order', 'nous-trouver': 'Visit', 'a-propos': 'About' },
-    pageNames: { gateaux: 'Cakes', viennoiseries: 'Viennoiseries', pains: 'Bread', patisseries: 'Pastries', prix: 'Prices', faq: 'FAQ', allergenes: 'Allergens', calculateur: 'Serving calculator', 'gateaux-personnalises': 'Custom cakes', 'gateau-pour-demain': 'Cake for tomorrow', buches: 'Yule logs', chef: 'The chef', boite: 'My box', paiement: 'Checkout', merci: 'Thank you' },
+    pageNames: { gateaux: 'Cakes', viennoiseries: 'Viennoiseries', pains: 'Bread', patisseries: 'Pastries', prix: 'Prices', faq: 'FAQ', allergenes: 'Allergens', calculateur: 'Serving calculator', 'gateaux-personnalises': 'Custom cakes', 'gateau-pour-demain': 'Cake for tomorrow', buches: 'Yule logs', chef: 'The chef', 'zoo-de-granby': 'From the Granby Zoo', boite: 'My box', paiement: 'Checkout', merci: 'Thank you' },
     actions: { order: 'Order', directions: 'Directions', call: 'Call', request: 'Send my request', addToBox: 'Add to my box', preorder: 'Pre-order' },
     breadcrumbHome: 'Home',
     hours: 'Opening hours',
@@ -172,6 +208,25 @@ const strings = {
     closedNow: 'Closed',
     until: 'until',
     weekdays: { Monday: 'Monday', Tuesday: 'Tuesday', Wednesday: 'Wednesday', Thursday: 'Thursday', Friday: 'Friday', Saturday: 'Saturday', Sunday: 'Sunday' },
+    shell: {
+      mainNav: 'Main navigation',
+      quickActions: 'Quick actions',
+      brandSub: 'Pâtisserie · Granby',
+      home: 'Home',
+      menu: 'Menu',
+      write: 'Message',
+      writeLong: 'Message us',
+      phone: 'Phone',
+      mobile: 'Mobile',
+      followUs: 'Follow us',
+      openMenu: 'Menu',
+      closeMenu: 'Close the menu',
+      today: 'Today',
+      reachUs: 'Contact us',
+      cakes: 'Cakes to order',
+      pickupOnly: 'In-store pickup only',
+      madeIn: 'Pâtisserie Coco Vanille · 3 rue Court, Granby',
+    },
     home: {
       eyebrow: 'Pastry shop and bakery · 3 rue Court, Granby',
       vitrine: 'What’s in the display case today?',
@@ -183,11 +238,28 @@ const strings = {
       rating: (r, n, date) => `${r} out of 5 · ${n} Google reviews, as of ${date}`,
       seeReviews: 'See the reviews on Google',
       seeMenu: 'See the whole menu',
+      request: 'Request a quote',
+      chipsLabel: 'The shop at a glance',
+      ring: 'Pastry shop · Café · Cakes to order · Creative workshops · ',
+      marquee: ['Viennoiseries', 'Bread and baguettes', 'Pastries', 'Cakes to order', 'Café', 'Creative workshops'],
+      servicesTitle: 'What you will find here',
+      services: [
+        { icon: 'croissant', title: 'Pastry shop and bakery', text: 'Viennoiseries, bread and pastries.' },
+        { icon: 'cake', title: 'Cakes to order', text: 'A request, a written price, then your approval.' },
+        { icon: 'coffee', title: 'Café', text: 'Pastry shop and café under one roof.' },
+        { icon: 'palette', title: 'Creative workshops', text: 'By reservation: call the shop.' },
+      ],
+      cakeEyebrow: 'Cakes to order',
+      cakeTitle: 'Your cake in three steps',
+      cakeSteps: ['Describe your cake: the occasion, the number of guests and the pickup date.', 'The shop replies with a price and a link for the deposit.', 'Nothing is made before you approve. Pickup at 3 rue Court.'],
+      visitTitle: 'Visit us',
+      finale: 'See you soon at 3 rue Court',
     },
     brief: {
       address: (a) => `Pâtisserie Coco Vanille is located at ${a}.`,
       phone: (p) => `Pâtisserie Coco Vanille can be reached at ${p}.`,
-      hours: (summary) => `Pâtisserie Coco Vanille is open ${summary}.`,
+      // A summary that ends on « p.m. » already has its period.
+      hours: (summary) => `Pâtisserie Coco Vanille is open ${summary}${/\.$/.test(summary) ? '' : '.'}`,
       legal: (name, neq) => `Pâtisserie Coco Vanille is run by ${name} (Québec enterprise number ${neq}).`,
       rating: (r, n, date) => `Pâtisserie Coco Vanille has a Google rating of ${r} out of 5 (${n} reviews, as of ${date}).`,
     },
@@ -209,7 +281,7 @@ const strings = {
       phone: 'Phone',
       email: 'Email',
       languages: 'Languages served',
-      social: 'Official page',
+      social: 'Official social accounts',
     },
     offer: {
       product: 'Product',
@@ -301,6 +373,25 @@ const strings = {
     closedNow: 'Cerrado',
     until: 'hasta',
     weekdays: { Monday: 'lunes', Tuesday: 'martes', Wednesday: 'miércoles', Thursday: 'jueves', Friday: 'viernes', Saturday: 'sábado', Sunday: 'domingo' },
+    shell: {
+      mainNav: 'Navegación principal',
+      quickActions: 'Acciones rápidas',
+      brandSub: 'Pâtisserie · Granby',
+      home: 'Inicio',
+      menu: 'Carta',
+      write: 'Escribir',
+      writeLong: 'Escríbanos',
+      phone: 'Teléfono',
+      mobile: 'Móvil',
+      followUs: 'Síganos',
+      openMenu: 'Menú',
+      closeMenu: 'Cerrar el menú',
+      today: 'Hoy',
+      reachUs: 'Contacto',
+      cakes: 'Pasteles por encargo',
+      pickupOnly: 'Solo recogida en la tienda',
+      madeIn: 'Pâtisserie Coco Vanille · 3 rue Court, Granby',
+    },
     home: {
       eyebrow: 'Pastelería y panadería · 3 rue Court, Granby',
       vitrine: '¿Qué hay hoy en la vitrina?',
@@ -312,6 +403,22 @@ const strings = {
       rating: (r, n, date) => `${r} de 5 · ${n} reseñas en Google, al ${date}`,
       seeReviews: 'Ver las reseñas en Google',
       seeMenu: 'Ver toda la carta',
+      request: 'Pedir un presupuesto',
+      chipsLabel: 'La tienda de un vistazo',
+      ring: 'Pastelería · Café · Pasteles por encargo · Talleres creativos · ',
+      marquee: ['Bollería', 'Pan y baguettes', 'Postres', 'Pasteles por encargo', 'Café', 'Talleres creativos'],
+      servicesTitle: 'Lo que encontrará aquí',
+      services: [
+        { icon: 'croissant', title: 'Pastelería y panadería', text: 'Bollería, pan y postres.' },
+        { icon: 'cake', title: 'Pasteles por encargo', text: 'Una solicitud, un precio por escrito y su aprobación.' },
+        { icon: 'coffee', title: 'Café', text: 'Pastelería y café bajo el mismo techo.' },
+        { icon: 'palette', title: 'Talleres creativos', text: 'Con reserva: llame a la tienda.' },
+      ],
+      cakeEyebrow: 'Pasteles por encargo',
+      cakeTitle: 'Su pastel en tres pasos',
+      cakeSteps: ['Describa su pastel: la ocasión, el número de personas y la fecha de recogida.', 'La tienda le responde con un precio y un enlace para el anticipo.', 'No se prepara nada antes de su aprobación. Recogida en 3 rue Court.'],
+      visitTitle: 'Cómo llegar',
+      finale: 'Hasta pronto en 3 rue Court',
     },
     brief: {
       address: (a) => `Pâtisserie Coco Vanille está en ${a}.`,
@@ -338,7 +445,7 @@ const strings = {
       phone: 'Teléfono',
       email: 'Correo',
       languages: 'Idiomas de atención',
-      social: 'Página oficial',
+      social: 'Redes sociales oficiales',
     },
     offer: {
       product: 'Producto',
@@ -391,6 +498,24 @@ const strings = {
 }
 
 export const t = (locale) => strings[locale] || strings.fr
+
+// The person in charge's title (Loi 25 s. 3.2) is one free-text field, in French (Studio › Réglages); the default
+// title, the owner's, is said in English on English pages. Any other title shows as written.
+const OWNER_TITLE = { en: 'Owner', es: 'Propietaria o propietario' }
+export const officerTitle = (title, locale = 'fr') => (title === 'Propriétaire' && OWNER_TITLE[locale]) || title
+
+// For text shown on a page only (never texts or emails, where a non-breaking space would make an SMS a 70-character
+// message): « 10 h 39 », « 30 octobre », « J2G 4Y6 » and « 3, rue Court » never break across two lines.
+const MONTHS_FR = 'janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre'
+export const keepTogether = (text) =>
+  typeof text === 'string'
+    ? text
+        .replace(/(\d) h(?= |$)/g, '$1 h')
+        .replace(/(\d h) (\d\d)/g, '$1 $2')
+        .replace(new RegExp(`(\\d(?:er)?) (${MONTHS_FR})`, 'g'), '$1 $2')
+        .replace(/\b([A-Z]\d[A-Z]) (\d[A-Z]\d)\b/g, '$1 $2')
+        .replace(/(\d), (rue|boulevard|avenue) /g, '$1, $2 ')
+    : text
 
 // 12,50 $ (fr) · $12.50 (en) · 12,50 $ (es-CA style)
 export function money(cents, locale = 'fr') {
