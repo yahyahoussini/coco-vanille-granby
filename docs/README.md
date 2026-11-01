@@ -29,12 +29,12 @@ Ces documents, en français du Québec, tirent leur contenu de la recherche du d
 | [17-architecture.md](17-architecture.md) | L'arbre du site, ce qui manque page par page, la requête de chaque page, les liens internes, les pages à créer |
 | [18-redirections.md](18-redirections.md) | Les règles d'adresse et la carte des redirections (rien à rediriger aujourd'hui) |
 | [19-marche-et-concurrence.md](19-marche-et-concurrence.md) | Qui possède le marché, les faiblesses légales des concurrents, la carte de bataille, les dix coups dans l'ordre |
-| [21-questions-proprietaire.md](21-questions-proprietaire.md) | Les 33 questions à la propriétaire, par urgence (le bloc 1 suffit pour lancer) : produits et prix, allergènes, gâteaux, délais, heures des Fêtes, bûches, paiement, capacité, accès, équipe, administratif |
-| [22-acces-et-premiers-pas.md](22-acces-et-premiers-pas.md) | Pour la propriétaire : les deux adresses (site et Coco Studio), quoi faire en premier dans « Faits du site », ce qui n'est pas encore actif et pourquoi, le passage au vrai domaine |
-| [23-feuille-produits.md](23-feuille-produits.md) | La feuille des vrais produits : une ligne par format (famille, nom, format, prix, portions, délai, allergènes), et ce que l'import fait et ne fait pas (les allergènes restent à confirmer dans Coco Studio) |
 | [20-seo-geo-aeo-local.md](20-seo-geo-aeo-local.md) | Le plan local : ce que veulent dire le SEO local, l'AEO et le GEO à Granby, la fiche maîtresse et ses copies, les trois batailles (boulangerie, Zoo, spécialités marocaines), les avis, les 15 questions locales, les 12 requêtes du mois, les liens locaux, la mesure, les 90 jours |
+| [21-questions-proprietaire.md](21-questions-proprietaire.md) | Les 37 questions à la propriétaire, par urgence (le bloc 1 suffit pour lancer) : produits et prix, allergènes, gâteaux, délais, heures des Fêtes, bûches, paiement, capacité, accès, équipe, administratif |
+| [22-acces-et-premiers-pas.md](22-acces-et-premiers-pas.md) | Pour la propriétaire : les deux adresses (site et Coco Studio), quoi faire en premier dans « Faits du site », ce qui n'est pas encore actif et pourquoi, le passage au vrai domaine |
 | [23-registre-incidents.md](23-registre-incidents.md) | Le registre de tous les incidents (site, Coco Studio, serveur, fiches), tenu par l'agence depuis le 1er novembre 2026 |
 | [24-registre-incidents-confidentialite.md](24-registre-incidents-confidentialite.md) | Le modèle du registre des incidents de confidentialité (Loi 25, article 3.8), qui appartient à la boutique et se garde hors du dépôt |
+| [25-feuille-produits.md](25-feuille-produits.md) | La feuille des vrais produits : une ligne par format (famille, nom, format, prix, portions, délai, allergènes), et ce que l'import fait et ne fait pas (les allergènes restent à confirmer dans Coco Studio) |
 
 **À côté de ce dossier** : [scoreboard/](../scoreboard/README.md) (les requêtes suivies, les relevés du lundi, les cibles d'extraits, les avis) et [site.config.json](../site.config.json) (la configuration lue par les outils de mesure).
 
