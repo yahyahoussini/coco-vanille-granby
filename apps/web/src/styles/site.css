@@ -1695,6 +1695,41 @@ html[data-today='Sunday'] .hours tr[data-days~='Sunday'] th::before {
   pointer-events: none;
 }
 
+/* A page's picture under its h1 and answer (shared.js PageHero): wide, rounded, its caption below in small type. */
+.page-hero {
+  margin-block: 1.25rem 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.page-hero img {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+}
+
+@media (min-width: 48rem) {
+  .page-hero img {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.stock-figure {
+  overflow: visible;
+  background: none;
+}
+
+.stock-caption {
+  margin-block-start: 0.5rem;
+  color: var(--ink-soft);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.stock-caption a {
+  color: inherit;
+}
+
 /* ---------- Footer ---------- */
 
 /* Phones: brand and address, three big actions, compact hours (today marked), the guides in two columns, the legal

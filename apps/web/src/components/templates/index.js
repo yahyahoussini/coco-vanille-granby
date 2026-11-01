@@ -206,7 +206,8 @@ async function AllergensTemplate(props) {
               <tr key={p.id} role="row">
                 <th scope="row" role="rowheader">{href ? <Link href={href}>{p.title}</Link> : p.title}</th>
                 <td role="cell" data-label={s.offer.contains}>{verified ? (p.allergens || []).map((a) => a.label).join(', ') || '—' : <Fact value={null} label="allergènes vérifiés par une personne" />}</td>
-                <td role="cell" data-label={s.mayContain}>{verified ? (p.mayContain || []).map((a) => a.label).join(', ') || '—' : '—'}</td>
+                {/* Unchecked: a marker, never « — », which would read as « nothing to fear ». */}
+                <td role="cell" data-label={s.mayContain}>{verified ? (p.mayContain || []).map((a) => a.label).join(', ') || '—' : <Fact value={null} label="allergènes vérifiés par une personne" />}</td>
               </tr>
             )
           })}

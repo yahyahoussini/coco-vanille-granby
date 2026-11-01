@@ -3,9 +3,19 @@
 // The admin host serves its own robots.txt from src/proxy.js.
 export const dynamic = 'force-static'
 
+// Named in the same group as * (same rules): a crawler obeys only the most specific group that names it, so naming
+// each one here states the decision for it without a second set of rules to keep in step (Layer 5 table).
+const NAMED = [
+  'Googlebot', 'Google-Extended', 'Google-CloudVertexBot', 'Bingbot', 'OAI-SearchBot', 'ChatGPT-User', 'GPTBot',
+  'PerplexityBot', 'Perplexity-User', 'Claude-SearchBot', 'Claude-User', 'ClaudeBot', 'Applebot', 'Applebot-Extended',
+  'meta-webindexer', 'meta-externalfetcher', 'meta-externalagent', 'Amzn-SearchBot', 'Amzn-User', 'Amazonbot',
+  'DuckAssistBot', 'MistralAI-Index', 'MistralAI-User', 'MistralAI-Training', 'CCBot',
+]
+
 export function GET() {
   const body = [
     'User-agent: *',
+    ...NAMED.map((name) => `User-agent: ${name}`),
     'Allow: /',
     'Disallow: /boite/',
     'Disallow: /en/box/',

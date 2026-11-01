@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isKnownPublicPath, notFoundPathFor } from './lib/public-paths.js'
+import { indexNowHost, indexNowKey } from './lib/indexnow.js'
 
 // Host-based routing (16b §2): one build, two hosts.
 //  admin.cocovanillegranby.com → Studio at "/", Payload « Avancé » at /admin, REST at /api; never indexed.
@@ -58,6 +59,10 @@ export function proxy(req) {
 
   // Public host
   if (ROLE === 'studio') return notFound(req)
+  // IndexNow key file (lib/indexnow.js): served on the real domain only, as plain text.
+  if (indexNowHost() && pathname === `/${indexNowKey()}.txt`) {
+    return new NextResponse(indexNowKey(), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=86400' } })
+  }
   if (/^\/(admin|api|studio)(\/|$)/.test(pathname)) return notFound(req)
   if (!isAsset(pathname) && !pathname.endsWith('/')) {
     // Built from the raw URL: nextUrl normalises trailing slashes away.

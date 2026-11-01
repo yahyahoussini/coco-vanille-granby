@@ -37,7 +37,7 @@ export async function NotFoundPage({ locale, head = false }) {
       <main id="contenu" className="site-main">
         <article className="wrap page not-found">
           <div className="not-found-art" aria-hidden="true">
-            <img src="/brand/logo-badge-192.webp" srcSet="/brand/logo-badge-192.webp 192w, /brand/logo-badge-384.webp 384w" sizes="160px" width="160" height="160" alt="" />
+            <img src="/brand/logo-badge-192.webp" srcSet="/brand/logo-badge-192.webp 192w, /brand/logo-badge-384.webp 384w" sizes="160px" width="160" height="160" alt="" loading="lazy" decoding="async" />
             <Ornament name="coconut" className="not-found-coconut" />
           </div>
           <h1>{s.notFoundTitle}</h1>

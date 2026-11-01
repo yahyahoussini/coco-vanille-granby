@@ -6,7 +6,7 @@ const strings = {
     nav: { carte: 'Carte', commander: 'Commander', 'nous-trouver': 'Nous trouver', 'a-propos': 'À propos' },
     // Breadcrumb names for registry pages (the last crumb uses the page h1).
     pageNames: { gateaux: 'Gâteaux', viennoiseries: 'Viennoiseries', pains: 'Pains et baguettes', patisseries: 'Pâtisseries', prix: 'Prix', faq: 'FAQ', allergenes: 'Allergènes', calculateur: 'Calculateur de portions', 'gateaux-personnalises': 'Gâteaux personnalisés', 'gateau-pour-demain': 'Gâteau pour demain', buches: 'Bûches de Noël', chef: 'Le chef', 'zoo-de-granby': 'Depuis le Zoo de Granby', boite: 'Ma boîte', paiement: 'Paiement', merci: 'Merci' },
-    actions: { order: 'Commander', directions: 'Itinéraire', call: 'Appeler', request: 'Envoyer ma demande', addToBox: 'Ajouter à ma boîte', preorder: 'Précommander' },
+    actions: { order: 'Commander', callToOrder: 'Commander par téléphone', directions: 'Itinéraire', call: 'Appeler', request: 'Envoyer ma demande', addToBox: 'Ajouter à ma boîte', preorder: 'Précommander' },
     breadcrumbHome: 'Accueil',
     hours: 'Heures d’ouverture',
     closed: 'fermé',
@@ -119,6 +119,7 @@ const strings = {
       social: 'Réseaux sociaux officiels',
     },
     offer: {
+      notOnline: (address) => `Ce produit ne se commande pas en ligne pour l’instant : appelez la boutique, ou passez la voir${address ? ` au ${address}` : ''}.`,
       product: 'Produit',
       portions: 'Portions',
       size: 'Format',
@@ -171,7 +172,7 @@ const strings = {
     skip: 'Skip to content',
     nav: { carte: 'Menu', commander: 'Order', 'nous-trouver': 'Visit', 'a-propos': 'About' },
     pageNames: { gateaux: 'Cakes', viennoiseries: 'Viennoiseries', pains: 'Bread', patisseries: 'Pastries', prix: 'Prices', faq: 'FAQ', allergenes: 'Allergens', calculateur: 'Serving calculator', 'gateaux-personnalises': 'Custom cakes', 'gateau-pour-demain': 'Cake for tomorrow', buches: 'Yule logs', chef: 'The chef', 'zoo-de-granby': 'From the Granby Zoo', boite: 'My box', paiement: 'Checkout', merci: 'Thank you' },
-    actions: { order: 'Order', directions: 'Directions', call: 'Call', request: 'Send my request', addToBox: 'Add to my box', preorder: 'Pre-order' },
+    actions: { order: 'Order', callToOrder: 'Order by phone', directions: 'Directions', call: 'Call', request: 'Send my request', addToBox: 'Add to my box', preorder: 'Pre-order' },
     breadcrumbHome: 'Home',
     hours: 'Opening hours',
     closed: 'closed',
@@ -284,6 +285,7 @@ const strings = {
       social: 'Official social accounts',
     },
     offer: {
+      notOnline: (address) => `This item can’t be ordered online yet: call the shop, or drop by${address ? ` at ${address}` : ''}.`,
       product: 'Product',
       portions: 'Servings',
       size: 'Size',
@@ -336,7 +338,7 @@ const strings = {
     skip: 'Ir al contenido',
     nav: { carte: 'Carta', commander: 'Pedidos', 'nous-trouver': 'Cómo llegar', 'a-propos': 'Nosotros' },
     pageNames: { gateaux: 'Pasteles', viennoiseries: 'Bollería', pains: 'Pan', patisseries: 'Postres', prix: 'Precios', faq: 'Preguntas frecuentes', allergenes: 'Alérgenos', calculateur: 'Calculadora de porciones', 'gateaux-personnalises': 'Pasteles personalizados', buches: 'Tronco de Navidad', boite: 'Mi caja', paiement: 'Pago', merci: 'Gracias' },
-    actions: { order: 'Pedir', directions: 'Cómo llegar', call: 'Llamar', request: 'Enviar mi solicitud', addToBox: 'Añadir a mi caja', preorder: 'Reservar' },
+    actions: { order: 'Pedir', callToOrder: 'Pedir por teléfono', directions: 'Cómo llegar', call: 'Llamar', request: 'Enviar mi solicitud', addToBox: 'Añadir a mi caja', preorder: 'Reservar' },
     breadcrumbHome: 'Inicio',
     hours: 'Horario',
     closed: 'cerrado',
@@ -448,6 +450,7 @@ const strings = {
       social: 'Redes sociales oficiales',
     },
     offer: {
+      notOnline: (address) => `Este producto aún no se pide en línea: llame a la tienda o pase por ella${address ? ` en ${address}` : ''}.`,
       product: 'Producto',
       portions: 'Porciones',
       size: 'Tamaño',

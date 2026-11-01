@@ -3,6 +3,10 @@ import { PAGES, pathFor } from '@/lib/routes'
 import { Fact } from '../site/Fact'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
 import { Ornament } from '../site/Ornament'
+import { Photo } from '../site/Products'
+import { StockPhoto } from '../site/StockPhoto'
+import { mediaFile } from '@/lib/media'
+import { pagePhotoKey } from '@/lib/photos'
 
 // Helpers shared by the page templates (index.js: home and content pages; menu.js; product.js).
 // Every template receives { locale, business, shop, page, doc, conditionNotice } from SitePage (product pages: { product }).
@@ -71,8 +75,24 @@ export function ratingOf(business, locale) {
   return { rating: decimal(g.rating, locale), count: g.reviewCount, date: longDate(g.ratingAsOf, locale), iso: g.ratingAsOf }
 }
 
-// Generic page-contract template: h1 → answer → template content → sections → key facts → FAQ → action → meta.
-// The answer stays the first paragraph of <main>; a page's missing condition (staging) is flagged right after it.
+// The picture under a page's h1 and answer (v1 Layer 10: a hero photo with a factual alt and a caption): the photo
+// the owner gave the page (its « hero » field), else its illustration (src/lib/photos.js), labelled and credited.
+function PageHero({ doc, locale }) {
+  const own = doc?.hero && typeof doc.hero === 'object' && mediaFile(doc.hero, 'hero') ? doc.hero : null
+  if (own) {
+    return (
+      <figure className="page-hero">
+        <Photo media={own} size="hero" priority />
+      </figure>
+    )
+  }
+  const key = pagePhotoKey(doc?.key)
+  return key ? <StockPhoto name={key} locale={locale} caption priority className="page-hero" sizes="(min-width: 60rem) 56rem, 92vw" /> : null
+}
+
+// Generic page-contract template: h1 → answer → hero picture → template content → sections → key facts → FAQ →
+// action → meta. The answer stays the first paragraph of <main>; a page's missing condition (staging) is flagged
+// right after it. Legal and utility pages (boilerplate) have no picture.
 export function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, className = '' }) {
   return (
     <article className={`wrap page ${className}`.trim()}>
@@ -82,6 +102,7 @@ export function ContentTemplate({ doc, locale, conditionNotice, primary, seconda
         <AnswerBlock text={doc?.answer} />
         <Missing text={conditionNotice} />
       </header>
+      {!boilerplate && <PageHero doc={doc} locale={locale} />}
       {children}
       {boilerplate ? (
         <div data-nosnippet="">

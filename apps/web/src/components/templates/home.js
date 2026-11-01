@@ -301,10 +301,14 @@ export async function HomeTemplate(props) {
               </p>
             )
           ) : (
-            <div className="vitrine-empty" data-reveal="">
-              <span className="icon-badge">
-                <Icon name="store" size={26} />
-              </span>
+            <div className={`vitrine-empty${PHOTOS.vitrine ? ' has-photo' : ''}`} data-reveal="">
+              {PHOTOS.vitrine ? (
+                <StockPhoto name="vitrine" locale={locale} className="vitrine-empty-photo" sizes="(min-width: 60rem) 40rem, 92vw" />
+              ) : (
+                <span className="icon-badge">
+                  <Icon name="store" size={26} />
+                </span>
+              )}
               <p>
                 {h.vitrineEmpty}{' '}
                 {menuHref && (
@@ -378,7 +382,7 @@ export async function HomeTemplate(props) {
                 <Icon name="arrow" size={20} className="icon-arrow" />
               </a>
             </div>
-            {PHOTOS.ateliers && <StockPhoto name="ateliers" locale={locale} className="cake-band-photo" sizes="(min-width: 60rem) 30rem, 92vw" />}
+            {PHOTOS['gateau-fete'] && <StockPhoto name="gateau-fete" locale={locale} className="cake-band-photo" sizes="(min-width: 60rem) 30rem, 92vw" />}
           </div>
         </section>
       )}

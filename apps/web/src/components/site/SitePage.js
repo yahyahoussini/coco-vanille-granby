@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, HTML_LANG, localeEnabled, pageByKey } from '@/lib/routes'
 import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, getServed, payloadClient } from '@/lib/data'
 import { containsMarker, publishGuard, marker } from '@/lib/facts'
-import { readyCopy, servedAlternates, productServed } from '@/lib/publish'
+import { readyCopy, servedAlternates, productServed, productReady } from '@/lib/publish'
 import { productTitle, productDescription } from '@/lib/meta'
 import { t } from '@/lib/i18n'
 import { graph, bakeryNode, websiteNode, webPageNode, breadcrumbNode, ZOO_DE_GRANBY } from '@/lib/schema'
@@ -80,7 +80,8 @@ export async function buildMetadata(locale, segments) {
   const social = ({ title, description, name, alt }) => {
     const image = { url: `${SITE_ORIGIN}${ogPath(locale, name)}`, width: 1200, height: 630, alt }
     return {
-      openGraph: { title, description, url: `${SITE_ORIGIN}${hit.path}`, siteName: 'Pâtisserie Coco Vanille', locale: ogLocale, type: 'website', images: [image] },
+      // og:url is written by SitePage as a plain <meta>, with the trailing slash the canonical has (Next strips it).
+      openGraph: { title, description, siteName: 'Pâtisserie Coco Vanille', locale: ogLocale, type: 'website', images: [image] },
       twitter: { card: 'summary_large_image', title, description, images: [image.url] },
     }
   }
@@ -88,7 +89,8 @@ export async function buildMetadata(locale, segments) {
     const p = hit.product
     const title = productTitle(p, locale)
     const description = productDescription(p, await getBusiness(locale), locale)
-    return { title, description, robots: robotsIndex, ...social({ title, description, name: `p-${p.id}`, alt: p.title }) }
+    // A product page with facts still missing (price, servings, lead time, checked allergens) is not indexed yet.
+    return { title, description, robots: productReady(p) ? robotsIndex : { index: false, follow: true }, ...social({ title, description, name: `p-${p.id}`, alt: p.title }) }
   }
   const doc = await getPageDoc(hit.page.key, locale)
   // Indexed only with its copy in this language and no missing fact; until then noindex (or hidden, strict).
@@ -159,7 +161,9 @@ export async function SitePage({ locale, segments = [], query }) {
       name: pageName,
       description: doc?.description || props.product?.summary,
       locale,
-      dateModified: doc?.updatedAt || props.product?.updatedAt,
+      // The same dates as the visible meta line (Contract.js MetaLine): content changes, not any database write.
+      datePublished: doc ? [doc.createdAt, doc.contentUpdatedAt].filter(Boolean).sort()[0] : props.product?.createdAt,
+      dateModified: doc?.contentUpdatedAt || doc?.updatedAt || props.product?.updatedAt,
       mentions: hit.kind === 'page' && hit.page.key === 'zoo-de-granby' ? ZOO_DE_GRANBY : undefined,
     }),
     breadcrumbNode(url, crumbs),
@@ -169,6 +173,7 @@ export async function SitePage({ locale, segments = [], query }) {
   return (
     <>
       <link rel="canonical" href={url} />
+      <meta property="og:url" content={url} />
       {Object.entries(languages).map(([lang, href]) => (
         <link key={lang} rel="alternate" hrefLang={lang} href={href} />
       ))}

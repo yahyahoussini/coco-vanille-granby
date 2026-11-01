@@ -5,7 +5,9 @@ import { productReady } from '@/lib/publish'
 import { mediaFile } from '@/lib/media'
 import { getOfferStates, getShop } from '@/lib/data'
 import { Fact } from './Fact'
-import { Icon, CATEGORY_ICON } from './Icon'
+import { Icon } from './Icon'
+import { StockPhoto } from './StockPhoto'
+import { productPhotoKey } from '@/lib/photos'
 import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, offerBadge } from './offer'
 import { catalogueCopy } from '../catalogue/copy'
 import { AddPlus, pricedVariants } from '../catalogue/AddToBox'
@@ -49,9 +51,9 @@ export function Photo({ media, size = 'card', priority = false, className, lang 
   )
 }
 
-// The picture area of a card: the owner's photo, or the family's pastel surface with its line icon in a ringed
-// badge. Never a stand-in product image (Media: « Real photos only »); the surface is decoration only.
-export function CardMedia({ product, className = '', size = 'card', priority = false, iconSize = 40 }) {
+// The picture area of a card: the owner's photo, or, until she adds one, an illustration photo of the kind of
+// product (src/lib/photos.js productPhotoKey), labelled « Photo d'illustration » on the picture itself.
+export function CardMedia({ product, className = '', size = 'card', priority = false, locale = 'fr', sizes = '(min-width: 60rem) 18rem, (min-width: 48rem) 33vw, 50vw' }) {
   const family = familyOf(product)
   const photo = (product?.photos || []).find((p) => mediaFile(p, size))
   if (photo) {
@@ -62,10 +64,8 @@ export function CardMedia({ product, className = '', size = 'card', priority = f
     )
   }
   return (
-    <div className={`card-media media-${family} ${className}`.trim()} aria-hidden="true">
-      <span className="card-media-emblem icon-badge">
-        <Icon name={CATEGORY_ICON[family] || 'sparkles'} size={iconSize} strokeWidth={1.4} />
-      </span>
+    <div className={`card-media has-photo is-illustration media-${family} ${className}`.trim()}>
+      <StockPhoto name={productPhotoKey(product)} locale={locale} priority={priority} sizes={sizes} />
     </div>
   )
 }
@@ -149,7 +149,7 @@ export function ProductCard({ product, locale, state, orderingEnabled, showPlann
   const canAdd = Boolean(orderingEnabled && state?.orderable)
   return (
     <li className={`product-card family-${familyOf(product)}${tone === 'soldout' ? ' is-soldout' : ''}`} data-spotlight="" data-reveal="">
-      <CardMedia product={product} className="product-card-media" />
+      <CardMedia product={product} locale={locale} className="product-card-media" />
       <Heading className="product-card-title">{href ? <Link href={href}>{product.title}</Link> : product.title}</Heading>
       {product.summary && <p className="product-card-summary">{product.summary}</p>}
       <OfferBadge state={state} orderingEnabled={orderingEnabled} />

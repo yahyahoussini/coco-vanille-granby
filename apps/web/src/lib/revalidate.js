@@ -7,6 +7,7 @@
 // A failed refresh never blocks a write: the pages renew on their own after 5 minutes (revalidate = 300).
 // Relative imports only: the Payload config (and so these hooks) also loads outside Next.
 import { PAGES } from './routes.js'
+import { pingIndexNow } from './indexnow.js'
 
 // Route handlers outside the page layouts, refreshed with every change.
 export const FILES = ['/sitemap.xml', '/llms.txt']
@@ -74,6 +75,9 @@ const run = async (kind, doc, previousDoc, req) => {
     warned = true
     req?.payload?.logger?.warn?.(`public pages not refreshed (${r.error || `HTTP ${r.status}`}): they renew within 5 minutes; further failures in this process are not logged`)
   }
+  // A page's own URLs, once refreshed, are announced to Bing and the other IndexNow engines (real domain only;
+  // lib/indexnow.js). Site-wide changes (hours, catalogue) are not: they would announce every page each time.
+  if (!job.all) await pingIndexNow(job.paths).catch(() => {})
 }
 
 // Payload hooks for a collection or a global that the public site shows.

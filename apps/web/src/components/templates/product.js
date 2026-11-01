@@ -2,17 +2,20 @@ import { t } from '@/lib/i18n'
 import { productNode } from '@/lib/schema'
 import { mediaUrl, mediaFile } from '@/lib/media'
 import { Fact } from '../site/Fact'
-import { Icon, CATEGORY_ICON } from '../site/Icon'
+import { Icon } from '../site/Icon'
+import { StockPhoto } from '../site/StockPhoto'
+import { productPhotoKey } from '@/lib/photos'
 import { AnswerBlock, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
 import { SizesTable, AllergenBlock, LaCoupe, OfferBadge, PriceLine, familyOf, portionsLabel } from '../site/Products'
 import { leadTimeText, offerBadge } from '../site/offer'
 import { AddToBoxForm, AddLabel, pricedVariants } from '../catalogue/AddToBox'
 import { LivePrice } from '../catalogue/LivePrice'
 import { catalogueCopy } from '../catalogue/copy'
-import { orderAction, phoneAction } from './shared'
+import { phoneAction, mapsAction, addressLine } from './shared'
 
-// The picture: the owner's photos (« La coupe ») in an arch-topped frame, or the family's pastel surface with
-// its line icon (decoration only, never a stand-in product image).
+// The picture: the owner's photos (« La coupe ») in an arch-topped frame, or, until she adds them, an illustration
+// photo of the kind of product, labelled « Photo d'illustration » with its credit (src/lib/photos.js). The
+// illustration never reaches the Product JSON-LD below (images: the shop's photos only).
 function ProductMedia({ product, locale }) {
   const family = familyOf(product)
   const photos = (product.photos || []).filter((p) => mediaFile(p))
@@ -24,10 +27,8 @@ function ProductMedia({ product, locale }) {
     )
   }
   return (
-    <div className={`product-media media-${family}`} aria-hidden="true">
-      <span className="product-media-emblem icon-badge">
-        <Icon name={CATEGORY_ICON[family] || 'sparkles'} size={72} strokeWidth={1.1} />
-      </span>
+    <div className={`product-media has-photo is-illustration media-${family}`}>
+      <StockPhoto name={productPhotoKey(product)} locale={locale} priority sizes="(min-width: 60rem) 30rem, (min-width: 48rem) 45vw, 92vw" />
     </div>
   )
 }
@@ -41,8 +42,11 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
   const orderingEnabled = Boolean(shop?.ordering?.enabled)
   const ready = offerBadge(offer, { orderingEnabled })?.tone === 'ready'
   const canAdd = Boolean(orderingEnabled && offer?.orderable)
-  const order = orderAction(locale, served)
+  // Not orderable online (online ordering off, or this product not offered online): the actions are about THIS
+  // product, by phone or at the shop, never the generic order page, which is about cakes and the online box.
   const phone = phoneAction(business, locale)
+  const callToOrder = phone && { ...phone, label: `${s.actions.callToOrder} · ${business.phoneDisplay || business.phone}` }
+  const maps = mapsAction(business, locale)
   const formId = `pp-${product.id}-form`
   // The buy bar (phones) needs the form it submits: a product with no priced size has neither.
   const buyBar = canAdd && pricedVariants(product).length > 0
@@ -79,21 +83,24 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
                 <LivePrice formId={formId} locale={locale} />
               </>
             ) : (
-              (order || phone) && (
-                <p className="product-actions">
-                  {order && (
-                    <a className="btn btn-primary" href={order.href} data-event={order.event} data-magnetic="">
-                      {order.label}
-                      <Icon name="arrow" size={20} />
-                    </a>
-                  )}
-                  {phone && (
-                    <a className="btn btn-quiet" href={phone.href} data-event={phone.event}>
-                      <Icon name="phone" size={18} />
-                      {phone.label}
-                    </a>
-                  )}
-                </p>
+              (callToOrder || maps) && (
+                <>
+                  <p className="product-actions">
+                    {callToOrder && (
+                      <a className="btn btn-primary" href={callToOrder.href} data-event={callToOrder.event} data-magnetic="">
+                        <Icon name="phone" size={20} />
+                        {callToOrder.label}
+                      </a>
+                    )}
+                    {maps && (
+                      <a className="btn btn-quiet" href={maps.href} data-event={maps.event} rel="noopener">
+                        <Icon name="pin" size={18} />
+                        {maps.label}
+                      </a>
+                    )}
+                  </p>
+                  <p className="product-offline-note">{o.notOnline(addressLine(business, locale))}</p>
+                </>
               )
             )}
             {/* Phones: the price and « Ajouter » stay at hand, in place of the tab bar. Next to the form in the reading
@@ -129,7 +136,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
         <AllergenBlock product={product} business={business} locale={locale} />
       </div>
       {/* A product that can be added keeps one action, its form: no second « Commander » that leaves the page. */}
-      {!canAdd && <ConversionBand primary={order} secondary={phone} />}
+      {!canAdd && <ConversionBand primary={callToOrder} secondary={maps} />}
       <MetaLine doc={product} locale={locale} />
     </article>
   )

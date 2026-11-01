@@ -1,13 +1,14 @@
 import { PAGES, LOCALES, SITE_ORIGIN, HTML_LANG, pathFor, isIndexable, localeEnabled } from '@/lib/routes'
-import { payloadClient, getServed } from '@/lib/data'
-import { servedAlternates, productServed } from '@/lib/publish'
+import { payloadClient, getServed, getPagesIn } from '@/lib/data'
+import { servedAlternates, productServed, readyCopy } from '@/lib/publish'
 import { publishGuard } from '@/lib/facts'
 
 export const revalidate = 300
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 
-// Sitemap from real pages, real lastmod and reciprocal hreflang (v1 L5).
+// Sitemap from real pages, real lastmod and reciprocal hreflang (v1 L5). Only pages a search engine may index:
+// in show mode too, a page or product with a fact still missing (noindex) is left out.
 export async function GET() {
   const payload = await payloadClient()
   const strict = publishGuard() === 'strict'
@@ -16,6 +17,7 @@ export async function GET() {
   // Only the languages the site answers (lib/publish.js): under strict, a page without its copy in a language,
   // or with a missing fact, is neither listed nor named in hreflang.
   const served = await getServed()
+  const indexable = Object.fromEntries(await Promise.all(LOCALES.map(async (l) => [l, new Set((await getPagesIn(l)).filter(readyCopy).map((d) => d.key))])))
   const urls = []
   for (const page of PAGES) {
     if (!isIndexable(page)) continue
@@ -25,27 +27,27 @@ export async function GET() {
     const alternates = servedAlternates(page.key, served)
     for (const locale of LOCALES) {
       const path = pathFor(page.key, locale)
-      if (!path || !served[locale]?.has(page.key)) continue
-      urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod: doc?.updatedAt, alternates })
+      if (!path || !served[locale]?.has(page.key) || !indexable[locale]?.has(page.key)) continue
+      // The date the copy last changed (the meta line's), not the last database write.
+      urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod: doc?.contentUpdatedAt || doc?.updatedAt, alternates })
     }
   }
   // Products taken off the menu have no page (lib/data.js getProductBySlugs): not listed either.
   const listed = { _status: { equals: 'published' }, availability: { not_equals: 'discontinued' } }
   const products = await payload.find({ collection: 'products', where: listed, locale: 'all', limit: 1000, depth: 1 })
-  // Under strict, a product page exists per language only with its facts complete, French first (lib/publish.js).
+  // A product page is listed per language only with its facts complete, French first (lib/publish.js); under
+  // strict it does not even exist otherwise, in show mode it answers but stays noindex.
   const readyIn = {}
-  if (strict) {
-    const french = new Map((await payload.find({ collection: 'products', where: listed, locale: 'fr', limit: 1000, depth: 0 })).docs.map((d) => [d.id, d]))
-    for (const locale of LOCALES) {
-      if (!localeEnabled(locale)) continue
-      const docs = locale === 'fr' ? [...french.values()] : (await payload.find({ collection: 'products', where: listed, locale, limit: 1000, depth: 0 })).docs
-      readyIn[locale] = new Set(docs.filter((d) => productServed(d, { strict, servedHere: served[locale], locale, frProduct: french.get(d.id) })).map((d) => d.id))
-    }
+  const french = new Map((await payload.find({ collection: 'products', where: listed, locale: 'fr', limit: 1000, depth: 0 })).docs.map((d) => [d.id, d]))
+  for (const locale of LOCALES) {
+    if (!localeEnabled(locale)) continue
+    const docs = locale === 'fr' ? [...french.values()] : (await payload.find({ collection: 'products', where: listed, locale, limit: 1000, depth: 0 })).docs
+    readyIn[locale] = new Set(docs.filter((d) => productServed(d, { strict: true, servedHere: served[locale], locale, frProduct: french.get(d.id) })).map((d) => d.id))
   }
   for (const p of products.docs) {
     const alternates = {}
     for (const locale of LOCALES) {
-      if (!localeEnabled(locale) || (strict && !readyIn[locale]?.has(p.id))) continue
+      if (!localeEnabled(locale) || !readyIn[locale]?.has(p.id)) continue
       const slug = p.slug?.[locale]
       const cat = p.category?.slug?.[locale]
       if (slug && cat) alternates[HTML_LANG[locale]] = `${SITE_ORIGIN}${locale === 'fr' ? '' : `/${locale}`}/${cat}/${slug}/`

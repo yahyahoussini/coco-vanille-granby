@@ -107,7 +107,7 @@ export function websiteNode() {
   return { '@type': 'WebSite', '@id': WEBSITE_ID, url: `${SITE_ORIGIN}/`, name: 'Pâtisserie Coco Vanille', publisher: { '@id': BAKERY_ID } }
 }
 
-export function webPageNode({ url, name, description, locale, dateModified, type = 'WebPage', mentions }) {
+export function webPageNode({ url, name, description, locale, dateModified, datePublished, type = 'WebPage', mentions }) {
   return {
     '@type': type,
     '@id': `${url}#webpage`,
@@ -118,6 +118,7 @@ export function webPageNode({ url, name, description, locale, dateModified, type
     isPartOf: { '@id': WEBSITE_ID },
     about: { '@id': BAKERY_ID },
     mentions,
+    datePublished,
     dateModified,
   }
 }
@@ -165,7 +166,8 @@ export function productNode({ product, url, imageUrls = [], offer = null }) {
     name: product.title,
     description: product.summary,
     image: imageUrls,
-    brand: { '@type': 'Brand', name: 'Coco Vanille' },
+    // The bakery itself (an Organization), as the visible page says « Pâtisserie Coco Vanille ».
+    brand: { '@id': BAKERY_ID },
     offers,
   }
 }

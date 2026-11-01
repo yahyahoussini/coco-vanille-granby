@@ -11,8 +11,9 @@ export function OpenNow({ schedule = {}, locale = 'fr', labels }) {
     setState(openState(schedule))
   }, [schedule])
   if (!(schedule.hours || []).length) return null
-  // Same box before the clock is read in the browser, so the pill never pushes content down.
-  if (state === undefined) return <p className="open-pill is-pending" aria-hidden="true">{labels.open}</p>
+  // Same box before the clock is read in the browser, so the pill never pushes content down. No word in it: the
+  // server cannot know whether the shop is open, and a crawler must not read « Ouvert » at 2 a.m.
+  if (state === undefined) return <p className="open-pill is-pending" aria-hidden="true" data-nosnippet="">{' '}</p>
   if (state === null) return null
   return (
     <p className={`open-pill ${state.open ? 'is-open' : 'is-closed'}`} role="status">

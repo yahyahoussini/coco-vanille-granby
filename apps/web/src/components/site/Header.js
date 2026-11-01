@@ -59,7 +59,7 @@ export function Header({ locale, pageKey, served, alternates = null, business = 
     )
   const brand = (
     <Link href={home} className="brand">
-      <img className="brand-badge" src="/brand/logo-badge-96.webp" srcSet="/brand/logo-badge-96.webp 96w, /brand/logo-badge-192.webp 192w" sizes="56px" width="56" height="56" alt="" />
+      <img className="brand-badge" src="/brand/logo-badge-96.webp" srcSet="/brand/logo-badge-96.webp 96w, /brand/logo-badge-192.webp 192w" sizes="56px" width="56" height="56" alt="" fetchPriority="low" decoding="async" />
       <span className="brand-text">
         <span className="brand-name">Coco Vanille</span>
         <span className="brand-sub">{s.shell.brandSub}</span>
