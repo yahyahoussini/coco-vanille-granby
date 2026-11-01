@@ -1697,7 +1697,9 @@ html[data-today='Sunday'] .hours tr[data-days~='Sunday'] th::before {
 
 /* A page's picture under its h1 and answer (shared.js PageHero): wide, rounded, its caption below in small type. */
 .page-hero {
+  inline-size: 100%;
   margin-block: 1.25rem 2rem;
+  margin-inline: 0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }

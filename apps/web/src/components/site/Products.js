@@ -65,7 +65,7 @@ export function CardMedia({ product, className = '', size = 'card', priority = f
   }
   return (
     <div className={`card-media has-photo is-illustration media-${family} ${className}`.trim()}>
-      <StockPhoto name={productPhotoKey(product)} locale={locale} priority={priority} sizes={sizes} />
+      <StockPhoto name={productPhotoKey(product)} locale={locale} priority={priority} sizes={sizes} compact />
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import { PHOTOS, photoSources } from '@/lib/photos'
 
 const LABEL = { fr: 'Photo d’illustration', en: 'Illustrative photo', es: 'Foto ilustrativa' }
+// Small pictures (product cards): the same notice in one word, so it is never cut off.
+const SHORT = { fr: 'Illustration', en: 'Illustration', es: 'Ilustración' }
 const BY = { fr: 'Photo', en: 'Photo', es: 'Foto' }
 const MAP = { fr: 'Carte', en: 'Map', es: 'Mapa' }
 // A CC licence asks to say the picture was changed (here: cropped and resized).
@@ -15,7 +17,7 @@ const ILLUSTRATION_NOTE = {
 // Always labelled « Photo d'illustration »: it shows the kind of thing, never a specific Coco Vanille product. The
 // map and the Zoo photo are real (kind map / place) and carry their credit instead. Intrinsic size on the <img>, lazy unless `priority`.
 // `caption`: a <figure> with the label and the credit under the picture (page heroes; a CC licence needs it).
-export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = false, className, label = true, decorative = false, caption = false }) {
+export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = false, className, label = true, decorative = false, caption = false, compact = false }) {
   const photo = Object.hasOwn(PHOTOS, name || '') ? PHOTOS[name] : null
   if (!photo) return null
   const src = photoSources(name)
@@ -40,7 +42,7 @@ export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = fa
   )
   const badge = label && !isReal && (
     <span className="stock-photo-label" data-nosnippet="">
-      {LABEL[locale] || LABEL.fr}
+      {(compact ? SHORT : LABEL)[locale] || LABEL.fr}
     </span>
   )
   if (!caption) {

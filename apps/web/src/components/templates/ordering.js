@@ -21,6 +21,7 @@ import { AutoRefresh } from '../ordering/AutoRefresh'
 import { requestContext } from '../ordering/server'
 import { BoxTemplate, CheckoutTemplate } from '../ordering/BoxCheckout'
 import { KeepPhone } from '../catalogue/KeepPhone'
+import { PageHero } from './shared'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const one = (v) => (Array.isArray(v) ? v[0] : v)
@@ -39,6 +40,7 @@ async function OrderTemplate({ locale, business, shop, doc }) {
     <article className="wrap page ordering order">
       <h1>{doc?.h1 ? <Unbroken text={doc.h1} /> : marker('titre de la page')}</h1>
       <AnswerBlock text={doc?.answer} />
+      <PageHero doc={doc} locale={locale} />
       {enabled && <ProductOrderList locale={locale} products={products} states={states} shop={shop} boxToken={ctx.boxToken} boxItems={ctx.boxItems} />}
       <RequestForm locale={locale} business={business} draft={ctx.draft} />
       <Sections sections={doc?.sections} locale={locale} />

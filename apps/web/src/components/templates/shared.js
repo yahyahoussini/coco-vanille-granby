@@ -77,7 +77,7 @@ export function ratingOf(business, locale) {
 
 // The picture under a page's h1 and answer (v1 Layer 10: a hero photo with a factual alt and a caption): the photo
 // the owner gave the page (its « hero » field), else its illustration (src/lib/photos.js), labelled and credited.
-function PageHero({ doc, locale }) {
+export function PageHero({ doc, locale }) {
   const own = doc?.hero && typeof doc.hero === 'object' && mediaFile(doc.hero, 'hero') ? doc.hero : null
   if (own) {
     return (
