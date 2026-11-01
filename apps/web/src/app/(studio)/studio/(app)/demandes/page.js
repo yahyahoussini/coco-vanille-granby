@@ -167,7 +167,7 @@ export default async function Demandes({ searchParams }) {
           </ul>
         </section>
       )}
-      <p className="meta">Délai promis aux clients : réponse en 24 h ({longDay(today)}).</p>
+      <p className="meta">Délai visé par l’équipe : réponse en 24 h, sans le promettre aux clients ({longDay(today)}).</p>
     </>
   )
 }

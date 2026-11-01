@@ -52,9 +52,11 @@ const STOP = { fr: 'STOP pour ne plus recevoir de textos.', en: 'Reply STOP to o
 
 const SMS = {
   request_received: {
-    fr: (d) => `Coco Vanille : votre demande pour le ${d.day} est bien arrivée. Réponse d'ici le ${d.answerBy}. ${STOP.fr}`,
-    en: (d) => `Coco Vanille: your request for ${d.day} has arrived. We will reply by ${d.answerBy}. ${STOP.en}`,
-    es: (d) => `Coco Vanille: recibimos su solicitud para el ${d.day}. Respuesta antes del ${d.answerBy}. ${STOP.es}`,
+    // No reply time is promised until the owner sets one (« Faits du site », reponse-demandes); answerBy stays the
+    // team's internal target in Studio › Demandes.
+    fr: (d) => `Coco Vanille : votre demande pour le ${d.day} est bien arrivée. La boutique vous répond avec un prix. ${STOP.fr}`,
+    en: (d) => `Coco Vanille: your request for ${d.day} has arrived. The shop will reply with a price. ${STOP.en}`,
+    es: (d) => `Coco Vanille: recibimos su solicitud para el ${d.day}. La tienda le responderá con un precio. ${STOP.es}`,
   },
   quote_sent: {
     // The link carries the date, the validity and the recap: the text stays one segment with a 4-digit price.
@@ -151,7 +153,7 @@ const E = {
     readySubject: (n) => `Votre commande ${n} est prête`,
     readyLead: (n, until) => `Votre commande ${n} vous attend au comptoir${until ? ` jusqu’à ${until}` : ''}.`,
     requestSubject: (d) => `Demande de gâteau reçue · ${d}`,
-    requestLead: (when) => `Merci! Nous avons bien reçu votre demande. Nous vous répondons d’ici le ${when}, avec un prix et un lien pour l’acompte.`,
+    requestLead: () => `Merci! Nous avons bien reçu votre demande. Nous vous répondons avec un prix et la façon de verser l’acompte.`,
     requestAllergy: 'Vous avez signalé une allergie : nous vous appellerons pour en parler avant de vous proposer un prix.',
     occasion: 'Occasion',
     guests: 'Invités',
@@ -190,7 +192,7 @@ const E = {
     readySubject: (n) => `Your order ${n} is ready`,
     readyLead: (n, until) => `Your order ${n} is waiting for you at the counter${until ? ` until ${until}` : ''}.`,
     requestSubject: (d) => `Cake request received · ${d}`,
-    requestLead: (when) => `Thank you! We received your request. We will reply by ${when}, with a price and a deposit link.`,
+    requestLead: () => `Thank you! We received your request. We will reply with a price and how to pay the deposit.`,
     requestAllergy: 'You mentioned an allergy: we will call you to talk about it before we send a price.',
     occasion: 'Occasion',
     guests: 'Guests',
