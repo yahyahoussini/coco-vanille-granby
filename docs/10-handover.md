@@ -1,6 +1,6 @@
 # Dossier de transmission — Pâtisserie Coco Vanille
 
-Rédigé le jeudi 29 octobre 2026. **Remis le premier jour du mandat et le dernier jour**, mis à jour à chaque changement d'accès.
+Rédigé le jeudi 29 octobre 2026, mis à jour le dimanche 1er novembre 2026 (hébergement provisoire sur le serveur de l'agence, §1.1; registres d'incidents). **Remis le premier jour du mandat et le dernier jour**, mis à jour à chaque changement d'accès.
 
 La boutique possède tout ; l'agence (Yahya, BrandHub.ma) gère. Ce dossier dit, pour chaque compte, chaque fichier et chaque procédure, où il se trouve et comment s'en servir, pour qu'une autre personne puisse reprendre sans nous. **Aucun mot de passe ici** : ils sont dans un gestionnaire de mots de passe partagé `[[FACT NEEDED: lequel, et qui en est propriétaire]]`.
 
@@ -12,7 +12,8 @@ Sources : [README.md](../README.md) (« The app »), [infra/README.md](../infra/
 |---|---|---|---|---|
 | Domaine `cocovanillegranby.com` | `[[FACT NEEDED: registraire et titulaire]]` | DNS délégué | `[[FACT NEEDED]]` | ☐ |
 | Domaines défensifs (`cocovanillegranby.ca`, autres) | Décision du propriétaire, au nom légal | — | `[[FACT NEEDED]]` | ☐ |
-| Serveur (VPS) | `[[FACT NEEDED: fournisseur, ville du centre de données]]` | Utilisateur `deploy` (clés SSH : la clé personnelle de l'agence et la clé de déploiement de GitHub) | `[[FACT NEEDED]]` | ☐ |
+| Serveur (VPS) de la boutique, cible | `[[FACT NEEDED: fournisseur, ville du centre de données]]` | Utilisateur `deploy` (clés SSH : la clé personnelle de l'agence et la clé de déploiement de GitHub) | `[[FACT NEEDED]]` | ☐ |
+| **Serveur provisoire : le VPS Hostinger de l'agence** (depuis le 1er novembre 2026, jusqu'au passage au vrai domaine; détail ci-dessous) | **Au nom de l'agence**, pas de la boutique : une exception datée à la règle de [docs/11 §3](11-contrat-clauses.md) | Compte Linux `coco` (le seul que Coco utilise); root reste à l'agence, pour ses autres applications | Celle du compte Hostinger de l'agence | `[[FACT NEEDED: double authentification active sur le compte Hostinger de l'agence]]` |
 | Stockage des sauvegardes (deux fournisseurs au Québec) | Comptes de la boutique | Une clé limitée à chaque compartiment | `[[FACT NEEDED]]` | ☐ |
 | Clé privée de chiffrement des sauvegardes (`age`) | Gestionnaire de mots de passe + copie imprimée dans le coffre de la boutique | Seulement le temps d'un exercice de restauration | — | — |
 | GitHub (code, déploiements, images) | **Aujourd'hui : compte de l'agence `yahyahoussini`.** À transférer à une organisation au nom de la boutique (décision à prendre, [docs/11 §3](11-contrat-clauses.md)) | Administrateur | `[[FACT NEEDED]]` | ☐ |
@@ -28,7 +29,22 @@ Sources : [README.md](../README.md) (« The app »), [infra/README.md](../infra/
 | Twilio | Compte de la boutique | Clés d'API dans le `.env` | `[[FACT NEEDED]]` | ☐ |
 | AWS (Amazon SES, région ca-central-1) | Compte de la boutique | Utilisateur limité à l'envoi de courriels | `[[FACT NEEDED]]` | ☐ |
 | Surveillance (disponibilité, signaux de vie) et Sentry | `[[FACT NEEDED: au nom de qui]]` | Reçoit les alertes | — | ☐ |
-| Coco Studio | Propriétaire : clé d'accès (passkey) et code de secours ; gérant et comptoir : NIP | Rôle « Agence » (sans noms ni téléphones de clients par défaut) | Le propriétaire recrée les accès de l'équipe dans Plus › Réglages | Passkey |
+| Coco Studio | Propriétaire : clé d'accès (passkey) et code de secours ; gérant et comptoir : NIP | Rôle « Agence » (sans noms ni téléphones de clients par défaut) | Le propriétaire recrée les accès de l'équipe dans Plus › Réglages | Passkey (sur l'adresse temporaire : mot de passe; la clé d'accès s'ajoute après le passage au vrai domaine, [docs/22](22-acces-et-premiers-pas.md)) |
+
+### 1.1 L'hébergement provisoire sur le serveur partagé de l'agence
+
+Le site et Coco Studio sont d'abord mis en ligne, pour que la boutique les vérifie, sur un serveur qui appartient à l'agence et qui fait déjà tourner d'autres applications ([infra/README.md](../infra/README.md), « Shared server on a temporary address »; [docs/22](22-acces-et-premiers-pas.md)). Ce n'est pas le serveur de la boutique : c'est une phase datée, qui finit au passage au vrai domaine.
+
+| Point | Ce qui est vrai pendant cette phase |
+|---|---|
+| Qui détient le serveur | L'agence (Yahya, BrandHub.ma), dans son compte Hostinger. La boutique n'y a pas d'accès système; elle a son compte Coco Studio |
+| Pays et ville du centre de données | `[[FACT NEEDED: pays et ville du centre de données du VPS Hostinger de l'agence]]`. S'il est hors du Québec, l'article 17 de la Loi 25 s'applique avant que des renseignements personnels y soient confiés : évaluation des facteurs relatifs à la vie privée et entente écrite ([docs/11 §6](11-contrat-clauses.md)) |
+| Adresses | `cocovanille.<ip-avec-tirets>.sslip.io` (le site, « ne pas indexer » sur chaque réponse) et `admin-cocovanille.<ip-avec-tirets>.sslip.io` (Coco Studio), en mode `show` : chaque page avec ses faits vérifiés et une case pour chaque fait manquant |
+| Renseignements personnels qui y sont gardés | Les comptes de Coco Studio (courriel, nom affiché, rôle, mot de passe chiffré) de la propriétaire, de l'équipe et de l'agence; les demandes de gâteaux et les messages « Écrivez-nous » si quelqu'un les envoie à l'adresse temporaire, et les commandes saisies dans Coco Studio s'il y en a (nom, téléphone, notes d'allergie); les journaux nginx (adresses IP). Aucun paiement : les paiements sont éteints (`make-env.sh`), et les textos et courriels ne partent pas (gardés dans le journal) |
+| Sauvegardes | Chaque nuit à 2 h 15, une copie de la base vérifiée, sur le même disque (`/opt/coco/production/backups/`); test de restauration le premier lundi du mois. Copie chiffrée hors du serveur : `[[FACT NEEDED: compartiments de sauvegarde configurés sur le serveur partagé (BACKUP_REMOTES), ou copie locale seulement]]` |
+| Qui y accède | L'agence (root et `coco`); les autres applications de l'agence partagent la machine, pas les données (conteneurs, base et dossiers de Coco à part) |
+| Fin | Au passage au vrai domaine, une fois `cocovanillegranby.com` enregistré au nom de la boutique : `[[FACT NEEDED: date du passage, qui suit le feu vert de la boutique pour le domaine (docs/13 S0-2)]]`. Ce jour-là : déménagement vers un serveur au nom de la boutique (cible : au Québec, [docs/11 §6](11-contrat-clauses.md)), redirection 301 des adresses temporaires ([docs/18 §2](18-redirections.md)), puis destruction des copies de la base et des fichiers de Coco laissées sur le serveur de l'agence, confirmée par écrit (article 18.3) |
+| Incidents | Les deux registres : [docs/23](23-registre-incidents.md) (tous les incidents, tenu par l'agence) et [docs/24](24-registre-incidents-confidentialite.md) (confidentialité, à la boutique) ; la conduite à tenir sur ce serveur : [docs/09 §6](09-runbook-incident.md) |
 
 ## 2. Où vivent les choses
 
@@ -43,7 +59,8 @@ Sources : [README.md](../README.md) (« The app »), [infra/README.md](../infra/
 | Les faits de l'entreprise | [data/facts.json](../data/facts.json) (le contrat des faits), puis Coco Studio (boutique, heures, produits) | Un fait n'est entré qu'une fois ; le site, les données structurées et les annuaires le reprennent |
 | Les pages | Le registre des pages : [apps/web/src/lib/routes.js](../apps/web/src/lib/routes.js). Le texte de départ : `apps/web/src/seed/content.js`, chargé dans Payload ; les modifications se font dans Coco Studio › Plus › Avancé | Une page avec un `[[FACT NEEDED]]` ne se publie pas en production (`PUBLISH_GUARD=strict`) |
 | La liste des faits qui manquent par page | Le résumé de chaque déploiement en préproduction (`owner-todo.md`) ; la dernière copie locale : `apps/web/reports/gate/owner-todo.md` (28 octobre 2026) | À renvoyer au propriétaire quand elle change |
-| La mesure du lundi | [.github/workflows/weekly.yml](../.github/workflows/weekly.yml) et `tools/*.mjs` ; questions lues par l'exécution automatique : [data/prompts.csv](../data/prompts.csv) ; concurrents : [data/competitors.csv](../data/competitors.csv) ; historique : l'artefact « rank-first-history » de GitHub Actions, gardé 90 jours et reporté chaque semaine. Les requêtes suivies, les relevés à la main et les limites connues des outils : [scoreboard/](../scoreboard/README.md) | Proposition : en archiver une copie chaque mois (dépôt ou compartiment), pour ne rien perdre si la mesure s'arrête plus de 90 jours ; faire lire `scoreboard/` par l'exécution automatique ([scoreboard/README §6](../scoreboard/README.md)) |
+| La mesure du lundi | [.github/workflows/weekly.yml](../.github/workflows/weekly.yml) et `tools/*.mjs` ; questions, concurrents, avis et relevés à la main lus par l'exécution automatique : [scoreboard/](../scoreboard/README.md) (`prompts.csv`, `competitors.csv`, `reviews.csv`, `runs/`), la seule source de vérité de la mesure depuis le 29 octobre 2026 ; historique : l'artefact « rank-first-history » de GitHub Actions, gardé 90 jours et reporté chaque semaine | Proposition : en archiver une copie chaque mois (dépôt ou compartiment), pour ne rien perdre si la mesure s'arrête plus de 90 jours |
+| Les registres d'incidents | [docs/23](23-registre-incidents.md) (tous, tenu par l'agence) ; [docs/24](24-registre-incidents-confidentialite.md) (Loi 25, article 3.8 : le modèle ; le registre rempli est gardé par la boutique, hors du dépôt) | Remis avec ce dossier à la fin du mandat |
 | Les redirections | La collection `redirects` existe dans Payload, mais rien ne la sert encore ([infra/README.md](../infra/README.md), « Open points ») ; l'historique : [docs/18-redirections.md](18-redirections.md) | Aucun ancien site n'a été trouvé ; anciens liens éventuels (Linktree, boutique Facebook…) : `[[FACT NEEDED: anciennes adresses à rediriger (research/14 T7)]]` |
 | Photos et vidéos originales | `[[FACT NEEDED: emplacement des originaux]]` | Droits : la boutique ; consentement écrit de toute personne visible |
 | Les documents de travail | `docs/00` à `docs/19`, `research/`, `data/` | Ce dossier-ci : `docs/10-handover.md` |

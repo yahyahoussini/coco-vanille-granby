@@ -1,6 +1,6 @@
 # Documents de travail — Pâtisserie Coco Vanille, Granby
 
-Mis à jour le jeudi 29 octobre 2026 · Préparé par l'Agence (Yahya, BrandHub.ma) pour Pâtisserie Coco Vanille inc.
+Mis à jour le jeudi 29 octobre 2026, puis le dimanche 1er novembre 2026 (registres d'incidents, serveur provisoire) · Préparé par l'Agence (Yahya, BrandHub.ma) pour Pâtisserie Coco Vanille inc.
 
 Ces documents, en français du Québec, tirent leur contenu de la recherche du dépôt ([research/](../research/), en anglais) et de ses données ([data/](../data/)), et décrivent le site tel qu'il est construit ([README du dépôt](../README.md), « The app »). Les faits qui manquent restent marqués `[[FACT NEEDED: …]]`; aucune position dans Google ni dans les moteurs d'IA n'est promise.
 
@@ -18,10 +18,10 @@ Ces documents, en français du Québec, tirent leur contenu de la recherche du d
 | [06-annuaires-listicles.md](06-annuaires-listicles.md) | Les 34 fiches d'annuaires, les palmarès « meilleures pâtisseries », les demandes de correction prêtes, les mentions sans lien, le compteur mensuel |
 | [07-rapport-mensuel.md](07-rapport-mensuel.md) | Le modèle du rapport mensuel : résultats de la boutique, réputation, visibilité, présence |
 | [08-brief-page.md](08-brief-page.md) | Le contrat de page et le gabarit de brief, avec l'exemple rempli « Gâteau pour demain » (les briefs se rangent dans `docs/briefs/`, à créer avec le premier) |
-| [09-runbook-incident.md](09-runbook-incident.md) | Les incidents : site en panne, baisse dans Google, vague d'avis, fait faux dans une IA, fiche suspendue, paiement, Loi 25 |
-| [10-handover.md](10-handover.md) | Le dossier de transmission : comptes et récupération, où vivent les choses, procédures, fin de mandat |
+| [09-runbook-incident.md](09-runbook-incident.md) | Les incidents : site en panne, baisse dans Google, vague d'avis, fait faux dans une IA, fiche suspendue, paiement, Loi 25, et les règles du serveur partagé de l'agence (adresse temporaire) |
+| [10-handover.md](10-handover.md) | Le dossier de transmission : comptes et récupération, l'hébergement provisoire sur le serveur de l'agence, où vivent les choses, procédures, fin de mandat |
 | [11-contrat-clauses.md](11-contrat-clauses.md) | Les clauses du contrat, à faire valider par un juriste, et l'entente d'une page sur les tactiques refusées |
-| [12-setup-mesure.md](12-setup-mesure.md) | La mise en place de la mesure : consentement, Search Console, Bing, IndexNow, GA4, fiche Google, journaux, les 33 requêtes |
+| [12-setup-mesure.md](12-setup-mesure.md) | La mise en place de la mesure : consentement, Search Console, Bing, IndexNow, GA4, fiche Google, journaux, les requêtes suivies, l'adresse temporaire |
 | [13-taches-humaines.md](13-taches-humaines.md) | Ce que le code et l'IA ne peuvent pas faire : décisions, comptes, serveur, photos, juriste, comptable, tâches de chaque semaine et de chaque mois |
 | [14-calendrier-contenu.md](14-calendrier-contenu.md) | Le calendrier de novembre 2026 à décembre 2027 : dates des fêtes, mois par mois, la page de chaque semaine après le lancement |
 | [15-script-video.md](15-script-video.md) | Cinq scripts de vidéos courtes à tourner au cellulaire, la règle de la transcription, les idées en réserve |
@@ -33,9 +33,11 @@ Ces documents, en français du Québec, tirent leur contenu de la recherche du d
 | [22-acces-et-premiers-pas.md](22-acces-et-premiers-pas.md) | Pour la propriétaire : les deux adresses (site et Coco Studio), quoi faire en premier dans « Faits du site », ce qui n'est pas encore actif et pourquoi, le passage au vrai domaine |
 | [23-feuille-produits.md](23-feuille-produits.md) | La feuille des vrais produits : une ligne par format (famille, nom, format, prix, portions, délai, allergènes), et ce que l'import fait et ne fait pas (les allergènes restent à confirmer dans Coco Studio) |
 | [20-seo-geo-aeo-local.md](20-seo-geo-aeo-local.md) | Le plan local : ce que veulent dire le SEO local, l'AEO et le GEO à Granby, la fiche maîtresse et ses copies, les trois batailles (boulangerie, Zoo, spécialités marocaines), les avis, les 15 questions locales, les 12 requêtes du mois, les liens locaux, la mesure, les 90 jours |
+| [23-registre-incidents.md](23-registre-incidents.md) | Le registre de tous les incidents (site, Coco Studio, serveur, fiches), tenu par l'agence depuis le 1er novembre 2026 |
+| [24-registre-incidents-confidentialite.md](24-registre-incidents-confidentialite.md) | Le modèle du registre des incidents de confidentialité (Loi 25, article 3.8), qui appartient à la boutique et se garde hors du dépôt |
 
 **À côté de ce dossier** : [scoreboard/](../scoreboard/README.md) (les requêtes suivies, les relevés du lundi, les cibles d'extraits, les avis) et [site.config.json](../site.config.json) (la configuration lue par les outils de mesure).
 
 **Les étiquettes** : *vérifié* (deux sources ou une source officielle) · *non vérifié* (une seule source non officielle, ou une déduction) · *(est.)* (estimation de l'Agence) · *confirmé, en partie, non trouvé* (verdicts sur les plateformes, [research/06](../research/06-seo-aeo-geo-2026-verified.md)) · `[[FACT NEEDED: …]]` (seule la boutique ou un professionnel peut le fournir; la page qui en contient un ne se publie pas).
 
-**Pour l'Agence** : les parties de [docs/19](19-marche-et-concurrence.md) marquées « Généré par market.mjs » viennent de `tools/market.mjs`. Toujours lancer cet outil avec `--out scoreboard/market/<semaine>.md`, et jamais `tools/weekly.mjs` depuis la racine du dépôt : les deux réécriraient docs/19 et effaceraient ce qui est complété à la main ([scoreboard/README.md](../scoreboard/README.md), §2).
+**Pour l'Agence** : les parties de [docs/19](19-marche-et-concurrence.md) marquées « Généré par market.mjs » viennent de `tools/market.mjs`. Depuis le 29 octobre 2026, `market.mjs` et `tools/weekly.mjs` écrivent la carte dans `scoreboard/market/<semaine>.md`, jamais dans docs/19, qui se complète à la main ([scoreboard/README.md](../scoreboard/README.md), §6, point 7).

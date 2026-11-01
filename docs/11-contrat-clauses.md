@@ -2,7 +2,7 @@
 
 > **À FAIRE VALIDER PAR UN JURISTE AVANT TOUTE SIGNATURE.** Ce document est un modèle de clauses, pas un contrat, et **pas un avis juridique**. Les articles de loi cités viennent de la recherche ([research/07](../research/07-legal-quebec-compliance.md)) ou du texte de loi reproduit par un cabinet (document sans valeur officielle) : le juriste les confirme sur Légis Québec et adapte chaque clause.
 
-Rédigé le jeudi 29 octobre 2026. Les clauses fixent trois choses : **ce qui est promis**, **qui possède quoi**, **comment on mesure**. Liens : [docs/00 §2](00-intake.md) (les comptes), [docs/10](10-handover.md) (la transmission), [docs/01 §5](01-plan-90-jours.md) (la définition de « premier »).
+Rédigé le jeudi 29 octobre 2026, mis à jour le dimanche 1er novembre 2026 (hébergement provisoire chez l'agence, §3 et §6; tableau de bord, §8; quatre tactiques de plus à l'annexe A). Les clauses fixent trois choses : **ce qui est promis**, **qui possède quoi**, **comment on mesure**. Liens : [docs/00 §2](00-intake.md) (les comptes), [docs/10](10-handover.md) (la transmission), [docs/01 §5](01-plan-90-jours.md) (la définition de « premier »).
 
 ## 0. Les parties
 
@@ -15,7 +15,7 @@ Le site, Coco Studio et la commande en ligne sont déjà construits (non déploy
 
 | Phase | Contenu | Mode | Honoraires |
 |---|---|---|---|
-| **1. Mise en place** | Déploiement sur le serveur de la boutique ; mesure de départ (33 questions, Google et cinq moteurs d'IA) ; consoles (Search Console, Bing Webmaster Tools), GA4 avec consentement ; fiche Google, Apple Business, Bing Places et annuaires alignés ; premières pages publiques ; coordination avec le juriste et le comptable ; ouverture de la commande en ligne après les tests ([docs/01](01-plan-90-jours.md)) | Forfait, livrables datés | `[[FACT NEEDED: montant]]` |
+| **1. Mise en place** | Mise en ligne provisoire, pour vérification, sur le serveur de l'agence (§3), puis déploiement sur le serveur de la boutique ; mesure de départ (les 30 requêtes suivies, Google et cinq moteurs d'IA) ; consoles (Search Console, Bing Webmaster Tools), GA4 avec consentement ; fiche Google, Apple Business, Bing Places et annuaires alignés ; premières pages publiques ; coordination avec le juriste et le comptable ; ouverture de la commande en ligne après les tests ([docs/01](01-plan-90-jours.md)) | Forfait, livrables datés | `[[FACT NEEDED: montant]]` |
 | **2. Croissance** | Le rythme hebdomadaire ([docs/02](02-rythme-hebdo.md)) : une page par semaine après le lancement, demandes d'avis et réponses, mentions (annuaires, listes, médias, partenaires), boucle des extraits, mesure chaque lundi, rapport chaque mois | Mensuel | `[[FACT NEEDED: montant]]` |
 | **3. Maintien** | Mesure, fraîcheur des faits, exploitation du serveur (vérifications du vendredi, sauvegardes, tests de restauration, mises à jour de sécurité), incidents ([docs/09](09-runbook-incident.md)) | Mensuel, tarif réduit | `[[FACT NEEDED: montant]]` |
 
@@ -28,6 +28,8 @@ Pourquoi cette clause : Google l'écrit lui-même : « No one can guarantee a #1
 ## 3. Propriété des actifs, du code et des contenus
 
 « Le domaine, le serveur, les comptes de sauvegarde, la propriété Search Console, le Profil d'entreprise Google, la propriété GA4, Bing Webmaster Tools, Apple Business, Bing Places, la chaîne YouTube, les comptes sociaux, la messagerie du domaine et les comptes Stripe, Twilio et AWS sont créés, ou transférés, au nom du client, avec des coordonnées de récupération qu'il contrôle. Le prestataire y accède comme gestionnaire, éditeur ou utilisateur. Le registre des accès ([docs/10 §1](10-handover.md)) est remis le premier jour et le dernier jour du mandat. Le prestataire n'enregistre jamais un de ces comptes à son nom et ne retient jamais un accès, même en cas de différend. »
+
+« **Exception provisoire, datée : l'hébergement de vérification.** Du 1er novembre 2026 jusqu'au passage au domaine du client, le site et Coco Studio tournent sur un serveur du prestataire (un VPS Hostinger qu'il loue en son nom et qui fait aussi tourner d'autres applications), à une adresse temporaire marquée « ne pas indexer », pour que le client les vérifie. Pendant cette phase : le prestataire détient le serveur; les données de Coco Vanille y restent séparées de celles des autres applications; aucun paiement n'y est traité; le pays et la ville du centre de données sont `[[FACT NEEDED: pays et ville du centre de données du VPS de l'agence]]`. La phase prend fin au passage au domaine du client, au plus tard `[[FACT NEEDED: date limite de la phase provisoire, à convenir]]` : le site déménage alors sur un serveur au nom du client, et le prestataire détruit les copies de la base et des fichiers laissées sur son serveur et le confirme par écrit. Le détail : [docs/10 §1.1](10-handover.md). »
 
 « Le code du site et de Coco Studio développé pour le client, les textes, les photos fournies par le client, les données et les rapports appartiennent au client `[[FACT NEEDED: à la livraison ou au paiement de quelle facture — à décider avec le juriste]]`. Le dépôt de code est hébergé dans une organisation GitHub au nom du client `[[FACT NEEDED: date du transfert ; aujourd'hui, le dépôt est sous le compte de l'agence]]`. Les composants libres gardent leurs licences. Les outils génériques de mesure de l'agence (dossier `tools/`) sont concédés au client sous une licence perpétuelle et non exclusive, pour ses propres sites `[[FACT NEEDED: validation du juriste]]`. »
 
@@ -61,6 +63,7 @@ Texte de loi tel que reproduit par le cabinet Lavery (« Ce document n'a pas de 
 | Élément | Lieu | Conséquence |
 |---|---|---|
 | Serveur et sauvegardes | Cible : centres de données **au Québec** ; sauvegardes chez deux fournisseurs différents, dans des centres de données au Québec `[[FACT NEEDED: fournisseur et ville (research/14 T1)]]` | Pas d'évaluation au titre de l'article 17 pour la base principale si tout reste au Québec ([research/17 §7](../research/17-vps-self-hosting-and-domain.md)) |
+| **Serveur provisoire de l'agence** (depuis le 1er novembre 2026, jusqu'au passage au domaine) | VPS Hostinger de l'agence : `[[FACT NEEDED: pays et ville du centre de données]]`. Données gardées : comptes de Coco Studio, demandes de gâteaux, messages « Écrivez-nous » et commandes saisies s'il y en a, journaux du serveur; sauvegardes de nuit sur le même disque ([docs/10 §1.1](10-handover.md)) | Si ce centre de données est hors du Québec : évaluation des facteurs relatifs à la vie privée et entente écrite (article 17) **avant** d'y confier des renseignements personnels de clients; d'ici là, l'adresse temporaire sert à vérifier le site, pas à prendre des commandes |
 | Fournisseurs hors du Québec : paiements (Stripe), textos (Twilio), mesure d'audience (GA4), erreurs (Sentry), messagerie, et l'interface Claude si les brouillons de réponses par IA sont activés plus tard | Hors du Québec (les autres provinces comptent, [research/07 §2](../research/07-legal-quebec-compliance.md)) | Article 17 : une évaluation des facteurs relatifs à la vie privée **avant** de communiquer, puis une entente écrite. Le client les fait, avec l'aide du prestataire |
 | **L'agence elle-même** | `[[FACT NEEDED: lieu d'où l'agence, ses sous-traitants et leurs outils accèdent au serveur et aux données]]` | Si l'accès se fait hors du Québec, l'article 17 s'applique aussi à ce mandat : évaluation et entente écrite avant le premier accès aux renseignements personnels |
 
@@ -74,7 +77,7 @@ Source : [research/07 1E et 1D](../research/07-legal-quebec-compliance.md) ; le 
 
 ## 8. Mesure, rapports, durée, fin du mandat
 
-« Un tableau de bord (33 questions suivies, positions, extraits, citations par moteur, mentions, avis, commandes et demandes) est mis à jour chaque semaine, et un rapport ([docs/07](07-rapport-mensuel.md)) est remis chaque mois. Un changement est considéré comme réel après quatre semaines dans la même direction. Le client a un accès en lecture à toutes les sources. »
+« Un rapport est produit chaque lundi (la mesure automatique de GitHub Actions et les relevés à la main de [scoreboard/](../scoreboard/README.md) : les 30 requêtes suivies, positions, extraits, citations par moteur), et un rapport mensuel ([docs/07](07-rapport-mensuel.md)) est remis chaque mois, avec les mentions, les avis, les commandes et les demandes. Le tableau de bord de Coco Studio (Agence › Scoreboard) reprendra les chiffres du lundi une fois le fichier des rapports déposé sur le serveur; d'ici là, le rapport du lundi et le rapport mensuel font foi. Un changement est considéré comme réel après quatre semaines dans la même direction. Le client a un accès en lecture à toutes les sources. »
 
 « Le contrat a une durée initiale de `[[FACT NEEDED: durée]]`, avec un préavis de résiliation de `[[FACT NEEDED: préavis]]`. À la fin du mandat, quelle qu'en soit la cause, le prestataire remet le dossier de transmission ([docs/10](10-handover.md)) : le code et son historique, les données exportées (copie de la base, fichiers téléversés, fichiers de mesure), les rapports, les documents ; il retire ses accès, fait changer les clés qu'il a connues et détruit les renseignements personnels qu'il détient (§6). Une aide à la transition de `[[FACT NEEDED: nombre d'heures]]` heures est incluse. »
 
@@ -91,7 +94,7 @@ Source : [research/07 1E et 1D](../research/07-legal-quebec-compliance.md) ; le 
 
 ## Annexe A — Entente d'une page sur les tactiques refusées (à signer en semaine 0)
 
-Cette entente est demandée dans le message au propriétaire ([research/14 §14](../research/14-owner-questions.md), question S6). Liste tirée du plan-v1 §10 et du registre des risques du skill rank-first (référence 09 §5), adaptée au Québec.
+Cette entente est demandée dans le message au propriétaire ([research/14 §14](../research/14-owner-questions.md), question S6). Liste tirée du plan-v1 §10 et du registre des risques du skill rank-first (référence 09 §5), adaptée au Québec; les points 14 à 17 ont été ajoutés le 1er novembre 2026, avant la signature (plan-v1 §10 les refusait déjà : les mini-sites pour la même boutique et Wikipédia).
 
 **Pâtisserie Coco Vanille inc. et l'agence s'engagent à ne jamais :**
 
@@ -107,7 +110,11 @@ Cette entente est demandée dans le message au propriétaire ([research/14 §14]
 10. publier un contenu payé ou une collaboration d'influenceur sans le dire, ni créer de faux comptes dans des groupes ou des forums ;
 11. annoncer des prix qui ne comprennent pas tous les frais obligatoires (seules la TPS et la TVQ s'ajoutent) ;
 12. nuire à un concurrent (faux avis, signalements abusifs, référencement négatif), ni copier ses textes ou ses photos ;
-13. utiliser des robots de clics ou toute manipulation du trafic.
+13. utiliser des robots de clics ou toute manipulation du trafic ;
+14. créer un deuxième domaine, un mini-site ou un site copie pour la même boutique : cocovanillegranby.com est le seul domaine du site (un domaine défensif, comme le .ca s'il est enregistré, ne fait que rediriger vers lui) ;
+15. bourrer de mots-clés le site, les fiches ou les réponses aux avis ;
+16. faire une redirection trompeuse : envoyer les robots ou les visiteurs vers une autre page que celle qu'ils demandent, ou montrer une adresse et en servir une autre ;
+17. écrire ou modifier un article de Wikipédia sur la boutique.
 
 Ce qui reste permis, et qu'on fera vite : une page utile par semaine, la demande d'avis à chaque client, des études de prix datées, la présence sur chaque annuaire et chaque liste qui compte, des partenaires réels, des vidéos, une page comparative honnête après avis juridique.
 
@@ -115,4 +122,4 @@ Signé à Granby, le `…` 2026 : pour Pâtisserie Coco Vanille inc. `…` · po
 
 ## Annexe B — Le processus et la définition de « premier »
 
-Le processus : [docs/01-plan-90-jours.md](01-plan-90-jours.md) et [docs/02-rythme-hebdo.md](02-rythme-hebdo.md). La définition de « premier » : [docs/01 §5](01-plan-90-jours.md) (version corrigée de [research/12 §4](../research/12-plan-review.md)), mesurée sur quatre lundis de suite, sur l'ensemble des questions **et** sur les seules questions en français.
+Le processus : [docs/01-plan-90-jours.md](01-plan-90-jours.md) et [docs/02-rythme-hebdo.md](02-rythme-hebdo.md). La définition de « premier » : [docs/01 §5](01-plan-90-jours.md) (version corrigée de [research/12 §4](../research/12-plan-review.md)), mesurée sur quatre lundis de suite, sur l'ensemble des 27 questions notées depuis le gel du 2 novembre 2026 **et** sur les seules questions en français ([scoreboard/README §5](../scoreboard/README.md)).

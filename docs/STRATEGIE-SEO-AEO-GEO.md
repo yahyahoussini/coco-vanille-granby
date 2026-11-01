@@ -34,7 +34,7 @@
 
 **D'ici le dimanche 1er novembre 2026, il nous faut** (§8) : l'ouverture confirmée et l'accès à la fiche Google; bûches de Noël, oui ou non; vos produits avec prix, portions, délais et heure limite pour le lendemain (une photo d'une liste écrite à la main suffit); la photo de l'enseigne et votre phrase de présentation; l'entente signée sur les tactiques refusées; une personne pour 20 à 30 minutes de recherches sur cellulaire à Granby, chaque lundi.
 
-**On mesurera** (§5, §10) trois tableaux, SEO, AEO et GEO, sur les mêmes 30 requêtes et 3 requêtes sur votre nom, jugés sur quatre lundis de suite. Le cap de la boutique : commandes, soumissions acceptées, appels et itinéraires, pas les visites. **Aucune position n'est promise** : la méthode, la mesure et la définition de « premier » le sont.
+**On mesurera** (§5, §10) trois tableaux, SEO, AEO et GEO, sur les mêmes 27 requêtes notées et 3 requêtes sur votre nom (annexe A), jugés sur quatre lundis de suite. Le cap de la boutique : commandes, soumissions acceptées, appels et itinéraires, pas les visites. **Aucune position n'est promise** : la méthode, la mesure et la définition de « premier » le sont.
 
 ## 2. SEO, AEO, GEO : ce que ça veut dire pour une pâtisserie de Granby
 
@@ -267,7 +267,7 @@ Sur mandat de Yahya, l'Agence a tranché les questions administratives qui bloqu
 
 ## 9. Nos règles
 
-**Chapeau blanc seulement.** Nous refusons, même à votre demande (liste complète : [docs/11, annexe A](11-contrat-clauses.md)) : les faux avis et ceux de l'équipe ou des proches; les avis achetés, récompensés ou triés; les quotas d'avis; un mot-clé, une ville ou une deuxième langue dans le nom de la fiche; une deuxième fiche ou une adresse fictive; les liens achetés; les pages « villes » clonées; le texte caché ou écrit pour les IA; les données structurées pour ce qui n'est pas sur la page; les publications payées sans le dire; les attaques contre un concurrent. Une pénalité coûte des mois, et votre domaine est le seul actif qui s'accumule. Ce qu'on fera vite, et qui est permis : une page utile par semaine, l'avis demandé à chaque client, une étude de prix datée, chaque annuaire et palmarès qui compte, de vrais partenaires, des vidéos.
+**Chapeau blanc seulement.** Nous refusons, même à votre demande (liste complète : [docs/11, annexe A](11-contrat-clauses.md)) : les faux avis et ceux de l'équipe ou des proches; les avis achetés, récompensés ou triés; les quotas d'avis; un mot-clé, une ville ou une deuxième langue dans le nom de la fiche; une deuxième fiche ou une adresse fictive; les liens achetés; les pages « villes » clonées; un deuxième domaine, un mini-site ou un site copie pour la même boutique; le bourrage de mots-clés; les redirections trompeuses; le texte caché ou écrit pour les IA; les données structurées pour ce qui n'est pas sur la page; les publications payées sans le dire; les attaques contre un concurrent; écrire ou modifier un article de Wikipédia sur la boutique. Une pénalité coûte des mois, et votre domaine est le seul actif qui s'accumule. Ce qu'on fera vite, et qui est permis : une page utile par semaine, l'avis demandé à chaque client, une étude de prix datée, chaque annuaire et palmarès qui compte, de vrais partenaires, des vidéos.
 
 **Zéro invention.** Chaque chiffre publié vient de [data/facts.json](../data/facts.json) ou de votre réponse écrite; ce qui manque reste `[[FACT NEEDED]]` et bloque la page. Votre note Google ne paraît qu'une fois lue sur Google, datée, jamais en étoiles dans le code. Les allergènes sont signés par une personne de la boutique, jamais rédigés par une IA.
 
@@ -297,7 +297,7 @@ D'où viennent les chiffres (réglages : [docs/12](12-setup-mesure.md)) :
 | Appels, itinéraires, clics vers le site | Fiche Google | arrondis par Google |
 | Positions, impressions | Search Console | réponses IA : impressions seulement |
 | Citations dans Copilot | Bing Webmaster Tools | un échantillon |
-| Les 33 requêtes, moteur par moteur | [scoreboard/](../scoreboard/README.md) | trois passages quand c'est possible; moteurs d'IA relevés à la main tant que l'outil automatique garde un réglage de pays hérité du modèle marocain ([scoreboard/README §6](../scoreboard/README.md)) |
+| Les 30 requêtes suivies, moteur par moteur | [scoreboard/](../scoreboard/README.md) | trois passages quand c'est possible; l'outil automatique cherche depuis le Québec depuis le 29 octobre 2026, avec un seul passage par semaine : le rapport écrit alors « mesure partielle » ([scoreboard/README §5 et §6](../scoreboard/README.md)) |
 | Clics sur le site | GA4, avec consentement (prévu) | un plancher |
 
 Le rapport ne montre pas, exprès : les visites comme résultat, les abonnés, un score global unique, et jamais un chiffre par employé. Un changement est réel après quatre semaines dans la même direction; aucune conclusion pendant une mise à jour majeure de Google; un changement à la fois.
@@ -306,47 +306,46 @@ Le rapport ne montre pas, exprès : les visites comme résultat, les abonnés, u
 
 ---
 
-## Annexe A — Les 30 requêtes suivies, et les 3 de marque
+## Annexe A — Les 27 requêtes notées, et les 3 de marque
 
-Le texte exact à taper ([scoreboard/prompts.csv](../scoreboard/prompts.csv)). La note sur 20 estime nos chances de gagner; elle reste provisoire jusqu'à la mesure depuis Granby ([research/05](../research/05-serp-baseline.md), 29 octobre 2026). ★ = une des 10 prioritaires.
+Le texte exact à taper ([scoreboard/prompts.csv](../scoreboard/prompts.csv)), tel qu'il est figé au lundi 2 novembre 2026. La note sur 20 estime nos chances de gagner; elle reste provisoire jusqu'à la mesure depuis Granby ([research/05](../research/05-serp-baseline.md), 29 octobre 2026). ★ = une des 10 prioritaires.
 
 | Code | Requête | /20 | Page | État |
 |---|---|---|---|---|
 | I1 ★ | combien coûte un gâteau de fête personnalisé à Granby | 16 | /prix/ | attend vos prix |
-| I2 | combien de jours d'avance commander un gâteau personnalisé | 16 | /gateaux/ | attend vos délais |
+| I2 | combien de jours d'avance commander un gâteau personnalisé | 16 | /gateaux-personnalises-granby/ | attend vos délais |
 | I3 ★ | quelle grosseur de gâteau pour 20 personnes | 17 | /calculateur-portions-gateau/ | attend vos portions |
 | I4 | comment transporter un gâteau à étages en auto | 16 | /transporter-conserver-gateau/ | prévue |
-| I5 | prix d'un gâteau de mariage par portion au Québec | 15 | — | gelée |
 | I6 | différence entre crème au beurre et ganache sur un gâteau | 13 | glossaire | prévue |
 | I7 | comment conserver un gâteau à la crème jusqu'au lendemain | 15 | /gateaux/ | attend vos consignes |
 | I8 | how much does a custom birthday cake cost in Quebec | 15 | /en/prices/ | attend vos prix |
-| I9 | how far in advance to order a wedding cake | 11 | — | gelée |
-| I10 | cuánto cuesta una torta de quinceañera en Quebec | 17 | — | espagnol fermé |
 | C1 ★ | meilleure pâtisserie à Granby | 18 | accueil, fiche Google | construite |
-| C2 ★ | meilleur gâteau de fête à Granby | 18 | /gateaux/ | construite |
-| C3 | pâtisserie gâteau de mariage Cantons-de-l'Est | 17 | — | gelée |
-| C4 | bûche de Noël Granby | 19 | /buches-de-noel/ | attend le 1er novembre |
+| C2 ★ | meilleur gâteau de fête à Granby | 18 | /gateaux-personnalises-granby/ | attend la confirmation des gâteaux sur commande |
+| C4 | bûche de Noël Granby | 19 | /buches-de-noel/ | attend votre oui ou non |
 | C5 | macarons Granby avis | 17 | — | attend le produit |
 | C6 | gâteau sans gluten Granby | 17 | /allergenes/ | information seulement |
-| C7 | prix gâteau de mariage Granby | 18 | — | gelée |
 | C8 ★ | best bakery in Granby Quebec | 17 | /en/ | construite |
-| C9 | wedding cake bakery Eastern Townships | 17 | — | gelée |
-| C10 | mejor pastelería en Granby Quebec | 18 | — | espagnol fermé |
+| X3 | gâteau d'anniversaire Granby | 18 | /gateaux/ | construite (entrée au gel) |
 | L1 ★ | pâtisserie près de moi | 17 | fiche Google, /nous-trouver/ | construite |
 | L2 ★ | commander un gâteau de fête en ligne Granby | 15 | /commander/ | vente en janvier 2027 |
 | L3 ★ | gâteau pour demain Granby | 19 | /gateau-pour-demain/ | attend l'heure limite |
 | L4 ★ | pâtisserie ouverte dimanche Granby | 18 | /nous-trouver/ | construite |
-| L5 | café et pâtisserie près du Zoo de Granby | 15 | /nous-trouver/ | attend la distance |
+| L5 | café et pâtisserie près du Zoo de Granby | 15 | /nous-trouver/zoo-de-granby/ | construite |
 | L6 | chocolatines Granby | 18 | /viennoiseries/ | attend le produit |
 | L7 | boîte de pâtisseries pour réunion Granby | 17 | /viennoiseries/ | attend l'offre |
-| L8 | bakery near Granby Zoo | 16 | /en/visit/ | attend la distance |
+| L8 | bakery near Granby Zoo | 16 | /en/visit/granby-zoo/ | construite |
 | L9 ★ | order custom cake online Granby | 16 | /en/order/ | attend le service en anglais |
-| L10 | torta de cumpleaños personalizada Granby | 19 | — | espagnol fermé |
+| X1 | pâtisserie Granby | 18 | accueil, fiche Google | construite (entrée au gel) |
+| X2 | boulangerie Granby | 17 | /pains-baguettes/, accueil | construite (entrée au gel) |
+| X7 | croissants Granby | 18 | /viennoiseries/ | construite (entrée au gel) |
+| X12 | café pâtisserie centre-ville Granby | 15 | /nous-trouver/, fiche Google | construite (entrée au gel) |
 | B1 | Pâtisserie Coco Vanille Granby avis | 18 | /a-propos/ | diagnostic |
 | B2 | Coco Vanille Granby heures | 19 | /nous-trouver/ | diagnostic, urgent |
 | B3 | Que sais-tu de la Pâtisserie Coco Vanille à Granby ? | 16 | /a-propos/ | diagnostic |
 
-« Gelée » = une requête de mariage, sans preuve d'une offre. **Remplacement proposé avant le gel** ([docs/19 §3.3](19-marche-et-concurrence.md)) : I5, I9, C3, C7 et C9 sortent; X1 « pâtisserie Granby » (18), X3 « gâteau d'anniversaire Granby » (18), X7 « croissants Granby » (18), X2 « boulangerie Granby » (17) et X12 « café pâtisserie centre-ville Granby » (15) entrent. Si vos réponses ferment aussi C5, C6, L6 ou L7, on puise dans X4, X5 ou X13 (17 chacune). Votre réponse à la question 7 du message décide.
+**Le remplacement fait avant le gel** (appliqué le 1er novembre 2026, recommandation de l'Agence, [docs/19 §3.3](19-marche-et-concurrence.md)) : les cinq requêtes de mariage I5, I9, C3, C7 et C9 sortent, faute de preuve d'une offre; X1, X3, X7, X2 et X12 entrent. Si vos réponses ferment aussi C5, C6, L6 ou L7, on puise dans X4, X5 ou X13 (17 chacune). **Les codes ne changent jamais** : si vous confirmez des gâteaux de mariage (question 7 du message), les cinq requêtes reviennent sous leur code.
+
+**Les trois requêtes en espagnol** (I10, C10, L10) restent relevées chaque lundi, mais ne comptent pas dans la définition de « premier » tant que personne ne sert la clientèle en espagnol (research/14 L2) : aucune page ne peut leur répondre ([scoreboard/README §5](../scoreboard/README.md)).
 
 ## Annexe B — Glossaire
 

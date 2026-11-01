@@ -1,6 +1,6 @@
 # Rythme hebdomadaire — Pâtisserie Coco Vanille
 
-Rédigé le jeudi 29 octobre 2026. Environ **6 heures par semaine pour l'agence**, en créneaux fixes, et **quelques minutes par jour pour vous** ([research/plan-v1-ranking-stack.md §9](../research/plan-v1-ranking-stack.md), budgets de temps de [research/16 §1.3](../research/16-admin-dashboard-spec.md)). Chaque tâche indique où elle se fait : un écran de Coco Studio (admin.cocovanillegranby.com), un outil gratuit de Google ou de Bing, ou une commande de l'agence.
+Rédigé le jeudi 29 octobre 2026, mis à jour le dimanche 1er novembre 2026 (outils réglés sur le Québec, règle d'escalade des extraits, index de Brave et de Perplexity, une seule étude de données la première année). Environ **6 heures par semaine pour l'agence**, en créneaux fixes, et **quelques minutes par jour pour vous** ([research/plan-v1-ranking-stack.md §9](../research/plan-v1-ranking-stack.md), budgets de temps de [research/16 §1.3](../research/16-admin-dashboard-spec.md)). Chaque tâche indique où elle se fait : un écran de Coco Studio (admin.cocovanillegranby.com), un outil gratuit de Google ou de Bing, ou une commande de l'agence.
 
 Deux périodes :
 
@@ -17,7 +17,7 @@ Deux périodes :
 | Jeudi | — | — | **1 heure** : une action hors du site, une publication | Fiche Google, Facebook, courriel |
 | Vendredi | — | — | **1 heure + 30 minutes de serveur** : vérifier | Search Console, Bing, commandes de vérification, Agence |
 | Chaque mois | **15 minutes** : approuver le rapport | — | ≈ 2 heures | [docs/07](07-rapport-mensuel.md) |
-| Chaque trimestre | **30 minutes** : valider les chiffres | — | ≈ 1 journée | Étude de données, révisions |
+| Chaque trimestre | **30 minutes** : valider les chiffres | — | ≈ 1 journée | Révisions; l'étude de données une seule fois la première année (premier trimestre 2027) |
 
 Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesuré dans le journal de Coco Studio), elle va sur la liste de corrections de l'agence ([research/16 §1.3](../research/16-admin-dashboard-spec.md)).
 
@@ -25,8 +25,8 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 
 | Étape | Quoi | Où | Résultat |
 |---|---|---|---|
-| 1 | **À 6 h, heure du Québec, la mesure part toute seule** : positions dans Google.ca réglé sur Granby (si la clé SerpApi existe), réponses des moteurs d'IA (si leurs clés existent), Signaux Web essentiels (quand le site est public), puis le calcul du tableau de bord, la carte du marché, Search Console et GA4 (si le compte de service existe) et les vérifications en direct. Une étape sans clé est sautée et nommée dans le rapport. **Attention :** l'outil des moteurs d'IA règle encore sa recherche sur le Maroc (réglage hérité du modèle) : ses réponses ne comptent pas tant que ce n'est pas corrigé ([scoreboard/README §6](../scoreboard/README.md)) | GitHub › Actions › « Weekly rank-first » ([.github/workflows/weekly.yml](../.github/workflows/weekly.yml)) | Le rapport de la semaine dans le résumé de l'exécution ; l'historique est gardé 90 jours |
-| 2 | Lire le rapport | Le résumé de l'exécution. Coco Studio › Agence › « Gates » et « Scoreboard » afficheront ces chiffres quand les fichiers du rapport seront déposés dans le dossier des rapports du serveur ; ce transfert n'est pas encore branché | Les chiffres de la semaine |
+| 1 | **À 6 h, heure du Québec, la mesure part toute seule** : positions dans Google.ca réglé sur Granby (si la clé SerpApi existe), réponses des moteurs d'IA (si leurs clés existent), Signaux Web essentiels (quand le site est public), puis le calcul du tableau de bord, la carte du marché, Search Console et GA4 (si le compte de service existe) et les vérifications en direct. Une étape sans clé est sautée et nommée dans le rapport. Les deux outils de mesure cherchent depuis le Québec depuis le 29 octobre 2026 : Google.ca réglé sur Granby, et les moteurs d'IA avec le Canada, Granby et l'heure de l'Est ([scoreboard/README §6](../scoreboard/README.md), points 9 et 10) | GitHub › Actions › « Weekly rank-first » ([.github/workflows/weekly.yml](../.github/workflows/weekly.yml)) | Le rapport de la semaine dans le résumé de l'exécution ; l'historique est gardé 90 jours |
+| 2 | Lire le rapport | Le résumé de l'exécution. Coco Studio › Agence › « Gates » et « Scoreboard » afficheront ces chiffres quand les fichiers du rapport seront déposés dans le dossier des rapports du serveur : `citation-share.mjs` écrit `reports/scoreboard.json` depuis le 1er novembre 2026, mais `gates.json` n'est encore écrit par aucun outil et le transfert n'est pas branché | Les chiffres de la semaine |
 | 3 | Remplir à la main ce que la mesure automatique ne voit pas : Copilot et le Mode IA de Google (pas d'interface de programmation), les moteurs sans clé, et les captures de la personne qui vérifie sur cellulaire à Granby | `scoreboard/runs/<semaine>.csv`, puis le calcul (encadré ci-dessous) | Une ligne par question et par moteur |
 | 4 | Lire Search Console : Performances filtrées sur les questions suivies (jamais la moyenne de tout le site), rapport « IA générative » (des impressions seulement, ni clics ni requêtes), Pages. Lire Bing Webmaster Tools › AI Performance (un échantillon, exportable en CSV seulement) | search.google.com/search-console ; bing.com/webmasters | La tendance sur 4 semaines |
 | 5 | Chercher les **faits faux** dans les réponses des IA, surtout les heures et le téléphone : le 29 octobre 2026, la réponse à « Coco Vanille Granby heures » donnait les heures et le téléphone d'une boulangerie fermée, le (450) 770-7246 (déduit), et une autre répétait « peut-être temporairement fermée » ([research/05 W44.5](../research/05-serp-baseline.md)). On corrige à la source : la fiche Google d'abord, puis les annuaires qui la copient | Rapport ; [docs/09 §3.4](09-runbook-incident.md) | Une demande de correction |
@@ -37,14 +37,15 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 > ```sh
 > mkdir -p rank/scoreboard/runs rank/reports
 > node apps/web/scripts/rank-config.mjs --out rank/site.config.json
-> cp data/prompts.csv data/competitors.csv rank/scoreboard/
-> # copier ici l'historique de la dernière exécution (artefact « rank-first-history ») et le CSV rempli à la main
+> cp scoreboard/prompts.csv scoreboard/competitors.csv scoreboard/reviews.csv rank/scoreboard/
+> cp scoreboard/runs/*.csv rank/scoreboard/runs/     # le premier niveau seulement, jamais runs/proxy/
+> # copier ici l'historique de la dernière exécution (artefact « rank-first-history »)
 > cd rank
-> # si la clé SerpApi existe, d'abord la recherche Google, toujours avec ces options (sans elles, l'outil cherche dans google.co.ma) :
-> # node ../tools/serp.mjs --week 2026-W45 --gl ca --domain google.ca --location "Granby,Quebec,Canada"
+> # si la clé SerpApi existe, d'abord la recherche Google ; sans options, l'outil prend le bloc market (google.ca réglé sur Granby) :
+> # node ../tools/serp.mjs --week 2026-W45 --skip-type candidate
 > node ../tools/weekly.mjs --week 2026-W45 --no-serp --no-ai
 > ```
-> Comme dans `weekly.yml`, `weekly.mjs` tourne avec `--no-serp --no-ai` : lancé seul, il appellerait la recherche Google et les moteurs d'IA avec leurs réglages marocains par défaut ([scoreboard/README §6](../scoreboard/README.md)). Sans clé, `weekly.mjs` saute la mesure concernée et le dit dans le rapport. Sans clés d'IA, chaque question ne passe qu'une fois par semaine au lieu de trois : la définition de « premier » de [docs/01 §5](01-plan-90-jours.md) est alors une **mesure partielle**, et le rapport le dit.
+> Comme dans `weekly.yml`, `weekly.mjs` tourne avec `--no-serp --no-ai` : lancé seul avec les clés, il interrogerait aussi les candidates ([scoreboard/README §2](../scoreboard/README.md), étape 4). Sans clé, `weekly.mjs` saute la mesure concernée et le dit dans le rapport. Sans clés d'IA, chaque question ne passe qu'une fois par semaine au lieu de trois : la définition de « premier » de [docs/01 §5](01-plan-90-jours.md) est alors une **mesure partielle**, et le rapport l'écrit (« MESURE PARTIELLE », `citation-share.mjs`). Le rapport du lundi reprend la semaine de ce document et ses saisons depuis le 1er novembre 2026 ([scoreboard/README §6](../scoreboard/README.md), point 15).
 
 ## 3. Vos 5 minutes du lundi : Coco Studio › Plus › « Cette semaine »
 
@@ -64,7 +65,7 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 6. **Production** : déploiement manuel avec approbation (GitHub › Actions › « Deploy production ») ; ensuite, la vérification des adresses et de l'accès des robots se fait toute seule de l'extérieur.
 7. **Avertir les moteurs** : IndexNow pour Bing et les autres moteurs qui l'utilisent, à la main tant que ce n'est pas automatique (`node tools/indexnow.mjs https://cocovanillegranby.com/<page>/`), et seulement une fois que le site sert le fichier de clé ([docs/12 §2](12-setup-mesure.md)) ; d'ici là, soumission de l'adresse dans Bing Webmaster Tools. Google n'utilise pas IndexNow : Search Console › Inspection de l'URL › « Demander l'indexation ».
 8. **Trois liens internes** vers la nouvelle page, depuis des pages qui sont déjà vues par Google.
-9. **Boucle des extraits** : si la page vise une question, on vérifie aux jours 7 et 14 qui tient l'extrait.
+9. **Boucle des extraits** : si la page vise une question, on vérifie aux jours 7 et 14 qui tient l'extrait ([scoreboard/snippet-targets.csv](../scoreboard/snippet-targets.csv)). **Si l'extrait est perdu au jour 14** : on compare notre passage à celui qui le tient (longueur, première phrase, chiffre daté, format), on réécrit **une seule fois**, et on revérifie 14 jours plus tard. **Perdu encore** : la page manque d'autorité, pas de texte; on ne réécrit plus, et la question passe à la liste des mentions (palmarès, annuaires et médias qui la décident, [docs/06 §4 et §5](06-annuaires-listicles.md)). Détail : [scoreboard/README §2](../scoreboard/README.md), étape 6.
 
 ## 5. Chaque jour : avis, messages, vitrine
 
@@ -92,6 +93,7 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 | Mise à jour de Google en cours? | status.search.google.com | Si oui : aucune conclusion tant qu'elle n'est pas finie ; on le note dans le rapport |
 | Adresses du site | `node tools/check-urls.mjs https://cocovanillegranby.com/sitemap.xml` | Chaque page répond 200, au plus une redirection, la bonne adresse canonique, aucun « noindex » sur une page publique |
 | Accès des robots | `node tools/crawler-access.mjs --sitemap https://cocovanillegranby.com/sitemap.xml --max 5` | Aucun robot bloqué (Googlebot, Bingbot, OAI-SearchBot, PerplexityBot, Claude-SearchBot, Applebot…) |
+| Index des moteurs (après la mise en ligne) | `site:cocovanillegranby.com` dans Google et dans Bing; `site:cocovanillegranby.com` sur search.brave.com (l'index de Brave sert Claude); dans Perplexity, nouvelle conversation : « Quelles pages de cocovanillegranby.com connais-tu? » ([docs/12 §2](12-setup-mesure.md), point 4) | Le nombre de pages trouvées dans chacun, noté avec la date dans le rapport du lundi; zéro page chez un moteur après deux semaines en ligne : vérifier ses robots dans les journaux |
 | Serveur (≈ 30 minutes, liste du vendredi de [infra/README.md](../infra/README.md)) | Serveur et outils de surveillance | Alertes lues ; mises à jour de sécurité vérifiées ; disque à moins de 70 % ; certificat valide plus de 30 jours ; sauvegarde de la nuit reçue ; dernier test de restauration réussi et âgé de moins de 31 jours ; liste des faits manquants envoyée si elle a changé |
 | Coco Studio › Agence | Tuiles « Système » et « Intégrations », « Questions de clients à traiter », journal | Rien d'ouvert sans responsable |
 | Premier vendredi du mois | `node tools/log-bots.mjs <journal du site public> --verify --week` (décompresser les anciens journaux d'abord) ; revue des accès (anciens employés) ; coûts | Googlebot et Bingbot passent chaque semaine sur les pages clés ; au moins deux robots d'IA passent ; aucun accès oublié |
@@ -100,11 +102,11 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 
 **Chaque mois** (≈ 2 heures pour l'agence, 15 minutes pour vous) : comparaison sur 4 semaines ; comparaison de chaque fiche d'annuaire avec la fiche Google ([research/11 §1](../research/11-offsite-local-citations.md)) ; compte des mentions (alertes Google et recherche manuelle de « "Coco Vanille" Granby ») ; journaux du serveur ; résultat du test de restauration du premier lundi ; nouvelles photos sur la fiche Google ; **rapport mensuel** ([docs/07](07-rapport-mensuel.md)) que vous approuvez.
 
-**Chaque trimestre** (≈ 1 journée pour l'agence, 30 minutes pour vous) : l'étude de données (la première : le relevé des prix des gâteaux du premier trimestre 2027) ; revérification avec vous de chaque chiffre des 20 premières pages ; audit des liens (Search Console, Ahrefs Webmaster Tools ; on ne désavoue un lien qu'en cas d'action manuelle) ; revue de l'index (une page sans impression depuis 6 mois est améliorée, fusionnée ou retirée de l'index) ; rotation des clés et exercice de restauration hors site ([infra/README.md](../infra/README.md)) ; relecture des prix des fournisseurs.
+**Chaque trimestre** (≈ 1 journée pour l'agence, 30 minutes pour vous) : au premier trimestre 2027, l'étude de données (le relevé des prix des gâteaux), **la seule de la première année** : les études des trimestres 2 à 4 sont reportées, faute de temps ([research/12 §5.1](../research/12-plan-review.md); [docs/04 §1](04-pitch-media.md)) ; revérification avec vous de chaque chiffre des 20 premières pages ; audit des liens (Search Console, Ahrefs Webmaster Tools ; on ne désavoue un lien qu'en cas d'action manuelle) ; revue de l'index (une page sans impression depuis 6 mois est améliorée, fusionnée ou retirée de l'index) ; rotation des clés et exercice de restauration hors site ([infra/README.md](../infra/README.md)) ; relecture des prix des fournisseurs.
 
 ## 9. Le programme rapide qui reste permis
 
-Aller vite sans tricher (référence rank-first 09 §6, adaptée) : une page par semaine après le lancement ; chaque client invité à laisser un avis le jour même ; une étude de données par trimestre ; la tournée des annuaires et des listes « meilleures pâtisseries » chaque jeudi ; la tournée des mentions sans lien chaque mois ; un outil gratuit utile (le calculateur de portions, si vos portions sont connues) ; une page comparative honnête (après le lancement et un avis juridique) ; des vidéos à partir du mois 4 ; la marque visible hors ligne (vitrine, autocollant sur les boîtes, reçus, signature de courriel). La petite publicité permanente sur le nom de marque attend un budget publicitaire ([research/12 §5.1](../research/12-plan-review.md)).
+Aller vite sans tricher (référence rank-first 09 §6, adaptée) : une page par semaine après le lancement ; chaque client invité à laisser un avis le jour même ; une étude de données datée (la première année, une seule : le relevé des prix du premier trimestre 2027, [research/12 §5.1](../research/12-plan-review.md)) ; la tournée des annuaires et des listes « meilleures pâtisseries » chaque jeudi ; la tournée des mentions sans lien chaque mois ; un outil gratuit utile (le calculateur de portions, si vos portions sont connues) ; une page comparative honnête (après le lancement et un avis juridique) ; des vidéos à partir du mois 4 ; la marque visible hors ligne (vitrine, autocollant sur les boîtes, reçus, signature de courriel). La petite publicité permanente sur le nom de marque attend un budget publicitaire ([research/12 §5.1](../research/12-plan-review.md)).
 
 ## 10. Règles de lecture
 

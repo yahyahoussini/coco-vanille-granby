@@ -1,6 +1,6 @@
 # Trousse médias et partenaires : Pâtisserie Coco Vanille
 
-Mis à jour le 29 octobre 2026 · Préparé par l'Agence (Yahya, BrandHub.ma) pour la boutique · Statut : prêt à l'emploi dès que les faits marqués [[FACT NEEDED]] sont fournis; aucune proposition ne part avant.
+Mis à jour le 29 octobre 2026, puis le 1er novembre 2026 (voies de contact lues sur les pages officielles, ligne du Zoo, une seule étude de données la première année) · Préparé par l'Agence (Yahya, BrandHub.ma) pour la boutique · Statut : prêt à l'emploi dès que les faits marqués [[FACT NEEDED]] sont fournis; aucune proposition ne part avant.
 
 ## À quoi sert ce document
 
@@ -62,20 +62,22 @@ Ce document sert à faire parler de la Pâtisserie Coco Vanille dans les médias
 
 ## 4. Les médias, guides et partenaires (par priorité)
 
-Les adresses de contact n'ont pas pu être trouvées de façon fiable : chaque ligne reste [[FACT NEEDED]] jusqu'à ce que l'Agence lise la page « Nous joindre » officielle du média. On ne devine jamais une adresse ([research/11, méthode](../research/11-offsite-local-citations.md)).
+Les voies de contact ci-dessous ont été lues le dimanche 1er novembre 2026 sur la page officielle de chaque média (« Nous joindre », « À propos » ou sa page de soumission), dont l'adresse est donnée. Une page qu'on n'a pas pu lire, ou qui ne donne pas de voie vers la rédaction, garde son marqueur. On ne devine jamais une adresse ([research/11, méthode](../research/11-offsite-local-citations.md)), et on relit la page le jour de l'envoi : une rédaction change d'adresse sans prévenir.
 
 ### 4.1 Médias
 
-| Priorité | Média | Pourquoi lui | Premier angle | Contact | État |
+| Priorité | Média | Pourquoi lui | Premier angle | Contact (lu le 1er novembre 2026) | État |
 |---|---|---|---|---|---|
-| 1 | La Voix de l'Est (quotidien, Granby) | Couvre les commerces de Granby; a mentionné la boutique le 23 octobre 2022 | A2, puis A1 | [[FACT NEEDED: courriel ou page de la rédaction]] | à contacter |
-| 1 | Granby Express (nouvelles locales) | Nouvelles locales actives en 2026 (décret de population, bilan du Zoo) | A1, A3 | [[FACT NEEDED]] | à contacter |
-| 1 | M105 (CFXM-FM 104,9, coopérative de radio de Granby) | Nouvelles locales sur les commerces | A1 (entrevue courte), A3 | [[FACT NEEDED]] | à contacter |
-| 1 | Tastet | Tastet est sorti dans les réponses pour 3 de nos questions (C2, I8, C5) le 25 octobre 2026, puis dans 11 des 30 recherches du 29 octobre 2026 (relevé indirect, fait depuis les États-Unis, [research/05 §4, W44.4](../research/05-serp-baseline.md)), souvent avec des adresses de Montréal; sa liste « coups de cœur à Granby » n'a aucune pâtisserie | Demande d'être considérée pour la liste (§5.4) | [[FACT NEEDED]] | à contacter |
-| 2 | ICI Radio-Canada Estrie | A nommé la boutique en 2022 | A1 (version régionale) | [[FACT NEEDED]] | plus tard |
-| 2 | La Tribune (Sherbrooke) | Couvre Granby (2023, 2025) | A1 (version Estrie) | [[FACT NEEDED]] | plus tard |
-| 2 | Narcity Québec | A publié un portrait d'une pâtisserie de Bromont | A6 ou un produit saisonnier réel | [[FACT NEEDED]] | plus tard |
-| 3 | Caribou, Noovo Moi, Le Nouvelliste | Numéros thématiques, nouveautés saisonnières, affaires | Seulement si le thème colle à un vrai sujet | [[FACT NEEDED]] | en réserve |
+| 1 | La Voix de l'Est (quotidien, Granby) | Couvre les commerces de Granby; a mentionné la boutique le 23 octobre 2022 | A2, puis A1 | Rédaction : redaction@lavoixdelest.ca, 450 375-4555, option 4 ([page « Nous joindre »](https://www.lavoixdelest.ca/pages/nous-joindre/)) | à contacter |
+| 1 | Granby Express (nouvelles locales) | Nouvelles locales actives en 2026 (décret de population, bilan du Zoo) | A1, A3 | info@granbyexpress.com, 450 777-4515; la page nomme aussi le chef de contenu, avec son courriel ([page « Nous joindre »](https://www.granbyexpress.com/nous-joindre/)) | à contacter |
+| 1 | M105 (CFXM-FM 104,9, coopérative de radio de Granby) | Nouvelles locales sur les commerces | A1 (entrevue courte), A3 | Salle des nouvelles : 450 372-5105, poste 32; formulaire « Nous écrire », destinataire « Nouvelles » (aucun courriel publié) ([page « Nous joindre »](https://m105.ca/nous-joindre/)) | à contacter |
+| 1 | Tastet | Tastet est sorti dans les réponses pour 3 de nos questions (C2, I8, C5) le 25 octobre 2026, puis dans 11 des 30 recherches du 29 octobre 2026 (relevé indirect, fait depuis les États-Unis, [research/05 §4, W44.4](../research/05-serp-baseline.md)), souvent avec des adresses de Montréal; sa liste « coups de cœur à Granby » n'a aucune pâtisserie | Demande d'être considérée pour la liste (§5.4) | Suggestions d'adresses : info@tastet.ca (« Comment me suggérer une adresse? Écrivez-nous à… », [page « À propos »](https://tastet.ca/a-propos/)) | à contacter |
+| 2 | ICI Radio-Canada Estrie | A nommé la boutique en 2022 | A1 (version régionale) | [[FACT NEEDED: voie de la rédaction de l'Estrie; la page générale https://ici.radio-canada.ca/contactez-nous, lue le 1er novembre 2026, n'en donne aucune]] | plus tard |
+| 2 | La Tribune (Sherbrooke) | Couvre Granby (2023, 2025) | A1 (version Estrie) | Rédaction : redaction@latribune.qc.ca, 819 564-5454 ([page « Nous joindre »](https://www.latribune.ca/pages/nous-joindre/)) | plus tard |
+| 2 | Narcity Québec | A publié un portrait d'une pâtisserie de Bromont | A6 ou un produit saisonnier réel | Formulaire « Submit A Tip » ([narcity.com/news-tip](https://www.narcity.com/news-tip); aucun courriel publié sur cette page) | plus tard |
+| 3 | Noovo Moi | Nouveautés saisonnières | Seulement si le thème colle à un vrai sujet | noovomoi@bellmedia.ca (« questions, commentaires ou suggestions », [page « Contactez-nous »](https://www.noovomoi.ca/contactez-nous/)) | en réserve |
+| 3 | Le Nouvelliste | Affaires | Seulement si le thème colle à un vrai sujet | Rédaction : information@lenouvelliste.qc.ca, 819 693-5464 ([page « Nous joindre »](https://www.lenouvelliste.ca/pages/nous-joindre/)) | en réserve |
+| 3 | Caribou | Numéros thématiques | Seulement si le thème colle à un vrai sujet | [[FACT NEEDED: page de la rédaction de Caribou; la page Érudit de la revue, lue le 1er novembre 2026, ne donne que le soutien d'Érudit]] | en réserve |
 
 Sources : [data/pitch-list.csv](../data/pitch-list.csv), [research/11 §2](../research/11-offsite-local-citations.md). Three Best Rated et RestoMontreal reçoivent des **corrections**, pas des propositions : voir [docs/06-annuaires-listicles.md](06-annuaires-listicles.md) §4.
 
@@ -86,7 +88,7 @@ Sources : [data/pitch-list.csv](../data/pitch-list.csv), [research/11 §2](../re
 | Marché public de Granby et région | La boutique figure dans sa liste d'exposants (page non datée) | Le lien vers le site sur la page des exposants; une publication un jour de marché | [[FACT NEEDED: présence au Marché public en 2026 et 2027 (research/14 S10)]] |
 | Réseau des Haltes gourmandes en Haute-Yamaska | Plus de 50 producteurs et artisans à 15 minutes de Granby; un concurrent (Gâteaux Duvoquic) en fait partie | Adhésion, si une pâtisserie du centre-ville est admissible | [[FACT NEEDED: admissibilité et frais]] |
 | Fromagerie Julio, Le Café de la Brûlerie (Granby) | Producteurs locaux qui ne font pas concurrence à la boutique | Une mention « on sert / on vend » de part et d'autre | **Seulement si la boutique utilise vraiment leurs produits** : [[FACT NEEDED: fournisseurs de lait, de fromage et de café]] |
-| Zoo de Granby | A une salle de presse | Une présence dans l'information aux visiteurs | Seulement quand une offre pour les visiteurs existe : [[FACT NEEDED: offre visiteurs, distance en auto (research/14 P16)]] |
+| Zoo de Granby | A une salle de presse et une page « Nos partenaires »; écrire par le formulaire « Write to us » en choisissant le service, 450 372-9113 ([page « Contact us »](https://www.zoodegranby.com/en/contact-us), lue le 1er novembre 2026). La distance est connue : environ 5 à 8 minutes en auto (calcul du 29 octobre 2026, `data/facts.json` distance.zoo), et notre page « Depuis le Zoo de Granby » est construite (`/nous-trouver/zoo-de-granby/`) | Une présence dans l'information aux visiteurs | Seulement quand une offre pour les visiteurs existe : [[FACT NEEDED: offre visiteurs (research/14 P16)]]. Jamais « Zoo » dans le nom de la fiche Google, jamais une affiliation suggérée |
 | Cégep de Granby | Programme de techniques de tourisme lié au Zoo | Une conférence, un stage | Mois 4 et plus; [[FACT NEEDED: contact]] |
 | Chambre de commerce de la Haute-Yamaska | Le nom exact et le site se contredisent selon les sources | Adhésion, répertoire des membres, une conférence | [[FACT NEEDED: nom exact, site, frais]] |
 | SERY (services aux nouveaux arrivants, Granby) | Organisme d'accueil reconnu | Relecture des pages en espagnol par une personne de langue maternelle espagnole | Seulement si une offre en espagnol existe vraiment (décision D3) |
@@ -101,7 +103,7 @@ Sources : [research/11 §3](../research/11-offsite-local-citations.md), [data/di
 
 ## 5. Courriels prêts à envoyer
 
-Les mots entre crochets se remplacent avant l'envoi. La signature idéale est celle de la personne propriétaire : [[FACT NEEDED: prénom, nom et rôle de la personne qui signe (research/14 C1)]]; adresse d'envoi : [[FACT NEEDED: courriel de la boutique sur le domaine du site (research/14 H4, T3)]].
+Les mots entre crochets se remplacent avant l'envoi. La signature idéale est celle de la personne propriétaire : [[FACT NEEDED: prénom, nom et rôle de la personne qui signe (research/14 C1)]]; adresse d'envoi : bonjour@cocovanillegranby.com (décidée le 29 octobre 2026, [research/21](../research/21-decisions-agence-2026-10-29.md) A2), une fois la boîte créée sur le domaine au lancement ([docs/13](13-taches-humaines.md) S0-6) : aucun courriel ne part avant.
 
 ### 5.1 Proposition « données » (angle A1), au plus 120 mots
 
@@ -119,7 +121,7 @@ Les mots entre crochets se remplacent avant l'envoi. La signature idéale est ce
 > Pâtisserie Coco Vanille · 3, rue Court, Granby (Québec) J2G 4Y6 · 450-372-7177
 > Vous préférez ne plus recevoir nos nouvelles? Répondez simplement « retirer ».
 
-**La méthode de l'étude, à respecter :** le même jour pour tous les commerces; seulement des prix publiés (site, menu en ligne); une capture d'écran datée de chaque page; prix par portion = prix ÷ portions annoncées; les prix de Coco Vanille inclus seulement quand sa grille est publiée; chaque commerce nommé avec sa page et la date; aucun commentaire sur la qualité des autres; relecture par l'avocat si des concurrents sont nommés ([research/03 §6](../research/03-competitors.md)). L'Agence fait les calculs, le graphique et la phrase de presse avec `tools/data-study.mjs`, puis la boutique valide les données (rythme trimestriel de plan-v1 §9).
+**La méthode de l'étude, à respecter :** le même jour pour tous les commerces; seulement des prix publiés (site, menu en ligne); une capture d'écran datée de chaque page; prix par portion = prix ÷ portions annoncées; les prix de Coco Vanille inclus seulement quand sa grille est publiée; chaque commerce nommé avec sa page et la date; aucun commentaire sur la qualité des autres; relecture par l'avocat si des concurrents sont nommés ([research/03 §6](../research/03-competitors.md)). L'Agence fait les calculs, le graphique et la phrase de presse avec `tools/data-study.mjs`, puis la boutique valide les données (une seule étude la première année, [research/12 §5.1](../research/12-plan-review.md); le rythme trimestriel de plan-v1 §9 reprend au plus tôt la deuxième année).
 
 ### 5.2 Proposition « commande en ligne » (angle A2)
 
@@ -158,6 +160,8 @@ Les mots entre crochets se remplacent avant l'envoi. La signature idéale est ce
 > Vous préférez ne plus recevoir nos nouvelles? Répondez simplement « retirer ».
 
 ### 5.4 Demande d'inclusion à une sélection (Tastet, Tourisme Granby région)
+
+Envoi (voies lues le 1er novembre 2026) : Tastet, info@tastet.ca, l'adresse que Tastet donne pour suggérer une adresse ([tastet.ca/a-propos](https://tastet.ca/a-propos/)); Tourisme Granby région, info@granbyregion.com ou 450 372-7056 ([granbyregion.com/nous-joindre](https://granbyregion.com/nous-joindre/)).
 
 > **Objet :** Pâtisserie Coco Vanille (3, rue Court) : pour votre prochaine sélection à Granby
 >
@@ -233,7 +237,7 @@ C'est une règle de méthode de l'Agence, pas une donnée :
 | Trouver les contacts officiels des médias | — | ✓ | Avant le premier envoi | 1 h, une fois |
 | Écrire et envoyer les propositions; noter les réponses | relit et approuve | ✓ | Jeudi, bloc hors site (plan-v1 §9) | 1 h par proposition |
 | Donner les entrevues | ✓ | prépare 3 messages clés | Sur demande | 15 à 30 min |
-| Préparer l'étude de prix du premier trimestre 2027 | valide les données | ✓ | Janvier et février 2027 (page la semaine du 22 février 2027) | 1 jour, une fois par trimestre |
+| Préparer l'étude de prix du premier trimestre 2027 | valide les données | ✓ | Janvier et février 2027 (page la semaine du 22 février 2027) | 1 jour, une fois la première année |
 | Demandes de lien aux partenaires | — | ✓ | À la mise en ligne du site | 15 min par partenaire |
 
 Au total : environ 1 heure par semaine pour l'Agence pendant les 3 premiers mois du plan (est.), dans le bloc hors site du jeudi ([docs/02-rythme-hebdo.md](02-rythme-hebdo.md)), et quelques minutes par mois pour la boutique.

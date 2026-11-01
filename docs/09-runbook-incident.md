@@ -4,7 +4,9 @@ Rédigé le jeudi 29 octobre 2026. Six situations, chacune avec ses signes, les 
 
 Sources : le protocole d'une heure du skill rank-first (références 11, « diagnostics »), adapté au serveur décrit dans [infra/README.md](../infra/README.md) et dans [research/17 §8](../research/17-vps-self-hosting-and-domain.md).
 
-**Accès nécessaires** (tenus à jour dans [docs/10-handover.md](10-handover.md)) : le serveur (clé SSH de l'utilisateur `deploy`), GitHub Actions, Search Console, Bing Webmaster Tools, la fiche Google, Stripe, Twilio, Amazon SES, les outils de surveillance, Coco Studio (rôle Agence ; le propriétaire pour les décisions).
+**Mis à jour le dimanche 1er novembre 2026** : le site tourne d'abord sur **le serveur partagé de l'agence** (le VPS Hostinger qui héberge aussi d'autres applications), à une adresse temporaire en `sslip.io`, avant le vrai domaine. Ce serveur a ses propres règles (§6) : l'utilisateur est `coco`, pas `deploy`, et rien ne doit toucher les autres applications. Les commandes des §3 et §5 sont écrites pour le serveur de la boutique; sur le serveur partagé, on lit d'abord le §6.
+
+**Accès nécessaires** (tenus à jour dans [docs/10-handover.md](10-handover.md)) : le serveur (clé SSH de l'utilisateur `deploy` sur le serveur de la boutique, `coco` sur le serveur partagé de l'agence), GitHub Actions, Search Console, Bing Webmaster Tools, la fiche Google, Stripe, Twilio, Amazon SES, les outils de surveillance, Coco Studio (rôle Agence ; le propriétaire pour les décisions).
 
 ## 0. Avant tout incident : être prêt
 
@@ -14,7 +16,8 @@ Sources : le protocole d'une heure du skill rank-first (références 11, « diag
 | Signaux de vie des tâches de nuit (sauvegarde de 2 h 15, test de restauration du premier lundi à 3 h 30) | Variables `HEARTBEAT_BACKUP_URL` et `HEARTBEAT_RESTORE_TEST_URL` | À créer |
 | Erreurs de l'application, sans renseignements personnels | Sentry (`SENTRY_DSN`), données personnelles masquées | À créer |
 | Alertes de Google par courriel : actions manuelles, problèmes de sécurité | Search Console : préférences de courriel du propriétaire et de l'agence, toutes les catégories activées | À activer avec la propriété ([docs/12](12-setup-mesure.md)) |
-| Registre des incidents (tous) et registre des incidents de confidentialité (Loi 25) | Un document daté tenu par l'agence ; le registre de confidentialité appartient à la boutique | À créer avant la mise en ligne |
+| Registre des incidents (tous) et registre des incidents de confidentialité (Loi 25) | [docs/23-registre-incidents.md](23-registre-incidents.md), tenu par l'agence ; [docs/24-registre-incidents-confidentialite.md](24-registre-incidents-confidentialite.md), qui appartient à la boutique (article 3.8) | Gabarits datés créés le 1er novembre 2026, vides : l'adresse temporaire est déjà publique. Le registre de confidentialité se recopie dans le coffre de la boutique (hors du dépôt) dès qu'une première ligne s'y inscrit |
+| L'adresse temporaire ne s'indexe pas | Chaque réponse de `cocovanille.<ip>.sslip.io` (et de l'adresse de Studio) porte `X-Robots-Tag: noindex, nofollow, noarchive` ([infra/README.md](../infra/README.md), « Shared server », étapes 7 et 9) | À vérifier de l'extérieur après chaque déploiement sur le serveur partagé (§6, contrôle « ne pas indexer ») : une copie indexée en `sslip.io` ferait double emploi avec le vrai domaine |
 | Cibles après une panne, à approuver : au plus 15 minutes de commandes perdues, site rétabli en 2 heures | [research/14 T10](../research/14-owner-questions.md), [research/17 §8.4](../research/17-vps-self-hosting-and-domain.md) | `[[FACT NEEDED: approbation du propriétaire (14 T10)]]` |
 
 **Qui fait quoi pendant un incident**
@@ -41,7 +44,7 @@ Le texto prévu pour le propriétaire en cas de panne : « Coco Studio : le site
 
 1. **Périmètre (15 minutes).** Exporter de Search Console les pages et les requêtes des 28 jours avant et des 28 jours après, puis : `node tools/gsc-diff.mjs avant.csv apres.csv --metric impressions`. Une page, une section, un type de question, ou tout?
 2. **Date (10 minutes).** La baisse correspond-elle à un déploiement (historique de GitHub Actions ; `DEPLOYED_AT` dans `state.env` sur le serveur), à une modification de contenu (journal de Coco Studio), à une mise à jour de Google, à une action manuelle, à un changement de saison?
-3. **Technique (15 minutes).** Search Console › Inspection de l'URL sur les pages touchées ; `node tools/check-urls.mjs https://cocovanillegranby.com/sitemap.xml` (réponses, redirections, adresses canoniques, « noindex ») ; `node tools/crawler-access.mjs --sitemap https://cocovanillegranby.com/sitemap.xml --max 5` (robots bloqués : vérifier aussi les bannissements automatiques du serveur avec `sudo fail2ban-client status nginx-limit-req`). **Cause propre au site :** un prix effacé, un allergène à revérifier ou un texte qui retrouve un `[[FACT NEEDED]]` fait retirer la page par la garde de publication ; la liste des faits manquants le montre.
+3. **Technique (15 minutes).** Search Console › Inspection de l'URL sur les pages touchées ; `node tools/check-urls.mjs https://cocovanillegranby.com/sitemap.xml` (réponses, redirections, adresses canoniques, « noindex ») ; `node tools/crawler-access.mjs --sitemap https://cocovanillegranby.com/sitemap.xml --max 5` (robots bloqués : vérifier aussi les bannissements automatiques du serveur avec `sudo fail2ban-client status nginx-limit-req`, sur le serveur de la boutique seulement : le serveur partagé n'a pas fail2ban, on y lit les refus 429 dans le journal nginx de Coco, §6). **Cause propre au site :** un prix effacé, un allergène à revérifier ou un texte qui retrouve un `[[FACT NEEDED]]` fait retirer la page par la garde de publication ; la liste des faits manquants le montre.
 4. **Page de résultats (10 minutes).** Chercher les questions touchées depuis un cellulaire à Granby : nouvelle présentation, nouveau concurrent, notre page est-elle encore là?
 5. **Décider (10 minutes).** Technique : corriger. Sécurité ou action manuelle : nettoyer, puis une seule demande de réexamen complète. Algorithme : améliorer et attendre. Demande : accepter et recibler.
 
@@ -54,7 +57,7 @@ Le texto prévu pour le propriétaire en cas de panne : « Coco Studio : le site
 ### 3.1 Le site est en panne
 
 - **Signes :** alerte de disponibilité ; des clients appellent ; Coco Studio ne répond plus.
-- **Les 15 premières minutes (agence)** :
+- **Les 15 premières minutes (agence)**, sur le serveur de la boutique (sur le serveur partagé : `ssh coco@<ip>` et les règles du §6) :
   ```sh
   ssh deploy@<adresse du serveur>
   cd /opt/coco/production
@@ -66,8 +69,8 @@ Le texto prévu pour le propriétaire en cas de panne : « Coco Studio : le site
   ```
   Le retour à la version précédente prend quelques secondes tant qu'elle tourne encore, environ 15 secondes après ([infra/README.md](../infra/README.md), « Rollback »).
 - **Pour les clients, pendant ce temps (propriétaire)** : le 450-372-7177 et la fiche Google restent la porte d'entrée. Si la commande en ligne est ouverte et que la panne dure, « Pause des commandes en ligne » dans Coco Studio › Boutique & heures (si Studio répond) ; si tout est en panne plus d'une heure, une publication sur la fiche Google et sur Facebook : « Commandes par téléphone aujourd'hui ».
-- **Dans l'heure :** trouver la cause (déploiement, disque, base de données, panne du fournisseur) et la corriger. Disque plein : `docker image prune -a --filter until=336h`, vieux journaux, vieilles copies locales. Migration ratée, en dernier recours : arrêter les processus qui écrivent, restaurer la copie faite avant le déploiement ; les commandes prises depuis disparaissent de la base et se ressaisissent à partir de Stripe ([infra/README.md](../infra/README.md)).
-- **Ensuite :** consigner l'incident ; relancer `check-urls` et `crawler-access` ; surveiller Search Console › Pages les jours suivants.
+- **Dans l'heure :** trouver la cause (déploiement, disque, base de données, panne du fournisseur) et la corriger. Disque plein : les images de Coco seulement, `docker image prune --all --force --filter until=336h --filter label=org.opencontainers.image.title=coco-vanille-web` (la même commande que la minuterie `coco-image-prune`), puis les vieux journaux et les vieilles copies locales de Coco. **Jamais** `docker image prune -a` sans le filtre d'étiquette : sur le serveur partagé, il effacerait aussi les images des autres applications, dont celles qui leur servent de retour arrière. Migration ratée, en dernier recours : arrêter les processus qui écrivent, restaurer la copie faite avant le déploiement ; les commandes prises depuis disparaissent de la base et se ressaisissent à partir de Stripe ([infra/README.md](../infra/README.md)).
+- **Ensuite :** consigner l'incident ([docs/23](23-registre-incidents.md)) ; relancer `check-urls` et `crawler-access` ; surveiller Search Console › Pages les jours suivants.
 - **Jamais :** déployer une correction sans passer par les vérifications automatiques ; changer des adresses de pages.
 
 ### 3.2 Baisse dans Google (positions, clics, appels de la fiche)
@@ -122,7 +125,7 @@ Ce que dit la loi (texte de la Loi sur la protection des renseignements personne
 
 | Situation | Premier geste | Ensuite |
 |---|---|---|
-| Clé ou mot de passe exposé | Changer la clé chez le fournisseur → mettre à jour le fichier `.env` → redéployer ([infra/README.md](../infra/README.md)) | Si des renseignements personnels ont pu être vus : inscrire l'incident au registre, évaluer le risque de préjudice sérieux avec la personne responsable et le juriste ; s'il y a risque, aviser la Commission et les personnes concernées |
+| Clé ou mot de passe exposé | Changer la clé chez le fournisseur → mettre à jour le fichier `.env` → redéployer ([infra/README.md](../infra/README.md)) | Si des renseignements personnels ont pu être vus : inscrire l'incident au registre ([docs/24](24-registre-incidents-confidentialite.md)), évaluer le risque de préjudice sérieux avec la personne responsable et le juriste ; s'il y a risque, aviser la Commission et les personnes concernées |
 | Site piraté | Page de maintenance ; restaurer une sauvegarde saine ; changer tous les mots de passe et toutes les clés ; mettre à jour | Retirer les pages et les liens injectés ; Search Console › Problèmes de sécurité › demander un examen ; surveiller l'index pendant des semaines |
 | Accès d'un ancien employé encore actif | Coco Studio › Plus › Réglages : désactiver le compte | Revue des accès le premier vendredi du mois |
 
@@ -138,3 +141,34 @@ Ce que dit la loi (texte de la Loi sur la protection des renseignements personne
 | Avant / après dans Search Console | `node tools/gsc-diff.mjs avant.csv apres.csv --metric impressions` |
 | Passages des robots dans les journaux | `node tools/log-bots.mjs access.log --verify --week` |
 | Avertir Bing après une correction (une fois le fichier de clé IndexNow servi, [docs/12 §2](12-setup-mesure.md)) | `node tools/indexnow.mjs https://cocovanillegranby.com/<page>/` |
+
+## 6. Le serveur partagé de l'agence (adresse temporaire)
+
+Depuis le 1er novembre 2026, et jusqu'au passage au vrai domaine, Coco Vanille tourne sur le VPS Hostinger de l'agence, à côté d'autres applications qui ne sont pas les siennes ([infra/README.md](../infra/README.md), « Shared server on a temporary address »; [docs/10 §1](10-handover.md)). Adresses : `cocovanille.<ip-avec-tirets>.sslip.io` (le site, « ne pas indexer ») et `admin-cocovanille.<ip-avec-tirets>.sslip.io` (Coco Studio). La règle qui passe avant tout le reste : **un incident de Coco ne se règle jamais en touchant une autre application.**
+
+**Se connecter** : `ssh coco@<ip>` (le compte Linux de Coco, créé par `setup-shared-host.sh`), ou `sudo -iu coco` depuis root. Le compte `coco` peut seulement tester et recharger nginx (`sudo nginx -t`, `sudo systemctl reload nginx`); tout le reste se fait dans `/opt/coco`. Une commande qui demande root (certificats, minuteries, `snapshot.sh`) se fait par l'agence, en sachant ce qu'elle touche.
+
+**Ce qu'on ne fait jamais sur ce serveur** : redémarrer le serveur, Docker ou un service qui n'est pas à Coco; `docker system prune` ou `docker image prune -a` sans le filtre d'étiquette de Coco; arrêter, supprimer ou relancer un conteneur qui n'est pas `coco-production-*` ou `coco-staging-*`; modifier un autre site nginx, le serveur par défaut, le pare-feu, `sshd`, le fuseau horaire ou les mises à jour du système; recharger nginx sans test.
+
+| Situation | Sur le serveur partagé |
+|---|---|
+| Avant toute intervention | Une photo de l'état des autres applications (root) : `bash /opt/coco/releases/<sha>/scripts/snapshot.sh > /root/coco-before.txt && test -s /root/coco-before.txt` |
+| Site en panne | `cd /opt/coco/production && docker compose -p coco-production --env-file .env --env-file state.env ps`; retour arrière : `bash /opt/coco/production/infra/scripts/rollback.sh production`; mémoire : `dmesg \| grep -i oom` (les étapes lourdes de Coco se proposent comme premières victimes, [infra/README.md](../infra/README.md), étape 5) |
+| Disque plein | `df -h /` et `docker system df` pour voir, puis les images de Coco seulement : `docker image prune --all --force --filter until=336h --filter label=org.opencontainers.image.title=coco-vanille-web`; les copies locales de `/opt/coco/production/backups/` après vérification qu'elles sont aussi dans les compartiments ([docs/10 §2](10-handover.md)). Si le disque reste plein à cause d'une autre application : on prévient l'agence, on ne nettoie rien qui n'est pas à Coco |
+| Modifier nginx (certificat, en-tête, redirection) | Seulement les fichiers de Coco (`/etc/nginx/sites-available/zz-coco-*.conf`, liés dans `sites-enabled`; `/etc/nginx/coco/`; `/etc/nginx/snippets/coco-*.conf`; `/etc/nginx/conf.d/coco.conf`), de préférence en relançant `install-nginx.sh` (root), qui garde le mode partagé, puis **toujours** `sudo nginx -t` avant `sudo systemctl reload nginx`. Test en échec : on remet le fichier d'avant et on ne recharge pas. Jamais `restart`, qui couperait les autres sites |
+| Robots bloqués | Pas de fail2ban sur ce serveur (`setup-shared-host.sh` ne l'installe pas) : les refus de Coco sont les réponses 429 de ses limites nginx, dans `/var/log/nginx/coco-public.access.log` |
+| Certificat | root : `certbot certificates`; si Let's Encrypt refuse `sslip.io` (quota partagé), les mêmes noms sous `nip.io` ([infra/README.md](../infra/README.md)) |
+| Après toute intervention | root : `bash /opt/coco/releases/<sha>/scripts/snapshot.sh > /root/coco-after.txt && diff /root/coco-before.txt /root/coco-after.txt`. Seules différences permises : les paquets que `setup-shared-host.sh` a dû installer. Toute autre différence : on arrête et on regarde, puis on l'inscrit au [registre des incidents](23-registre-incidents.md) |
+
+**Contrôle « ne pas indexer », après chaque déploiement sur ce serveur** (de l'extérieur, depuis le portable de l'agence) : chaque réponse doit porter `X-Robots-Tag: noindex, nofollow, noarchive`, pages, fichiers et erreurs compris.
+
+```sh
+for p in / /sitemap.xml /robots.txt /llms.txt /page-qui-nexiste-pas/; do
+  printf '%s  ' "$p"; curl -sI "https://cocovanille.<ip-avec-tirets>.sslip.io$p" | grep -i '^x-robots-tag' || echo 'MANQUANT'
+done
+curl -sI "https://admin-cocovanille.<ip-avec-tirets>.sslip.io/" | grep -i '^x-robots-tag'
+```
+
+Un « MANQUANT » : on corrige avant tout le reste (le fichier `coco-noindex.conf` vient de l'option `--temporary`), puis on vérifie dans Google et dans Bing (`site:sslip.io cocovanille`) qu'aucune page n'a été prise; si une page l'a été, demande de retrait dans Search Console dès que la propriété existe, et ligne au [registre des incidents](23-registre-incidents.md). Une image ou un fichier de `/media/` se vérifie de la même façon.
+
+**Au passage au vrai domaine** ([infra/README.md](../infra/README.md), étape 10) : on retire `--temporary` (sinon le vrai site resterait « ne pas indexer »), on met une redirection 301 des noms temporaires vers le domaine, inscrite le jour même dans [docs/18 §2](18-redirections.md), et on refait ce contrôle à l'envers : plus aucun `noindex` sur les pages publiques du domaine (`node tools/check-urls.mjs https://cocovanillegranby.com/sitemap.xml`).

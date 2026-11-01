@@ -195,11 +195,11 @@ milestones,gâteau dévoilement sexe bébé,fr,transactional,/gateaux-personnali
 milestones,gâteau retraite,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,
 milestones,gâteau bal des finissants,fr,transactional,/gateaux-personnalises-granby/,low,UNVERIFIED,May–June
 milestones,torta de bautizo primera comunión,es,transactional,/es/pasteles-personalizados-granby/,low,UNVERIFIED,
-visitors,café et pâtisserie près du zoo de granby,fr,local,/en-visite-a-granby/,medium,https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby,"L5; seasonal; Zoo >500k summer visitors (Zoo release, undated)"
-visitors,bakery near granby zoo,en,local,/en/visiting-granby/,medium,https://www.travelprofy.com/montreal/granby-zoo,L8; Montréal→Zoo ~1 h 12 min
-visitors,where to eat near granby zoo,en,local,/en/visiting-granby/,medium,UNVERIFIED,
+visitors,café et pâtisserie près du zoo de granby,fr,local,/nous-trouver/zoo-de-granby/,medium,https://www.zoodegranby.com/salle-de-presse/une-saison-estivale-couronnee-de-succes-au-zoo-de-granby,"L5; seasonal; Zoo >500k summer visitors (Zoo release, undated)"
+visitors,bakery near granby zoo,en,local,/en/visit/granby-zoo/,medium,https://www.travelprofy.com/montreal/granby-zoo,L8; Montréal→Zoo ~1 h 12 min
+visitors,where to eat near granby zoo,en,local,/en/visit/granby-zoo/,medium,UNVERIFIED,
 visitors,dónde comer cerca del zoo de granby,es,local,/es/visita-granby/,low,UNVERIFIED,
-visitors,pique-nique zoo de granby,fr,informational,/en-visite-a-granby/,low,UNVERIFIED,Picnic boxes only if offered
+visitors,pique-nique zoo de granby,fr,informational,/nous-trouver/zoo-de-granby/,low,UNVERIFIED,Picnic boxes only if offered
 delivery,livraison gâteau granby,fr,transactional,/commander/,medium,https://www.ubereats.com/ca/category/granby-qc/bakery,CONDITIONAL: no delivery evidence for Coco Vanille; answer in FAQ either way
 delivery,livraison pâtisserie granby,fr,transactional,/commander/,low,https://www.ubereats.com/ca/category/granby-qc/dessert,
 delivery,livraison gâteau bromont,fr,transactional,/commander/,low,https://rosegateaux.com/,City pages only with real delivery + local proof

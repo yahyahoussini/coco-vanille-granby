@@ -1,6 +1,6 @@
 # Rapport mensuel — Pâtisserie Coco Vanille — `[[FACT NEEDED: mois et année, par exemple « novembre 2026 »]]`
 
-Modèle rédigé le jeudi 29 octobre 2026. Chaque mois, l'agence le remplit et vous l'envoie ; vous l'approuvez en 15 minutes ([research/16 §1.3](../research/16-admin-dashboard-spec.md)). Premiers envois prévus : le vendredi 4 décembre 2026 (novembre), le vendredi 8 janvier 2027 (décembre) et le vendredi 5 février 2027 (janvier) ([docs/01 §4](01-plan-90-jours.md)).
+Modèle rédigé le jeudi 29 octobre 2026, mis à jour le dimanche 1er novembre 2026 (ensemble figé des requêtes, verdict calculé par l'outil, événements de GA4). Chaque mois, l'agence le remplit et vous l'envoie ; vous l'approuvez en 15 minutes ([research/16 §1.3](../research/16-admin-dashboard-spec.md)). Premiers envois prévus : le vendredi 4 décembre 2026 (novembre), le vendredi 8 janvier 2027 (décembre) et le vendredi 5 février 2027 (janvier) ([docs/01 §4](01-plan-90-jours.md)).
 
 - Préparé par l'agence le : `[[FACT NEEDED: date]]` · Approuvé par le propriétaire le : `[[FACT NEEDED: date]]`
 - Mise à jour majeure de Google pendant le mois? `[[FACT NEEDED: oui ou non, et dates (status.search.google.com)]]`. Si oui, les conclusions sont gelées jusqu'à la fin du déploiement.
@@ -52,7 +52,7 @@ Jamais de chiffre par employé, jamais de classement de l'équipe (décision M2 
 
 ## 3. Visibilité (indicateurs avancés)
 
-**Les 33 questions suivies**, moteur par moteur ([scoreboard/prompts.csv](../scoreboard/prompts.csv)). Une ligne de moteur d'IA venue de l'outil automatique ne compte qu'une fois corrigé son réglage de pays ([scoreboard/README §6](../scoreboard/README.md)) :
+**Les 30 requêtes suivies** (27 notées et 3 de marque), moteur par moteur ([scoreboard/prompts.csv](../scoreboard/prompts.csv)). Les lignes automatiques des moteurs d'IA comptent : l'outil cherche depuis le Québec depuis le 29 octobre 2026 ([scoreboard/README §6](../scoreboard/README.md), point 9), avec un seul passage par semaine :
 
 | Moteur | Questions où la boutique est **nommée** | Questions où notre site est **lié** | 1re place / 3 premières (Google) | Variation sur 4 semaines |
 |---|---|---|---|---|
@@ -72,7 +72,7 @@ Jamais de chiffre par employé, jamais de classement de l'équipe (décision M2 
 | AEO | ☐ | ☐ | |
 | GEO | ☐ | ☐ | |
 
-Si chaque question n'a pas passé trois fois par semaine dans chaque moteur, écrire **« mesure partielle »** à côté du tableau.
+Les deux premières colonnes viennent de `node tools/citation-share.mjs` (le verdict sur l'ensemble, puis sur les seules questions en français, sur quatre semaines ISO de suite). Si l'outil écrit « MESURE PARTIELLE » (une case à moins de trois passages, ou une question notée sans relevé une semaine), écrire **« mesure partielle »** à côté du tableau. À vérifier à la main, puis à noter ici : la grille de 7 × 7 points dans un rayon de 3 km, la règle des palmarès (« meilleure… ») et le Mode IA ([scoreboard/README §5](../scoreboard/README.md)).
 
 **Autres signaux avancés**
 
@@ -139,7 +139,7 @@ But fixé par le plan-v1 (couche 15) : les mentions sont comptées chaque mois e
 | Commandes, demandes, avis, messages | Coco Studio (la base de données de la boutique : la source de vérité, [research/12 G8](../research/12-plan-review.md)) |
 | Appels, itinéraires, clics de la fiche | Profil d'entreprise Google › Performances |
 | Positions, impressions, pages indexées, recherches de marque | Search Console ; `node tools/gsc-api.mjs positions --to-runs` si le compte de service existe ([docs/12](12-setup-mesure.md)) |
-| Questions suivies, citations par moteur, définition de « premier » | `node tools/citation-share.mjs` sur `scoreboard/runs/` (mesure du lundi, [docs/02](02-rythme-hebdo.md)) |
-| Clics « Appeler », « Itinéraire », « Commander » ; visites venant des IA | GA4 ; `node tools/ga4-api.mjs leads --weeks` et `node tools/ga4-api.mjs ai` |
+| Questions suivies, citations par moteur, définition de « premier » | `node tools/citation-share.mjs` sur `scoreboard/runs/` (mesure du lundi, [docs/02](02-rythme-hebdo.md)); il écrit aussi `reports/scoreboard.json` pour Coco Studio |
+| Clics « Appeler », « Itinéraire », « Commander », demandes de gâteaux et commandes payées ; visites venant des IA | GA4 ; `node tools/ga4-api.mjs leads --weeks` (les événements `phone_click`, `directions_click`, `order_click`, `generate_lead` et `purchase`, [docs/12 §3](12-setup-mesure.md)) et `node tools/ga4-api.mjs ai` |
 | Robots sur les pages clés | `node tools/log-bots.mjs <journal> --verify --week` |
 | Page de tableau de bord à joindre au courriel | `node tools/dashboard.mjs` → `reports/dashboard.html` (une page autonome) |

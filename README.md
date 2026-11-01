@@ -60,7 +60,7 @@ Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in
 - `research/requirements-2026-10-25.md` and `research/plan-*.md`: the owner's inputs, stored as provided by Yahya (formatting only). Their claims are reviewed in research/12 and research/18.
 - `research/01`–`18`: one research track per file. Each has a method-and-limits header, a bottom line, the body, open items, a search queue and Sources. Numbers 09 and 13 are not used.
 - `data/`: machine-readable twins of the research files (CSV, JSON).
-- `docs/`: the client operating documents in Québec French (00–20), with the client strategy `docs/STRATEGIE-SEO-AEO-GEO.md`, the local plan `docs/20-seo-geo-aeo-local.md` and an index in `docs/README.md`.
+- `docs/`: the client operating documents in Québec French (00–24, with the two incident registers 23 and 24 since 2026-11-01), with the client strategy `docs/STRATEGIE-SEO-AEO-GEO.md`, the local plan `docs/20-seo-geo-aeo-local.md` and an index in `docs/README.md`.
 - `scoreboard/`: the weekly SEO · AEO · GEO measurement (prompts, competitors, runs; the single source of truth for `.github/workflows/weekly.yml`), described in `scoreboard/README.md`; `site.config.json` and `tools/` hold the Québec market settings.
 - **Precedence:** files with a verification pass win over files without one; research wins over the owner plans (research/12 lists each conflict); research/12 §3 merged decisions bind until the owner overrules one in writing.
 - **Labels used everywhere:** verified / conflict / unverified / needed (research/01) · Confirmed / Partly / Not found / Contradicted (research/06, 18) · **UNVERIFIED** = no source or a secondary one only · **UNVERIFIED (FC)** = flagged by the fact-check, not re-confirmed · **(est.)** = an estimate · **[[FACT NEEDED: …]]** = only the owner (or a professional) can supply it; the publish guard blocks it from going live.
@@ -99,12 +99,12 @@ Operating model, "One-Man Empire": one operator (Yahya, the « Agence » role in
 
 | File | Rows | What it holds | Twin of |
 |---|---|---|---|
-| `facts.json` | 66 facts + 21 `fact_needed` | Canonical entity draft (pending owner sign-off), sourced facts with status, verification log, search queue | 01 |
+| `facts.json` | 74 facts + 20 `fact_needed` (as of 2026-11-01) | Canonical entity draft (pending owner sign-off), sourced facts with status, an `updates` log, verification log, search queue | 01 |
 | `competitors.csv` | 45 | Competitors: ratings, address, category, online ordering, custom cakes, weddings, published prices, languages, listicles | 03 |
 | `price-benchmarks.csv` | 35 | Published prices with size or portions and price basis | 02 |
 | `keywords.csv` | 220 | Keywords: cluster, language, intent, target page, relative-demand prior (not volume), evidence URL | 04 |
 | `seasonal-calendar.csv` | 45 | Occasions Nov 2026 – Dec 2027 with publish-by and pre-order dates | 04 |
-| `prompts.csv` | 53 | 33 scored prompts (I1–I10, C1–C10, L1–L10, B1–B3) + 20 candidates (X1–X20) | 05 |
+| `prompts.csv` | 53 | Since the freeze of 2026-11-02 (applied 2026-11-01): 27 scored prompts + B1–B3, 20 candidates (the five wedding prompts among them), 3 Spanish variants; the tracked copy is `scoreboard/prompts.csv` | 05 |
 | `serp-baseline-2026-W43.csv` | 33 | Proxy baseline, one row per prompt (engine = WebSearch-proxy) | 05 |
 | `inspiration.csv` | 57 | Public-site references: pattern to steal, what to avoid, SEO-safe flag | 08 |
 | `directories.csv` | 34 | Citation targets: what each feeds, priority, cost, Coco Vanille status | 11 |

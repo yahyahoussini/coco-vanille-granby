@@ -1,6 +1,6 @@
 # Vidéos courtes : 5 scripts à tourner au cellulaire, Pâtisserie Coco Vanille
 
-Mis à jour le 29 octobre 2026 · Préparé par l'Agence (Yahya, BrandHub.ma) pour la boutique · Statut : scripts prêts; chacun se tourne quand ses faits marqués [[FACT NEEDED]] sont confirmés.
+Mis à jour le 29 octobre 2026, puis le 1er novembre 2026 (compte Instagram vérifié) · Préparé par l'Agence (Yahya, BrandHub.ma) pour la boutique · Statut : scripts prêts; chacun se tourne quand ses faits marqués [[FACT NEEDED]] sont confirmés.
 
 ## À quoi sert ce document
 
@@ -25,7 +25,7 @@ Une vidéo courte, tournée au cellulaire dans la vraie boutique, montre ce qu'a
 | Français d'abord | Chaque vidéo est en français. Une version anglaise (sous-titres ou voix) seulement pour les sujets « visiteurs » (scripts 1 et 5). | Charte de la langue française : [research/07 F-1](../research/07-legal-quebec-compliance.md) |
 | Où publier | Au lancement : Instagram (Reels), Facebook et la fiche Google, le même fichier aux trois endroits, dans la limite de 3 publications par semaine en tout. YouTube à partir du mois 4 du plan, soit mars 2027 dans le calendrier ([docs/14-calendrier-contenu.md](14-calendrier-contenu.md)). Pas de TikTok au lancement. | Décisions D17 et M12; [research/12 §5.1](../research/12-plan-review.md) |
 | Rythme | Une vidéo YouTube par mois à partir de mars 2027; deux par mois seulement si le temps le permet. D'ici là, un court clip au cellulaire est facultatif : les scripts 1 et 2 peuvent se tourner plus tôt, dès que leurs faits sont confirmés, comme publications ordinaires. L'ordre de publication sur YouTube suit le calendrier de [docs/14](14-calendrier-contenu.md). | [research/12 F6, §5.1](../research/12-plan-review.md); plan-v1 §8 |
-| Les comptes | La chaîne YouTube appartient au compte Google de la boutique; l'Agence y est gestionnaire. Elle n'existe pas encore : [[FACT NEEDED: création de la chaîne YouTube au nom de la boutique]]. Compte Instagram à confirmer : [[FACT NEEDED: research/14 T4]]. | Guide rank-first, réf. 13 §2 |
+| Les comptes | La chaîne YouTube appartient au compte Google de la boutique; l'Agence y est gestionnaire. Elle n'existe pas encore : [[FACT NEEDED: création de la chaîne YouTube au nom de la boutique]]. Le compte Instagram existe et appartient à la boutique : **@coco_vanillegranby** (« Coco•vanille », public et actif, dernière publication le 22 octobre 2026; lu le 29 octobre 2026, [research/20b §0.1](../research/20b-products-and-offers.md); `data/facts.json`, social.instagram). | Guide rank-first, réf. 13 §2 |
 | Les fichiers d'origine | Garder chaque fichier vidéo original dans la médiathèque de la boutique, pas seulement sur les réseaux. | [research/18 §3](../research/18-dated-claims-verification.md) |
 
 ---

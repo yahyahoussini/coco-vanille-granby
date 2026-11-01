@@ -1,6 +1,9 @@
 {
-  "as_of": "2026-10-25",
+  "as_of": "2026-11-01",
   "method": "WebSearch result summaries only (US-based, not a Granby-localized SERP); WebFetch/curl blocked; no page opened directly. Status: verified = 2+ independent sources or 1 official source; conflict = sources disagree; unverified = single non-official source or inference; needed = no public evidence.",
+  "updates": [
+    { "date": "2026-11-01", "what": "Brought in line with what the site publishes since 2026-10-29: Instagram verified (owner channel read on 2026-10-29) and moved into entity.sameAs; the shop email decided (bonjour@cocovanillegranby.com, mailbox created on the domain at launch); the mobile number books the creative workshops (texts still unconfirmed); the category sentence is the default option B, published, the owner's choice A or B still open; the domain is chosen but not registered (RDAP 404 on 2026-11-01).", "sources": ["research/20b §0.1 and S-19", "research/21 A2 and A10", "research/15 D19; research/14 S5", "https://rdap.verisign.com/com/v1/domain/cocovanillegranby.com (404, read 2026-11-01)"] }
+  ],
   "entity": {
     "status": "canonical DRAFT pending owner sign-off",
     "name": "Pâtisserie Coco Vanille",
@@ -18,18 +21,22 @@
     "geo": { "latitude": 45.3995807, "longitude": -72.7250821, "status": "verified 2026-10-29 (research/20c G-1…G-3: 10.6 m from OpenStreetMap's « 3, Rue Court », the same Google pin as Wanderlog; good to about ±15 m, not a door location)" },
     "telephone": "+1-450-372-7177",
     "telephoneDisplay": "450-372-7177",
-    "telephoneMobile": "+1-438-528-7818 (Facebook bio; use not confirmed: calls, texts or atelier bookings, research/14 N1)",
-    "email": "[[FACT NEEDED: email]]",
-    "url": "[[FACT NEEDED: domain — none found]]",
+    "telephoneMobile": "+1-438-528-7818 (owner-published: Facebook bio and Google listing; books the creative workshops per the shop's reel of 2026-10-22, research/20b S-19; texts not confirmed, research/14 N1)",
+    "email": "bonjour@cocovanillegranby.com",
+    "email_status": "decided 2026-10-29 by the agency under Yahya's mandate (research/21 A2), published on the site; the mailbox is created on the domain at launch (docs/13 S0-6), so it receives nothing before then",
+    "url": "[[FACT NEEDED: domain — cocovanillegranby.com chosen (docs/13 S0-2), not registered on 2026-11-01]]",
     "openingHours": "Mo–Tu closed; We–Sa 08:30–17:30; Su 09:30–17:00 (Google listing relayed by Yahya 2026-10-27; site-published; owner sign-off welcome, research/14 H1)",
     "operatingStatus": "Trading: current Google listing hours and Facebook bio relayed by Yahya on 2026-10-27 (owner confirmation welcome, research/14 S1)",
     "foundingDate": "[[FACT NEEDED: shop opening date — corporation registered 2021-11-09]]",
     "founder": "[[FACT NEEDED: owner/chef name, role, background]]",
     "priceRange": "[[FACT NEEDED: owner price range — directory shows '$ & $$' (unverified)]]",
     "areaServed": "[[FACT NEEDED: pickup only or delivery radius]]",
-    "sameAs": ["https://www.facebook.com/PatisserieCocoVanille/"],
-    "sameAs_unverified": ["https://www.instagram.com/coco_vanillegranby/"],
-    "category_sentence": "[[FACT NEEDED: owner to choose option A (custom cakes) or B (pâtisserie-boulangerie) — see research/01-business-facts.md §11]]"
+    "sameAs": ["https://www.facebook.com/PatisserieCocoVanille/", "https://www.instagram.com/coco_vanillegranby/"],
+    "category_sentence": {
+      "fr": "Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby : viennoiseries, pains et gâteaux sur commande.",
+      "en": "Pâtisserie Coco Vanille is a pastry shop and bakery in downtown Granby: viennoiseries, bread and cakes to order.",
+      "status": "default option B (research/15 D19), published on the site (apps/web/src/seed/index.js); the owner's choice of option A (custom cakes first) or B is still open (research/14 S5; research/01-business-facts.md §11)"
+    }
   },
   "facts": [
     {
@@ -180,17 +187,21 @@
     },
     {
       "id": "web.domain",
-      "value": "none found",
+      "value": "cocovanillegranby.com chosen; not registered on 2026-11-01",
       "status": "needed",
-      "sources": [],
-      "notes": "Searched cocovanille.ca, patisseriecocovanille.com, handles. No website surfaced."
+      "sources": [
+        { "url": "https://rdap.verisign.com/com/v1/domain/cocovanillegranby.com", "says": "HTTP 404: no such domain in the .com registry", "date": "2026-11-01" }
+      ],
+      "notes": "Searched cocovanille.ca, patisseriecocovanille.com, handles on 2026-10-25: no website surfaced. The name is the agency's choice (docs/13 S0-2: register .com and .ca in the name of Pâtisserie Coco Vanille inc.), waiting for the owner's go-ahead. Until then the site runs on a temporary sslip.io address that answers noindex (docs/22)."
     },
     {
       "id": "web.email",
-      "value": "none found",
-      "status": "needed",
-      "sources": [],
-      "notes": ""
+      "value": "bonjour@cocovanillegranby.com (decided; mailbox created at launch)",
+      "status": "decided (agency decision, not a public fact)",
+      "sources": [
+        { "url": null, "says": "Decision A2: bonjour@cocovanillegranby.com on the contact, terms and accessibility answers; mailbox created at launch (research/21)", "date": "2026-10-29" }
+      ],
+      "notes": "Published on the site and in llms.txt. The mailbox does not exist before the domain is registered and Exchange Online is set up (docs/13 S0-2, S0-6): create it before DNS goes live."
     },
     {
       "id": "hours.restomontreal",
@@ -427,10 +438,12 @@
     },
     {
       "id": "social.instagram",
-      "value": "@coco_vanillegranby",
-      "status": "unverified",
-      "sources": [],
-      "notes": "From the brief; not surfaced by any search (exact-handle search returned nothing; 2 more queries on 2026-10-25 also returned nothing)."
+      "value": "@coco_vanillegranby (https://www.instagram.com/coco_vanillegranby/), display name « Coco•vanille »",
+      "status": "verified (owner channel)",
+      "sources": [
+        { "url": "https://www.instagram.com/coco_vanillegranby/", "says": "Public and active; bio repeats the Facebook bio word for word, with both phone numbers; 266 followers; newest post 2026-10-22 (research/20b §0.1)", "date": "2026-10-29" }
+      ],
+      "notes": "Not surfaced by any search on 2026-10-25; read directly on 2026-10-29. In entity.sameAs and on the site (decision A10, research/21). Follower count as read that day only."
     },
     {
       "id": "press.mentions",
@@ -720,9 +733,10 @@
       "value": "+1-438-528-7818 (438-528-7818)",
       "status": "verified (owner-published, relayed)",
       "sources": [
-        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" }
+        { "url": null, "says": "Copied from the Google listing and the shop’s Facebook bio by Yahya (operator), sent in chat", "date": "2026-10-27" },
+        { "url": "https://www.instagram.com/coco_vanillegranby/", "says": "Reel caption: « Ateliers disponibles les vendredis, samedis et dimanches, sur réservation : 438 528 7818 » (research/20b S-19)", "date": "2026-10-22" }
       ],
-      "notes": "Shown as « Cellulaire » only; texting and atelier bookings not promised until the owner says which number takes them (research/14 N1)."
+      "notes": "Books the creative workshops (the shop's reel of 2026-10-22): the site names it as the workshop booking number (seed/index.js). Whether it takes texts is still not confirmed (research/14 N1)."
     },
     {
       "id": "service.cafe",
@@ -768,8 +782,7 @@
     "Is 450-372-5917 an old/second line or an error?",
     "Owner and chef names, roles, training, background; photo consent (About/Founder pages)",
     "Shop opening date; any previous business or previous Coco Vanille location at/before 3 rue Court",
-    "Business email; any registered domain",
-    "Instagram handle confirmation (@coco_vanillegranby?), follower counts, other social accounts",
+    "The owner's go-ahead to register cocovanillegranby.com and .ca in the company's name (not registered on 2026-11-01; docs/13 S0-2). The email is decided (web.email) and Instagram is verified (social.instagram); other social accounts, if any",
     "Revenue mix (counter viennoiseries/bread/café vs custom cakes vs market vs frozen); custom-cake orders per week; lead times",
     "Product list with prices: sizes, portions, flavours, finishes, custom-cake price grid, deposit policy",
     "Wedding cakes offered? tiers, delivery, set-up",

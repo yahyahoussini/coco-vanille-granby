@@ -12,8 +12,19 @@
 //   A row whose notes start with "PROXY" (a stand-in measure) is left out, so a proxy week never enters a trend; --proxy scores proxy rows
 //   alone (e.g. --runs scoreboard/runs/proxy --proxy): the table only, no trend, no streaks, no definition of first, written to
 //   scoreboard/summary-proxy.csv (never over summary.csv, which dashboard.mjs and weekly.mjs read as the real scoreboard).
-// Usage: node citation-share.mjs [--runs scoreboard/runs] [--brand x.ma] [--config site.config.json] [--prompts scoreboard/prompts.csv] [--out scoreboard/summary.csv] [--proxy]
-import { readFileSync, existsSync, writeFileSync } from "node:fs";
+// The definition of first (docs/01 §5, decision M14) is read on 4 consecutive ISO weeks (four Mondays in a row; a missing week
+//   means no verdict), over the frozen scored set of prompts.csv (every informational, commercial and local row, measured or not:
+//   a prompt without a row that week counts as not held), once on all prompts and once on the French prompts only (both must
+//   hold). A case with fewer than 3 runs, or a scored prompt without a row, makes it a « mesure partielle », printed as such.
+//   GEO's most linked domain is the brand or a pastry shop of competitors.csv; directories and every other domain are counted
+//   apart. The 7 × 7 map-pack grid and the « meilleure… » rule stay a monthly check by hand (docs/07).
+// Also writes reports/scoreboard.json for Coco Studio › Agence ([{ week: Monday 'YYYY-MM-DD', seo, aeo, geo }], one row per week:
+//   seo = commercial and local prompts at Google position 1, aeo = prompts with our snippet/PAA/AI Overview, geo = prompts
+//   where at least 2 AI engines name or cite the brand; each « held/scored »).
+// Usage: node citation-share.mjs [--runs scoreboard/runs] [--brand x.ma] [--config site.config.json] [--prompts scoreboard/prompts.csv]
+//        [--competitors scoreboard/competitors.csv] [--out scoreboard/summary.csv] [--json-out reports/scoreboard.json] [--proxy]
+import { readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { loadConfig, parseArgs, csvObjects, toCsv, c, readRuns, holds, casePosition } from "./lib.mjs";
 export { runsRank } from "./lib.mjs";
 
@@ -44,8 +55,8 @@ const caseDomains = (k) => (k.runs.length === 1 ? domainsOf(k.runs[0]).map(norm)
 
 // ---------- prompt types: an id missing from prompts.csv is "unknown", reported, never scored ----------
 const promptsFile = args.prompts ?? "scoreboard/prompts.csv";
-const promptTypes = new Map();
-if (existsSync(promptsFile)) for (const r of csvObjects(readFileSync(promptsFile, "utf8"))) promptTypes.set(r.id, r.type);
+const promptTypes = new Map(), promptLangs = new Map();
+if (existsSync(promptsFile)) for (const r of csvObjects(readFileSync(promptsFile, "utf8"))) { promptTypes.set(r.id, r.type); promptLangs.set(r.id, (r.lang ?? "").trim().toLowerCase()); }
 const unknown = [...new Set(cases.map((k) => k.prompt_id))].filter((id) => !promptTypes.has(id));
 if (unknown.length) console.log(c.yellow(`${unknown.length} prompt_id(s) not in ${promptsFile}${existsSync(promptsFile) ? "" : " (file missing)"}: counted as unknown, left out of the streaks and the definition of first — ${unknown.join(", ")}`));
 
@@ -120,13 +131,17 @@ if (weeks.length >= 2 && !args.proxy) {
 // ---------- streaks and the definition of first (Layer 13 #4, Layer 21.5) ----------
 const last4 = weeks.slice(-4);
 const scored = (id) => ["informational", "commercial", "local"].includes(promptTypes.get(id)); // unknown ids are not scored
-const promptIds = [...new Set(cases.map((k) => k.prompt_id))].filter(scored);
+// The frozen scored set of prompts.csv is the denominator (docs/01 §5), not the prompts that happen to be in the runs.
+const promptIds = [...promptTypes.keys()].filter(scored);
 const isAio = (r) => (/^ai overview$/i.test(r.engine) && (yes(r.ai_overview_cited) || citesUs(r))) || (/^google$/i.test(r.engine) && yes(r.ai_overview_cited));
 const isSnippet = (r) => /^google$/i.test(r.engine) && r.snippet_owner && isBrand(r.snippet_owner);
 // held = the predicate holds on most runs of one of that prompt's cases that week (an engine's case, or the Google one)
 const heldIn = (w, id, pred) => cases.some((k) => k.week === w && k.prompt_id === id && holds(k.runs, pred));
-// streak = number of consecutive most-recent weeks the predicate held for that prompt (over the weeks available)
-const streak = (id, pred) => { let n = 0; for (const w of [...weeks].reverse()) { if (heldIn(w, id, pred)) n++; else break; } return n; };
+// ISO week label → its Monday (UTC): « four Mondays in a row » holds across a year end (2026 has a W53).
+const mondayOf = (w) => { const m = /^(\d{4})-W(\d{2})$/.exec(w); if (!m) return null; const jan4 = new Date(Date.UTC(+m[1], 0, 4)); return new Date(jan4.getTime() + ((+m[2] - 1) * 7 - ((jan4.getUTCDay() || 7) - 1)) * 86400000); };
+const nextWeek = (a, b) => { const x = mondayOf(a), y = mondayOf(b); return !!x && !!y && y - x === 7 * 86400000; };
+// streak = number of consecutive most-recent ISO weeks the predicate held for that prompt (a week without runs ends it)
+const streak = (id, pred) => { let n = 0; const ws = [...weeks].reverse(); for (let i = 0; i < ws.length; i++) { if (i && !nextWeek(ws[i], ws[i - 1])) break; if (heldIn(ws[i], id, pred)) n++; else break; } return n; };
 const snippetStreaks = promptIds.map((id) => [id, streak(id, isSnippet)]).filter(([, n]) => n > 0);
 const aioStreaks = promptIds.map((id) => [id, streak(id, isAio)]).filter(([, n]) => n > 0);
 const fmt = (arr) => arr.map(([id, n]) => `${id}×${n}w`).join(", ") || "none";
@@ -138,28 +153,78 @@ if (!args.proxy) {
   if (cases.some((k) => k.runs.some((r) => "third_party_names_us" in r))) console.log(`Third-party page naming the brand among cited sources (last ${last4.length} week(s)): ${thirdParty.size}/${promptIds.length} prompts — Layer 15 target: half`);
 }
 
-if (weeks.length >= 4 && !args.proxy) {
-  const commLocal = promptIds.filter((id) => ["commercial", "local"].includes(promptTypes.get(id)));
+const gaps = last4.slice(1).filter((w, i) => !nextWeek(last4[i], w));
+const consecutive = last4.length === 4 && !gaps.length;
+const isPos1 = (r) => /^google$/i.test(r.engine) && +r.google_position === 1;
+const namesUs = (r) => yes(r.brand_named) || citesUs(r);
+const aiEngines = engines.filter((e) => !/^(google|ai overview)$/i.test(e));
+// GEO's « most linked pastry domain » (docs/01 §5): the brand or a pastry shop of competitors.csv; directories, media and every
+// other domain are counted apart (a pastry shop missing from competitors.csv belongs there).
+const competitorsFile = args.competitors ?? "scoreboard/competitors.csv";
+const pastryDomains = new Set([brand]);
+if (existsSync(competitorsFile)) for (const r of csvObjects(readFileSync(competitorsFile, "utf8"))) if ((r.domain ?? "").trim() && !/^(null|—|-)$/i.test(r.domain.trim())) pastryDomains.add(norm(r.domain));
+const isPastry = (d) => pastryDomains.has(d) || [...pastryDomains].some((p) => d.endsWith("." + p));
+
+if (weeks.length >= 4 && !args.proxy && !consecutive) {
+  console.log(`\nDefinition of first: no verdict — the last 4 weeks of runs (${last4.join(", ")}) are not 4 consecutive ISO weeks (break before ${gaps.join(", ")}). It is read on four Mondays in a row (docs/01 §5).`);
+}
+if (weeks.length >= 4 && !args.proxy && consecutive) {
   const allWeeks = (id, pred) => last4.every((w) => heldIn(w, id, pred));
-  const pos1 = commLocal.filter((id) => allWeeks(id, (r) => /^google$/i.test(r.engine) && +r.google_position === 1));
-  const rest = promptIds.filter((id) => !commLocal.includes(id));
-  const top3 = rest.filter((id) => allWeeks(id, (r) => /^google$/i.test(r.engine) && +r.google_position >= 1 && +r.google_position <= 3));
-  const aeo = promptIds.filter((id) => allWeeks(id, (r) => isSnippet(r) || isAio(r)));
-  const localIds = promptIds.filter((id) => promptTypes.get(id) === "local");
-  const packData = cases.some((k) => localIds.includes(k.prompt_id) && k.runs.some((r) => (r.map_pack ?? "").trim() !== ""));
-  const packHeld = localIds.filter((id) => allWeeks(id, (r) => /^google$/i.test(r.engine) && yes(r.map_pack)));
-  const aiEngines = engines.filter((e) => !/^(google|ai overview)$/i.test(e));
-  const geoEngines = aiEngines.filter((e) => { const cited = promptIds.filter((id) => allWeeks(id, (r) => sameEngine(r.engine, e) && (yes(r.brand_named) || citesUs(r)))); return cited.length >= promptIds.length / 2; });
-  const domCount = new Map(); for (const k of cases.filter((k) => last4.includes(k.week) && !/^google$/i.test(k.engine))) for (const d of caseDomains(k)) domCount.set(d, (domCount.get(d) ?? 0) + 1);
-  const topDom = [...domCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
-  const g = commLocal.length && pos1.length >= commLocal.length / 2 && (!rest.length || top3.length >= rest.length) && (!localIds.length || (packData && packHeld.length === localIds.length));
-  const a = aeo.length >= promptIds.length / 3;
-  const ge = geoEngines.length >= 2 && topDom === brand;
-  console.log(`\nDefinition of first (last 4 weeks, ${promptIds.length} scored prompts):`);
-  console.log(`  Google  ${g ? c.green("MET") : c.yellow("not yet")} — position 1 on ${pos1.length}/${commLocal.length} commercial+local (need half), top 3 on ${top3.length}/${rest.length} others (need all), map pack held on ${packData ? `${packHeld.length}/${localIds.length} local prompts (need all)` : "n/a — fill the map_pack column on local prompts"}`);
-  console.log(`  AEO     ${a ? c.green("MET") : c.yellow("not yet")} — snippet/PAA/AI Overview held on ${aeo.length}/${promptIds.length} (need a third)`);
-  console.log(`  GEO     ${ge ? c.green("MET") : c.yellow("not yet")} — cited on ≥ half of prompts in ${geoEngines.length} engine(s) [${geoEngines.join(", ")}] (need 2); most cited domain: ${topDom ?? "n/a"}${topDom === brand ? " (us)" : ""}`);
-  if (g && a && ge) console.log(c.green("  All three hold: widen the category by one step, or add a city or a language, and run the stack again (Layer 21.5)."));
+  // the domains the AI engines cite over the 4 weeks, on these prompts, most cited first
+  const citedDomains = (ids) => { const n = new Map(); for (const k of cases.filter((k) => last4.includes(k.week) && ids.includes(k.prompt_id) && !/^google$/i.test(k.engine))) for (const d of caseDomains(k)) n.set(d, (n.get(d) ?? 0) + 1); return [...n.entries()].sort((a, b) => b[1] - a[1]); };
+  // One verdict for a set of prompts: the whole frozen set, then the French prompts alone (both must hold).
+  const verdict = (ids) => {
+    const ranked = citedDomains(ids);
+    const topPastry = ranked.find(([d]) => isPastry(d))?.[0];
+    const apart = ranked.filter(([d]) => !isPastry(d)).slice(0, 4);
+    const commLocal = ids.filter((id) => ["commercial", "local"].includes(promptTypes.get(id)));
+    const rest = ids.filter((id) => !commLocal.includes(id));
+    const localIds = ids.filter((id) => promptTypes.get(id) === "local");
+    const pos1 = commLocal.filter((id) => allWeeks(id, isPos1));
+    const top3 = rest.filter((id) => allWeeks(id, (r) => /^google$/i.test(r.engine) && +r.google_position >= 1 && +r.google_position <= 3));
+    const aeo = ids.filter((id) => allWeeks(id, (r) => isSnippet(r) || isAio(r)));
+    const packData = cases.some((k) => localIds.includes(k.prompt_id) && k.runs.some((r) => (r.map_pack ?? "").trim() !== ""));
+    const packHeld = localIds.filter((id) => allWeeks(id, (r) => /^google$/i.test(r.engine) && yes(r.map_pack)));
+    const geoEngines = aiEngines.filter((e) => ids.filter((id) => allWeeks(id, (r) => sameEngine(r.engine, e) && namesUs(r))).length >= ids.length / 2);
+    const g = !!commLocal.length && pos1.length >= commLocal.length / 2 && (!rest.length || top3.length >= rest.length) && (!localIds.length || (packData && packHeld.length === localIds.length));
+    const a = !!ids.length && aeo.length >= ids.length / 3;
+    const ge = !!ids.length && geoEngines.length >= 2 && topPastry === brand;
+    return { ids, commLocal, rest, localIds, pos1, top3, aeo, packData, packHeld, geoEngines, topPastry, apart, g, a, ge };
+  };
+  const print = (label, v) => {
+    console.log(`\nDefinition of first, ${label} (${last4[0]} → ${last4.at(-1)}, ${v.ids.length} scored prompts):`);
+    console.log(`  Google  ${v.g ? c.green("MET") : c.yellow("not yet")} — position 1 on ${v.pos1.length}/${v.commLocal.length} commercial+local (need half), top 3 on ${v.top3.length}/${v.rest.length} others (need all), map pack held on ${v.packData ? `${v.packHeld.length}/${v.localIds.length} local prompts (need all)` : "n/a — fill the map_pack column on local prompts"}`);
+    console.log(`  AEO     ${v.a ? c.green("MET") : c.yellow("not yet")} — snippet/PAA/AI Overview held on ${v.aeo.length}/${v.ids.length} (need a third)`);
+    console.log(`  GEO     ${v.ge ? c.green("MET") : c.yellow("not yet")} — named or cited on ≥ half of prompts in ${v.geoEngines.length} AI engine(s) [${v.geoEngines.join(", ")}] (need 2); most linked pastry domain: ${v.topPastry ?? "n/a"}${v.topPastry === brand ? " (us)" : ""}`);
+    if (v.apart.length) console.log(c.dim(`          counted apart (directories, media, other domains): ${v.apart.map(([d, n]) => `${d} (${n})`).join(", ")} — a pastry shop here belongs in ${competitorsFile}`));
+  };
+  const all = verdict(promptIds), fr = verdict(promptIds.filter((id) => promptLangs.get(id) === "fr"));
+  print("all prompts", all);
+  print("French prompts only", fr);
+  // « Mesure partielle » (docs/02 §2): each case needs 3 runs (2 of 3 counts), and every scored prompt a row every week.
+  const measured = cases.filter((k) => last4.includes(k.week) && scored(k.prompt_id));
+  const short = measured.filter((k) => k.runs.length < 3).length;
+  const unmeasured = last4.flatMap((w) => promptIds.filter((id) => !cases.some((k) => k.week === w && k.prompt_id === id)).map((id) => `${w} ${id}`));
+  const partial = short > 0 || unmeasured.length > 0;
+  if (partial) console.log(c.yellow(`  MESURE PARTIELLE: ${short}/${measured.length} case(s) with fewer than 3 runs${unmeasured.length ? `; ${unmeasured.length} scored prompt-week(s) without any row (${unmeasured.slice(0, 6).join(", ")}${unmeasured.length > 6 ? "…" : ""})` : ""}. Say so next to the verdict (docs/07 §3).`));
+  console.log(c.dim("  By hand, monthly (docs/07): the 7 × 7 map-pack grid within 3 km (the map_pack column is the top 3 at the point of the check), and the « meilleure… » rule (position 1 also counts when the first result names us first)."));
+  if (all.g && all.a && all.ge && fr.g && fr.a && fr.ge && !partial) console.log(c.green("  All three hold on all prompts and on the French prompts: widen the category by one step, or add a city or a language, and run the stack again (Layer 21.5)."));
+  else if (all.g && all.a && all.ge && fr.g && fr.a && fr.ge) console.log(c.yellow("  All three hold, on a partial measure: confirm with 3 runs per case before widening."));
+}
+
+// ---------- Coco Studio › Agence › Scoreboard (src/lib/studio/reports.js): one row per week ----------
+if (!args.proxy) {
+  const commLocal = promptIds.filter((id) => ["commercial", "local"].includes(promptTypes.get(id)));
+  const rows = weeks.map((w) => ({
+    week: mondayOf(w)?.toISOString().slice(0, 10) ?? w,
+    seo: `${commLocal.filter((id) => heldIn(w, id, isPos1)).length}/${commLocal.length}`,
+    aeo: `${promptIds.filter((id) => heldIn(w, id, (r) => isSnippet(r) || isAio(r))).length}/${promptIds.length}`,
+    geo: `${promptIds.filter((id) => aiEngines.filter((e) => cases.some((k) => k.week === w && k.prompt_id === id && sameEngine(k.engine, e) && holds(k.runs, namesUs))).length >= 2).length}/${promptIds.length}`,
+  }));
+  const jsonOut = args["json-out"] ?? "reports/scoreboard.json";
+  mkdirSync(dirname(jsonOut), { recursive: true });
+  writeFileSync(jsonOut, JSON.stringify(rows, null, 2) + "\n");
+  console.log(c.dim(`written ${jsonOut} (Studio › Agence reads it from REPORTS_DIR)`));
 }
 
 // ---------- review velocity (Layer 12 "Done when": ≥ 3 new reviews per week for four weeks) ----------

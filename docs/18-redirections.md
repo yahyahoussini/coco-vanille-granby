@@ -57,8 +57,11 @@ Mots utilisés :
 
 Rien n'a encore changé. Chaque ligne future s'ajoute ici, en plus de son inscription dans la configuration (§4).
 
+Depuis le 1er novembre 2026, le site répond aussi à une **adresse temporaire** sur le serveur partagé de l'agence (`cocovanille.<ip-avec-tirets>.sslip.io` et `admin-cocovanille.<ip-avec-tirets>.sslip.io`), marquée « ne pas indexer » sur chaque réponse ([docs/09 §6](09-runbook-incident.md)). Le jour du passage au vrai domaine, ces noms reçoivent une redirection 301 vers le domaine ([infra/README.md](../infra/README.md), « Shared server », étape 10) : la ligne ci-dessous se remplit ce jour-là, avec la date et l'adresse IP réelles.
+
 | Date | Ancienne adresse | Nouvelle adresse | Code | Raison | Vérifié |
 |---|---|---|---|---|---|
+| au passage au vrai domaine : [[FACT NEEDED: date du passage au domaine]] | `https://cocovanille.<ip-avec-tirets>.sslip.io/*` et `https://admin-cocovanille.<ip-avec-tirets>.sslip.io/*` (et leurs jumelles en `nip.io`, si elles ont servi) | `https://cocovanillegranby.com/*` et `https://admin.cocovanillegranby.com/*` (même chemin) | 301 | fin de la phase de vérification sur le serveur de l'agence. **Pas encore configuré** : la redirection s'écrit ce jour-là; ensuite, vérifier qu'aucune page n'est restée `noindex` sur le domaine (`check-urls.mjs`) | ☐ |
 | à la mise en ligne : [[FACT NEEDED: date de mise en ligne]] | `http://cocovanillegranby.com/*`, `http://www.cocovanillegranby.com/*`, `https://www.cocovanillegranby.com/*` | `https://cocovanillegranby.com/*` | 301 | un seul hôte, HTTPS | ☐ |
 | à l'enregistrement du domaine : [[FACT NEEDED: accord pour enregistrer cocovanillegranby.ca au nom de l'entreprise (research/14 T2)]] | `https://cocovanillegranby.ca/*` (et les autres domaines de défense, s'il y en a) | `https://cocovanillegranby.com/*` (même chemin) | 301 | domaine de défense (research/17 §10.1). **Pas encore configuré** : aucun bloc nginx ni certificat pour le `.ca` | ☐ |
 | [[FACT NEEDED: anciennes adresses (research/14 T7)]] | — | — | 301 | ancien lien de bio, boutique en ligne ou ancien site, s'il y en a | ☐ |

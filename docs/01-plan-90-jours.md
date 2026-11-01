@@ -1,6 +1,6 @@
 # Plan de 90 jours — Pâtisserie Coco Vanille (du lundi 2 novembre 2026 au dimanche 31 janvier 2027)
 
-Rédigé le jeudi 29 octobre 2026 par l'agence. Treize semaines, deux pistes menées ensemble :
+Rédigé le jeudi 29 octobre 2026 par l'agence, mis à jour le dimanche 1er novembre 2026 (phase de vérification sur le serveur de l'agence, domaine en dépendance de G1, remplacement des questions appliqué). Treize semaines, deux pistes menées ensemble :
 
 - **la piste classement** (SEO, AEO, GEO : être trouvé dans Google, être la réponse affichée, être cité par les IA), tirée de [research/plan-v1-ranking-stack.md §3](../research/plan-v1-ranking-stack.md) et du sprint de 90 jours de [research/plan-v0b-multilingual-local-domination.md §C1](../research/plan-v0b-multilingual-local-domination.md) ;
 - **la piste lancement** (site, commande en ligne, Coco Studio), tirée de l'ordre corrigé de [research/12 §6](../research/12-plan-review.md) et de la feuille de route de [research/00 §13](../research/00-master-concept.md).
@@ -20,6 +20,8 @@ Documents liés : [docs/00-intake.md](00-intake.md) (les faits) · [docs/02-ryth
 | Faits du propriétaire | Presque tous manquants : le site ne publie aucune page tant qu'ils manquent | [docs/00 §9](00-intake.md) |
 | Mesure de départ | Seulement une mesure indirecte depuis les États-Unis (les 33 questions, les 25 et 29 octobre 2026, plus 13 candidates) ; aucune mesure dans les moteurs d'IA, aucune depuis Granby | [research/05](../research/05-serp-baseline.md), mise à jour du 29 octobre |
 | Commande en ligne | Ouverture prévue du lundi 11 au dimanche 24 janvier 2027, **après la cohue des Fêtes** (décision M20, qui tient tant que vous ne la changez pas par écrit) | [research/12 §3](../research/12-plan-review.md) |
+| **Mise à jour du dimanche 1er novembre 2026** : en ligne pour vérification | Le site et Coco Studio tournent sur **le serveur partagé de l'agence** (son VPS Hostinger, qui héberge aussi d'autres applications), à une adresse temporaire `cocovanille.<ip>.sslip.io` marquée « ne pas indexer », en mode « show » : chaque page avec ses faits vérifiés et une case pour chaque fait qui manque. C'est une phase de vérification, pas le lancement : rien n'y est indexé ni mesuré | [docs/22](22-acces-et-premiers-pas.md), [docs/10 §1.1](10-handover.md), [infra/README.md](../infra/README.md) (« Shared server ») |
+| Le domaine | **Pas encore enregistré** : `cocovanillegranby.com` répond 404 au registre RDAP de Verisign le 1er novembre 2026. Search Console, Bing Webmaster Tools, le courriel et la mise en ligne publique en dépendent (porte G1) | [docs/13](13-taches-humaines.md) S0-2 |
 
 ## 1. Les portes
 
@@ -28,14 +30,14 @@ Une porte est une vérification qui doit réussir. Si elle échoue, le travail q
 | Porte | Réussie quand | Échéance | Si elle échoue |
 |---|---|---|---|
 | **G0** Go ou pas | Ouverture de la boutique confirmée · la fiche Google n'est pas marquée comme temporairement fermée · on sait qui a l'accès propriétaire de la fiche | Dimanche 1er novembre 2026 | Rien d'autre ne démarre. Sans confirmation dans les deux semaines, on arrête le travail de lancement et on corrige seulement les fiches ([research/00 §14](../research/00-master-concept.md)) |
-| **G1** Mesure et fiches | Mesure de départ enregistrée · fiche Google = Apple = Bing = Facebook (mêmes nom, adresse, téléphone, heures) · Search Console et Bing Webmaster Tools vérifiés | Dimanche 8 novembre 2026 | La semaine 2 commence par ce qui manque |
+| **G1** Mesure et fiches | Mesure de départ enregistrée · fiche Google = Apple = Bing = Facebook (mêmes nom, adresse, téléphone, heures) · Search Console et Bing Webmaster Tools vérifiés. **Dépend de** : `cocovanillegranby.com` enregistré au nom de Pâtisserie Coco Vanille inc. **au plus tard le jeudi 5 novembre 2026** (P donne le feu vert, A enregistre, [docs/13](13-taches-humaines.md) S0-2), pour que l'enregistrement TXT des consoles ait le temps de se propager | Dimanche 8 novembre 2026 | La semaine 2 commence par ce qui manque. Sans domaine le 5 novembre, les consoles glissent d'autant, et le reste de G1 (mesure, fiches) se fait quand même |
 | **G2** Fondations | Test de restauration des sauvegardes réussi et consigné · la garde de publication bloque marqueurs, textes provisoires et allergènes non vérifiés · personne responsable des renseignements personnels nommée | Dimanche 15 novembre 2026 | Aucun formulaire ne recueille de renseignements personnels en production |
 | **G4** Premières pages | Vérification du site : 0 échec · aucune différence entre la page brute et la page affichée · Signaux Web essentiels au vert sur l'accueil et `/carte/` · aucun marqueur sur les pages servies · chaque robot de Google, de Bing et des IA reçoit une réponse 200 | Dimanche 29 novembre 2026 | Les pages restent sur le site de préproduction ; la fiche Google porte la saison |
 | **G5** Indexation | Pages clés indexées dans Google et dans Bing · si GA4 est installé, ses événements ne partent qu'après le consentement | Dimanche 6 décembre 2026 | On cherche la cause avec [docs/09](09-runbook-incident.md) |
 | **G6** Cahier de la commande | Cahier de la commande en ligne signé (processeur, capacité, plages de cueillette, acompte et annulation, taxes, consentements) · demande d'accès à l'interface de programmation de la fiche Google déposée · heures des Fêtes en ligne partout | Dimanche 13 décembre 2026 | Par défaut : Stripe et l'imprimante de Coco Studio ; le lancement n'attend jamais l'intégration d'une caisse ([research/00 §14](../research/00-master-concept.md)) |
 | **G10** Avant d'ouvrir la commande | Test du propriétaire : 5 tâches sur 5 sans aide · test de l'équipe · test de charge pour la saison · test de restauration · sauvegarde continue en place · classes de taxes signées par le comptable · avis du juriste sur le paiement et les conditions de vente · textos d'un seul segment | Dimanche 10 janvier 2027 | La commande en ligne reste fermée ; téléphone et demandes de gâteaux seulement |
 | **G12** Lancement | 20 premières vraies commandes sans texto perdu ni en double · remboursements et minuteries fonctionnels | Dimanche 24 janvier 2027 | On corrige avant d'annoncer la commande en ligne |
-| **G14** Re-mesure | Les 33 questions remesurées et comparées à S1 · rapport en commandes et en demandes · 20 pages suivantes choisies · protocole de diagnostic fait une fois · rythme hebdomadaire en marche | Commence en S13 ; se termine le dimanche 7 février 2027 ([research/00 §13](../research/00-master-concept.md)) | — |
+| **G14** Re-mesure | Les 30 requêtes suivies remesurées et comparées à S1 · rapport en commandes et en demandes · 20 pages suivantes choisies · protocole de diagnostic fait une fois · rythme hebdomadaire en marche | Commence en S13 ; se termine le dimanche 7 février 2027 ([research/00 §13](../research/00-master-concept.md)) | — |
 
 ## 2. Le plan en un écran
 
@@ -61,7 +63,8 @@ Une porte est une vérification qui doit réussir. Si elle échoue, le travail q
 - **A** envoie le message de 15 questions ([research/14 §14](../research/14-owner-questions.md)) et l'entente d'une page sur les tactiques refusées ([docs/11, annexe A](11-contrat-clauses.md)).
 - **P** répond aux questions bloquantes ([docs/00 §9](00-intake.md)) et dit **oui ou non aux bûches**, avec le menu des Fêtes et la date des précommandes (research/14 P3).
 - **P** choisit la phrase de catégorie A ou B ([docs/00 §1](00-intake.md)).
-- **A** propose le remplacement des questions suivies qui dépendent de produits non confirmés (proposition de [research/00 §10.5](../research/00-master-concept.md) : les cinq questions sur les mariages I5, I9, C3, C7, C9 deviennent X1 « pâtisserie Granby », X2 « boulangerie Granby », X7 « croissants Granby », X3 « gâteau d'anniversaire Granby » et X12 « café pâtisserie centre-ville Granby »).
+- **A** propose le remplacement des questions suivies qui dépendent de produits non confirmés (proposition de [research/00 §10.5](../research/00-master-concept.md) : les cinq questions sur les mariages I5, I9, C3, C7, C9 deviennent X1 « pâtisserie Granby », X2 « boulangerie Granby », X7 « croissants Granby », X3 « gâteau d'anniversaire Granby » et X12 « café pâtisserie centre-ville Granby »). **Appliqué le 1er novembre 2026** dans `scoreboard/prompts.csv`, avec les trois questions en espagnol passées en variantes tant que l'espagnol est fermé : 27 questions notées au gel ([scoreboard/README §1 et §5](../scoreboard/README.md)). Les codes ne changent pas : une question sortie revient sous son code si son produit est confirmé.
+- **A, le 1er novembre 2026** : le site et Coco Studio en ligne pour vérification sur le serveur partagé de l'agence, à l'adresse temporaire ([docs/22](22-acces-et-premiers-pas.md)).
 - **Porte G0** le dimanche 1er novembre.
 
 ### S1 — du lundi 2 au dimanche 8 novembre 2026 : mesurer et ouvrir les comptes
@@ -74,9 +77,11 @@ Une porte est une vérification qui doit réussir. Si elle échoue, le travail q
 - **A, seulement si les bûches sont confirmées** : le pont des Fêtes 2026 (décision D20), dès l'ouverture des précommandes (le 1er novembre au plan) : produits et publication sur la fiche Google, publication Facebook, téléphone, formulaire de demande et lien de paiement. Le nouveau site ne gagnera pas Noël 2026 dans Google : il sera trop jeune ([research/04 §0.6](../research/04-keywords-demand.md)).
 
 **Lancement**
-- **P + A** : serveur au Québec confirmé ou commandé **dans le compte de la boutique** (si c'est OVHcloud : Beauharnois, choisi explicitement) ; sécurisation (`harden-vps.sh`), DNS, certificats, courriel sur le domaine, secrets GitHub ([infra/README.md](../infra/README.md), « First deploy »).
-- **A** : site de préproduction en ligne (`staging.cocovanillegranby.com`, protégé par mot de passe et invisible des moteurs) ; P le parcourt sur son cellulaire.
-- **A** : Search Console (propriété « Domaine »), Bing Webmaster Tools (import depuis Search Console) et clé IndexNow dès que le DNS est prêt ([docs/12](12-setup-mesure.md)).
+- **Pendant toute la semaine : la phase de vérification.** Le site et Coco Studio sont sur le serveur partagé de l'agence, à l'adresse temporaire marquée « ne pas indexer » ([docs/22](22-acces-et-premiers-pas.md); [docs/10 §1.1](10-handover.md)) : **P** parcourt le site sur son cellulaire et répond dans Coco Studio › Plus › « Faits du site »; **A** suit les règles du serveur partagé ([docs/09 §6](09-runbook-incident.md)) et vérifie le « ne pas indexer » après chaque déploiement. Cette phase finit au passage au vrai domaine.
+- **P, au plus tard le jeudi 5 novembre 2026 : le feu vert pour le domaine** ; **A** enregistre `cocovanillegranby.com` (et le `.ca`) au nom de Pâtisserie Coco Vanille inc. ([docs/13](13-taches-humaines.md) S0-2). C'est la dépendance de G1 : sans domaine, ni Search Console, ni Bing Webmaster Tools, ni courriel sur le domaine.
+- **P + A** : serveur au Québec confirmé ou commandé **dans le compte de la boutique** (si c'est OVHcloud : Beauharnois, choisi explicitement) ; sécurisation (`harden-vps.sh`), DNS, certificats, courriel sur le domaine, secrets GitHub ([infra/README.md](../infra/README.md), « First deploy »). Le site quitte alors le serveur de l'agence (redirection 301 des adresses temporaires, [docs/18 §2](18-redirections.md)).
+- **A** : site de préproduction (`staging.cocovanillegranby.com`, protégé par mot de passe et invisible des moteurs) sur le serveur de la boutique; d'ici là, l'adresse temporaire en tient lieu.
+- **A** : Search Console (propriété « Domaine »), Bing Webmaster Tools (import depuis Search Console) et clé IndexNow dès que le DNS est prêt ([docs/12](12-setup-mesure.md)); la vérification par TXT peut se faire dès l'enregistrement du domaine, avant que le site y réponde.
 - **A** : juriste mandaté **dès maintenant**, pas en S3 : les quatre pages légales portent le marqueur « révision par un avocat » et bloquent la première mise en ligne. Comptable contacté : aucun produit ne se vend en ligne sans classe de taxes signée ([research/07 §8](../research/07-legal-quebec-compliance.md)).
 
 **Vous** : approuver le NAP ; envoyer vos photos existantes ; fixer la date de la séance photo (S2) ; envoyer les invitations d'accès (fiche Google, Facebook et Meta Business, domaine, serveur).
@@ -204,6 +209,7 @@ Une porte est une vérification qui doit réussir. Si elle échoue, le travail q
 | Message des 15 questions envoyé ; réponses bloquantes reçues | Dimanche 1er novembre 2026 | A, P | |
 | Entente sur les tactiques refusées signée | Dimanche 1er novembre 2026 | P, A | |
 | Mesure de départ (`scoreboard/runs/2026-W45.csv`, copie dans `data/serp-baseline-2026-W45.csv`) | Lundi 2 novembre 2026 | G, A | |
+| `cocovanillegranby.com` (et le `.ca`) enregistré au nom de Pâtisserie Coco Vanille inc. (dépendance de G1) | Jeudi 5 novembre 2026 | P (feu vert), A | |
 | Fiche Google = Apple = Bing = Facebook | Dimanche 8 novembre 2026 | P, A | |
 | Search Console et Bing Webmaster Tools vérifiés | Dimanche 8 novembre 2026 | A | |
 | Premier test de restauration réussi | Dimanche 15 novembre 2026 | A | |
@@ -227,7 +233,7 @@ Une porte est une vérification qui doit réussir. Si elle échoue, le travail q
 
 **Définition de « premier »** (version corrigée de [research/12 §4](../research/12-plan-review.md), décision M14), mesurée sur quatre lundis de suite :
 
-- **Ensemble mesuré** : 30 questions (après le remplacement) et les questions de marque B1 à B3 comme diagnostic. Chaque question passe trois fois par semaine dans chaque moteur ; une case compte si elle réussit au moins deux fois sur trois.
+- **Ensemble mesuré** : 27 questions notées (les 30 d'après le remplacement, moins les 3 questions en espagnol, relevées comme variantes tant que personne ne sert en espagnol, research/14 L2) et les questions de marque B1 à B3 comme diagnostic ([scoreboard/README §5](../scoreboard/README.md)). Chaque question passe trois fois par semaine dans chaque moteur ; une case compte si elle réussit au moins deux fois sur trois.
 - **SEO** : notre domaine est 1er sur au moins la moitié des questions commerciales et locales, et dans les 3 premiers sur les autres. Pour les questions du type « meilleure pâtisserie », la 1re place compte aussi si le 1er résultat nous nomme en premier. Bloc local : dans les 3 premiers au point de la boutique et sur au moins la moitié d'une grille de 7 × 7 points dans un rayon de 3 km (proposition à ajuster après 4 mesures).
 - **AEO** : notre texte tient l'extrait en vedette, une réponse « Autres questions posées » ou une citation dans l'Aperçu IA ou le Mode IA sur au moins le tiers des questions.
 - **GEO** : la marque est nommée sur au moins la moitié des questions dans au moins deux moteurs d'IA, et notre domaine est le domaine de pâtisserie le plus souvent lié (les annuaires sont comptés à part).

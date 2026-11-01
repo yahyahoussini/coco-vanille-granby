@@ -4,9 +4,9 @@
 
 | | |
 |---|---|
-| Mis à jour | 29 octobre 2026 |
+| Mis à jour | 29 octobre 2026; puis le dimanche 1er novembre 2026 : page du Zoo construite, faits manquants et liens recomptés (§2, §4.2), une page par requête pour « gâteau de fête » (§3.3), sujets des concurrents comparés à la carte (§5) |
 | Préparé par | Yahya (BrandHub.ma), l'Agence |
-| Lu dans le site construit | `apps/web/src/lib/routes.js` (registre des pages), `apps/web/src/seed/content.js` (textes des pages), `apps/web/src/lib/publish.js` (verrou de publication), `apps/web/src/proxy.js` (règles d'adresse), rapport de contrôle du 28 octobre 2026 (`apps/web/reports/gate/`) |
+| Lu dans le site construit | `apps/web/src/lib/routes.js` (registre des pages), `apps/web/src/seed/content.js` (textes des pages), `apps/web/src/lib/publish.js` (verrou de publication), `apps/web/src/proxy.js` (règles d'adresse), rapport de contrôle du 28 octobre 2026 (`apps/web/reports/gate/`); recomptes du 1er novembre 2026 sur le site construit en mode aperçu (`apps/web/scripts/gate.mjs`, `tools/links.mjs`, et un décompte des liens dans le texte des pages, audit de l'Agence des couches 6 à 11) |
 | S'appuie sur | research/04 §2 (arbre P01 à P38), research/00 §5 (adresses retenues), plan-v1 §6, research/05 (requêtes et notes), `data/keywords.csv`, `data/prompts.csv`, research/12 (décisions M1 à M25); pour la page du Zoo et les spécialités marocaines : [research/22d](../research/22d-local-content.md) (29 octobre 2026) |
 | À savoir | Une refonte visuelle est en cours. Les menus et le pied de page peuvent changer; les adresses des pages, non. Après la refonte, on recompte les liens (§4). |
 | Voir aussi | [docs/14-calendrier-contenu.md](14-calendrier-contenu.md) (quand publier) · [docs/08-brief-page.md](08-brief-page.md) (comment écrire une page) · [docs/16-recherche.md](16-recherche.md) (la demande et les concurrents) · [docs/18-redirections.md](18-redirections.md) (règles d'adresse) |
@@ -23,12 +23,12 @@ Les mots utilisés dans ce document :
 ## En bref
 
 1. **Le site est construit, il n'est pas encore en ligne** (README, état du 26 octobre 2026). En production, le verrou de publication ne montre une page que si son texte, dans cette langue, ne contient plus aucune mention [[FACT NEEDED]]; une page anglaise ne s'ouvre que si sa version française est en ligne (Charte de la langue française, `publish.js`). Aujourd'hui, chaque page attend au moins une réponse : en production, aucune page ne serait publiée.
-2. **Ce qui existe :** 21 pages de contenu en français, leurs 21 adresses anglaises (3 sans texte anglais pour l'instant) et 6 pages de produits par langue, soit 54 pages vérifiées par le contrôle du 28 octobre 2026; plus 3 pages utilitaires jamais indexées (boîte, paiement, merci). Le volet espagnol est fermé.
-3. **Une réponse est nécessaire à toutes les pages :** le nom, le titre et le courriel de la personne responsable des renseignements personnels (Loi 25; question A4 de research/14). Ces informations sont dans le pied de chaque page : sans elles, aucune page ne peut être publiée proprement, même quand son propre texte est complet.
+2. **Ce qui existe :** 22 pages de contenu en français (avec la page du Zoo, construite le 30 octobre 2026), leurs 22 adresses anglaises (3 sans texte anglais pour l'instant) et 6 pages de produits par langue, soit les 56 adresses du plan du site vérifiées par le contrôle du 1er novembre 2026 (`gate.mjs` : réussi, chaque échec expliqué par un fait manquant); plus 3 pages utilitaires jamais indexées (boîte, paiement, merci). Le volet espagnol est fermé.
+3. **Réglé le 29 octobre 2026 pour toutes les pages :** le titre et le courriel de la personne responsable des renseignements personnels (« Propriétaire », confidentialite@cocovanillegranby.com; décision de l'Agence, [research/21](../research/21-decisions-agence-2026-10-29.md); la Loi 25 demande le titre et les coordonnées, pas le nom). Ils sont dans le pied de chaque page; la boîte de courriel se crée au lancement ([docs/13](13-taches-humaines.md) S0-6).
 4. **Chaque page vise une requête principale** et répond à ses sous-questions dans ses intertitres (§3). La page prioritaire n° 1, « gâteau pour demain » (L3, 19 sur 20), est construite; elle attend l'heure limite et les formats.
-5. **Les liens internes passent le contrôle :** chaque page reçoit au moins 5 liens internes, tout est à 2 clics ou moins de l'accueil, aucun lien cassé, aucune ancre du type « cliquez ici » (rapport du 28 octobre 2026). À recompter après la refonte et à chaque mise en ligne (§4).
+5. **Les liens internes passent le contrôle des menus, pas celui du texte :** chaque page reçoit au moins 5 liens internes, tout est à 2 clics ou moins de l'accueil, aucun lien cassé, aucune ancre du type « cliquez ici » (recompte du 1er novembre 2026). Mais **dans le texte des pages**, 30 des 54 pages (hors accueils) reçoivent moins de 3 liens, et le pilier ne relie aucune de ses pages satellites : les liens du §4.3 ne sont pas encore construits (§4.2).
 6. **Couverture des sujets :** 25 des 34 groupes de mots-clés ouverts ont déjà une page ou une section (73,5 %; la méthode demande 80 % avant d'élargir); 46 des 60 questions de clients en français et en anglais ont leur réponse (76,7 %). Les pages prévues au §6 comblent l'écart (§5).
-7. **Prévu le 29 octobre 2026** ([research/22d](../research/22d-local-content.md)) : une page « Depuis le Zoo de Granby » (`/nous-trouver/zoo-de-granby/`), enfant de Nous trouver, qui remplace la page « Visiter Granby » du §6; et, pour les spécialités marocaines, une question sur la carte et une ligne sur l'accueil, sans page. Ni l'une ni l'autre n'est encore dans le code (§1, §6).
+7. **Prévu le 29 octobre 2026, construit le 30 octobre 2026** ([research/22d](../research/22d-local-content.md)) : la page « Depuis le Zoo de Granby » (`/nous-trouver/zoo-de-granby/` et `/en/visit/granby-zoo/`), enfant de Nous trouver, qui remplace la page « Visiter Granby » du §6. Elle est dans le registre (`routes.js`), au plan du site, indexable, et n'a **aucun fait manquant** : elle peut se publier avec le site. Pour les spécialités marocaines, la question de la carte (« Avez-vous des spécialités marocaines? ») et la ligne de l'accueil existent aussi, sans page; elles gardent un marqueur pour les jours et les prix (§1, §6).
 
 ---
 
@@ -57,7 +57,7 @@ Légende : **[prête]** = page construite qui attend des réponses de la boutiqu
 │   └── /commander/merci/                 Confirmation                                                                         [utilitaire]
 ├── /prix/                                Prix : tableau daté                                                                  [conditionnelle]
 ├── /nous-trouver/                        Adresse, heures, stationnement, Zoo de Granby                                       [prête]
-│   └── /nous-trouver/zoo-de-granby/      Depuis le Zoo de Granby (trajet, autobus, stationnement)                            [prévue]
+│   └── /nous-trouver/zoo-de-granby/      Depuis le Zoo de Granby (trajet, autobus, stationnement)                            [prête, sans fait manquant]
 ├── /a-propos/                            À propos : la source de vérité                                                       [prête]
 │   └── /a-propos/chef/                   Le chef (avec son accord)                                                            [conditionnelle]
 ├── /allergenes/                          Allergènes (information, jamais « sans gluten »)                                     [prête]
@@ -88,7 +88,7 @@ Le fil d'Ariane suit le registre : par exemple Accueil › Carte › Gâteaux �
 | 11 | Prix | `/prix/` | `/en/prices/` | satellite commercial | conditionnelle | « Grille de prix du propriétaire » |
 | 12 | Commander | `/commander/` | `/en/order/` | commande et cueillette | prête | — (la vente en ligne attend en plus les signatures de l'avocat et du comptable, research/00 §13, G10) |
 | 13 | Nous trouver | `/nous-trouver/` | `/en/visit/` | page locale | prête | — |
-| 13 bis | Depuis le Zoo de Granby | `/nous-trouver/zoo-de-granby/` | `/en/visit/granby-zoo/` | page locale pour les visiteurs du Zoo, enfant de Nous trouver | prévue ([research/22d](../research/22d-local-content.md) §1 : texte validé, ligne du registre prête) | aucune : la page n'a aucun fait manquant et se publie avec le site |
+| 13 bis | Depuis le Zoo de Granby | `/nous-trouver/zoo-de-granby/` | `/en/visit/granby-zoo/` | page locale pour les visiteurs du Zoo, enfant de Nous trouver | prête : construite le 30 octobre 2026 ([research/22d](../research/22d-local-content.md) §1), au plan du site, aucun fait manquant (contrôle du 1er novembre 2026) | aucune : la page se publie avec le site |
 | 14 | À propos | `/a-propos/` | `/en/about/` | source de vérité | prête | — |
 | 15 | Le chef | `/a-propos/chef/` | `/en/about/chef/` (texte anglais à écrire) | personne | conditionnelle | « Consentement photo + biographie du chef » |
 | 16 | Allergènes | `/allergenes/` | `/en/allergens/` | information | prête | — |
@@ -108,38 +108,39 @@ Les 6 produits sont ceux que des sources publiques nomment (research/01 §5) : c
 
 ## 2. Ce qui manque, page par page
 
-Le chiffre donne le nombre d'informations distinctes à fournir dans le texte de la page (français / anglais), lu dans `content.js` le 29 octobre 2026. Entre parenthèses : le numéro de la question dans research/14, où chaque question est expliquée.
+Le chiffre donne le nombre de cases `[[FACT NEEDED]]` distinctes de la page rendue (français / anglais), **recompté le dimanche 1er novembre 2026** dans la liste des faits manquants de `apps/web/scripts/gate.mjs` (site construit, mode aperçu, toutes les pages affichées). Une même réponse remplit parfois plusieurs cases (par exemple « prix » et « grille de prix datée »). Entre parenthèses : le numéro de la question dans research/14, où chaque question est expliquée.
 
-**Pour toutes les pages :** nom, titre et courriel de la personne responsable des renseignements personnels (A4). Ces informations s'affichent dans le pied de chaque page; sans elles, aucune page ne peut être mise en ligne proprement (`infra/README.md`, points ouverts).
+**Pour toutes les pages : réglé le 29 octobre 2026.** Le titre et le courriel de la personne responsable des renseignements personnels (« Propriétaire », confidentialite@cocovanillegranby.com, [research/21](../research/21-decisions-agence-2026-10-29.md)) s'affichent dans le pied de chaque page; la boîte se crée au lancement ([docs/13](13-taches-humaines.md) S0-6).
 
 **Déjà en place, à approuver :** la phrase de catégorie de l'accueil, option B (« Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby : viennoiseries, pains et gâteaux sur commande. »), en français, en anglais et en espagnol (`apps/web/src/seed/index.js`; research/15 D19; votre choix : research/14 S5); l'horaire de la fiche Google (research/14 H1).
 
 | Page | FR / EN | Ce qui manque |
 |---|---|---|
-| Accueil | 5 / 5 | commande pour le lendemain et heure limite (P4) · livraison offerte ou non (O3) · stationnement (H5) · modes de paiement au comptoir (O5) · personne qui sert en anglais (L1) |
-| Carte | 5 / 5 | liste complète des produits (P1) · produits saisonniers (P2, P10) · réservation de la vitrine (P14) · pains et baguettes congelés (P2) · cafés, prix et places assises (N3) |
-| Commander | 6 / 7 | délais par produit et heure limite (P4) · pourcentage de l'acompte (O4) · commandes non récupérées (O4) · livraison (O3); en anglais, en plus : minutes en auto depuis le Zoo de Granby (calcul de l'Agence à partir du point de la boutique, une fois ce point vérifié, research/14 §13) |
-| Nous trouver | 8 / 8 | repère pour trouver la porte et stationnement (H5) · minutes en auto depuis le Zoo (Agence) · courriel de la boutique (H4) · heures des Fêtes 2026 (H2) · places assises (N3) · accès en fauteuil roulant (H5, à préciser) · livraison (O3) |
-| À propos | 7 / 7 | équipe et rôles, propriétaires, biographie et consentement photo (C1, D2) · date d'ouverture de la boutique (C2) · présence au Marché public en 2026 (S10) · produits faits sur place ou non (S8) · courriel (H4) |
-| Le chef | 8 / pas de texte | nom, rôle, parcours, formation, spécialités, année d'arrivée, rencontres pour un gâteau, distinctions avec preuve datée, équipe de production (C1, C2) |
-| Prix | 7 / 7 | grille de prix datée, plus petit format avec son prix et ses portions, prix en ligne et en boutique (P1) · suppléments de décor et de saveur (P9) · acompte (O4) · format et prix pour 20 portions (P7) |
-| Gâteau pour demain | 5 / pas de texte | heure limite, formats et gâteaux offerts pour le lendemain, personnalisation possible, message sur le gâteau (P4, P9) |
-| Gâteaux personnalisés | 12 / 12 | délais par type de gâteau (P4) · portions minimum et maximum, délai de réponse aux demandes, message, gâteaux à étages (P9) · acompte et modifications (O4) · prix de départ (P1) · thèmes, personnages, gâteau à écraser (P2, P11) · livraison (O3) |
-| Bûches de Noël | 9 / pas de texte | bûches offertes en 2026 ou non, dates des précommandes et de la cueillette, prix, portions, saveurs, bûches glacées, liste d'attente (P3) |
-| Allergènes | 4 / 4 | allergènes manipulés en cuisine et précautions contre la contamination croisée, liste des ingrédients, affichage en boutique (A1, A6) · produits faits sans lait ou sans œufs (A2) |
-| FAQ | 9 / 9 | prix des gâteaux (P1) · portions (P7) · ateliers créatifs : thèmes, âges, durée, prix, dates (N2) · délais (P4) · acompte (O4) · livraison (O3) · stationnement (H5) · cartes-cadeaux (P2) · paiement à la cueillette (O5) |
-| Calculateur | 5 / 5 | portions par format, format pour 20 portions, portions d'un gâteau de 8 po, taille d'une portion, plus grand format (P7) |
-| Viennoiseries | 8 / 8 | liste et prix (P1) · heures de sortie du four (H6) · chocolatines (P2) · boîtes pour réunions (P12) · réservation pour le lendemain (P14) · cuisson le matin même (S8) |
-| Pains et baguettes | 7 / 7 | liste et prix (P1) · heures de sortie du four (H6) · pain congelé (P2) · réservation (P14) · commandes en quantité (P12) |
-| Gâteaux | 10 / 10 | liste, saveurs, décors, prix et portions (P1, P7) · délais et commande pour le lendemain (P4) · message, thèmes et personnages (P9, P11) · acompte (O4) · consignes de conservation des gâteaux à la crème (aucune question dans research/14 : à ajouter) |
-| Pâtisseries | 8 / 8 | liste, prix, garnitures du Paris-Brest et du vol-au-vent (P1) · tartes (P2) · consignes de conservation (à ajouter à research/14) · commandes pour événements (P12) |
-| Confidentialité | 8 / 8 | révision par un avocat (A5) · fournisseurs, pays de traitement et évaluations des facteurs relatifs à la vie privée (Agence et avocat) · ville du centre de données (T1) · délais et durées de conservation (avocat, comptable : A5) |
-| Conditions de vente | 10 / 10 | révision par un avocat (A5) · courriel (H4) · numéros de TPS et de TVQ (A5) · acompte, annulation, remboursement, commandes non récupérées (O4 et avocat) · validité des soumissions (P9) · cartes-cadeaux (P2) |
-| Témoins | 3 / 3 | révision par un avocat (A5) · outils de mesure retenus et durée des témoins (Agence) |
-| Accessibilité | 6 / 6 | révision par un avocat (A5) · contrôle manuel au lecteur d'écran et limites connues (Agence) · courriel (H4) · accès en fauteuil roulant (H5) |
-| 6 pages de produits | — | description de 40 à 60 mots, chaque format avec son prix et ses portions (P1, P7), délai de préparation (P4), allergènes vérifiés et datés par une personne (A1) |
+| Accueil | 3 / 3 | commande pour le lendemain et heure limite (P4) · modes de paiement au comptoir (O5) · personne qui sert la clientèle en anglais (L1) |
+| Carte | 7 / 7 | liste complète des produits confirmée et prix (P1) · produits saisonniers (P2, P10) · réservation de la vitrine (P14) · pains et baguettes congelés (P2) · prix des boissons et nombre de places assises (N3) · jours et prix des msemmens et des harchas |
+| Commander | 3 / 3 | commande pour le lendemain et heure limite (P4) · délai minimum par type de gâteau (P4) · délais par produit et heure limite de commande (P4) |
+| Nous trouver | 5 / 5 | marches, largeur de porte et accès en fauteuil roulant (H5) · devises et modes de paiement au comptoir (O5) · heures des Fêtes 2026 (H2) · nombre de places assises (N3) · repère visuel près de la boutique, approuvé par la boutique (H5) |
+| Depuis le Zoo de Granby | 0 / 0 | aucune case : trajet, autobus, stationnement et règles du Zoo viennent de sources publiques datées (research/20c, research/22d) |
+| À propos | 6 / 6 | date d'ouverture de la boutique (C2) · nom et rôle des propriétaires · nom, rôle et parcours du chef ou de la propriétaire, avec consentement photo (C1) · noms et rôles de l'équipe, avec consentement (D2) · présence au Marché public en 2026 (S10) · produits faits au 3, rue Court ou ailleurs (S8) |
+| Le chef | 9 / pas de texte | nom et rôle, parcours et formation, spécialités, année d'arrivée, rencontre avec le chef offerte ou non, distinctions avec preuve datée, équipe de production, consentement photo et biographie (C1, C2) |
+| Prix | 10 / 10 | grille de prix datée par format, prix et portions (P1, P7) · prix et portions du plus petit format · format et prix pour 20 portions (P7) · prix identiques en ligne et en boutique ou non (P1) · suppléments de décor et de saveur (P9) |
+| Gâteau pour demain | 6 / pas de texte | heure limite pour le lendemain, gâteaux et formats offerts, personnalisation et message possibles (P4, P9) |
+| Gâteaux personnalisés | 11 / 11 | gâteaux sur commande confirmés : volume, délai, prix (condition de la page) · délai minimum et délais par type de gâteau (P4) · portions minimum et maximum, délai de réponse aux demandes, message, gâteaux à étages (P9) · modifications après l'acompte (O4) · prix du plus petit gâteau (P1) · thèmes, personnages, gâteau à écraser (P2, P11) |
+| Bûches de Noël | 11 / pas de texte | bûches offertes en 2026 ou non (la réponse était attendue le 1er novembre 2026), dates des précommandes et de la cueillette, prix et portions par format, saveurs, bûches glacées, liste d'attente (P3) |
+| Allergènes | 5 / 5 | allergènes vérifiés par une personne, pour chaque produit (A1) · allergènes manipulés en cuisine et précautions contre la contamination croisée (A1, A6) · liste des ingrédients par produit · affichage en boutique · produits sans lait ou sans œufs (A2) |
+| FAQ | 5 / 5 | prix des gâteaux par format (P1) · portions par format (P7) · délai minimum par type de gâteau (P4) · âges et heures de début des ateliers (N2) · paiement comptant ou par carte à la cueillette (O5) |
+| Calculateur | 6 / 7 | portions par format, format pour 20 portions, portions d'un gâteau de 8 po, taille d'une portion, plus grand format (P7) |
+| Viennoiseries | 9 / 9 | liste et prix (P1) · heures de sortie du four et cuisson le matin même (H6, S8) · chocolatines (P2) · boîtes pour groupes (P12) · réservation pour le lendemain (P14) |
+| Pains et baguettes | 8 / 8 | liste et prix (P1) · heures de sortie du four (H6) · pain congelé (P2) · réservation pour le lendemain (P14) · commandes en quantité (P12) |
+| Gâteaux | 10 / 10 | liste, saveurs, décors, prix et portions (P1, P7) · délais et commande pour le lendemain (P4) · message, thèmes et personnages (P9, P11) · consignes de conservation des gâteaux à la crème (aucune question dans research/14 : à ajouter) |
+| Pâtisseries | 9 / 9 | liste, prix, garnitures du Paris-Brest et du vol-au-vent (P1) · tartes (P2) · consignes de conservation (à ajouter à research/14) · commandes pour événements (P12) |
+| Confidentialité | 0 / 0 | aucune case; la révision par un avocat reste à faire avant l'indexation (A5) |
+| Conditions de vente | 1 / 1 | numéros de TPS et de TVQ (A5); révision par un avocat (A5) |
+| Témoins | 0 / 0 | aucune case (« aucun outil de mesure pour l'instant »); révision par un avocat (A5) |
+| Accessibilité | 1 / 1 | marches, largeur de porte et accès en fauteuil roulant (H5); révision par un avocat (A5) |
+| 6 pages de produits | 5 / 5 chacune | description de 40 à 60 mots, chaque format avec son prix et ses portions (P1, P7), délai de préparation (P4), allergènes vérifiés et datés par une personne (A1) |
 
-**Mise à jour du 29 octobre 2026, après [research/21](../research/21-decisions-agence-2026-10-29.md) §6.1 et [research/22d](../research/22d-local-content.md).** Le stationnement (décision F1) et la distance du Zoo (F2) sont maintenant répondus sur l'accueil, Nous trouver, Commander (anglais) et la FAQ; le courriel (A2) et la livraison (A3) sont décidés; les places assises sont confirmées par les publications de la boutique, mais leur nombre manque. Prévu : la carte reçoit la question « Avez-vous des spécialités marocaines? », avec un marqueur pour les jours et les prix; la page du Zoo n'a aucun marqueur. Les nombres de la colonne « FR / EN » datent de la lecture du matin : à recompter quand les changements de research/22d §1.5 seront intégrés.
+**Mise à jour du 29 octobre 2026, après [research/21](../research/21-decisions-agence-2026-10-29.md) §6.1 et [research/22d](../research/22d-local-content.md).** Le stationnement (décision F1) et la distance du Zoo (F2) sont maintenant répondus sur l'accueil, Nous trouver, Commander (anglais) et la FAQ; le courriel (A2) et la livraison (A3) sont décidés; les places assises sont confirmées par les publications de la boutique, mais leur nombre manque. La carte a reçu la question « Avez-vous des spécialités marocaines? », avec un marqueur pour les jours et les prix; la page du Zoo n'a aucun marqueur. **Recompté le 1er novembre 2026** : le tableau ci-dessus remplace les nombres du 29 octobre.
 
 Ce que le contrôle du 28 octobre 2026 signale aussi sur les textes (`apps/web/reports/gate/audit.json`) :
 - **Pages de produits trop courtes** (93 à 139 mots, bloc réponse de 9 mots, description de 115 à 128 caractères) : normal tant que la description du produit manque.
@@ -157,20 +158,20 @@ Les notes sur 20 viennent de research/05 W44.6 (mise à jour du 29 octobre 2026,
 
 | Page | Requête principale (code, note) | Autres requêtes suivies | Mots-clés liés (priorité estimée) |
 |---|---|---|---|
-| Accueil | X1 « pâtisserie Granby » (candidate, 18) · C1 « meilleure pâtisserie à Granby » (18) | C8 « best bakery in Granby Quebec » (17, EN) · B1 « Pâtisserie Coco Vanille Granby avis » (18) | pâtisserie granby (élevée) · boulangerie pâtisserie granby (moyenne) |
-| Carte | X2 « boulangerie Granby » (candidate, 17) | X7 « croissants Granby » (18), X9 « Paris-Brest Granby » (15), X10 « vol-au-vent Granby » (16) (candidates) | coco vanille granby menu (faible) |
-| Viennoiseries | X7 « croissants Granby » (candidate, 18) | L6 « chocolatines Granby » (18; chocolatines à confirmer) · X8 « croissant aux amandes Granby » (19) | croissant granby, chocolatine granby (moyennes) |
-| Pains et baguettes | X2 « boulangerie Granby » (candidate, 17) | — | boulangerie granby (élevée) · boulangerie près de moi (élevée) · pain artisanal granby (moyenne) |
-| Gâteaux | X3 « gâteau d'anniversaire Granby » (candidate, 18) | C2 « meilleur gâteau de fête à Granby » (18) | gâteau de fête granby (élevée, partagée avec le pilier : voir 3.3) |
+| Accueil | X1 « pâtisserie Granby » (18, notée depuis le gel du 2 novembre 2026) · C1 « meilleure pâtisserie à Granby » (18) | C8 « best bakery in Granby Quebec » (17, EN) · B1 « Pâtisserie Coco Vanille Granby avis » (18) | pâtisserie granby (élevée) · boulangerie pâtisserie granby (moyenne) |
+| Carte | X2 « boulangerie Granby » (17, notée depuis le gel) | X7 « croissants Granby » (18, notée), X9 « Paris-Brest Granby » (15) et X10 « vol-au-vent Granby » (16) (candidates) | coco vanille granby menu (faible) |
+| Viennoiseries | X7 « croissants Granby » (18, notée depuis le gel) | L6 « chocolatines Granby » (18; chocolatines à confirmer) · X8 « croissant aux amandes Granby » (19) | croissant granby, chocolatine granby (moyennes) |
+| Pains et baguettes | X2 « boulangerie Granby » (17, notée depuis le gel) | — | boulangerie granby (élevée) · boulangerie près de moi (élevée) · pain artisanal granby (moyenne) |
+| Gâteaux | X3 « gâteau d'anniversaire Granby » (18, notée depuis le gel du 2 novembre 2026) | C2 « meilleur gâteau de fête à Granby » (18) : une section qui y répond et renvoie au pilier, qui en est la page (§3.3) | gâteau d'anniversaire granby, gâteau de fête granby (élevée; « gâteau de fête » appartient au pilier, voir 3.3) |
 | Pâtisseries | X9 « Paris-Brest Granby » (candidate, 15) | X6 « pâtisserie française Granby » (14) · X10 (16) | paris-brest granby (faible) |
-| Gâteaux personnalisés (pilier) | X4 « gâteau personnalisé Granby » (candidate, 17) · C2 (18) | I2 délais (16) · I1 prix (16) · L9 « order custom cake online Granby » (16, EN) · X5 « gâteau sur mesure Granby » (17) | gâteau personnalisé granby (élevée) · gâteau de fête granby (élevée) |
+| Gâteaux personnalisés (pilier) | C2 « meilleur gâteau de fête à Granby » (18) · X4 « gâteau personnalisé Granby » (candidate, 17) | I2 délais (16) · I1 prix (16) · L9 « order custom cake online Granby » (16, EN) · X5 « gâteau sur mesure Granby » (17) | gâteau personnalisé granby (élevée) · gâteau de fête granby (élevée) |
 | Gâteau pour demain | **L3 « gâteau pour demain Granby » (19)**, la n° 1 de research/05 W44.7 | I2 (16) · E19 « Can you make a cake for tomorrow? » | gâteau pour demain granby (moyenne) · gâteau dernière minute granby (faible) |
 | Bûches de Noël | C4 « bûche de Noël Granby » (19; n° 1 en novembre et décembre seulement si les bûches sont confirmées) | — | bûche de noël granby (élevée en saison) · commander bûche de noël (moyenne) |
 | Calculateur | I3 « quelle grosseur de gâteau pour 20 personnes » (17) | X13 « gâteau 8 pouces combien de portions » · X14 (EN) | combien de portions gâteau 8 pouces (moyenne) |
 | Prix | I1 « combien coûte un gâteau de fête personnalisé à Granby » (16) | I8 (15, EN) | prix gâteau personnalisé granby (moyenne) · prix gâteau par portion (moyenne) |
 | Commander | L2 « commander un gâteau de fête en ligne Granby » (15) | L9 (16, EN) | commander gâteau en ligne granby (moyenne) · livraison gâteau granby (moyenne : réponse « cueillette en boutique ») |
-| Nous trouver | L1 « pâtisserie près de moi » (17) | B2 « Coco Vanille Granby heures » (19) · L4 « pâtisserie ouverte dimanche Granby » (18) · X12 « café pâtisserie centre-ville Granby » (15) · L5 et L8 passent à la page du Zoo (prévue) | pâtisserie près de moi (élevée) · café pâtisserie granby (moyenne) |
-| Depuis le Zoo de Granby (prévue) | L5 « café et pâtisserie près du Zoo de Granby » (15) · L8 « bakery near Granby Zoo » (16) | la variante L8-quebec « bakery near Granby Zoo Quebec » | visiteurs du Zoo (moyenne; aucune suggestion de Google ne relie le Zoo à une pâtisserie, [research/22b](../research/22b-local-market-granby.md) §5) |
+| Nous trouver | L1 « pâtisserie près de moi » (17) | B2 « Coco Vanille Granby heures » (19) · L4 « pâtisserie ouverte dimanche Granby » (18) · X12 « café pâtisserie centre-ville Granby » (15, notée depuis le gel) · L5 et L8 sont passées à la page du Zoo | pâtisserie près de moi (élevée) · café pâtisserie granby (moyenne) |
+| Depuis le Zoo de Granby (construite le 30 octobre 2026) | L5 « café et pâtisserie près du Zoo de Granby » (15) · L8 « bakery near Granby Zoo » (16) | la variante L8-quebec « bakery near Granby Zoo Quebec » | visiteurs du Zoo (moyenne; aucune suggestion de Google ne relie le Zoo à une pâtisserie, [research/22b](../research/22b-local-market-granby.md) §5) |
 | À propos | B3 « Que sais-tu de la Pâtisserie Coco Vanille à Granby ? » (16) | B1 (18) | pâtisserie coco vanille granby, cocovanille granby (moyennes) |
 | Le chef | B3 | X6 « pâtisserie française Granby » | — |
 | Allergènes | C6 « gâteau sans gluten Granby » (17), répondue par l'information sur les allergènes, jamais par une allégation « sans gluten » (research/07 A-6, S10) | — | gâteau sans gluten granby (moyenne) |
@@ -209,7 +210,7 @@ Une nouvelle donnée change une note : la fiche Google indique maintenant le dim
 | L1 « pâtisserie près de moi » et B2 « heures » | Heures | `/nous-trouver/`, tableau des heures et intertitre (existent) |
 | | Comment s'y rendre | « Comment se rendre au 3, rue Court? » (existe) |
 | | Stationnement | « Où se stationner près de la Pâtisserie Coco Vanille? » (existe, répondue le 29 octobre 2026 : stationnement municipal gratuit, Centre-Court à environ 100 m, [research/21](../research/21-decisions-agence-2026-10-29.md) F1) |
-| | Distance du Zoo | « À quelle distance du Zoo de Granby est la boutique? » (existe, répondue le 29 octobre 2026 : environ 5 à 8 minutes en auto, F2); l'autobus, le stationnement et les règles du Zoo vont sur la page du Zoo (prévue) |
+| | Distance du Zoo | « À quelle distance du Zoo de Granby est la boutique? » (existe, répondue le 29 octobre 2026 : environ 5 à 8 minutes en auto, F2); l'autobus, le stationnement et les règles du Zoo sont sur la page du Zoo (construite le 30 octobre 2026) |
 | | Ouvert le dimanche? Les Fêtes? | questions « Êtes-vous ouverts le dimanche? » et « … pendant le temps des Fêtes? » (existent) |
 | I3 « grosseur de gâteau pour 20 personnes » | Comment ça marche | `/calculateur-portions-gateau/`, « Comment fonctionne le calculateur? » (existe) |
 | | 20 personnes | « Quelle grosseur de gâteau pour 20 personnes? » (existe, attend P7) |
@@ -222,9 +223,13 @@ Une nouvelle donnée change une note : la fiche Google indique maintenant le dim
 | | Pourquoi ça varie | « Pourquoi le prix d'un gâteau personnalisé varie-t-il? » (existe) |
 | C4 « bûche de Noël Granby » | Où, quand, combien, pour combien de personnes, qu'est-ce que c'est | `/buches-de-noel/`, cinq intertitres (existent, attendent P3) |
 
-### 3.3 Deux pages pour « gâteau de fête » : une décision à prendre au lancement du pilier
+### 3.3 Deux pages pour « gâteau de fête » : décidé le 1er novembre 2026
 
-Aujourd'hui, `/gateaux/` porte le titre « Gâteaux de fête sur commande à Granby » et le pilier `/gateaux-personnalises-granby/` porte « Gâteaux personnalisés à Granby ». Tant que le pilier est caché, il n'y a pas de concurrence. Quand le pilier s'ouvre, on fait le test de chevauchement de plan-v1 §6 : si « gâteau de fête Granby » et « gâteau personnalisé Granby » partagent au moins 6 de leurs 10 premiers résultats (relevé fait depuis Granby), une seule page vise « gâteau de fête » et l'autre change de titre et de premier paragraphe. On ne change pas d'adresse (research/04 §2; [docs/18-redirections.md](18-redirections.md)).
+**Une page par requête.** Le pilier `/gateaux-personnalises-granby/` est la page de C2 « meilleur gâteau de fête à Granby », de X4 « gâteau personnalisé Granby », de X5 « gâteau sur mesure Granby » et de I2 (les délais). `/gateaux/` est la page de X3 « gâteau d'anniversaire Granby » et des gâteaux de la carte; il répond à C2 et à I2 dans une section courte qui renvoie au pilier ([scoreboard/prompts.csv](../scoreboard/prompts.csv) et [snippet-targets.csv](../scoreboard/snippet-targets.csv), mis à jour le même jour).
+
+**Reste à faire dans le texte** (`apps/web/src/seed/content.js` et Coco Studio, hors de ce document) : le titre de `/gateaux/` (« Gâteaux de fête sur commande à Granby ») et son H1 (« Gâteaux de fête et gâteaux sur commande à Granby ») visent encore « gâteau de fête » et « sur commande », comme le lien d'en-tête « Gâteaux sur commande », qui mène au pilier. Les recentrer sur les gâteaux de la carte et l'anniversaire. Tant que le pilier est caché (page conditionnelle), `/gateaux/` reste la seule page publiée sur le sujet : c'est voulu.
+
+**La preuve, après le lancement** : le contrôle de Search Console (une requête qui fait apparaître deux adresses, `node tools/gsc-api.mjs cannibal`) et le test de chevauchement de plan-v1 §6 (si « gâteau de fête Granby » et « gâteau personnalisé Granby » partagent au moins 6 de leurs 10 premiers résultats, relevés depuis Granby, une seule page vise les deux). Ils confirment ou renversent la décision; on ne change pas d'adresse (research/04 §2; [docs/18-redirections.md](18-redirections.md)).
 
 ### 3.4 Parité français-anglais : quatre questions à aligner
 
@@ -260,19 +265,22 @@ Proposition : ajouter en français les questions des visiteurs (Zoo, cartes et d
 
 Règle déjà codée : en production, le site ne fait jamais de lien vers une page qu'il cache (`publish.js`). Un lien vers une page conditionnelle n'apparaît donc qu'au jour de sa publication.
 
-### 4.2 Le contrôle du 28 octobre 2026
+### 4.2 Le recompte du 1er novembre 2026
 
-Fait par `apps/web/scripts/gate.mjs` en mode aperçu (toutes les pages affichées), 54 pages :
+Fait sur le site construit, en mode aperçu (toutes les pages affichées) : `tools/links.mjs` sur les 58 pages copiées (les 56 du plan du site, plus `/boite/` et `/en/box/`), puis un décompte des liens **dans le texte** des pages (dans `<main>`, sans le fil d'Ariane), lors de l'audit de l'Agence des couches 6 à 11. Le contrôle du 28 octobre 2026 (54 pages, `gate.mjs`) donnait les mêmes liens de menu.
 
-| Type de page | Liens internes reçus (pages différentes) | Profondeur |
-|---|---|---|
-| Accueil, pages du menu et du pied de page (y compris les pages conditionnelles et légales) | 27, soit toutes les pages de la même langue | 1 clic |
-| Gâteaux | 12 | 1 clic |
-| Pâtisseries | 8 | 1 clic |
-| Viennoiseries, Pains et baguettes | 7 | 1 clic |
-| Produits | 5 à 7 (le vol-au-vent : 5) | 1 ou 2 clics |
+| Type de page | Liens internes reçus, menus compris (pages différentes) | Liens reçus dans le texte | Profondeur |
+|---|---|---|---|
+| Pages du menu, du pied de page et de la barre du bas | 29 | souvent 0 ou 1 (À propos 0, FAQ 1, Prix 1, Nous trouver 1) | 1 clic |
+| Pages satellites du pilier (Gâteau pour demain, Calculateur, Bûches) | 29 | 1 chacune (depuis `/gateaux/`) | 1 clic |
+| Le pilier `/gateaux-personnalises-granby/` | 29 | 2 (accueil, `/gateaux/`) | 1 clic |
+| Depuis le Zoo de Granby | 29 | 1 (depuis `/nous-trouver/`) | 1 clic |
+| Familles (Viennoiseries, Pains et baguettes, Gâteaux, Pâtisseries) | 7 à 12 | 5 | 1 clic |
+| Produits | 5 | 4 (famille, Carte, Prix, Allergènes) | 2 clics |
 
-Aucun lien cassé et aucune ancre générique. La règle « au moins 3 liens entrants » est respectée partout, en aperçu. **En production, le compte sera plus bas** au début, parce que seules les pages publiées se relient entre elles. On recompte après la refonte, puis à chaque mise en ligne d'une page (`node apps/web/scripts/gate.mjs` ou `node tools/links.mjs` sur le site rendu).
+Aucun lien cassé, aucune ancre générique, tout à 2 clics ou moins de l'accueil. **Mais la règle du texte n'est pas tenue** : 30 des 54 pages (hors accueils et paniers) reçoivent moins de 3 liens dans le texte, et le pilier ne relie dans son texte que `/commander/`, aucune de ses pages satellites (couche 9.3). Les liens du §4.3 et la règle du §4.4 restent à construire dans le texte (seed et Studio). `site.config.json` porte depuis le 1er novembre 2026 le pilier et ses satellites (`type` = `pillar`, `cluster`), et `tools/links.mjs` fait donc le contrôle de la couche 9.3 : il compte aussi les liens des menus et du pied de page, et ne signale aucun manque le 1er novembre 2026. Seul le décompte dans le texte montre l'écart.
+
+**En production, le compte sera plus bas** au début, parce que seules les pages publiées se relient entre elles. On recompte à chaque mise en ligne d'une page (`node apps/web/scripts/gate.mjs`, ou `node tools/links.mjs <site rendu> --config site.config.json`).
 
 ### 4.3 Les liens à ajouter dans le texte (prévu, après la refonte)
 
@@ -287,7 +295,7 @@ Le texte nomme souvent une autre page (« la page Commander », « la page Aller
 | Accueil, question sur le sans gluten · Carte, « Où voir les allergènes de chaque produit? » · chaque famille | `/allergenes/` | « allergènes de chaque produit » |
 | Accueil, « Où se trouve la Pâtisserie Coco Vanille à Granby? » · FAQ, heures et stationnement · À propos | `/nous-trouver/` | « heures et stationnement » ou « nous trouver au 3, rue Court » |
 | Accueil, Carte, Nous trouver, Gâteaux | `/commander/` | « commander en ligne pour la cueillette » |
-| Nous trouver (section du Zoo) · Accueil (« Où se trouve… ») · FAQ (nouvelle section sur le Zoo) · Pâtisseries (question sur le salé) : prévu | `/nous-trouver/zoo-de-granby/` | « Depuis le Zoo de Granby » ([research/22d](../research/22d-local-content.md) §1.6) |
+| Nous trouver (section du Zoo) : **fait** (le seul lien dans le texte que la page reçoit, recompte du 1er novembre 2026) · Accueil (« Où se trouve… ») · FAQ (« Y a-t-il une pâtisserie près du Zoo? », sans lien aujourd'hui) · Pâtisseries (question sur le salé) : prévu | `/nous-trouver/zoo-de-granby/` | « Depuis le Zoo de Granby » ([research/22d](../research/22d-local-content.md) §1.6) |
 | Gâteaux et Carte, en saison seulement | `/buches-de-noel/` | « bûches de Noël » |
 
 ### 4.4 Les règles
@@ -302,12 +310,12 @@ Le texte nomme souvent une autre page (« la page Commander », « la page Aller
 
 ## 5. La carte des sujets (couverture)
 
-**La règle de la méthode :** avant d'élargir à une nouvelle catégorie, au moins 80 % des sujets de la catégorie doivent avoir une page ou une section. L'univers des sujets, ici, ce sont les 43 groupes de mots-clés de `data/keywords.csv` (220 mots-clés) et les 88 questions de la banque de research/04 §5. Il manque deux sources que la méthode demande : la récolte des « Autres questions posées » de Google depuis Granby (research/04 V5), à faire par l'Agence avec la personne de Granby; et l'intégration à ce calcul de l'analyse des sites concurrents, faite le 29 octobre 2026 avec `tools/crawl.mjs` sur 4 sites ([docs/19 §2.1](19-marche-et-concurrence.md)), mais pas encore comparée sujet par sujet à cette carte.
+**La règle de la méthode :** avant d'élargir à une nouvelle catégorie, au moins 80 % des sujets de la catégorie doivent avoir une page ou une section. L'univers des sujets, ici, ce sont les 43 groupes de mots-clés de `data/keywords.csv` (220 mots-clés) et les 88 questions de la banque de research/04 §5. Il manquait deux sources que la méthode demande : la récolte des « Autres questions posées » de Google depuis Granby (research/04 V5), toujours à faire par l'Agence avec la personne de Granby; et l'analyse des sites concurrents, faite le 29 octobre 2026 avec `tools/crawl.mjs` sur 4 sites ([docs/19 §2.1](19-marche-et-concurrence.md)), comparée sujet par sujet à cette carte le 1er novembre 2026 (fin de ce §5).
 
 | État | Groupes | Mots-clés | Lesquels |
 |---|---|---|---|
-| Une page construite les couvre | 16 | 115 | marque, catégorie, « près de moi », heures, gâteaux personnalisés, gâteaux de fête, gâteau pour demain, commande en ligne, prix, portions, gâteaux de la carte, viennoiseries, pains, pâtisseries, bûches, allergies (comme information) |
-| Une section ou une question d'une page construite | 9 | 34 | gâteaux d'enfants, gâteau à écraser, transport et conservation (en partie), boîtes pour le bureau, prêt-à-manger (vol-au-vent), cadeaux, visiteurs du Zoo (une page prévue, research/22d), livraison, avis |
+| Une page construite les couvre | 17 | 120 | marque, catégorie, « près de moi », heures, gâteaux personnalisés, gâteaux de fête, gâteau pour demain, commande en ligne, prix, portions, gâteaux de la carte, viennoiseries, pains, pâtisseries, bûches, allergies (comme information), visiteurs du Zoo (page construite le 30 octobre 2026; groupe « visitors », 5 mots-clés) |
+| Une section ou une question d'une page construite | 8 | 29 | gâteaux d'enfants, gâteau à écraser, transport et conservation (en partie), boîtes pour le bureau, prêt-à-manger (vol-au-vent), cadeaux, livraison, avis |
 | Page ou section prévue (les pages de fête attendent aussi la confirmation de leurs produits) | 9 | 29 | comparatif, saveurs et finis (glossaire), Saint-Valentin, Pâques, fête des Mères, fête des Pères, saisons d'été et d'automne, grandes occasions (baptême, communion…, une section du pilier) |
 | En attente d'un produit confirmé | 7 | 38 | mariages, macarons, petits gâteaux (cupcakes), desserts québécois, galette des rois, temps des sucres, volet espagnol |
 | Exclus volontairement | 2 | 4 | gâteaux glacés, gâteaux crus véganes et beignes (marchés d'autres commerces, research/04 §0.9); « tout sur la vanille » (aucune spécialité vanille prouvée, research/12 A5) |
@@ -318,11 +326,31 @@ Résultat (calcul fait le 29 octobre 2026 sur `data/keywords.csv`) :
 - **Questions de clients** (FR et EN, 72 questions) : 46 ont leur réponse dans une page construite (63,9 %), 14 attendent une page prévue, 12 attendent un produit. Hors produits à confirmer : **46 sur 60, soit 76,7 %**. Les 16 questions en espagnol attendent l'ouverture du volet espagnol.
 - **Construit ne veut pas dire en ligne :** plusieurs pages qui couvrent ces sujets sont conditionnelles et restent cachées tant que la boutique n'a pas confirmé l'offre (§2).
 
+**Les sujets des concurrents, comparés à cette carte (1er novembre 2026).** Les profils écrits par `tools/crawl.mjs` le 29 octobre 2026 (`crawl/*.json` : avecungranda.com, 40 pages; cakegranby.ca, 40 pages; rosegateaux.com, 13 pages; la page unique de delicessucresgranby.my.canva.site) ont été relus page par page. Chaque sujet tombe dans un groupe déjà compté plus haut : **aucun groupe ouvert ne s'ajoute, la couverture reste de 25 sur 34**.
+
+| Sujet des concurrents (leurs pages) | Chez nous |
+|---|---|
+| Saveurs (pages de saveurs de cakegranby.ca et de rosegateaux.com; gâteaux par saveur d'avecungranda.com) | groupe « saveurs et finis » : prévu (glossaire, liste des saveurs P1) |
+| Anniversaires d'enfants, gâteaux thématiques, gâteau à écraser, « 1 an » (cakegranby.ca, rosegateaux.com) | sections du pilier (marqueurs P2, P11); page `/gateaux-enfants/` prévue |
+| Baptêmes, showers, événements spéciaux (cakegranby.ca, rosegateaux.com) | section « grandes occasions » du pilier, prévue |
+| Mariages (cakegranby.ca, rosegateaux.com) | en attente d'un produit confirmé (P2) |
+| Corporatif (cakegranby.ca, rosegateaux.com), table de desserts et menu événementiel (rosegateaux.com, avecungranda.com) | boîtes pour le bureau et commandes pour événements : sections qui attendent P12 |
+| Cupcakes, cake pops, petits gâteaux (cakegranby.ca, rosegateaux.com, avecungranda.com) | « petits gâteaux » : en attente d'un produit confirmé |
+| Tartes (avecungranda.com) | question « tartes offertes ou non » de `/patisseries/` (P2) |
+| Côté salé (avecungranda.com) | prêt-à-manger : section du vol-au-vent |
+| Pâtisseries françaises (avecungranda.com) | `/patisseries/` |
+| Saisons : automne, Noël (avecungranda.com) | `/buches-de-noel/` et la page `/saisons/` prévue |
+| Boîte découverte, pot gourmand (avecungranda.com) | « cadeaux » : section; boîtes-cadeaux en attente |
+| Prix (rosegateaux.com), commande en ligne (avecungranda.com, cakegranby.ca), politique de remboursement (cakegranby.ca) | `/prix/`, `/commander/`, `/conditions-de-vente/` |
+| Offre d'emploi (avecungranda.com) | hors de la carte : pas un sujet de client |
+
+Ce que ce passage ne remplace pas : la récolte des « Autres questions posées » depuis Granby (research/04 V5), toujours à faire.
+
 ---
 
 ## 6. Les pages encore à créer
 
-Chaque page part d'un brief ([docs/08-brief-page.md](08-brief-page.md)) et prend sa place dans le calendrier ([docs/14-calendrier-contenu.md](14-calendrier-contenu.md)). Une page de fête ou de produit n'existe que si la boutique vend vraiment le produit (research/14 P2). Les adresses ci-dessous viennent de research/04 §2 et research/00 §5; aucune n'a encore été créée dans le code.
+Chaque page part d'un brief ([docs/08-brief-page.md](08-brief-page.md)) et prend sa place dans le calendrier ([docs/14-calendrier-contenu.md](14-calendrier-contenu.md)). Une page de fête ou de produit n'existe que si la boutique vend vraiment le produit (research/14 P2). Les adresses ci-dessous viennent de research/04 §2 et research/00 §5; aucune n'a encore été créée dans le code, sauf la page du Zoo et la question des spécialités marocaines (construites le 30 octobre 2026, gardées ici pour mémoire).
 
 | Page | Adresse FR · EN | Pourquoi | Condition | Au plus tard |
 |---|---|---|---|---|
@@ -336,8 +364,8 @@ Chaque page part d'un brief ([docs/08-brief-page.md](08-brief-page.md)) et prend
 | Comparatif honnête | `/comparatif-gateau-de-fete-granby/` · `/en/birthday-cake-options-granby/` | C1 et C2 (18 chacune); on compare des types d'options (épicerie, gâteau glacé, pâtisserie, boulangère à domicile), avec critères et date | relecture d'un avocat (Loi sur la concurrence, Loi sur la protection du consommateur; research/12 §5.1) | brouillon remis à l'avocat la semaine du lundi 15 février 2027 |
 | Glossaire de pâtisserie | `/journal/glossaire-patisserie/` · `/en/journal/pastry-glossary/` | I6 (13), crème au beurre ou ganache, pièce montée, gâteau mousse | aucune | après les pages de saison (2e vague, research/04 P36) |
 | Gâteaux d'enfants | `/gateaux-enfants/` · `/en/kids-birthday-cakes/` | « gâteau de fête enfant granby » (moyenne) | gâteaux thématiques confirmés + politique sur les personnages (P2, P11) | quand la boutique confirme |
-| Depuis le Zoo de Granby (remplace « Visiter Granby ») | `/nous-trouver/zoo-de-granby/` · `/en/visit/granby-zoo/` (l'ancienne idée `/en-visite-a-granby/` est abandonnée) | L5 (15) et L8 (16); les deux conditions de research/00 §5.1 existent maintenant : la distance (research/20c Z-8) et l'offre du café, sur place ou à emporter (research/20b S-14 à S-16) | **prévue** : texte validé, aucun fait manquant ([research/22d](../research/22d-local-content.md) §1). Une seule page de lieu : jamais d'autre page pour un lieu ou une ville, jamais « Zoo » dans le nom de la fiche Google; aucune offre pour les visiteurs inventée (P16 reste ouverte) | avec le site; rafraîchie au plus tard le samedi 1er mai 2027 ([docs/14](14-calendrier-contenu.md)) |
-| Spécialités marocaines | pas de page : une question sur `/carte/` et `/en/menu/`, et une ligne dans la liste « Que vend… » de l'accueil | la boutique les annonce (publication du 25 août 2026, research/20b S-13); aucune demande mesurée à Granby (research/22b §2, §5) | **prévue** : la question garde un marqueur pour les jours et les prix ([research/22d](../research/22d-local-content.md) §2); une section datée sur `/carte/` quand la boutique répond; une page seulement si Search Console montre des impressions pour « msemmen » ou « harcha » près de Granby | quand la boutique répond |
+| Depuis le Zoo de Granby (remplace « Visiter Granby ») | `/nous-trouver/zoo-de-granby/` · `/en/visit/granby-zoo/` (l'ancienne idée `/en-visite-a-granby/` est abandonnée) | L5 (15) et L8 (16); les deux conditions de research/00 §5.1 existent maintenant : la distance (research/20c Z-8) et l'offre du café, sur place ou à emporter (research/20b S-14 à S-16) | **construite le 30 octobre 2026**, aucun fait manquant ([research/22d](../research/22d-local-content.md) §1). Une seule page de lieu : jamais d'autre page pour un lieu ou une ville, jamais « Zoo » dans le nom de la fiche Google; aucune offre pour les visiteurs inventée (P16 reste ouverte) | se publie avec le site; rafraîchie au plus tard le samedi 1er mai 2027 ([docs/14](14-calendrier-contenu.md)) |
+| Spécialités marocaines | pas de page : une question sur `/carte/` et `/en/menu/`, et une ligne dans la liste « Que vend… » de l'accueil | la boutique les annonce (publication du 25 août 2026, research/20b S-13); aucune demande mesurée à Granby (research/22b §2, §5) | **construites le 30 octobre 2026** : la question garde un marqueur pour les jours et les prix ([research/22d](../research/22d-local-content.md) §2); une section datée sur `/carte/` quand la boutique répond; une page seulement si Search Console montre des impressions pour « msemmen » ou « harcha » près de Granby | quand la boutique répond |
 | Boîtes pour le bureau | `/boites-bureau-corporatif/` · `/en/corporate/` | L7 (17) | offre confirmée (P12) | dimanche 1er août 2027 (rentrée) si l'offre existe |
 | Ateliers créatifs | adresse à fixer (proposition : `/ateliers/`) | la boutique annonce des « ateliers créatifs sur réservation » (bio Facebook, relayée le 27 octobre 2026) | thèmes, âges, durée, prix, dates (N2) [[FACT NEEDED: demande de recherche inconnue, aucun mot-clé dans data/keywords.csv]] | quand N2 est répondue |
 | Textes anglais manquants | `/en/cake-for-tomorrow/` · `/en/yule-logs/` · `/en/about/chef/` | les adresses existent sans texte | version française confirmée + relecture par une personne anglophone (research/14 M2) | avec la version française |

@@ -4,13 +4,16 @@
 // the numbers, the moves and the human tasks of the week. Anything without a key or credentials is skipped and named in the report
 // so the human runs it by hand. Run inside a project folder (site.config.json). The market map goes to scoreboard/market/<week>.md
 // (never docs/19-marche-et-concurrence.md, which is completed by hand); the moves of the report and the dashboard are read from it.
+// Freshness reads the static site folder when there is one; a server-rendered site (this Next.js app) is crawled live first (--live).
+// The human tasks come from docs/13-taches-humaines.md, here or in the repository the tools live in (CI runs inside rank/). The week's
+// rhythm follows the market block: Québec (docs/02) for a CA market, the Moroccan template without one.
 // Usage: node tools/weekly.mjs [--week 2026-W40] [--live] [--no-ai] [--no-serp] [--engines openai,perplexity] [--out reports/<week>.md]
-//        [--market-out scoreboard/market/<week>.md]
+//        [--market-out scoreboard/market/<week>.md] [--tasks docs/13-taches-humaines.md]
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadConfig, parseArgs, csvObjects, c, isoWeek, isoDate } from "./lib.mjs";
+import { loadConfig, parseArgs, csvObjects, c, isoWeek, isoDate, marketConfig } from "./lib.mjs";
 
 const args = parseArgs(process.argv.slice(2));
 const cfg = loadConfig(args.config ?? "site.config.json");
@@ -45,10 +48,20 @@ if (aiKeys.length && !args["no-ai"]) run("AI engines — prompt runs", "ai-runs.
 if (existsSync("scoreboard/runs") && readdirSync("scoreboard/runs").some((f) => f.endsWith(".csv"))) run("Scoreboard — citation share, streaks, definition of first", "citation-share.mjs", [], { optional: true }); else skipped.push("Scoreboard: no runs yet");
 run("Market map — who owns the category, the battle plan", "market.mjs", ["--week", week, "--out", marketOut], { optional: true });
 if (hasSA) { run("Search Console — striking distance", "gsc-api.mjs", ["striking"], { optional: true }); run("Search Console — cannibalization", "gsc-api.mjs", ["cannibal"], { optional: true }); run("Search Console — CTR gaps", "gsc-api.mjs", ["ctr"], { optional: true }); }
-if (hasGa4) { run("GA4 — AI referrals", "ga4-api.mjs", ["ai"], { optional: true }); run("GA4 — WhatsApp / phone events", "ga4-api.mjs", ["leads"], { optional: true }); } else if (hasSA) skipped.push("GA4 API: set GA4_PROPERTY_ID (numeric) or ga4PropertyId in site.config.json");
+if (hasGa4) { run("GA4 — AI referrals", "ga4-api.mjs", ["ai"], { optional: true }); run("GA4 — lead events (calls, directions, orders, requests, purchases)", "ga4-api.mjs", ["leads"], { optional: true }); } else if (hasSA) skipped.push("GA4 API: set GA4_PROPERTY_ID (numeric) or ga4PropertyId in site.config.json");
 // 3. site health (live)
 if (args.live) { run("Live — status, chains, canonical, noindex", "check-urls.mjs", [`${cfg.site}/sitemap.xml`], { optional: true, findings: true }); run("Live — crawler access", "crawler-access.mjs", ["--sitemap", `${cfg.site}/sitemap.xml`, "--max", "5"], { optional: true, findings: true }); run("Live — Core Web Vitals", "cwv.mjs", [`${cfg.site}/`], { optional: true, findings: true }); } else skipped.push("Live checks skipped (add --live for check-urls, crawler-access, cwv)");
-run("Freshness — refresh queue", "freshness.mjs", [cfg.root ?? "site", "--skip-drafts"], { optional: true, findings: true });
+// Freshness: the static site folder when there is one; otherwise a crawl of the live site (kept out of crawl/, which holds the
+// competitors' profiles market.mjs reads).
+const siteRoot = cfg.root ?? "site";
+const freshOut = join("reports", `refresh-queue-${week}.md`);
+mkdirSync("reports", { recursive: true });
+if (existsSync(siteRoot)) run("Freshness — refresh queue", "freshness.mjs", [siteRoot, "--skip-drafts", "--out", freshOut], { optional: true, findings: true });
+else if (args.live) {
+  const crawlOut = join("reports", `crawl-${new URL(cfg.site).host.replace(/^www\./, "")}.json`);
+  run("Live — crawl of the site (for freshness)", "crawl.mjs", [`${cfg.site}/`, "--sitemap", `${cfg.site}/sitemap.xml`, "--max", "150", "--out", crawlOut], { optional: true });
+  if (existsSync(crawlOut)) run("Freshness — refresh queue", "freshness.mjs", ["--crawl", crawlOut, "--out", freshOut], { optional: true, findings: true });
+} else skipped.push(`Freshness: no site folder ${siteRoot} (server-rendered site) — add --live to crawl the live site first`);
 run("Dashboard", "dashboard.mjs", ["--out", `reports/dashboard.html`, "--market", marketOut], { optional: true });
 
 // 4. report
@@ -58,8 +71,19 @@ const lastWeek = summary.map((r) => r.week).sort().at(-1);
 const kpis = summary.filter((r) => r.week === lastWeek).map((r) => (/^google$/i.test(r.engine) ? `Google top 3 ${r.top3_pct} % · n°1 ${r.top1_pct} % · extraits ${r.snippet_pct} %${r.map_pack_pct !== "" ? ` · pack local ${r.map_pack_pct} %` : ""}` : `${r.engine} cité ${r.cited_pct} % (1er ${r.first_pct} %)`));
 const market = existsSync(marketOut) ? readFileSync(marketOut, "utf8") : ""; // this week's map (market.mjs above), never the hand-completed docs/19
 const moves = (market.match(/## 4\. Les dix coups[\s\S]*?\n(?=## 5)/)?.[0] ?? "").split("\n").filter((l) => /^\d+\. /.test(l));
-const tasks = existsSync("docs/13-taches-humaines.md") ? (readFileSync("docs/13-taches-humaines.md", "utf8").match(/^\|\s*[A-E]\d+[a-z]?\s*\|.*\|\s*☐\s*\|\s*$/gm) ?? []).map((l) => l.split("|").slice(1, 3).map((x) => x.trim()).join(" — ").slice(0, 140)).slice(0, 12) : [];
-const md = [`# Rapport hebdomadaire — ${cfg.brand?.name ?? cfg.site} — ${week} (${isoDate()})`, "", `## Chiffres de la semaine (${lastWeek ?? "pas de run"})`, ...(kpis.length ? kpis.map((k) => `- ${k}`) : ["- pas de scoreboard cette semaine"]), "", "## Les coups de la semaine (carte de bataille)", ...(moves.length ? moves.slice(0, 5) : ["- (market.mjs sans données : remplir les runs)"]), "", "## Ce que l'humain fait cette semaine", "- Lundi : lire ce rapport, valider les 3 premiers coups, envoyer les demandes d'avis aux clients de la semaine (docs/03).", "- Mardi : publier le post GBP + LinkedIn préparés ; répondre aux avis (< 24 h).", "- Mercredi : le pitch / la demande de lien de la semaine (docs/04, docs/06) — depuis la vraie boîte mail.", "- Jeudi : enregistrer/valider la vidéo ou les photos prévues.", "- Vendredi : `npm run check` + `npm run crawlers` si non lancés ici ; Search Console → Pages, CWV, actions manuelles.", ...(tasks.length ? ["", "Tâches ouvertes (docs/13) :", ...tasks.map((t) => t.trim())] : []), "", "## Non mesuré cette semaine (à faire à la main)", ...(skipped.length ? skipped.map((s) => `- ${s}`) : ["- rien"]), "", "## Détail des sorties", ...sections.map((s) => `### ${s.label}${s.findings ? " — ⚠ problèmes trouvés" : s.status ? ` (exit ${s.status})` : ""}\n\`\`\`\n${s.out.slice(0, 4000)}\n\`\`\``), "", "Règles : tendances sur 4 semaines ; conclusions gelées pendant un déploiement de core update ; comparer à N-1 autour du Ramadan et de l'été ; aucune position promise."];
+// The open human tasks: docs/13 in this folder, else in the repository the tools come from (CI runs in rank/, a copy without docs/).
+const tasksFile = [args.tasks, "docs/13-taches-humaines.md", join(here, "..", "docs", "13-taches-humaines.md")].find((f) => f && existsSync(f));
+const tasks = tasksFile ? (readFileSync(tasksFile, "utf8").match(/^\|\s*[A-E]\d+[a-z]?\s*\|.*\|\s*☐\s*\|\s*$/gm) ?? []).map((l) => l.split("|").slice(1, 3).map((x) => x.trim()).join(" — ").slice(0, 140)).slice(0, 12) : [];
+// The week of the humans: Québec (docs/02 §2 to §7, the seasons of research/04 §6) with a CA market block; the template's
+// Moroccan week otherwise (the tools also serve other projects).
+const quebec = marketConfig(cfg).country === "CA";
+const rhythm = quebec
+  ? ["- Lundi : lire ce rapport et choisir les 3 actions de la semaine (docs/02 §2, étape 6); remplir à la main ce que la mesure ne voit pas (Copilot, Mode IA de Google, captures du cellulaire à Granby) dans scoreboard/runs/; une ligne dans scoreboard/reviews.csv.", "- Mardi et mercredi : une page (plan de docs/08, faits approuvés, préproduction, déploiement, IndexNow, « Demander l'indexation »); boucle des extraits aux jours 7 et 14 (docs/02 §4).", "- Jeudi : une action hors du site (docs/04, docs/06), depuis une vraie boîte de courriel; une publication sur la fiche Google et une sur Facebook ou Instagram, trois par semaine au plus en tout.", "- Vendredi : Search Console (Pages, Signaux Web essentiels, sécurité, actions manuelles), `node tools/check-urls.mjs` et `node tools/crawler-access.mjs` si non lancés ici, liste du serveur (infra/README.md); index de Bing, Brave et Perplexity (docs/02 §7).", "- Chaque jour : chaque avis reçoit sa réponse en moins de 24 heures, jours de fermeture compris (docs/03)."]
+  : ["- Lundi : lire ce rapport, valider les 3 premiers coups, envoyer les demandes d'avis aux clients de la semaine (docs/03).", "- Mardi : publier le post GBP + LinkedIn préparés ; répondre aux avis (< 24 h).", "- Mercredi : le pitch / la demande de lien de la semaine (docs/04, docs/06) — depuis la vraie boîte mail.", "- Jeudi : enregistrer/valider la vidéo ou les photos prévues.", "- Vendredi : `npm run check` + `npm run crawlers` si non lancés ici ; Search Console → Pages, CWV, actions manuelles."];
+const rules = quebec
+  ? "Règles : tendances sur 4 semaines dans la même direction; aucune conclusion pendant une mise à jour majeure de Google; la première année, comparer avec les semaines de départ et le calendrier des saisons (Fêtes, Saint-Valentin, Pâques, saison du Zoo, rentrée); un changement à la fois, puis 14 jours d'attente; aucune position promise (docs/02 §10)."
+  : "Règles : tendances sur 4 semaines ; conclusions gelées pendant un déploiement de core update ; comparer à N-1 autour du Ramadan et de l'été ; aucune position promise.";
+const md = [`# Rapport hebdomadaire — ${cfg.brand?.name ?? cfg.site} — ${week} (${isoDate()})`, "", `## Chiffres de la semaine (${lastWeek ?? "pas de run"})`, ...(kpis.length ? kpis.map((k) => `- ${k}`) : ["- pas de scoreboard cette semaine"]), "", "## Les coups de la semaine (carte de bataille)", ...(moves.length ? moves.slice(0, 5) : ["- (market.mjs sans données : remplir les runs)"]), "", "## Ce que l'humain fait cette semaine", ...rhythm, ...(tasks.length ? ["", "Tâches ouvertes (docs/13) :", ...tasks.map((t) => t.trim())] : []), "", "## Non mesuré cette semaine (à faire à la main)", ...(skipped.length ? skipped.map((s) => `- ${s}`) : ["- rien"]), "", "## Détail des sorties", ...sections.map((s) => `### ${s.label}${s.findings ? " — ⚠ problèmes trouvés" : s.status ? ` (exit ${s.status})` : ""}\n\`\`\`\n${s.out.slice(0, 4000)}\n\`\`\``), "", rules];
 const out = args.out ?? join("reports", `${week}.md`);
 writeFileSync(out, md.join("\n") + "\n");
 console.log(c.bold(`\nWeekly ${week}: ${sections.length} step(s) run, ${skipped.length} skipped → ${out}${existsSync("reports/dashboard.html") ? " + reports/dashboard.html" : ""}`));

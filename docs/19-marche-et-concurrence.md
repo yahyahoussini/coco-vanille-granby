@@ -212,6 +212,8 @@ La liste et l'ordre viennent de [research/05 W44.7](../research/05-serp-baseline
 
 ### 3.3 Une décision à prendre avant le gel des requêtes (lundi 2 novembre 2026)
 
+**Appliquée le dimanche 1er novembre 2026** dans `scoreboard/prompts.csv` et `data/prompts.csv`, selon la recommandation de l'Agence ci-dessous : I5, I9, C3, C7 et C9 deviennent des candidates, X1, X3, X7, X2 et X12 des requêtes notées, et les trois requêtes en espagnol (I10, C10, L10) des variantes relevées sans compter tant que l'espagnol est fermé. L'ensemble noté compte donc 27 requêtes ([scoreboard/README §1 et §5](../scoreboard/README.md)). Les codes ne changent pas; vos réponses (research/14 P2) peuvent encore faire revenir une requête sous son code.
+
 Les codes des requêtes se figent à la première mesure depuis Granby ([docs/01](01-plan-90-jours.md), S1). Douze des trente requêtes dépendent d'un produit non confirmé ([research/12](../research/12-plan-review.md) G3). Les deux propositions au dossier s'entendent sur les cinq requêtes qui entrent, chacune appuyée par le relevé du 29 octobre 2026 :
 
 | Entre | Note (29 octobre) | Ce que montre le relevé |
@@ -230,7 +232,7 @@ Celles qui sortent dépendent de vos réponses (research/14 P2) :
 
 ### 3.4 La carte calculée par l'outil
 
-La carte complète **générée par market.mjs** (59 lignes : 33 requêtes suivies, 20 candidates, 6 variantes) est à l'**Annexe A**. Tant qu'aucune position n'est mesurée, l'outil propose le même coup partout (« pas dans le top 20 : page dédiée à cette intention »). C'est vrai pour un site qui n'est pas encore en ligne, mais trop vague pour choisir : d'où le tableau 3.1.
+La carte complète **générée par market.mjs** le 29 octobre 2026, avant le gel (59 lignes : 33 requêtes suivies, 20 candidates, 6 variantes) est à l'**Annexe A**. Tant qu'aucune position n'est mesurée, l'outil propose le même coup partout (« pas dans le top 20 : page dédiée à cette intention »). C'est vrai pour un site qui n'est pas encore en ligne, mais trop vague pour choisir : d'où le tableau 3.1.
 
 ---
 
