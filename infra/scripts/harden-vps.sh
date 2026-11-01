@@ -23,6 +23,9 @@ die() {
 }
 
 [ "$(id -u)" = 0 ] || die "run as root (sudo)"
+# A server shared with other apps (install-nginx.sh --shared recorded it) must never get this script: it changes
+# the time zone, the firewall, sshd and the default site for everyone. setup-shared-host.sh is the one to use.
+if grep -qs "^SHARED=1" /etc/nginx/coco/host.conf; then die "this server is shared with other apps (/etc/nginx/coco/host.conf): harden-vps.sh is for a dedicated server only"; fi
 # shellcheck disable=SC1091
 . /etc/os-release
 if [ "${ID:-}" != ubuntu ] || [ "${VERSION_ID:-}" != 24.04 ]; then
@@ -122,13 +125,13 @@ bantime = 1h
 [nginx-limit-req]
 enabled = true
 port = http,https
-logpath = /var/log/nginx/admin.error.log
-          /var/log/nginx/staging.error.log
+logpath = /var/log/nginx/coco-admin.error.log
+          /var/log/nginx/coco-staging.error.log
 maxretry = 10
 findtime = 10m
 bantime = 1h
 EOF
-touch /var/log/nginx/admin.error.log /var/log/nginx/staging.error.log
+touch /var/log/nginx/coco-admin.error.log /var/log/nginx/coco-staging.error.log
 systemctl enable fail2ban >/dev/null
 systemctl restart fail2ban
 info "$(fail2ban-client status | tr '\n' ' ')"

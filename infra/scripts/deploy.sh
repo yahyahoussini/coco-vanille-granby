@@ -83,6 +83,12 @@ fi
 step "Migrating (expand-only: the live colour keeps serving meanwhile)"
 DEPLOY_TAG="$TAG" compose --profile ops run --rm migrate
 
+# Both colours run side by side for a while (2 x 768 MB at most, compose mem_limit): on a server shared with other
+# apps, start the new one only with that much memory free (MIN_FREE_MB_DEPLOY to change the floor).
+avail_mb=$(($(awk '/^MemAvailable:/ {print $2}' /proc/meminfo) / 1024))
+[ "$avail_mb" -ge "${MIN_FREE_MB_DEPLOY:-1700}" ] || die "only ${avail_mb} MB of memory available: starting ${target} beside ${live:-nothing} could squeeze the server's other apps"
+info "memory available: ${avail_mb} MB"
+
 step "Starting ${target} on ${TAG}"
 state_set "$TARGET_KEY" "$TAG"
 compose --profile "$target" up -d --no-deps --force-recreate "web-$target" "studio-$target"

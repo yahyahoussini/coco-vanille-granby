@@ -16,16 +16,10 @@ export LC_ALL=C
 
 DEPLOY_USER="${DEPLOY_USER:-coco}"
 coco() { grep -vE '(^|[/ ·])(00-|zz-)?coco[-_.@]|/etc/nginx/coco/|/opt/coco|coco-production|coco-staging|coco-build-|/renewal/cocovanille[.]'; }
-# Coco's local ports, from its .env when there is one (the defaults otherwise), plus the build's two.
-coco_ports() {
-  local f=/opt/coco/production/.env k v
-  for k in WEB_BLUE_PORT STUDIO_BLUE_PORT WEB_GREEN_PORT STUDIO_GREEN_PORT; do
-    v="$(grep -E "^${k}=" "$f" 2>/dev/null | tail -n 1 | cut -d= -f2)"
-    printf '%s\n' "${v:-}"
-  done
-  printf '3001\n3002\n3011\n3012\n55432\n3999\n'
-}
-ports_re="$(coco_ports | grep -E '^[0-9]+$' | sort -u | paste -sd'|' -)"
+# The 127.0.0.1 sockets Coco's containers publish right now, and nothing else: a port another app holds stays
+# listed, even one Coco would use by default.
+coco_sockets="$(docker ps --filter name=^coco- --format '{{.Ports}}' 2>/dev/null | tr ',' '\n' | grep -oE '127\.0\.0\.1:[0-9]+' | sort -u | paste -sd'|' - || true)"
+coco_sockets="$(printf '%s' "${coco_sockets:-none}" | sed 's/[.]/[.]/g')"
 
 echo "# nginx files"
 if [ -d /etc/nginx ]; then
@@ -77,10 +71,10 @@ if command -v docker >/dev/null 2>&1; then
 fi
 
 echo "# listening ports"
-ss -Hltn 2>/dev/null | awk '{print $4}' | sort -u | grep -vE ":(${ports_re})\$"
+ss -Hltn 2>/dev/null | awk '{print $4}' | sort -u | grep -vxE "$coco_sockets"
 
 echo "# running services (main pid and start time: a restart changes them, a reload does not)"
-systemctl list-units --type=service --state=running --no-legend --plain 2>/dev/null | awk '{print $1}' | coco | sort | while read -r u; do
+systemctl list-units --type=service --state=running --no-legend --plain 2>/dev/null | awk '{print $1}' | grep -v '^user@' | coco | sort | while read -r u; do
   echo "$u $(systemctl show -p MainPID -p ExecMainStartTimestamp --value "$u" 2>/dev/null | tr '\n' ' ')"
 done
 echo "# systemd unit files"
@@ -104,3 +98,8 @@ awk -F: -v u="$DEPLOY_USER" '$1 != u {print $1, $3, $6, $7}' /etc/passwd | sha25
 # Group lines without Coco's account in their member lists (Coco joins the docker group).
 awk -F: -v u="$DEPLOY_USER" '$1 != u { n = split($4, m, ","); s = ""; for (i = 1; i <= n; i++) if (m[i] != u) s = s "," m[i]; print $1, $3, s }' /etc/group | sha256sum | cut -c1-16
 swapon --show=NAME,SIZE --noheadings 2>/dev/null
+
+echo "# out-of-memory kills since boot (any increase: journalctl -k names the process)"
+grep '^oom_kill ' /proc/vmstat 2>/dev/null
+echo "# packages (a new line is an expected install; a changed version is not)"
+dpkg-query -W -f='${Package} ${Version}\n' 2>/dev/null | sort

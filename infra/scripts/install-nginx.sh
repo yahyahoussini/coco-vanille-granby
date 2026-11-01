@@ -2,6 +2,7 @@
 # Installs infra/nginx on the VPS (run with sudo from a release folder, idempotent):
 #   sudo bash /opt/coco/releases/<sha>/scripts/install-nginx.sh                  configs only
 #   sudo bash …/install-nginx.sh --issue-certs you@example.com                     + Let's Encrypt
+#   (--issue-certs none: a certificate without giving Let's Encrypt an email address)
 #   sudo bash …/install-nginx.sh --issue-certs you@example.com --no-staging        without the staging pair
 # A server that hosts other sites, on a temporary address (render-sites.sh explains each option):
 #   sudo bash …/install-nginx.sh --shared --no-staging --temporary \
@@ -17,6 +18,11 @@ set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 src="$(cd "$here/../nginx" && pwd)"
+coco=/etc/nginx/coco
+# A shared server remembers its settings (written below after the first shared run): run by hand later (HSTS ramp,
+# the final domain), this script keeps the shared mode, Coco's account and its ports without being told again.
+host_conf="$coco/host.conf"
+conf() { [ -f "$host_conf" ] && grep -E "^$1=" "$host_conf" | tail -n 1 | cut -d= -f2- || true; }
 email=""
 staging=1
 shared=0
@@ -24,12 +30,23 @@ temporary=0
 public=cocovanillegranby.com
 admin=admin.cocovanillegranby.com
 port_base=3000
+deploy_user="${DEPLOY_USER:-deploy}"
+if [ "$(conf SHARED)" = 1 ]; then
+  shared=1
+  staging=0
+  temporary="$(conf TEMPORARY)"
+  public="$(conf PUBLIC_HOST)"
+  admin="$(conf ADMIN_HOST)"
+  port_base="$(conf PORT_BASE)"
+  deploy_user="$(conf DEPLOY_USER)"
+fi
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --issue-certs) email="${2:-}"; shift 2 ;;
     --no-staging) staging=0; shift ;;
     --shared) shared=1; shift ;;
     --temporary) temporary=1; shift ;;
+    --no-temporary) temporary=0; shift ;;
     --public-host) public="${2:-}"; shift 2 ;;
     --admin-host) admin="${2:-}"; shift 2 ;;
     --port-base) port_base="${2:-}"; shift 2 ;;
@@ -41,22 +58,41 @@ info() { printf '    %s\n' "$*"; }
 [ "$(id -u)" = 0 ] || { echo "run with sudo" >&2; exit 1; }
 [[ "$port_base" =~ ^[1-9][0-9]{2,4}$ ]] && [ "$port_base" -le 64000 ] || { echo "--port-base is a number like 3000" >&2; exit 64; }
 command -v nginx >/dev/null || { echo "nginx is not installed (harden-vps.sh or setup-shared-host.sh installs it)" >&2; exit 1; }
+id "$deploy_user" >/dev/null 2>&1 || { echo "the account ${deploy_user} does not exist (DEPLOY_USER)" >&2; exit 1; }
+if [ "$shared" = 1 ]; then staging=0; fi
 
-coco=/etc/nginx/coco
-deploy_user="${DEPLOY_USER:-deploy}"
 names=("$public" "www.$public" "$admin")
 if [ "$staging" = 1 ]; then names+=("staging.$public" "admin-staging.$public"); fi
 cert_name="$public"
 
+# Asked before any file changes, so an answer left blank changes nothing.
+if [ "$staging" = 1 ] && [ ! -s "$coco/staging.htpasswd" ]; then
+  if [ -z "${STAGING_AUTH_USER:-}" ]; then read -r -p "    staging user name: " STAGING_AUTH_USER; fi
+  if [ -z "${STAGING_AUTH_PASSWORD:-}" ]; then read -r -s -p "    staging password: " STAGING_AUTH_PASSWORD; echo; fi
+  if [ -z "$STAGING_AUTH_USER" ] || [ -z "$STAGING_AUTH_PASSWORD" ]; then echo "staging user and password are required" >&2; exit 1; fi
+fi
+
 step "Folders"
-install -d -m 755 "$coco" "$coco/tls" /var/www/certbot /var/www/coco
+install -d -m 755 "$coco" "$coco/tls" /var/www/coco
+# Another site's ACME client may use the same webroot with its own mode: create it only when it is missing.
+[ -d /var/www/certbot ] || install -d -m 755 /var/www/certbot
 install -d -m 755 -o "$deploy_user" -g "$deploy_user" "$coco/upstreams"
 info "$coco/upstreams is writable by ${deploy_user} (deploy.sh switches colours there)"
 
 step "Configs for ${public} and ${admin}"
 rendered="$(mktemp -d)"
 backup="$(mktemp -d)"
-trap 'rm -rf "$rendered" "$backup"' EXIT
+changed=0
+committed=0
+# Interrupted or failed before a checked, live reload: Coco's previous nginx files are put back.
+on_exit() {
+  if [ "$changed" = 1 ] && [ "$committed" = 0 ]; then
+    echo "stopped before the new configuration was checked live: Coco's previous nginx files are put back" >&2
+    restore_coco_nginx
+  fi
+  rm -rf "$rendered" "$backup"
+}
+trap on_exit EXIT
 # Coco's nginx files as they are now (and nothing else), to put back if the new set fails `nginx -t`: a broken
 # file left in sites-enabled would keep every site on the server from starting at the next nginx restart.
 # A file is Coco's by its name (coco-*, zz-coco-*, 00-coco-default), or, for the names of the first layout that
@@ -84,6 +120,7 @@ restore_coco_nginx() {
   while IFS= read -r f; do rm -f "/$f"; done < <(coco_nginx_files)
   if [ -f "$backup/coco-nginx.tar" ]; then tar -C / -xpf "$backup/coco-nginx.tar"; fi
 }
+changed=1
 install -m 644 "$src/conf.d/coco.conf" /etc/nginx/conf.d/coco.conf
 install -m 644 "$src"/snippets/*.conf /etc/nginx/snippets/
 install -m 644 "$src/html/50x.html" /var/www/coco/50x.html
@@ -171,11 +208,47 @@ step "nginx -t and reload"
 if ! nginx -t; then
   echo "nginx -t failed: Coco's previous nginx files are put back, nothing was reloaded" >&2
   restore_coco_nginx
+  changed=0
   nginx -t || echo "nginx -t still fails without Coco's new files: the problem is elsewhere, look before any restart" >&2
   exit 1
 fi
 # A reload is graceful (open connections finish); never a restart while other sites are being served.
 if systemctl is-active --quiet nginx; then systemctl reload nginx; else systemctl start nginx; fi
+# A reload nginx could not apply (a socket it failed to bind) still returns success: prove the new configuration
+# is the live one with a file served from Coco's ACME location under the public name.
+probe="coco-probe-$(openssl rand -hex 8)"
+acme=/var/www/certbot/.well-known/acme-challenge
+mkdir -p "$acme"
+printf '%s' "$probe" >"$acme/$probe"
+got=""
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  got="$(curl -fsS --max-time 3 --resolve "${public}:80:127.0.0.1" "http://${public}/.well-known/acme-challenge/${probe}" 2>/dev/null || true)"
+  [ "$got" = "$probe" ] && break
+  sleep 1
+done
+rm -f "$acme/$probe"
+if [ "$got" != "$probe" ]; then
+  echo "nginx reloaded but does not serve Coco's new configuration (a socket it could not bind?): Coco's previous files are put back" >&2
+  restore_coco_nginx
+  changed=0
+  nginx -t && systemctl reload nginx
+  exit 1
+fi
+committed=1
+info "live: nginx serves Coco's configuration for ${public}"
+if [ "$shared" = 1 ]; then
+  umask 022
+  cat >"$host_conf" <<EOF
+# Written by infra/scripts/install-nginx.sh on a server shared with other apps: run by hand later, the script
+# keeps these settings (render-sites.sh --shared). Command-line options still win.
+SHARED=1
+DEPLOY_USER=${deploy_user}
+PORT_BASE=${port_base}
+PUBLIC_HOST=${public}
+ADMIN_HOST=${admin}
+TEMPORARY=${temporary}
+EOF
+fi
 
 if [ -n "$email" ]; then
   step "Let's Encrypt for: ${names[*]}"
@@ -183,15 +256,17 @@ if [ -n "$email" ]; then
   args=()
   for n in "${names[@]}"; do args+=(-d "$n"); done
   hint="the site keeps its self-signed certificate meanwhile. Check that port 80 reaches this server for every name; for a .sslip.io name refused by Let's Encrypt's quota, the same names under .nip.io work the same way"
+  # --issue-certs none: no email given to Let's Encrypt (it no longer sends expiry notices anyway).
+  if [ "$email" = none ]; then contact=(--register-unsafely-without-email); else contact=(--email "$email" --no-eff-email); fi
   # A dry run first, on Let's Encrypt's staging server (its own limits): port 80 or name problems never spend
   # the real quota.
   certbot certonly --dry-run --webroot -w /var/www/certbot --cert-name "$cert_name" \
-    --email "$email" --agree-tos --no-eff-email --non-interactive "${args[@]}" ||
+    "${contact[@]}" --agree-tos --non-interactive "${args[@]}" ||
     { echo "Let's Encrypt dry run failed: ${hint}" >&2; exit 1; }
   # The reload hook is stored in this certificate's own renewal file (not renewal-hooks/, which every
   # certificate on a shared server runs).
   certbot certonly --webroot -w /var/www/certbot --cert-name "$cert_name" \
-    --email "$email" --agree-tos --no-eff-email --non-interactive --keep-until-expiring --expand \
+    "${contact[@]}" --agree-tos --non-interactive --keep-until-expiring --expand \
     --deploy-hook 'systemctl reload nginx' "${args[@]}" ||
     { echo "Let's Encrypt refused the certificate: ${hint}" >&2; exit 1; }
   link_cert

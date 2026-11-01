@@ -68,24 +68,58 @@ if [ -n "$owners" ]; then
     die "the nginx on ports 80/443 is not Ubuntu's packaged nginx.service (a panel's or a custom build?): nothing was changed. Coco's sites must go into that nginx's own configuration instead (infra/README.md › Shared server)."
   fi
   info "Ubuntu's nginx.service answers on 80/443 (pid ${main_pid}): Coco adds its own sites beside the others"
+  # Coco listens on 0.0.0.0:80 and 0.0.0.0:443. Beside a dual-stack socket ([::] with ipv6only=off, shown as *:443)
+  # or sockets on a specific address only, that bind would fail at reload: every later reload would be dropped.
+  for port in 80 443; do
+    addrs="$(ss -Hltn "( sport = :$port )" 2>/dev/null | awk '{print $4}' | sort -u | tr '\n' ' ' || true)"
+    [ -n "$addrs" ] || continue
+    case " $addrs " in
+      *" 0.0.0.0:$port "*) ;;
+      *) die "port ${port} is held as '${addrs% }' (no 0.0.0.0:${port} socket): Coco's sites would not load beside it. Nothing was changed." ;;
+    esac
+  done
+elif dpkg -s nginx >/dev/null 2>&1 && ! systemctl is-active --quiet nginx; then
+  die "nginx is installed but stopped on purpose (nothing listens on 80/443): nothing was changed. Starting it could take ports another app needs."
 fi
 app_ports="$((port_base + 1)) $((port_base + 2)) $((port_base + 11)) $((port_base + 12))"
-busy=""
-for p in $app_ports 55432 3999; do
-  if ss -Hltn "( sport = :$p )" 2>/dev/null | grep -q .; then
-    if ! docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -q "^coco-.*127.0.0.1:${p}->"; then busy="$busy $p"; fi
+# A port is taken when something listens on it, when another container publishes it (running or stopped), or
+# when an nginx site already proxies to it (its app may just be restarting).
+claimed="$( {
+  ss -Hltn 2>/dev/null | awk '{print $4}' | sed 's/.*://'
+  if command -v docker >/dev/null 2>&1; then
+    docker ps -aq 2>/dev/null | xargs -r docker inspect -f '{{.Name}}{{range $p, $b := .HostConfig.PortBindings}}{{range $b}} {{.HostPort}}{{end}}{{end}}' 2>/dev/null |
+      grep -v '^/coco-' | cut -s -d' ' -f2- | tr ' ' '\n'
   fi
+  if command -v nginx >/dev/null 2>&1; then
+    nginx -T 2>/dev/null | awk '/^# configuration file / { skip = ($4 ~ /\/coco[-.]|\/zz-coco-|\/etc\/nginx\/coco\//) } !skip' |
+      grep -oE '(127\.0\.0\.1|localhost|\[::1\]):[0-9]+' | sed 's/.*://'
+  fi
+} | grep -E '^[0-9]+$' | sort -u | tr '\n' ' ' || true)"
+busy=""
+for p in $app_ports 3999; do
+  if [[ " ${claimed} " == *" ${p} "* ]] &&
+    ! docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -q "^coco-.*127.0.0.1:${p}->"; then busy="$busy $p"; fi
 done
-[ -z "$busy" ] || die "ports in use by another app:${busy}. Nothing was changed: run again with another --port-base (e.g. --port-base 4300), and give make-env.sh the same one; BUILD_DB_PORT / SMOKE_PORT move the build ports"
-info "Coco's ports: ${app_ports} (production colours), 55432 and 3999 (builds) are free"
+[ -z "$busy" ] || die "ports claimed by another app (listening, published by a container, or a proxy target in nginx):${busy}. Nothing was changed: run again with another --port-base (e.g. --port-base 4300), and give make-env.sh the same one; SMOKE_PORT moves the build's test port"
+info "Coco's ports: ${app_ports} (production colours) and 3999 (build test) are free"
 if id "$DEPLOY_USER" >/dev/null 2>&1; then
   case "$(getent passwd "$DEPLOY_USER" | cut -d: -f5)" in
     "$GECOS"*) info "account ${DEPLOY_USER} exists and is Coco's" ;;
     *) die "the account '${DEPLOY_USER}' already exists and belongs to something else: nothing was changed. Run again with DEPLOY_USER=<another name>." ;;
   esac
 fi
-if command -v docker >/dev/null 2>&1 && ! docker compose version >/dev/null 2>&1; then
-  die "Docker is installed but root has no 'docker compose' (v2): nothing was changed. Add the plugin that matches this engine (docker-compose-plugin for docker-ce, docker-compose-v2 for Ubuntu's docker.io) yourself; this script never replaces a running Docker engine."
+if command -v docker >/dev/null 2>&1; then
+  # What Coco's account will see (root's own plugins and contexts set aside): compose 2.17+ (two --env-file),
+  # buildx (BuildKit secrets), and a docker group to join.
+  compose_v="$(DOCKER_CONFIG=/nonexistent docker compose version --short 2>/dev/null | sed 's/^v//' || true)"
+  if [ -z "$compose_v" ] || [ "$(printf '%s\n2.17.0\n' "$compose_v" | sort -V | head -n 1)" != 2.17.0 ] ||
+    ! DOCKER_CONFIG=/nonexistent docker buildx version >/dev/null 2>&1 || ! getent group docker >/dev/null; then
+    die "Docker is installed but lacks what Coco needs (docker compose 2.17 or later: '${compose_v:-none}'; docker buildx; a docker group): nothing was changed. Add the packages that match this engine yourself (docker-compose-plugin and docker-buildx-plugin for docker-ce; docker-compose-v2 and docker-buildx for Ubuntu's docker.io); this script never replaces a running Docker engine."
+  fi
+fi
+# A certificate renewer the script cannot see (a pip install, a container) must not get a second one beside it.
+if ! command -v certbot >/dev/null 2>&1 && [ ! -x /snap/bin/certbot ] && ls /etc/letsencrypt/renewal/*.conf >/dev/null 2>&1; then
+  die "certificates exist in /etc/letsencrypt but no certbot command is on this server: something else renews them, and installing Ubuntu's certbot beside it could break their renewal. Nothing was changed."
 fi
 uid1000="$(getent passwd 1000 | cut -d: -f1 || true)"
 if [ -n "$uid1000" ] && [ "$uid1000" != "$DEPLOY_USER" ]; then
@@ -95,7 +129,8 @@ fi
 step "Packages (only the missing ones; nothing already installed is upgraded)"
 missing=()
 for p in ca-certificates curl gnupg nginx certbot jq openssl age rsync; do
-  if [ "$p" = certbot ] && [ -x /snap/bin/certbot ]; then continue; fi
+  # Any certbot already on the server (snap, pip, apt) is the one used: never a second.
+  if [ "$p" = certbot ] && { command -v certbot >/dev/null 2>&1 || [ -x /snap/bin/certbot ]; }; then continue; fi
   dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
 done
 if [ "${#missing[@]}" -gt 0 ]; then

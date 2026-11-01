@@ -21,18 +21,24 @@ FROM ${NODE_IMAGE} AS base
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 
+# Built on a server that also serves other sites (infra/scripts/build-image.sh): the heavy steps below volunteer
+# as the kernel's first choice when memory runs out (oom_score_adj 1000, which any process may raise for itself)
+# and run at a lower CPU priority, so a build that is too big fails instead of a neighbour being killed. The npm
+# cache has its own id, apart from any other Node build on the same engine.
 # Production dependencies: the Payload CLI (migrate, worker, seed) needs the full tree, not
 # only what the standalone trace keeps. The swc compilers are build-only (the trace drops them).
 FROM base AS prod-deps
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm,sharing=locked \
-    npm ci --omit=dev --no-audit --no-fund \
+RUN --mount=type=cache,id=coco-npm,target=/root/.npm,sharing=locked \
+    { echo 1000 >/proc/self/oom_score_adj; } 2>/dev/null || true; \
+    nice -n 10 npm ci --omit=dev --no-audit --no-fund \
  && rm -rf node_modules/@next/swc-*
 
 FROM base AS build
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm,sharing=locked \
-    npm ci --no-audit --no-fund
+RUN --mount=type=cache,id=coco-npm,target=/root/.npm,sharing=locked \
+    { echo 1000 >/proc/self/oom_score_adj; } 2>/dev/null || true; \
+    nice -n 10 npm ci --no-audit --no-fund
 COPY . .
 ARG BUILD_DATABASE_URI=""
 ARG GIT_SHA=dev
@@ -46,6 +52,7 @@ ARG NEXT_BUILD_WORKERS=""
 ENV GIT_SHA=${GIT_SHA} PUBLISH_GUARD=${PUBLISH_GUARD} ENABLE_ES=${ENABLE_ES} \
     PAYLOAD_CONFIG_PATH=src/payload.config.js
 RUN --mount=type=secret,id=build_database_uri --mount=type=secret,id=server_actions_key \
+    { echo 1000 >/proc/self/oom_score_adj; } 2>/dev/null || true; \
     if [ -s /run/secrets/build_database_uri ]; then DATABASE_URI="$(cat /run/secrets/build_database_uri)"; \
     else DATABASE_URI="$BUILD_DATABASE_URI"; fi \
  && if [ -z "$DATABASE_URI" ]; then echo 'BUILD_DATABASE_URI is required: next build prerenders pages from a seeded Postgres (see the header).' >&2; exit 1; fi \
@@ -54,7 +61,7 @@ RUN --mount=type=secret,id=build_database_uri --mount=type=secret,id=server_acti
  && if [ -s /run/secrets/server_actions_key ]; then NEXT_SERVER_ACTIONS_ENCRYPTION_KEY="$(cat /run/secrets/server_actions_key)"; export NEXT_SERVER_ACTIONS_ENCRYPTION_KEY; fi \
  && export PAYLOAD_SECRET="$(node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('hex'))")" \
  && mkdir -p public \
- && npx next build \
+ && nice -n 10 npx next build \
  && rm -f .next/standalone/.env
 
 FROM base AS runtime

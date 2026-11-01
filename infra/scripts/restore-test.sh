@@ -36,7 +36,7 @@ require_cmd docker jq
 work="$(mktemp -d)"
 container="coco-restore-test-${ENV_NAME}-$$"
 cleanup() {
-  docker rm -f "$container" >/dev/null 2>&1 || true
+  docker rm -fv "$container" >/dev/null 2>&1 || true
   rm -rf "$work"
 }
 trap cleanup EXIT
@@ -126,7 +126,7 @@ jq -n \
   '{ok: $ok, env: $env, source: $source, dumpWrittenAt: $dumpWrittenAt, testedAt: $testedAt,
     restoreSeconds: $seconds, tableCount: ($tables | length), tables: $tables, checks: $checks}' \
   >"$reports/restore-test-${stamp}.json"
-cp "$reports/restore-test-${stamp}.json" "$reports/restore-test.json"
+cp -f "$reports/restore-test-${stamp}.json" "$reports/restore-test.json"
 info "$reports/restore-test.json"
 
 if [ "$ok" = true ]; then
