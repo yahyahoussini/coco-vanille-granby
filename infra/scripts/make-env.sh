@@ -3,7 +3,7 @@
 # (openssl, never printed). Run as the deploy user; safe to run again: the secrets already in the file are kept,
 # only the host names and the options below are rewritten.
 #   bash infra/scripts/make-env.sh production --public-host cocovanille.<ip-with-dashes>.sslip.io \
-#     --admin-host admin-cocovanille.<ip-with-dashes>.sslip.io [--guard strict|show] [--image coco-vanille-web]
+#     --admin-host admin-cocovanille.<ip-with-dashes>.sslip.io [--guard strict|show] [--image coco-vanille-web] [--port-base 3000]
 # Messages stay in the container log (EMAIL_PROVIDER=log, SMS_PROVIDER=log) and no payment is taken
 # (PAYMENT_PROVIDER=none) until the owner's Amazon SES, Twilio and Stripe accounts exist (docs/13).
 set -euo pipefail
@@ -19,17 +19,21 @@ public=""
 admin=""
 guard=strict
 image=coco-vanille-web
+# Empty: the ports already in the file stay (a new file has 3001-3012 from .env.example).
+port_base=""
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --public-host) public="${2:-}"; shift 2 ;;
     --admin-host) admin="${2:-}"; shift 2 ;;
     --guard) guard="${2:-}"; shift 2 ;;
     --image) image="${2:-}"; shift 2 ;;
+    --port-base) port_base="${2:-}"; shift 2 ;;
     *) die "unknown option: $1" ;;
   esac
 done
 [ -n "$public" ] && [ -n "$admin" ] || die "--public-host and --admin-host are required"
 case "$guard" in strict | show) ;; *) die "--guard is strict or show" ;; esac
+if [ -n "$port_base" ]; then [[ "$port_base" =~ ^[1-9][0-9]{2,4}$ ]] && [ "$port_base" -le 64000 ] || die "--port-base is a number like 3000"; fi
 require_cmd openssl awk
 
 dir="$(env_dir "$ENV_NAME")"
@@ -79,10 +83,17 @@ set_kv ADMIN_HOSTS "$admin"
 set_kv PUBLIC_HOST "$public"
 set_kv ADMIN_HOST "$admin"
 set_kv PUBLISH_GUARD "$guard"
+# Same --port-base as setup-shared-host.sh: blue = base + 1 / + 2, green = base + 11 / + 12.
+if [ -n "$port_base" ]; then
+  set_kv WEB_BLUE_PORT "$((port_base + 1))"
+  set_kv STUDIO_BLUE_PORT "$((port_base + 2))"
+  set_kv WEB_GREEN_PORT "$((port_base + 11))"
+  set_kv STUDIO_GREEN_PORT "$((port_base + 12))"
+fi
 set_kv SEED_DEMO false
 set_kv SEED_DEV_USER false
 set_kv PAYMENT_PROVIDER none
 set_kv PAYMENT_MOCK off
 set_kv EMAIL_PROVIDER log
 set_kv SMS_PROVIDER log
-info "hosts ${public} · ${admin} · PUBLISH_GUARD=${guard} · image ${image} · payments off · messages logged"
+info "hosts ${public} · ${admin} · PUBLISH_GUARD=${guard} · image ${image} · ports $(file_get "$file" WEB_BLUE_PORT)/$(file_get "$file" STUDIO_BLUE_PORT) and $(file_get "$file" WEB_GREEN_PORT)/$(file_get "$file" STUDIO_GREEN_PORT) · payments off · messages logged"

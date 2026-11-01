@@ -7,9 +7,15 @@
 #                               admin-cocovanille.<ip-with-dashes>.sslip.io (www.<H> keeps redirecting to <H>)
 # --temporary   the public host answers noindex on every response (snippets/coco-noindex.conf)
 # --no-staging  leave out the staging pair
-# --shared      the server hosts other sites: leave out 00-default.conf (no default_server taken over)
-# Output names do not depend on the hosts (coco-public.conf, coco-admin.conf, coco-staging.conf,
-# 00-coco-default.conf), so switching to the final domain later rewrites the same files.
+# --shared      the server hosts other sites, and nothing about them may change:
+#               - no 00-default.conf (no default_server taken over);
+#               - files named zz-coco-*.conf, so they load after every other site: nginx makes the first server
+#                 it loads on a socket that socket's default, and that must stay the other app's;
+#               - no http2 on the listen lines: on nginx < 1.25.1 the flag applies to the whole socket, so it would
+#                 switch HTTP/2 on for the other sites too;
+#               - no IPv6 listens: a socket the other sites may not use (the temporary names have IPv4 only).
+# Output names do not depend on the hosts (coco-public.conf, coco-admin.conf, coco-staging.conf and
+# 00-coco-default.conf; zz-coco-*.conf with --shared), so switching to the final domain rewrites the same files.
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -47,12 +53,18 @@ rename() {
     -e "s/cocovanillegranby\.com/${public}/g" "$1"
 }
 
-rename "$src/cocovanillegranby.com.conf" >"$out/coco-public.conf"
+prefix=""
+if [ "$shared" = 1 ]; then prefix=zz-; fi
+rename "$src/cocovanillegranby.com.conf" >"$out/${prefix}coco-public.conf"
 if [ "$temporary" = 1 ]; then
   # Every place that sets HSTS (server level and the locations that add headers) also says noindex.
-  sed -i 's#^\(\s*\)include /etc/nginx/snippets/coco-hsts.conf;#&\n\1include /etc/nginx/snippets/coco-noindex.conf;#' "$out/coco-public.conf"
+  sed -i 's#^\(\s*\)include /etc/nginx/snippets/coco-hsts.conf;#&\n\1include /etc/nginx/snippets/coco-noindex.conf;#' "$out/${prefix}coco-public.conf"
 fi
-rename "$src/admin.cocovanillegranby.com.conf" >"$out/coco-admin.conf"
-if [ "$staging" = 1 ]; then rename "$src/staging.cocovanillegranby.com.conf" >"$out/coco-staging.conf"; fi
-if [ "$shared" = 0 ]; then cp "$src/00-default.conf" "$out/00-coco-default.conf"; fi
+rename "$src/admin.cocovanillegranby.com.conf" >"$out/${prefix}coco-admin.conf"
+if [ "$staging" = 1 ]; then rename "$src/staging.cocovanillegranby.com.conf" >"$out/${prefix}coco-staging.conf"; fi
+if [ "$shared" = 0 ]; then
+  cp "$src/00-default.conf" "$out/00-coco-default.conf"
+else
+  sed -i -e 's/^\(\s*listen 443 ssl\) http2;/\1;/' -e '/^\s*listen \[::\]/d' "$out"/zz-coco-*.conf
+fi
 ls -1 "$out"

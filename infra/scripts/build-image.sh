@@ -34,8 +34,21 @@ cleanup() { docker rm -f "$db" "$smoke" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 cleanup
 
+# A build takes about 2-3 GB of memory and a few GB of disk for a few minutes. On a server that also serves other
+# sites, refuse to start when that would squeeze them (MIN_FREE_MB / MIN_DISK_GB to change the floor).
+avail_mb=$(($(awk '/^MemAvailable:/ {print $2}' /proc/meminfo) / 1024))
+disk_gb=$(($(df -Pk / | awk 'NR == 2 {print $4}') / 1024 / 1024))
+info "memory available ${avail_mb} MB · disk free ${disk_gb} GB"
+[ "$avail_mb" -ge "${MIN_FREE_MB:-2500}" ] || die "only ${avail_mb} MB of memory available: the build could slow the other sites down (add swap, or build when the server is quiet)"
+[ "$disk_gb" -ge "${MIN_DISK_GB:-6}" ] || die "only ${disk_gb} GB free on /: free some space first"
+
+# Secrets reach the containers by name (-e NAME, value from this script's environment), never on a command line
+# that `ps` would show to the server's other accounts.
+export POSTGRES_PASSWORD="$pass" DATABASE_URI="$uri" PAYLOAD_SECRET="build-${TAG:0:12}"
+cpus="$(awk -v n="$(nproc)" 'BEGIN { print (n > 1.5 ? 1.5 : n) }')"
+
 step "Throwaway build database (127.0.0.1:${port})"
-docker run -d --name "$db" -e POSTGRES_USER=cv -e POSTGRES_PASSWORD="$pass" -e POSTGRES_DB=coco_build \
+docker run -d --name "$db" -e POSTGRES_USER=cv -e POSTGRES_PASSWORD -e POSTGRES_DB=coco_build \
   -p "127.0.0.1:${port}:5432" --tmpfs /var/lib/postgresql/data postgres:16 >/dev/null
 for _ in $(seq 1 45); do
   if docker exec "$db" pg_isready -U cv -d coco_build >/dev/null 2>&1; then break; fi
@@ -45,7 +58,7 @@ docker exec "$db" pg_isready -U cv -d coco_build >/dev/null || die "the build da
 info "ready"
 
 step "Migrations and the verified seed (NODE_ENV=production)"
-docker run --rm --network host -v "$src/apps/web:/src:ro" -e DATABASE_URI="$uri" -e PAYLOAD_SECRET="build-${TAG:0:12}" \
+docker run --rm --network host --memory 1536m --cpus "$cpus" -v "$src/apps/web:/src:ro" -e DATABASE_URI -e PAYLOAD_SECRET \
   -e PAYLOAD_CONFIG_PATH=src/payload.config.js -e NEXT_TELEMETRY_DISABLED=1 "$node_image" sh -ec '
     mkdir -p /work && cp -a /src/. /work && cd /work
     npm ci --no-audit --no-fund --loglevel=error
@@ -68,8 +81,9 @@ DOCKER_BUILDKIT=1 docker build --network host "${secrets[@]}" \
   -t "${image}:${TAG}" "$src/apps/web"
 
 step "Smoke test: the web role answers its health check"
-docker run -d --name "$smoke" --network host -e APP_ROLE=web -e PORT="$smoke_port" -e DATABASE_URI="$uri" \
-  -e PAYLOAD_SECRET="build-${TAG:0:12}" "${image}:${TAG}" >/dev/null
+# HOSTNAME=127.0.0.1: on the host network the test server must not listen on the public address.
+docker run -d --name "$smoke" --network host --memory 768m -e APP_ROLE=web -e PORT="$smoke_port" -e HOSTNAME=127.0.0.1 \
+  -e DATABASE_URI -e PAYLOAD_SECRET "${image}:${TAG}" >/dev/null
 ok=0
 for _ in $(seq 1 45); do
   if curl -fsS -m 5 -H 'Host: localhost' "http://127.0.0.1:${smoke_port}/svc/health/" >/dev/null 2>&1; then ok=1; break; fi

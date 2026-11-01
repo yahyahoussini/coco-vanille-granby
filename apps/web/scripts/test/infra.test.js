@@ -83,9 +83,17 @@ test('admin host: noindex on every status, login rate limit, unbuffered SSE, 12 
   const login = blocks.find((b) => b.match.includes('api/users/') && b.match.includes('login'))
   assert.match(login.body, /limit_req zone=coco_login/)
   // Studio's own sign-in routes share the limit (password, PIN switch, step-up, passkey).
-  const re = new RegExp(login.match.replace(/^~\s*/, ''))
-  for (const path of ['/api/users/login', '/svc/connexion/', '/svc/nip/', '/svc/verifier/', '/svc/cle/options/']) assert.match(path, re, path)
+  // `~*`: Payload matches endpoint paths without regard to case, so the limit must too.
+  assert.match(login.match, /^~\*/)
+  const re = new RegExp(login.match.replace(/^~\*\s*/, ''), 'i')
+  for (const path of ['/api/users/login', '/api/users/LOGIN', '/svc/connexion/', '/svc/nip/', '/svc/verifier/', '/svc/cle/options/']) assert.match(path, re, path)
   assert.doesNotMatch('/svc/action/', re)
+  // Accounts come from `npm run accounts` only: Payload's first-user screen and endpoint never answer, nor GraphQL.
+  const closed = blocks.find((b) => b.match.includes('first-register'))
+  assert.match(closed.body, /return 404;/)
+  const shut = new RegExp(closed.match.replace(/^~\*\s*/, ''), 'i')
+  for (const path of ['/api/users/first-register', '/API/Users/First-Register', '/admin/create-first-user', '/api/graphql', '/api/graphql-playground']) assert.match(path, shut, path)
+  for (const path of ['/admin', '/admin/collections/pages', '/api/users/me']) assert.doesNotMatch(path, shut, path)
   // The real SSE route (src/app/(studio)/studio/svc/evenements, rewritten from /svc/evenements/ on this host).
   const sse = blocks.find((b) => b.match === '^~ /svc/evenements/')
   assert.match(sse.body, /proxy_buffering off;/)

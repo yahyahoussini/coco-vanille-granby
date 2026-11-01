@@ -8,6 +8,7 @@
 #     --public-host cocovanille.<ip-with-dashes>.sslip.io --admin-host admin-cocovanille.<ip-with-dashes>.sslip.io \
 #     --issue-certs you@example.com
 # --shared leaves the other sites alone: no default_server is installed and Ubuntu's default site is kept.
+# --port-base N: Coco's local ports are N+1, N+2 (blue) and N+11, N+12 (green); default 3000 (make-env.sh, same option).
 # First run: TLS starts with a self-signed certificate (so nginx can start and answer the ACME
 # challenge on port 80); --issue-certs then gets one certificate for every name (webroot), links it
 # and adds a renewal hook that reloads nginx. Staging basic auth: STAGING_AUTH_USER and
@@ -22,6 +23,7 @@ shared=0
 temporary=0
 public=cocovanillegranby.com
 admin=admin.cocovanillegranby.com
+port_base=3000
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --issue-certs) email="${2:-}"; shift 2 ;;
@@ -30,12 +32,14 @@ while [ "$#" -gt 0 ]; do
     --temporary) temporary=1; shift ;;
     --public-host) public="${2:-}"; shift 2 ;;
     --admin-host) admin="${2:-}"; shift 2 ;;
+    --port-base) port_base="${2:-}"; shift 2 ;;
     *) echo "unknown option: $1" >&2; exit 64 ;;
   esac
 done
 step() { printf '\n==> %s\n' "$*"; }
 info() { printf '    %s\n' "$*"; }
 [ "$(id -u)" = 0 ] || { echo "run with sudo" >&2; exit 1; }
+[[ "$port_base" =~ ^[1-9][0-9]{2,4}$ ]] && [ "$port_base" -le 64000 ] || { echo "--port-base is a number like 3000" >&2; exit 64; }
 command -v nginx >/dev/null || { echo "nginx is not installed (harden-vps.sh or setup-shared-host.sh installs it)" >&2; exit 1; }
 
 coco=/etc/nginx/coco
@@ -50,20 +54,51 @@ install -d -m 755 -o "$deploy_user" -g "$deploy_user" "$coco/upstreams"
 info "$coco/upstreams is writable by ${deploy_user} (deploy.sh switches colours there)"
 
 step "Configs for ${public} and ${admin}"
+rendered="$(mktemp -d)"
+backup="$(mktemp -d)"
+trap 'rm -rf "$rendered" "$backup"' EXIT
+# Coco's nginx files as they are now (and nothing else), to put back if the new set fails `nginx -t`: a broken
+# file left in sites-enabled would keep every site on the server from starting at the next nginx restart.
+# A file is Coco's by its name (coco-*, zz-coco-*, 00-coco-default), or, for the names of the first layout that
+# another site could also use (00-default.conf…), only when its content includes Coco's snippets.
+is_coco_file() {
+  case "$1" in
+    /etc/nginx/conf.d/coco.conf | /etc/nginx/snippets/coco-*.conf | */coco-public.conf | */coco-admin.conf | */coco-staging.conf | */zz-coco-*.conf | */00-coco-default.conf) return 0 ;;
+    */00-default.conf | */cocovanillegranby.com.conf | */admin.cocovanillegranby.com.conf | */staging.cocovanillegranby.com.conf)
+      grep -qs -e 'coco_timing' -e 'snippets/coco-' "$1"
+      return
+      ;;
+  esac
+  return 1
+}
+coco_nginx_files() {
+  local f
+  for f in /etc/nginx/conf.d/coco.conf /etc/nginx/snippets/coco-*.conf /etc/nginx/sites-available/* /etc/nginx/sites-enabled/*; do
+    if { [ -e "$f" ] || [ -L "$f" ]; } && is_coco_file "$f"; then printf '%s\n' "${f#/}"; fi
+  done
+}
+mapfile -t before < <(coco_nginx_files)
+if [ "${#before[@]}" -gt 0 ]; then tar -C / -cpf "$backup/coco-nginx.tar" "${before[@]}"; fi
+restore_coco_nginx() {
+  local f
+  while IFS= read -r f; do rm -f "/$f"; done < <(coco_nginx_files)
+  if [ -f "$backup/coco-nginx.tar" ]; then tar -C / -xpf "$backup/coco-nginx.tar"; fi
+}
 install -m 644 "$src/conf.d/coco.conf" /etc/nginx/conf.d/coco.conf
 install -m 644 "$src"/snippets/*.conf /etc/nginx/snippets/
 install -m 644 "$src/html/50x.html" /var/www/coco/50x.html
-rendered="$(mktemp -d)"
-trap 'rm -rf "$rendered"' EXIT
 flags=(--public-host "$public" --admin-host "$admin")
 if [ "$temporary" = 1 ]; then flags+=(--temporary); fi
 if [ "$staging" = 0 ]; then flags+=(--no-staging); fi
 if [ "$shared" = 1 ]; then flags+=(--shared); fi
 bash "$here/render-sites.sh" "$rendered" "${flags[@]}" >/dev/null
-# Files from an earlier layout or an option turned off since (only Coco's own names are touched).
+# Coco's files from an earlier layout or an option turned off since; another site's file is never removed.
 for old in cocovanillegranby.com.conf admin.cocovanillegranby.com.conf staging.cocovanillegranby.com.conf 00-default.conf \
-  coco-public.conf coco-admin.conf coco-staging.conf 00-coco-default.conf; do
-  if [ ! -f "$rendered/$old" ]; then rm -f "/etc/nginx/sites-enabled/$old" "/etc/nginx/sites-available/$old"; fi
+  coco-public.conf coco-admin.conf coco-staging.conf zz-coco-public.conf zz-coco-admin.conf zz-coco-staging.conf 00-coco-default.conf; do
+  [ ! -f "$rendered/$old" ] || continue
+  for f in "/etc/nginx/sites-enabled/$old" "/etc/nginx/sites-available/$old"; do
+    if { [ -e "$f" ] || [ -L "$f" ]; } && is_coco_file "$f"; then rm -f "$f"; fi
+  done
 done
 for site in "$rendered"/*.conf; do
   name="$(basename "$site")"
@@ -82,8 +117,10 @@ fi
 step "Upstreams (blue until the first deploy)"
 for env in production staging; do
   file="$coco/upstreams/$env.conf"
-  if [ ! -f "$file" ]; then
-    if [ "$env" = production ]; then web=3001 studio=3002; else web=3101 studio=3102; fi
+  # Rewritten until the first deploy owns it (deploy.sh writes its own header), so a new --port-base applies.
+  if [ ! -f "$file" ] || ! grep -q '^# Written by infra/scripts (deploy.sh' "$file"; then
+    # Blue ports (WEB_BLUE_PORT / STUDIO_BLUE_PORT in .env): port base + 1 and + 2, staging 100 higher.
+    if [ "$env" = production ]; then web=$((port_base + 1)) studio=$((port_base + 2)); else web=$((port_base + 101)) studio=$((port_base + 102)); fi
     printf 'upstream coco_%s_web {\n  server 127.0.0.1:%s;\n  keepalive 16;\n}\nupstream coco_%s_studio {\n  server 127.0.0.1:%s;\n  keepalive 8;\n}\n' \
       "$env" "$web" "$env" "$studio" >"$file"
     chown "$deploy_user:$deploy_user" "$file"
@@ -131,22 +168,35 @@ else
 fi
 
 step "nginx -t and reload"
-nginx -t
-systemctl reload nginx || systemctl restart nginx
+if ! nginx -t; then
+  echo "nginx -t failed: Coco's previous nginx files are put back, nothing was reloaded" >&2
+  restore_coco_nginx
+  nginx -t || echo "nginx -t still fails without Coco's new files: the problem is elsewhere, look before any restart" >&2
+  exit 1
+fi
+# A reload is graceful (open connections finish); never a restart while other sites are being served.
+if systemctl is-active --quiet nginx; then systemctl reload nginx; else systemctl start nginx; fi
 
 if [ -n "$email" ]; then
   step "Let's Encrypt for: ${names[*]}"
   command -v certbot >/dev/null || { echo "certbot is not installed" >&2; exit 1; }
   args=()
   for n in "${names[@]}"; do args+=(-d "$n"); done
+  hint="the site keeps its self-signed certificate meanwhile. Check that port 80 reaches this server for every name; for a .sslip.io name refused by Let's Encrypt's quota, the same names under .nip.io work the same way"
+  # A dry run first, on Let's Encrypt's staging server (its own limits): port 80 or name problems never spend
+  # the real quota.
+  certbot certonly --dry-run --webroot -w /var/www/certbot --cert-name "$cert_name" \
+    --email "$email" --agree-tos --no-eff-email --non-interactive "${args[@]}" ||
+    { echo "Let's Encrypt dry run failed: ${hint}" >&2; exit 1; }
+  # The reload hook is stored in this certificate's own renewal file (not renewal-hooks/, which every
+  # certificate on a shared server runs).
   certbot certonly --webroot -w /var/www/certbot --cert-name "$cert_name" \
-    --email "$email" --agree-tos --no-eff-email --non-interactive --keep-until-expiring --expand "${args[@]}"
-  install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
-  printf '#!/bin/sh\n# Installed by infra/scripts/install-nginx.sh\nsystemctl reload nginx\n' >/etc/letsencrypt/renewal-hooks/deploy/coco-reload-nginx.sh
-  chmod 755 /etc/letsencrypt/renewal-hooks/deploy/coco-reload-nginx.sh
+    --email "$email" --agree-tos --no-eff-email --non-interactive --keep-until-expiring --expand \
+    --deploy-hook 'systemctl reload nginx' "${args[@]}" ||
+    { echo "Let's Encrypt refused the certificate: ${hint}" >&2; exit 1; }
   link_cert
   nginx -t
   systemctl reload nginx
-  info "certificate installed; renewal: certbot's systemd timer + reload hook"
+  info "certificate installed; renewal: certbot's systemd timer, then a reload for this certificate only"
 fi
 step "nginx ready"

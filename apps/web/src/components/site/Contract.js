@@ -26,8 +26,25 @@ export function Breadcrumb({ crumbs }) {
 // (« Heures : », « … ») never break across two lines. The text stays byte-identical; only nowrap spans are added.
 const KEEP = /(\d{3}-\d{3}-\d{4}|\b\d{1,2} h(?: \d{2})?(?!\p{L})|\b\d{1,2}(?::\d{2})? [ap]\.m\.|\b[A-Z]\d[A-Z] \d[A-Z]\d\b|« \S+|\S+(?: [:;!?»])+(?=\s|$))/u
 
+// A fact the owner has not given yet, inside the copy (PUBLISH_GUARD=show; strict never serves one): the same badge
+// as the template markers (Fact.js), so the client sees at a glance what is missing. The marker text is unchanged,
+// so the gate still counts it, and it stays out of search snippets.
+const SLOT = /(\[\[FACT NEEDED: [^\]]+\]\])/
+const withSlots = (text, render) =>
+  text.split(SLOT).map((part, i) =>
+    i % 2 ? (
+      <span key={i} className="fact-needed" data-nosnippet="">
+        {part}
+      </span>
+    ) : (
+      render(part, i)
+    ),
+  )
+
 export function Typeset({ text }) {
   if (typeof text !== 'string') return text ?? null
+  // The same pattern decides and splits: a malformed marker ("[[FACT NEEDED]]", no closing brackets) stays plain text.
+  if (SLOT.test(text)) return withSlots(text, (part, i) => <Typeset key={i} text={part} />)
   const parts = text.split(KEEP)
   if (parts.length === 1) return text
   return parts.map((part, i) => (i % 2 ? <span key={i} className="nowrap">{part}</span> : part))
@@ -174,5 +191,6 @@ export function MetaLine({ doc, locale }) {
 // The text stays byte-identical for crawlers; only a nowrap span is added around the word.
 export function Unbroken({ text }) {
   if (typeof text !== 'string') return text ?? null
+  if (SLOT.test(text)) return withSlots(text, (part, i) => <Unbroken key={i} text={part} />)
   return text.split(/(\S+-\S+)/).map((part, i) => (i % 2 ? <span key={i} className="nowrap">{part}</span> : part))
 }
