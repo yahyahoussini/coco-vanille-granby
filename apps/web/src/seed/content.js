@@ -5,6 +5,7 @@
 // Facts come only from data/facts.json and the seed. Every owner fact not yet supplied stays a marker (zero invention).
 // Checked by test/unit/content.test.js.
 import { marker } from '../lib/facts.js'
+import { frTypo } from '../lib/typo.js'
 import { t } from '../lib/i18n.js'
 import { hoursSummary, WEEK } from '../components/site/hours.js'
 
@@ -19,6 +20,7 @@ const UPDATED_1029 = '2026-10-29T16:00:00.000Z'
 // counter and by cake request first while online payment is off, one dated and sourced number in the answer blocks,
 // the review-named products kept apart from the shop's own offer, dated allergen sources, and change notes that say
 // what changed (never the workflow). The English copy of the chef, next-day cake and Yule log pages is new that day.
+// The same day, the Journal index (the blog's spec).
 const UPDATED_1101 = '2026-11-01T16:00:00.000Z'
 
 // Regular hours: the shop's Google listing, supplied by the operator on 2026-10-27 (research/01 « Update 2026-10-27 »,
@@ -52,23 +54,8 @@ const s = (heading, answer, extra = {}) => ({
 })
 const q = (question, answer) => ({ question, answer })
 
-// Québec typography: non-breaking space before « : » and inside guillemets (OQLF).
+// Québec typography: non-breaking space before « : » and inside guillemets (OQLF), lib/typo.js frTypo.
 const NBSP = ' '
-const frTypo = (value) => {
-  if (typeof value === 'string')
-    return value
-      .replace(/ :/g, `${NBSP}:`)
-      .replace(/« /g, `«${NBSP}`)
-      .replace(/ »/g, `${NBSP}»`)
-      .replace(/(\d) (h|\$|%)(?![\p{L}\d])/gu, `$1${NBSP}$2`)
-      .replace(/(\d h) (\d\d)/g, `$1${NBSP}$2`)
-      .replace(/(\d(?:er)?) (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/g, `$1${NBSP}$2`)
-      .replace(/(\d), (rue|boulevard|avenue) /g, `$1,${NBSP}$2 `)
-      .replace(/J2G 4Y6/g, `J2G${NBSP}4Y6`)
-  if (Array.isArray(value)) return value.map(frTypo)
-  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, frTypo(v)]))
-  return value
-}
 
 const DEPOSIT_FR = `30${NBSP}%`
 const DEPOSIT_EN = '30%'
@@ -613,6 +600,58 @@ const faq = {
         q('Can I pay cash at pickup?', `Payment at pickup: ${fn('cash or card payment at pickup')}. When a product is paid online, payment is by card.`),
       ],
       changeNote: 'Ordering by phone, at the counter and by online cake request made clear.',
+      contentUpdatedAt: UPDATED_1101,
+    },
+  },
+}
+
+// ---------- The Journal (blog) index: /journal/, /en/journal/ (posts: collection posts, seed/journal.js) ----------
+// Only what the Journal itself does (lib/journal.js: one post a week at most, dated sources, French first); no
+// claim about the shop beyond its address and phone.
+const journal = {
+  key: 'journal',
+  status: 'core',
+  locales: {
+    fr: {
+      title: 'Journal de Pâtisserie Coco Vanille à Granby',
+      description: 'Conseils pour choisir et conserver une pâtisserie, histoire des classiques et vie du centre-ville de Granby : le Journal de Pâtisserie Coco Vanille.',
+      h1: 'Le Journal de Pâtisserie Coco Vanille',
+      answer:
+        'Le Journal de Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, rassemble des conseils pour choisir, commander et conserver une pâtisserie, l’histoire des classiques de la vitrine et la vie du quartier. Chaque chiffre y porte sa date et sa source, et ce que la boutique n’a pas confirmé n’y figure pas.',
+      sections: [
+        s('Qu’est-ce qu’on trouve dans le Journal?', 'Des billets qui répondent chacun à une question précise : comment choisir ou conserver une pâtisserie, d’où vient un classique de la vitrine, quoi savoir avant de venir au centre-ville de Granby.'),
+        s('Qui publie les billets?', 'Pâtisserie Coco Vanille publie chaque billet sous son nom, avec sa date de publication, sa date de mise à jour et la liste de ses sources à la fin.'),
+        s('À quelle fréquence paraît un billet?', 'Un billet au plus par semaine, le lundi : le Journal préfère un billet vérifié à plusieurs billets écrits vite, et un billet qui n’a rien de neuf à dire ne paraît pas.'),
+      ],
+      faq: [
+        q('Les prix sont-ils dans le Journal?', 'Rarement : un billet cite seulement un prix que la boutique a déjà publié, avec sa date; les prix des produits sont sur la page Prix et sur chaque produit, quand la boutique les a confirmés.'),
+        q('Peut-on commander à partir d’un billet?', 'Oui : chaque billet mène aux pages de la boutique qui le concernent, et la page Commander est dans le menu.'),
+        q('Le Journal existe-t-il en anglais?', 'Oui, billet par billet, une fois la version anglaise relue : elle suit toujours la version française.'),
+        q('Comment proposer un sujet?', 'Écrivez à la boutique avec « Écrivez-nous » sur le site ou appelez au 450-372-7177.'),
+        q('Où se trouve la boutique?', 'Au 3, rue Court, au centre-ville de Granby; les heures et l’itinéraire sont sur la page Nous trouver.'),
+      ],
+      changeNote: 'Création du Journal.',
+      contentUpdatedAt: UPDATED_1101,
+    },
+    en: {
+      title: 'Pâtisserie Coco Vanille Journal, Granby, Quebec',
+      description: 'Tips for choosing, ordering and keeping pastries, the history of the classics and life in downtown Granby, Quebec: the Pâtisserie Coco Vanille Journal.',
+      h1: 'The Pâtisserie Coco Vanille Journal',
+      answer:
+        'The Pâtisserie Coco Vanille Journal, from the shop at 3 rue Court in downtown Granby, Quebec, gathers tips for choosing, ordering and keeping pastries, the history of the classics in the display case and news from the neighbourhood. Every figure carries its date and source, and nothing the shop has not confirmed appears here.',
+      sections: [
+        s('What is in the Journal?', 'Each post answers one precise question: how to choose or keep a pastry, where a classic from the display case comes from, what to know before coming to downtown Granby.'),
+        s('Who publishes the posts?', 'Pâtisserie Coco Vanille publishes every post under its own name, with its publication date, its update date and the list of its sources at the end.'),
+        s('How often is a post published?', 'At most one post a week, on Monday: the Journal would rather publish one checked post than several quick ones, and a post with nothing new to say is not published.'),
+      ],
+      faq: [
+        q('Are prices in the Journal?', 'Rarely: a post only quotes a price the shop has already published, with its date; product prices are on the Prices page and on each product once the shop has confirmed them.'),
+        q('Can I order from a post?', 'Yes: each post links to the shop’s pages it is about, and the Order page is in the menu.'),
+        q('Is the Journal in English?', 'Yes, post by post, once the English version has been reviewed: it always follows the French one.'),
+        q('How do I suggest a topic?', 'Write to the shop with “Write to us” on the site or call 450-372-7177.'),
+        q('Where is the shop?', 'At 3 rue Court in downtown Granby; hours and directions are on the Visit page.'),
+      ],
+      changeNote: 'Journal created.',
       contentUpdatedAt: UPDATED_1101,
     },
   },
@@ -1501,4 +1540,4 @@ const withTypography = (page) => ({
   locales: Object.fromEntries(Object.entries(page.locales).map(([locale, copy]) => [locale, locale === 'fr' ? frTypo(copy) : copy])),
 })
 
-export const pages = [home, carte, commander, nousTrouver, zooDeGranby, aPropos, allergenes, faq, viennoiseries, pains, gateaux, patisseries, confidentialite, conditionsDeVente, temoins, accessibilite, prix, calculateur, gateauxPersonnalises, gateauPourDemain, buches, chef].map(withTypography)
+export const pages = [home, carte, commander, nousTrouver, zooDeGranby, aPropos, allergenes, faq, journal, viennoiseries, pains, gateaux, patisseries, confidentialite, conditionsDeVente, temoins, accessibilite, prix, calculateur, gateauxPersonnalises, gateauPourDemain, buches, chef].map(withTypography)

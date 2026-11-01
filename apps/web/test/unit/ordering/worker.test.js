@@ -2,7 +2,7 @@
 // after closing, nightly allergy-note retention; plus the senders (log, MIME, SigV4).
 import { test, describe, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { sendDueMessages, expireHolds, expireQuotes, markNotPickedUp, retention, tick, MAX_ATTEMPTS } from '../../../src/worker/tasks.js'
+import { sendDueMessages, expireHolds, expireQuotes, markNotPickedUp, retention, releaseDuePosts, tick, MAX_ATTEMPTS } from '../../../src/worker/tasks.js'
 import { smsSender, emailSender, mailFrom } from '../../../src/lib/messaging/senders.js'
 import { buildMime } from '../../../src/lib/messaging/mime.js'
 import { signRequest } from '../../../src/lib/messaging/sigv4.js'
@@ -142,6 +142,32 @@ describe('expiry and pickup jobs', () => {
     assert.equal((await retention(payload, { now: NOW })).allergyNotesDeleted, 1)
     assert.deepEqual(payload.store.orders.map((o) => o.allergyNote), [null, 'Lait'])
     assert.match(payload.store.orders[0].timeline.at(-1).note, /effacée/)
+  })
+
+  test('Journal: due posts are stamped once; future and draft posts wait; English only once published', async () => {
+    const at = (d) => `${d}T11:00:00.000Z`
+    payload.store.posts = [
+      { id: 1, state: 'published', stateEn: 'published', publishedAt: at('2026-10-26') },
+      { id: 2, state: 'published', stateEn: 'draft', publishedAt: at('2026-10-26') },
+      { id: 3, state: 'published', stateEn: 'published', publishedAt: at('2026-11-02') },
+      { id: 4, state: 'draft', stateEn: 'published', publishedAt: at('2026-10-19') },
+    ]
+    assert.deepEqual(await releaseDuePosts(payload, { now: NOW }), { postsReleased: 3 })
+    const [a, b, c, d] = payload.store.posts
+    assert.ok(a.releasedAt && a.releasedEnAt)
+    assert.ok(b.releasedAt)
+    assert.equal(b.releasedEnAt, undefined)
+    assert.equal(c.releasedAt, undefined, 'future: not yet')
+    assert.equal(d.releasedAt, undefined, 'draft: never')
+    const first = a.releasedAt
+    assert.deepEqual(await releaseDuePosts(payload, { now: new Date(NOW.getTime() + 60e3) }), { postsReleased: 0 })
+    assert.equal(payload.store.posts[0].releasedAt, first, 'a restart stamps nothing again')
+  })
+
+  test('the Journal release runs on the minute ticks only', async () => {
+    payload.store.posts = []
+    assert.equal('postsReleased' in (await tick(payload, { now: NOW, senders: recorder() })), false)
+    assert.equal((await tick(payload, { now: NOW, senders: recorder(), minutely: true })).postsReleased, 0)
   })
 
   // Nightly also purges « Écrivez-nous » conversations 90 days after their last message (lib/chat/server.js).

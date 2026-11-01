@@ -1,5 +1,6 @@
 // Background worker process (APP_ROLE=worker): `npm run worker`. Every 5 s: due messages, expired holds and
-// quotes, orders not picked up after closing. Once a night (first tick after 3 h, Granby time): retention.
+// quotes, orders not picked up after closing. Once a minute: Journal posts due today. Once a night (first tick after
+// 3 h, Granby time): retention.
 // WORKER_ONCE=1 runs every job once (nightly included) and exits: used by the e2e test and by cron checks.
 import { getPayload } from 'payload'
 import config from '../payload.config.js'
@@ -13,6 +14,7 @@ const once = process.env.WORKER_ONCE === '1' || process.argv.includes('--once')
 const payload = await getPayload({ config })
 const senders = makeSenders()
 let lastNightly = null
+let lastMinutely = 0
 let running = false
 let stopping = false
 
@@ -23,8 +25,11 @@ async function run() {
     const now = new Date()
     const here = localParts(now)
     const nightly = once || (lastNightly !== here.iso && here.hh >= 3)
-    const summary = await tick(payload, { now, senders, nightly })
+    // Journal posts due today (6 h) are released at most once a minute.
+    const minutely = once || now.getTime() - lastMinutely >= 60_000
+    const summary = await tick(payload, { now, senders, nightly, minutely })
     if (nightly) lastNightly = here.iso
+    if (minutely) lastMinutely = now.getTime()
     if (once || Object.values(summary).some((n) => n > 0)) payload.logger.info({ worker: summary }, 'worker tick')
     if (once) console.log(`[worker] ${JSON.stringify(summary)}`)
   } catch (e) {

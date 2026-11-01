@@ -13,22 +13,29 @@ const PAGE_NAMES = {
   home: 'Accueil', carte: 'Carte', commander: 'Commander', 'nous-trouver': 'Nous trouver', 'zoo-de-granby': 'Depuis le Zoo', 'a-propos': 'À propos', chef: 'Le chef',
   prix: 'Prix', 'gateau-pour-demain': 'Gâteau pour demain', 'gateaux-personnalises': 'Gâteaux personnalisés', buches: 'Bûches de Noël', allergenes: 'Allergènes',
   faq: 'FAQ', calculateur: 'Calculateur de portions', viennoiseries: 'Viennoiseries', pains: 'Pains et baguettes', gateaux: 'Gâteaux', patisseries: 'Pâtisseries',
-  confidentialite: 'Confidentialité', 'conditions-de-vente': 'Conditions de vente', temoins: 'Témoins', accessibilite: 'Accessibilité',
+  confidentialite: 'Confidentialité', 'conditions-de-vente': 'Conditions de vente', temoins: 'Témoins', accessibilite: 'Accessibilité', journal: 'Journal',
 }
+// A Journal post, named by its French title (the place a slot appears).
+const postName = (doc) => `Journal › « ${doc.title || doc.slug || doc.id} »`
 
 // Every [[FACT NEEDED]] slot left in the published copy, per language: fact key → { labels, pages, langs }.
-// Read from the stored copy (not the filled one), so an answered fact still shows where it appears.
+// Read from the stored copy (not the filled one), so an answered fact still shows where it appears. Journal posts
+// count once published, whatever their day (a scheduled post waits for its facts too); `pages` holds place names.
 async function slotsInCopy(payload) {
   const out = new Map()
+  const published = (collection, locale, where) => payload.find({ collection, where, locale, limit: 500, depth: 0, pagination: false, overrideAccess: true }).catch(() => ({ docs: [] }))
+  const frTitles = new Map((await published('posts', 'fr', { state: { equals: 'published' } })).docs.map((d) => [d.id, d]))
   for (const locale of ['fr', 'en']) {
-    const res = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale, limit: 500, depth: 0, pagination: false, overrideAccess: true })
-    for (const doc of res.docs) {
+    const res = await published('pages', locale, { _status: { equals: 'published' } })
+    const posts = await published('posts', locale, { state: { equals: 'published' } })
+    const places = [...res.docs.map((doc) => [doc, PAGE_NAMES[doc.key] || doc.key]), ...posts.docs.map((doc) => [doc, postName(frTitles.get(doc.id) || doc)])]
+    for (const [doc, place] of places) {
       for (const m of JSON.stringify(doc).matchAll(SLOT)) {
         const label = m[1].replace(/ /g, ' ')
         const key = factIdFor(locale, label)
         const slot = out.get(key) || { labels: new Set(), pages: new Set(), langs: new Set() }
         slot.labels.add(label)
-        slot.pages.add(doc.key)
+        slot.pages.add(place)
         slot.langs.add(locale)
         out.set(key, slot)
       }
@@ -102,7 +109,7 @@ export default async function Faits({ searchParams }) {
               const a = answers.get(f.id)
               const langs = f.slot ? [...f.slot.langs] : []
               const needsEn = langs.includes('en') || Boolean(a?.en)
-              const where = f.slot ? [...f.slot.pages].map((k) => PAGE_NAMES[k] || k).join(', ') : 'plus aucune page pour l’instant'
+              const where = f.slot ? [...f.slot.pages].join(', ') : 'plus aucune page pour l’instant'
               return (
                 <details key={f.id} className="card fact" open={!done(f)}>
                   <summary>

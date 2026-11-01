@@ -20,6 +20,7 @@ import { PHOTOS } from '@/lib/photos'
 import { MenuTemplate, CategoryTemplate } from './menu'
 import { HomeTemplate } from './home'
 import { ProductTemplate } from './product'
+import { JournalTemplate, PostTemplate } from './journal'
 import { ContentTemplate, REGION, categoryHref, pageHref, orderAction, googleMapsUrl, mapsAction, phoneAction, streetFor, addressLine, appleMapsUrl, ratingOf } from './shared'
 
 export { addressLine }
@@ -441,6 +442,9 @@ export const TEMPLATES = {
   prices: PricesTemplate,
   calculator: CalculatorTemplate,
   seasonal: SeasonalTemplate,
+  // The Journal: its index and list pages (registry page « journal »), and a post (collection posts).
+  journal: JournalTemplate,
+  post: PostTemplate,
   ...orderingTemplates,
 }
 

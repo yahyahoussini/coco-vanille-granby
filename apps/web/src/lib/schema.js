@@ -123,6 +123,29 @@ export function webPageNode({ url, name, description, locale, dateModified, date
   }
 }
 
+// A Journal post (components/templates/journal.js), from what the post page shows: the h1, the byline's dates (with
+// their offset), the category label, the business as author (the byline names its team) and the sources list.
+// No description (the meta description is not on the page: the WebPage node keeps it). An image only for the shop's
+// own photo, never an illustration, so a stock picture is never presented as the shop's.
+export function blogPostingNode({ url, post, locale, business, published, modified, section, ownImageUrl = null }) {
+  return {
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    mainEntityOfPage: { '@id': `${url}#webpage` },
+    url,
+    headline: post?.h1,
+    inLanguage: HTML_LANG[locale],
+    datePublished: published,
+    dateModified: modified,
+    articleSection: section,
+    author: [{ '@type': 'Organization', name: business?.name, url: `${SITE_ORIGIN}/` }],
+    publisher: { '@id': BAKERY_ID },
+    isPartOf: { '@id': WEBSITE_ID },
+    image: ownImageUrl ? [ownImageUrl] : undefined,
+    citation: (post?.sources || []).map((s) => ({ '@type': 'CreativeWork', name: s.label, url: s.url })),
+  }
+}
+
 export function breadcrumbNode(url, crumbs) {
   if (!crumbs || crumbs.length < 2) return undefined
   return {

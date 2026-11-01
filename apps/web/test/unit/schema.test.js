@@ -1,7 +1,7 @@
 // lib/schema: JSON-LD only from real values (no markers, no empty fields) and no self-serving review stars.
 import test, { describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { BAKERY_ID, WEBSITE_ID, bakeryNode, websiteNode, webPageNode, breadcrumbNode, productNode, graph } from '../../src/lib/schema.js'
+import { BAKERY_ID, WEBSITE_ID, bakeryNode, websiteNode, webPageNode, breadcrumbNode, productNode, blogPostingNode, graph } from '../../src/lib/schema.js'
 import { marker, MARKER_RE } from '../../src/lib/facts.js'
 import { SITE_ORIGIN } from '../../src/lib/routes.js'
 import { HOURS } from '../../src/seed/content.js'
@@ -214,5 +214,44 @@ describe('exceptional closure in the Bakery node (same data as the site banner)'
   test('ended or inactive: nothing added', () => {
     assert.equal(graph([bakeryNode(business, { ...shop, closure: { active: false } }, 'fr', [], { now })])['@graph'][0].specialOpeningHoursSpecification, undefined)
     assert.equal(graph([bakeryNode(business, shop, 'fr', [], { now: new Date('2026-11-01T12:00:00Z') })])['@graph'][0].specialOpeningHoursSpecification, undefined)
+  })
+})
+
+describe('BlogPosting (Journal post): only what the post page shows', () => {
+  const url = `${SITE_ORIGIN}/journal/conserver-des-croissants/`
+  const post = {
+    h1: 'Comment conserver des croissants',
+    category: 'conseils',
+    description: 'Une description que la page ne montre pas.',
+    sources: [{ label: 'MAPAQ, Thermoguide', url: 'https://www.mapaq.gouv.qc.ca/thermoguide', date: '2026-11-01' }],
+  }
+  const args = { url, post, locale: 'fr', business: { name: 'Pâtisserie Coco Vanille' }, published: '2026-11-02T06:00:00-05:00', modified: '2026-11-02T06:00:00-05:00', section: 'Conseils' }
+
+  test('author the business, publisher the Bakery, headline the h1, dates with their offset, sources as citations', () => {
+    const node = blogPostingNode(args)
+    assert.equal(node['@type'], 'BlogPosting')
+    assert.equal(node['@id'], `${url}#article`)
+    assert.deepEqual(node.mainEntityOfPage, { '@id': `${url}#webpage` })
+    assert.deepEqual(node.author, [{ '@type': 'Organization', name: 'Pâtisserie Coco Vanille', url: `${SITE_ORIGIN}/` }])
+    assert.deepEqual(node.publisher, { '@id': BAKERY_ID })
+    assert.deepEqual(node.isPartOf, { '@id': WEBSITE_ID })
+    assert.equal(node.headline, post.h1)
+    assert.equal(node.inLanguage, 'fr-CA')
+    assert.equal(node.datePublished, '2026-11-02T06:00:00-05:00')
+    assert.ok(node.dateModified)
+    assert.equal(node.articleSection, 'Conseils')
+    assert.deepEqual(node.citation, [{ '@type': 'CreativeWork', name: 'MAPAQ, Thermoguide', url: 'https://www.mapaq.gouv.qc.ca/thermoguide' }])
+    for (const key of ['description', 'aggregateRating', 'review']) assert.ok(!(key in node) || node[key] === undefined, key)
+  })
+
+  test('an image only for the shop’s own photo, never an illustration', () => {
+    assert.equal(graph([blogPostingNode(args)])['@graph'][0].image, undefined)
+    assert.deepEqual(blogPostingNode({ ...args, ownImageUrl: `${SITE_ORIGIN}/media/vitrine.avif` }).image, [`${SITE_ORIGIN}/media/vitrine.avif`])
+  })
+
+  test('the post graph has no empty value and no marker', () => {
+    const out = graph([bakeryNode(business, {}, 'fr'), websiteNode(), webPageNode({ url, name: post.h1, description: post.description, locale: 'fr', datePublished: args.published, dateModified: args.modified }), blogPostingNode(args)])
+    assert.deepEqual(problems(out), [])
+    assert.doesNotMatch(JSON.stringify(out), MARKER_RE)
   })
 })

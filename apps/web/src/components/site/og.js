@@ -2,11 +2,12 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { PAGES, pageByKey, localeEnabled, isIndexable } from '@/lib/routes'
-import { getBusiness, getPageDoc, payloadClient } from '@/lib/data'
+import { getBusiness, getPageDoc, getServedPosts, payloadClient } from '@/lib/data'
 import { MARKER_RE } from '@/lib/facts'
 
 // Typographic Open Graph images (1200×630): brand + page title, one route per locale group
-// (/og/<key>.png, /en/og/<key>.png, /es/og/<key>.png; products: p-<id>.png). No photo, no claim beyond the page.
+// (/og/<key>.png, /en/og/<key>.png, /es/og/<key>.png; products: p-<id>.png; Journal posts: j-<id>.png). No photo,
+// no claim beyond the page.
 const BRAND = 'Pâtisserie Coco Vanille'
 const COLORS = { paper: '#f7f0e3', raised: '#fffcf6', ink: '#2e211a', soft: '#5a4636', accent: '#7a4d24', caramel: '#c8915a', framboise: '#b8435a' }
 const SPECKLE =
@@ -29,6 +30,12 @@ export const ogStaticParams = (locale) => (localeEnabled(locale) ? PAGES.filter(
 const clean = (text) => (text && !MARKER_RE.test(text) ? text : null)
 
 async function titleFor(locale, name) {
+  // A Journal post: its card exists only while the post is served in this language (lib/journal.js).
+  const post = name.match(/^j-(\d+)$/)
+  if (post) {
+    const found = ((await getServedPosts())[locale] || []).find((p) => String(p.id) === post[1])
+    return found ? clean(found.title) || BRAND : null
+  }
   const product = name.match(/^p-(\d+)$/)
   if (product) {
     const payload = await payloadClient()

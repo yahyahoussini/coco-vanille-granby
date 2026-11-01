@@ -1160,3 +1160,83 @@ table.st-table td {
     margin-block-start: 0.75rem;
   }
 }
+
+/* ---------- Journal editor (Plus › Journal): illustration choices, sources, English beside French ---------- */
+
+.post-editor fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--s-gap, 1.25rem);
+}
+
+.post-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.post-photo {
+  position: relative;
+  display: grid;
+  gap: 0.375rem;
+  padding: 0.375rem;
+  border: 2px solid var(--s-control);
+  border-radius: 12px;
+  background: var(--s-paper-card);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.post-photo input {
+  position: absolute;
+  opacity: 0;
+  inline-size: 1px;
+  block-size: 1px;
+}
+
+.post-photo img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.post-photo:has(input:checked) {
+  border-color: var(--s-paper-dark);
+  box-shadow: 0 0 0 2px var(--s-paper-dark);
+}
+
+.post-photo:has(input:focus-visible) {
+  outline: 3px solid var(--s-focus);
+  outline-offset: 3px;
+}
+
+.post-source {
+  display: grid;
+  gap: 0 0.75rem;
+}
+
+@media (min-width: 48rem) {
+  .post-source {
+    grid-template-columns: 1fr 1.4fr 11rem;
+  }
+}
+
+.post-pair {
+  display: grid;
+  gap: 0.25rem 1rem;
+}
+
+.post-pair-fr p {
+  margin: 0.125rem 0 0.5rem;
+  white-space: pre-line;
+}
+
+@media (min-width: 60rem) {
+  .post-pair {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}

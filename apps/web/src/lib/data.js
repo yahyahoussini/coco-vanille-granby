@@ -8,6 +8,7 @@ import { LOCALES } from '@/lib/routes'
 import { publishGuard, answerMap, resolveFacts } from '@/lib/facts'
 import { factIdFor } from '@/lib/facts-catalog'
 import { servedByLocale, productReady } from '@/lib/publish'
+import { servedPosts, withJournal } from '@/lib/journal'
 
 export const payloadClient = cache(async () => getPayload({ config }))
 
@@ -52,12 +53,46 @@ export const getPagesIn = cache(async (locale = 'fr') => {
   return Promise.all(res.docs.map((d) => withFacts(d, locale)))
 })
 
-// Registry keys the site answers, per language (lib/publish.js): links and hreflang point only at these.
-export const getServed = cache(async () => {
+// Registry keys served per language before the Journal gate (lib/publish.js).
+const getServedBase = cache(async () => {
   const strict = publishGuard() === 'strict'
   const docs = Object.fromEntries(await Promise.all(LOCALES.map(async (l) => [l, await getPagesIn(l)])))
   return servedByLocale(docs, { strict })
 })
+
+// Published, due Journal posts in one language, with answered facts filled (like getPagesIn). A missing table (a
+// database not yet migrated) means no posts, as for site-facts.
+export const getPostsIn = cache(async (locale = 'fr') => {
+  const payload = await payloadClient()
+  const res = await payload
+    .find({
+      collection: 'posts',
+      where: { and: [{ state: { equals: 'published' } }, { publishedAt: { less_than_equal: new Date().toISOString() } }] },
+      locale,
+      depth: 1,
+      limit: 500,
+      pagination: false,
+      sort: '-publishedAt',
+      overrideAccess: true,
+    })
+    .catch(() => ({ docs: [] }))
+  return Promise.all(res.docs.map((d) => withFacts(d, locale)))
+})
+
+// The posts the site answers, per language (lib/journal.js servedPosts): { fr, en, ids }, newest first.
+export const getServedPosts = cache(async () => {
+  const [fr, en, base] = await Promise.all([getPostsIn('fr'), getPostsIn('en'), getServedBase()])
+  return servedPosts({ fr, en }, { strict: publishGuard() === 'strict', now: new Date(), base })
+})
+
+// Registry keys the site answers, per language (lib/publish.js): links and hreflang point only at these. Under
+// strict, the Journal index needs at least one served post in its language (lib/journal.js withJournal).
+export const getServed = cache(async () => {
+  const [base, posts] = await Promise.all([getServedBase(), getServedPosts()])
+  return withJournal(base, { fr: posts.fr.length, en: posts.en.length, es: 0 }, { strict: publishGuard() === 'strict' })
+})
+
+export const getPostBySlug = cache(async (locale, slug) => (await getServedPosts())[locale]?.find((p) => p.slug === slug) || null)
 
 export const getCategories = cache(async (locale = 'fr') => {
   const payload = await payloadClient()

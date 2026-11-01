@@ -1,7 +1,8 @@
 import { PAGES, LOCALES, SITE_ORIGIN, HTML_LANG, pathFor, isIndexable, localeEnabled } from '@/lib/routes'
-import { payloadClient, getServed, getPagesIn } from '@/lib/data'
+import { payloadClient, getServed, getPagesIn, getServedPosts } from '@/lib/data'
 import { servedAlternates, productServed, readyCopy } from '@/lib/publish'
-import { publishGuard } from '@/lib/facts'
+import { publishGuard, containsMarker } from '@/lib/facts'
+import { postPath, postAlternates, dateModifiedOf } from '@/lib/journal'
 
 export const revalidate = 300
 
@@ -16,8 +17,10 @@ export async function GET() {
   const byKey = Object.fromEntries(docs.docs.map((d) => [d.key, d]))
   // Only the languages the site answers (lib/publish.js): under strict, a page without its copy in a language,
   // or with a missing fact, is neither listed nor named in hreflang.
-  const served = await getServed()
+  const [served, posts] = await Promise.all([getServed(), getServedPosts()])
   const indexable = Object.fromEntries(await Promise.all(LOCALES.map(async (l) => [l, new Set((await getPagesIn(l)).filter(readyCopy).map((d) => d.key))])))
+  // Journal posts a search engine may index: served (lib/journal.js) and without a missing fact (noindex otherwise).
+  const listedPosts = { fr: posts.fr.filter((p) => !containsMarker(p)), en: posts.en.filter((p) => !containsMarker(p)) }
   const urls = []
   for (const page of PAGES) {
     if (!isIndexable(page)) continue
@@ -29,7 +32,13 @@ export async function GET() {
       const path = pathFor(page.key, locale)
       if (!path || !served[locale]?.has(page.key) || !indexable[locale]?.has(page.key)) continue
       // The date the copy last changed (the meta line's), not the last database write.
-      urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod: doc?.contentUpdatedAt || doc?.updatedAt, alternates })
+      let lastmod = doc?.contentUpdatedAt || doc?.updatedAt
+      if (page.key === 'journal') {
+        // The empty index is noindex (show mode); otherwise it changes with its newest post's content date.
+        if (!posts[locale]?.length) continue
+        lastmod = [lastmod, ...posts[locale].map((p) => dateModifiedOf(p))].filter(Boolean).sort((a, b) => new Date(a) - new Date(b)).at(-1)
+      }
+      urls.push({ loc: `${SITE_ORIGIN}${path}`, lastmod, alternates })
     }
   }
   // Products taken off the menu have no page (lib/data.js getProductBySlugs): not listed either.
@@ -55,6 +64,13 @@ export async function GET() {
     if (alternates['fr-CA']) alternates['x-default'] = alternates['fr-CA']
     for (const [lang, loc] of Object.entries(alternates)) {
       if (lang !== 'x-default') urls.push({ loc, lastmod: p.updatedAt, alternates })
+    }
+  }
+  // Journal posts: their real content date (dateModifiedOf), never updatedAt (a worker stamp or a typo fix is not
+  // fresh content); hreflang only when both languages are served. The list's next pages are reached by its pager.
+  for (const locale of ['fr', 'en']) {
+    for (const p of listedPosts[locale]) {
+      urls.push({ loc: `${SITE_ORIGIN}${postPath(p, locale)}`, lastmod: dateModifiedOf(p), alternates: postAlternates(p, posts.ids) })
     }
   }
   const xml = [

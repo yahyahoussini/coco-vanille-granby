@@ -93,6 +93,7 @@ Le fil d'Ariane suit le registre : par exemple Accueil › Carte › Gâteaux �
 | 15 | Le chef | `/a-propos/chef/` | `/en/about/chef/` (texte anglais à écrire) | personne | conditionnelle | « Consentement photo + biographie du chef » |
 | 16 | Allergènes | `/allergenes/` | `/en/allergens/` | information | prête | — |
 | 17 | FAQ | `/faq/` | `/en/faq/` | questions fréquentes | prête | — |
+| 17 bis | Journal | `/journal/` (billets : `/journal/<adresse>/`, pages suivantes : `/journal/page/2/`…) | `/en/journal/` (`/en/journal/<adresse>/`) | blogue : un billet par semaine au plus, le lundi à 6 h | prête (billets : collection « posts », Coco Studio › Plus › Journal) | en production, l'index paraît avec son premier billet; un billet avec un fait manquant reste caché (`lib/journal.js`) |
 | 18 | Confidentialité | `/confidentialite/` | `/en/privacy/` | légal (Loi 25) | prête | révision par un avocat |
 | 19 | Conditions de vente | `/conditions-de-vente/` | `/en/terms-of-sale/` | légal (Loi sur la protection du consommateur) | prête | révision par un avocat |
 | 20 | Témoins | `/temoins/` | `/en/cookies/` | légal | prête | révision par un avocat |
@@ -396,6 +397,7 @@ Chaque page part d'un brief ([docs/08-brief-page.md](08-brief-page.md)) et prend
 | Les textes de départ (titre, description, h1, bloc réponse, intertitres, FAQ, note de changement) | `apps/web/src/seed/content.js`, puis la collection « pages » de Payload, modifiable dans Coco Studio |
 | Les produits, leurs formats, prix, portions et allergènes | collection « produits » de Payload, dans Coco Studio |
 | Le verrou de publication (marqueurs, français d'abord, produits complets) | `apps/web/src/lib/publish.js` |
+| Les billets du Journal (texte FR et EN, date, sources, pages liées) et leurs règles (adresse fixe après parution, un billet par semaine, contrôle avant « Publier ») | collection « posts » de Payload, écrite dans Coco Studio › Plus › Journal; règles dans `apps/web/src/lib/journal.js`; premiers billets dans `apps/web/src/seed/journal-posts.json` (`npm run seed:journal`) |
 | Le plan du site, robots.txt et llms.txt | générés par le site : `/sitemap.xml`, `/robots.txt`, `/llms.txt` |
 | Le contrôle (contrat de page, liens, marqueurs) | `apps/web/scripts/gate.mjs`; rapports dans `apps/web/reports/gate/` |
 

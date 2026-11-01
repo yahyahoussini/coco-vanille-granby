@@ -26,6 +26,7 @@ export const SCREENS = {
   produits: [P, G, A, T],
   question: [P, G, C, A],
   faits: [P, G, A, T],
+  journal: [P, G, A, T], // the blog: write, translate, schedule (Traduction: English only)
   reglages: [P, G, C, A, T],
   agence: [P, A], // Propriétaire: read
   plus: [P, G, C, A, T],
@@ -71,6 +72,13 @@ export const ACTIONS = {
   'review.later': [P, G],
   'question.create': [P, G, C, A],
   'fact.answer': [P, G, A, T],
+  // Journal: Traduction writes the English copy; a person of the shop or the agency releases it.
+  'post.saveFr': [P, G, A],
+  'post.saveEn': [P, G, A, T],
+  'post.publish': [P, G, A], // publish or schedule the French post
+  'post.unpublish': [P, G, A],
+  'post.publishEn': [P, G, A],
+  'post.unpublishEn': [P, G, A],
   'chat.reply': [P, G, C],
   'chat.close': [P, G, C],
   'chat.enabled': [P, G],

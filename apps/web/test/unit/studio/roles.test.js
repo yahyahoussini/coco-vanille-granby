@@ -37,8 +37,9 @@ describe('access matrix (16 §2.2)', () => {
 
   test('Agence acts on nothing in the shop', () => {
     for (const a of Object.keys(ACTIONS)) {
-      // fact.answer is site copy, not the shop: the agency types the owner's answers into « Faits du site ».
-      if (['question.create', 'device.mode', 'fact.answer'].includes(a)) continue
+      // fact.answer is site copy, not the shop: the agency types the owner's answers into « Faits du site ». The
+      // Journal's post.* actions are site copy too: the agency writes and schedules posts.
+      if (['question.create', 'device.mode', 'fact.answer'].includes(a) || a.startsWith('post.')) continue
       assert.equal(can(agency, a), false, a)
     }
   })
@@ -62,6 +63,26 @@ describe('access matrix (16 §2.2)', () => {
   test('step-up for money, prices, allergens, taxes and people', () => {
     for (const a of ['order.refund', 'product.price', 'product.allergens', 'product.tax', 'users.pin']) assert.ok(needsStepUp(a), a)
     assert.equal(needsStepUp('order.ready'), false)
+  })
+
+  test('Journal: the screen for the shop, the agency and Traduction, never Comptoir; Traduction writes English only', () => {
+    const translator = u('traduction')
+    for (const user of [owner, manager, agency, translator]) assert.ok(canSee(user, 'journal'), user.role)
+    assert.equal(canSee(counter, 'journal'), false)
+    const want = {
+      'post.saveFr': ['proprietaire', 'gerant', 'agence'],
+      'post.saveEn': ['proprietaire', 'gerant', 'agence', 'traduction'],
+      'post.publish': ['proprietaire', 'gerant', 'agence'],
+      'post.unpublish': ['proprietaire', 'gerant', 'agence'],
+      'post.publishEn': ['proprietaire', 'gerant', 'agence'],
+      'post.unpublishEn': ['proprietaire', 'gerant', 'agence'],
+    }
+    for (const [action, roles] of Object.entries(want)) {
+      assert.deepEqual(ACTIONS[action], roles, action)
+      assert.equal(can(counter, action), false, `comptoir ${action}`)
+      assert.equal(needsStepUp(action), false, `${action}: no step-up`)
+      assert.equal(OFFLINE_OK.has(action), false, `${action}: needs the network`)
+    }
   })
 
   test('offline policy: quotes, refunds, closure and hours never wait in the outbox', () => {

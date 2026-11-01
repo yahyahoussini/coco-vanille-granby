@@ -13,7 +13,7 @@ const OFFICER = {
 }
 
 // Guides and services under the menu: one click from every page (rank-first L9: ≤ 3 clicks, ≥ 3 inbound links).
-const EXPLORE = ['gateaux-personnalises', 'gateau-pour-demain', 'buches', 'calculateur', 'prix', 'faq', 'allergenes', 'chef', 'zoo-de-granby']
+const EXPLORE = ['gateaux-personnalises', 'gateau-pour-demain', 'buches', 'calculateur', 'prix', 'faq', 'allergenes', 'chef', 'zoo-de-granby', 'journal']
 
 // Verified profiles only (business.sameAs[].verified): the footer and the phone menu.
 export const socialLinks = (business) =>

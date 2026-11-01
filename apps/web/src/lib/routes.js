@@ -20,6 +20,8 @@ export const PAGES = [
   { key: 'buches', template: 'seasonal', status: 'conditional', parent: 'gateaux', season: 'noel', condition: 'Bûches offertes (oui/non avant le 1er novembre)', paths: { fr: '/buches-de-noel/', en: '/en/yule-logs/', es: '/es/tronco-de-navidad/' } },
   { key: 'allergenes', template: 'allergens', status: 'core', parent: 'home', paths: { fr: '/allergenes/', en: '/en/allergens/', es: '/es/alergenos/' } },
   { key: 'faq', template: 'content', status: 'core', parent: 'home', paths: { fr: '/faq/', en: '/en/faq/', es: '/es/preguntas-frecuentes/' } },
+  // The Journal (blog): its index here; posts at /journal/<slug>/ (collection posts, lib/journal.js). No Spanish.
+  { key: 'journal', template: 'journal', status: 'core', parent: 'home', paths: { fr: '/journal/', en: '/en/journal/' } },
   { key: 'calculateur', template: 'calculator', status: 'conditional', parent: 'gateaux', condition: 'Portions par taille fournies par le propriétaire', paths: { fr: '/calculateur-portions-gateau/', en: '/en/cake-serving-calculator/', es: '/es/calculadora-porciones-pastel/' } },
   { key: 'viennoiseries', template: 'category', status: 'core', parent: 'carte', category: 'viennoiseries', paths: { fr: '/viennoiseries/', en: '/en/viennoiseries/' } },
   { key: 'pains', template: 'category', status: 'core', parent: 'carte', category: 'pains', paths: { fr: '/pains-baguettes/', en: '/en/bread/', es: '/es/panaderia/' } },

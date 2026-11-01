@@ -14,8 +14,15 @@ export const FILES = ['/sitemap.xml', '/llms.txt']
 
 // What a change touches. Hours, closures, the business identity and the catalogue appear on every page (footer
 // hours, closure banner, product cards, JSON-LD), so they refresh the whole site; a page's copy refreshes its
-// own URLs in every language, its card, the sitemap and /llms.txt.
-export function affected(kind, doc = {}) {
+// own URLs in every language, its card, the sitemap and /llms.txt. A Journal post shows on the home page, its related
+// pages, the index and its pages: once it has been public, a change refreshes the whole site.
+export function affected(kind, doc = {}, previousDoc = null) {
+  if (kind === 'posts') {
+    // A post that was never public (draft before and after) changes nothing the public sees.
+    if (doc?.state !== 'published' && previousDoc?.state !== 'published') return { skip: true }
+    const cards = doc?.id ? [`/og/j-${doc.id}.png`, `/en/og/j-${doc.id}.png`] : []
+    return { all: true, paths: [...FILES, ...cards] }
+  }
   if (kind === 'pages' && doc?.key) {
     const page = PAGES.find((p) => p.key === doc.key)
     if (page) {
@@ -68,7 +75,8 @@ export async function revalidatePublic(job, { env = process.env, fetchImpl = fet
 let warned = false
 
 const run = async (kind, doc, previousDoc, req) => {
-  const job = affected(kind, doc)
+  const job = affected(kind, doc, previousDoc)
+  if (job.skip) return
   if (!job.all && previousDoc?.key && previousDoc.key !== doc?.key) Object.assign(job, { all: true })
   const r = await revalidatePublic(job)
   if (!r.ok && !r.skipped && !warned) {

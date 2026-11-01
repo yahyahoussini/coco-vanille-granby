@@ -15,6 +15,7 @@ import {
   isIndexable,
   localeEnabled,
 } from '../../src/lib/routes.js'
+import { RESERVED_SLUGS } from '../../src/lib/journal.js'
 
 const STATUSES = ['core', 'conditional', 'utility']
 
@@ -175,5 +176,22 @@ describe('alternatesFor (hreflang)', () => {
         assert.ok(url.startsWith('https://cocovanillegranby.com/'), url)
       }
     }
+  })
+})
+
+describe('the Journal (blog)', () => {
+  test('one registry page « journal »: /journal/ and /en/journal/, no Spanish', () => {
+    const page = pageByKey('journal')
+    assert.ok(page)
+    assert.equal(page.template, 'journal')
+    assert.deepEqual(page.paths, { fr: '/journal/', en: '/en/journal/' })
+    assert.equal(withEs('true', () => pathFor('journal', 'es')), null)
+  })
+
+  test('no category slug can take the Journal’s place or its reserved words', () => {
+    // The category slugs of src/seed/index.js (CATS), in every language.
+    const CAT_SLUGS = ['viennoiseries', 'pains-baguettes', 'bread', 'panaderia', 'gateaux', 'cakes', 'pasteles', 'patisseries', 'pastries', 'postres', 'bolleria']
+    for (const slug of CAT_SLUGS) assert.ok(!['journal', ...RESERVED_SLUGS].includes(slug), slug)
+    assert.ok(RESERVED_SLUGS.includes('page') && RESERVED_SLUGS.includes('categorie'))
   })
 })

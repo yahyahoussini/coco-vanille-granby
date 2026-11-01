@@ -143,12 +143,32 @@ export async function retention(payload, { now = new Date() } = {}) {
   return { allergyNotesDeleted: cleared }
 }
 
-export async function tick(payload, { now = new Date(), senders, nightly = false } = {}) {
+// A dated Journal post goes public on its day at 6 h without anyone pressing a button: stamp the first release
+// (the address is then fixed, lib/studio/actions/journal.js) and let the posts hook refresh the public pages, the
+// sitemap and llms.txt (lib/revalidate.js affected('posts')). Idempotent: a stamped post is never stamped again.
+export async function releaseDuePosts(payload, { now = new Date() } = {}) {
+  const iso = new Date(now).toISOString()
+  const due = await payload.find({ collection: 'posts', where: { and: [{ state: { equals: 'published' } }, { publishedAt: { less_than_equal: iso } }, { releasedAt: { exists: false } }] }, limit: 20, ...SYS })
+  for (const p of due.docs) await payload.update({ collection: 'posts', id: p.id, data: { releasedAt: iso }, ...SYS, context: { studioAudited: true } })
+  const dueEn = await payload.find({
+    collection: 'posts',
+    where: { and: [{ state: { equals: 'published' } }, { stateEn: { equals: 'published' } }, { publishedAt: { less_than_equal: iso } }, { releasedEnAt: { exists: false } }] },
+    limit: 20,
+    ...SYS,
+  })
+  for (const p of dueEn.docs) await payload.update({ collection: 'posts', id: p.id, data: { releasedEnAt: iso }, ...SYS, context: { studioAudited: true } })
+  return { postsReleased: due.docs.length + dueEn.docs.length }
+}
+
+// `minutely`: the worker passes it once a minute (Journal releases); `nightly`: once a night.
+export async function tick(payload, { now = new Date(), senders, nightly = false, minutely = false } = {}) {
   const summary = {}
   Object.assign(summary, await expireHolds(payload, { now }))
   Object.assign(summary, await expireQuotes(payload, { now }))
   Object.assign(summary, await markNotPickedUp(payload, { now }))
   Object.assign(summary, await sendDueMessages(payload, { now, senders }))
+  // A failed release (a database not yet migrated) never stops the shop's jobs: logged, tried again next minute.
+  if (minutely) Object.assign(summary, await releaseDuePosts(payload, { now }).catch((e) => (payload.logger?.error?.({ err: e }, 'journal release failed'), { postsReleased: 0 })))
   if (nightly) {
     Object.assign(summary, await retention(payload, { now }))
     Object.assign(summary, await purgeConversations(payload, { now }))

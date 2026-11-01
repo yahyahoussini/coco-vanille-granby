@@ -16,6 +16,16 @@ describe('what a change touches', () => {
     for (const p of ['/carte/', '/en/menu/', '/og/carte.png', '/en/og/carte.png', '/sitemap.xml', '/llms.txt']) assert.ok(job.paths.includes(p), p)
   })
 
+  test('a Journal post that was never public changes nothing; once public, the whole site and its cards', () => {
+    assert.deepEqual(affected('posts', { id: 4, state: 'draft' }, { id: 4, state: 'draft' }), { skip: true })
+    assert.deepEqual(affected('posts', { id: 4, state: 'draft' }, null), { skip: true })
+    const live = affected('posts', { id: 4, state: 'published' }, { id: 4, state: 'draft' })
+    assert.equal(live.all, true)
+    for (const p of [...FILES, '/og/j-4.png', '/en/og/j-4.png']) assert.ok(live.paths.includes(p), p)
+    // Taken off the site (published → draft): the pages that listed it refresh too.
+    assert.equal(affected('posts', { id: 4, state: 'draft' }, { id: 4, state: 'published' }).all, true)
+  })
+
   test('an unknown page key refreshes everything', () => {
     assert.equal(affected('pages', { key: 'nope' }).all, true)
   })

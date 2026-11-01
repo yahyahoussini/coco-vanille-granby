@@ -1,14 +1,17 @@
 import { describe, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { pages } from '../../src/seed/content.js'
+import { journalPosts } from '../../src/seed/journal-data.js'
 import { FACTS, FACT_GROUPS, factIdFor, factById } from '../../src/lib/facts-catalog.js'
 import { answerMap, resolveFacts, containsMarker } from '../../src/lib/facts.js'
 
 const SLOT = /\[\[FACT NEEDED: ([^\]]+)\]\]/g
 const norm = (s) => s.replace(/ /g, ' ')
+// The seeded page copy and the Journal's seeded posts (a post's slot is answered in « Faits du site » too).
 const slotsIn = (locale) => {
   const found = new Set()
-  for (const p of pages) if (p.locales[locale]) for (const m of JSON.stringify(p.locales[locale]).matchAll(SLOT)) found.add(norm(m[1]))
+  const copies = [...pages.map((p) => p.locales[locale]), ...journalPosts().map((p) => p[locale])].filter(Boolean)
+  for (const copy of copies) for (const m of JSON.stringify(copy).matchAll(SLOT)) found.add(norm(m[1]))
   return found
 }
 

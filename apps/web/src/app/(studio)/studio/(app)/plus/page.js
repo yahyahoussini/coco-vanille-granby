@@ -14,6 +14,7 @@ export default async function Plus() {
     ['semaine', '/semaine/', 'Cette semaine', '5 chiffres et 3 actions au plus'],
     ['vitrine', '/vitrine/', 'Vitrine', 'Épuisé, photo du jour'],
     ['faits', '/plus/faits/', 'Faits du site', 'Les réponses que le site attend, par sujet'],
+    ['journal', '/plus/journal/', 'Journal', 'Billets du site : écrire, traduire, programmer'],
     ['produits', '/plus/produits/', 'Produits', 'Prix, allergènes, taxes'],
     ['question', '/plus/question/', 'Noter une question de client', 'Pour la FAQ du site'],
     ['agence', '/agence/', 'Agence', 'Rapports et système'],
@@ -48,7 +49,7 @@ export default async function Plus() {
             <a href="/admin">
               <span>
                 Avancé
-                <small>Pages, FAQ, traductions, médias, modèles de messages, journal</small>
+                <small>Pages, FAQ, traductions, médias, modèles de messages, registre des changements</small>
               </span>
               <span aria-hidden="true">›</span>
             </a>

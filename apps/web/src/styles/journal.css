@@ -1,0 +1,290 @@
+/* Coco Vanille · the Journal (components/templates/journal.js): post cards (index, home « Du journal »), the pager,
+   the post page (byline, sources, related pages, newer and older posts, update note) and « À lire dans le journal ».
+   Imported by every public layout after content.css; uses only the tokens declared in site.css :root.
+   Phones first: one column of cards under 48rem, two from 48rem, three from 60rem; no horizontal scroll at 360 px;
+   every link and button at least 44 px tall. */
+
+/* ---------- Cards ---------- */
+
+.post-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.post-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  block-size: 100%;
+  overflow: hidden;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform var(--dur-2) var(--ease-whip),
+    box-shadow var(--dur-2) var(--ease-whip);
+}
+
+.post-card-media {
+  aspect-ratio: 4 / 3;
+  background: var(--paper-sunk);
+}
+
+.post-card-media .stock-photo,
+.post-card-media > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.post-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: var(--card-pad);
+  min-inline-size: 0;
+}
+
+.post-card-category {
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
+}
+
+.post-card-title {
+  margin: 0;
+  font-size: var(--step-1);
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.post-card-title a {
+  display: inline-block;
+  min-block-size: 44px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The whole card answers a tap; the link's text stays the post's own title. */
+.post-card-title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.post-card-title a:focus-visible {
+  outline: none;
+}
+
+.post-card:has(a:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.post-card-text {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.post-card-date {
+  margin-block-start: auto;
+  font-size: var(--text-meta);
+  color: var(--ink-soft);
+}
+
+@media (hover: hover) {
+  .post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .post-card:hover .post-card-title a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card {
+    transition: none;
+  }
+
+  .post-card:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .post-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 60rem) {
+  .post-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Home « Du journal »: the same cards, quieter text. */
+.home-journal {
+  margin-block: var(--section-gap);
+}
+
+.post-cards.is-compact {
+  margin-block-end: var(--space-2);
+}
+
+.post-card.is-compact .post-card-text {
+  font-size: var(--step--1);
+}
+
+.journal-more {
+  margin: 0;
+}
+
+/* ---------- Index: list and pager ---------- */
+
+.journal-list {
+  margin-block: var(--space-4);
+}
+
+.journal-empty {
+  margin-block: var(--space-4);
+}
+
+.journal-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.journal-pages {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.journal-pages a,
+.journal-pages [aria-current='page'] {
+  display: grid;
+  place-items: center;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.journal-pages [aria-current='page'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+/* ---------- Post page ---------- */
+
+.post .post-category {
+  margin-block-start: var(--space-1);
+}
+
+.post-byline {
+  padding-block-start: 0;
+  border-block-start: 0;
+  margin-block: calc(-1 * var(--space-2)) var(--space-3);
+}
+
+.post-byline a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.post-sources {
+  max-inline-size: var(--measure);
+  margin-block: 3rem;
+}
+
+.post-sources ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.post-sources a {
+  overflow-wrap: anywhere;
+}
+
+.post-sources time {
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.post-related {
+  max-inline-size: var(--measure);
+}
+
+.post-around {
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: var(--measure);
+  margin-block: var(--space-4);
+}
+
+.post-around p {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.75rem var(--card-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+
+.post-around a {
+  display: inline-block;
+  min-block-size: 44px;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.post-around-label {
+  font-size: var(--text-meta);
+  color: var(--ink-soft);
+}
+
+@media (min-width: 48rem) {
+  .post-around {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .post-around-newer {
+    grid-column: 2;
+    text-align: end;
+  }
+}
+
+.post-footer .meta-line {
+  margin-block: 0;
+}

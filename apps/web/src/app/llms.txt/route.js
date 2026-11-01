@@ -1,5 +1,7 @@
 import { PAGES, LOCALES, SITE_ORIGIN, pathFor, isIndexable } from '@/lib/routes'
-import { getBusiness, getShop, getServed, payloadClient } from '@/lib/data'
+import { getBusiness, getShop, getServed, getServedPosts, payloadClient } from '@/lib/data'
+import { containsMarker } from '@/lib/facts'
+import { postUrl, dayOfPost } from '@/lib/journal'
 import { buildLlmsTxt } from '@/components/site/llms'
 
 export const revalidate = 300
@@ -11,7 +13,7 @@ export async function GET() {
   const [business, shop] = await Promise.all([getBusiness('fr'), getShop('fr')])
   const docs = await payload.find({ collection: 'pages', where: { _status: { equals: 'published' } }, locale: 'all', limit: 500, depth: 0 })
   const byKey = Object.fromEntries(docs.docs.map((d) => [d.key, d]))
-  const served = await getServed()
+  const [served, journal] = await Promise.all([getServed(), getServedPosts()])
   const pick = (field, locale) => (field && typeof field === 'object' ? field[locale] : undefined)
   const pages = []
   for (const page of PAGES) {
@@ -23,8 +25,15 @@ export async function GET() {
       const path = pathFor(page.key, locale)
       const title = pick(doc.h1, locale) || pick(doc.title, locale)
       if (!path || !title || !served[locale]?.has(page.key)) continue
+      // The Journal index without a post is an empty, noindex page (show mode).
+      if (page.key === 'journal' && !journal[locale]?.length) continue
       pages.push({ key: page.key, locale, status: page.status, template: page.template, url: `${SITE_ORIGIN}${path}`, title, description: pick(doc.description, locale) })
     }
   }
-  return new Response(buildLlmsTxt({ business, shop, pages }), { headers: { 'content-type': 'text/plain; charset=utf-8' } })
+  // Journal posts served per language (lib/journal.js), each with its published h1 and description; a post with a
+  // fact still missing (noindex under PUBLISH_GUARD=show) is left out, as in the sitemap.
+  const posts = ['fr', 'en'].flatMap((locale) =>
+    journal[locale].filter((p) => !containsMarker(p)).map((p) => ({ locale, url: postUrl(p, locale), title: p.h1, description: p.description, date: dayOfPost(p.publishedAt) })),
+  )
+  return new Response(buildLlmsTxt({ business, shop, pages, posts }), { headers: { 'content-type': 'text/plain; charset=utf-8' } })
 }

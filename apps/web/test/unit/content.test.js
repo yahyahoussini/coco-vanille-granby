@@ -5,18 +5,10 @@ import assert from 'node:assert/strict'
 import { pages, HOURS, HOURS_FR, HOURS_EN } from '../../src/seed/content.js'
 import { pageByKey } from '../../src/lib/routes.js'
 import { MARKER_RE } from '../../src/lib/facts.js'
+import { countWords, firstSentence, BANNED } from '../../src/lib/copy-rules.js'
 import { hoursSummary, WEEK } from '../../src/components/site/hours.js'
 
-const MARKERS = new RegExp(MARKER_RE.source, 'g')
-
-// A marker stands for the fact it will become: it counts as one word.
-export const countWords = (text = '') =>
-  text
-    .replace(MARKERS, 'X')
-    .split(/\s+/)
-    .filter((w) => /[\p{L}\p{N}]/u.test(w)).length
-
-const firstSentence = (text = '') => text.replace(MARKERS, 'X').split(/(?<=[.!?])\s/)[0]
+// countWords (a marker counts as one word) and firstSentence: src/lib/copy-rules.js, shared with the Journal checks.
 
 // Verified in data/facts.json (address, phone, downtown, registry); one must sit in every answer block.
 const VERIFIED = ['3, rue Court', '3 rue Court', '450-372-7177', 'centre-ville', 'downtown', '1177082220', '9 novembre 2021', 'November 9, 2021']
@@ -115,13 +107,7 @@ describe('across pages', () => {
   })
 
   test('no unsupported claims or banned words (00 §3.2, §10.1; 04 §3)', () => {
-    const banned = [
-      [/mariage|wedding|boda/i, 'weddings are frozen'],
-      [/\bmeilleur|\bbest\b|\bmejor\b/i, 'no superlatives as facts'],
-      [/prix sur demande|price on request/i, 'prices are never "on request"'],
-      [/ramassage/i, '« cueillette », not « ramassage »'],
-      [/\bWhatsApp\b/i, 'no WhatsApp (M11)'],
-    ]
+    const banned = BANNED
     for (const e of entries) {
       const text = JSON.stringify(e.copy)
       for (const [re, why] of banned) assert.doesNotMatch(text, re, `${label(e)}: ${why}`)

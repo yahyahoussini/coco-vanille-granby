@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { t } from '@/lib/i18n'
-import { getProducts, getCategories, payloadClient } from '@/lib/data'
+import { getProducts, getCategories, getServedPosts, payloadClient } from '@/lib/data'
 import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
@@ -16,9 +16,10 @@ import { Ornament } from '../site/Ornament'
 import { StockPhoto } from '../site/StockPhoto'
 import { PHOTOS } from '@/lib/photos'
 import { categoryHref, pageHref, orderAction, googleMapsUrl, mapsAction, phoneAction, streetFor, addressLine, ratingOf } from './shared'
+import { PostCard } from './journal'
 
 // The home page template (registry key « home »): the logo stage, services, vitrine du jour, categories, cakes,
-// hours and visit, Q&A, FAQ. Styles: src/styles/home.css.
+// hours and visit, the newest Journal posts, Q&A, FAQ. Styles: src/styles/home.css (the post cards: journal.css).
 
 // The short link beside a section title (UI words only, no business fact).
 const HEAD_LINK = { fr: 'Voir la carte', en: 'See the menu', es: 'Ver la carta' }
@@ -101,7 +102,10 @@ export async function HomeTemplate(props) {
   const s = t(locale)
   const h = s.home
   const today = localParts().iso
-  const [products, categories, photo] = await Promise.all([getProducts({ locale }), getCategories(locale), payloadClient().then((payload) => vitrinePhotoOf(payload, today)).catch(() => null)])
+  const [products, categories, photo, posts] = await Promise.all([getProducts({ locale }), getCategories(locale), payloadClient().then((payload) => vitrinePhotoOf(payload, today)).catch(() => null), getServedPosts()])
+  // « Du journal »: the three newest posts served in this language, while the Journal index answers.
+  const journalHref = pageHref(served, locale, 'journal')
+  const latest = (posts[locale] || []).slice(0, 3)
   const vitrine = products.filter((p) => p.vitrine && p.availability !== 'discontinued')
   const rating = ratingOf(business, locale)
   const maps = mapsAction(business, locale)
@@ -426,6 +430,24 @@ export async function HomeTemplate(props) {
             )}
           </div>
         </section>
+        {journalHref && latest.length > 0 && (
+          <section aria-labelledby="home-journal" className="home-journal">
+            <div className="home-head">
+              <h2 id="home-journal" className="section-title">{s.journal.latest}</h2>
+            </div>
+            <ol className="post-cards is-compact">
+              {latest.map((post) => (
+                <PostCard key={post.id} post={post} locale={locale} compact />
+              ))}
+            </ol>
+            <p className="journal-more">
+              <Link href={journalHref} className="link-arrow">
+                {s.journal.all}
+                <Icon name="arrow" size={18} />
+              </Link>
+            </p>
+          </section>
+        )}
         <Sections sections={doc?.sections} locale={locale} />
         <Faq items={doc?.faq} locale={locale} />
         <section className="finale" aria-labelledby="home-finale" data-reveal="">

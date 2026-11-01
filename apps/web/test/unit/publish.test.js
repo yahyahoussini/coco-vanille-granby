@@ -92,6 +92,13 @@ describe('public paths the proxy lets through', () => {
     assert.ok(isKnownPublicPath('/en/'))
   })
 
+  test('Journal posts and list pages from 2 are known; page 1, other shapes and reserved addresses are not', () => {
+    for (const path of ['/journal/', '/en/journal/', '/journal/x-y/', '/journal/page/2/', '/en/journal/x/', '/en/journal/page/12/']) assert.ok(isKnownPublicPath(path), path)
+    for (const path of ['/journal/page/1/', '/journal/page/0/', '/journal/Abc/', '/journal/a/b/', '/journal/tout-sur-la-vanille/', '/journal/page/', '/journal/-x/', '/es/journal/x/']) {
+      assert.equal(isKnownPublicPath(path), false, path)
+    }
+  })
+
   test('the 404 page answers in the language of the URL (French when it is off)', () => {
     assert.equal(localeOfPath('/en/x/'), 'en')
     assert.equal(notFoundPathFor('/x/'), '/page-introuvable/')

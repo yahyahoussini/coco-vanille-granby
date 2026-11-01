@@ -1,9 +1,10 @@
 // URLs the public site can answer, known without the database: the registry (src/lib/routes.js), the box
-// token routes, product URLs under a category page, and a few route handlers. src/proxy.js sends anything else
-// to the 404 page of its language, rendered on the server with header and footer: under several root layouts,
-// Next's own not-found ships an empty HTML shell that crawlers (and the gate) cannot read.
+// token routes, product URLs under a category page, Journal posts and list pages, and a few route handlers.
+// src/proxy.js sends anything else to the 404 page of its language, rendered on the server with header and footer:
+// under several root layouts, Next's own not-found ships an empty HTML shell that crawlers (and the gate) cannot read.
 // Pure module (relative imports only): the proxy and node --test load it.
 import { PAGES, localeEnabled } from './routes.js'
+import { SLUG_RE as POST_SLUG, RESERVED_SLUGS } from './journal.js'
 
 export const NOT_FOUND_PATHS = { fr: '/page-introuvable/', en: '/en/page-not-found/', es: '/es/pagina-no-encontrada/' }
 
@@ -35,6 +36,12 @@ export function isKnownPublicPath(pathname = '/') {
   for (const { path } of pathsOf((p) => p.template === 'category').filter((x) => x.locale === locale)) {
     const r = rest(path)
     if (r && r.length === 1 && SLUG.test(r[0])) return true
+  }
+  // Journal: /journal/<slug>/ and /journal/page/<n>/ (n ≥ 2); SitePage checks the post itself.
+  for (const { path } of pathsOf((p) => p.template === 'journal').filter((x) => x.locale === locale)) {
+    const r = rest(path)
+    if (r && r.length === 1 && POST_SLUG.test(r[0]) && !RESERVED_SLUGS.includes(r[0])) return true
+    if (r && r.length === 2 && r[0] === 'page' && /^[1-9]\d{0,3}$/.test(r[1]) && Number(r[1]) >= 2) return true
   }
   return false
 }

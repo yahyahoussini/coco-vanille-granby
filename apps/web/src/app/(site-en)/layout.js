@@ -3,6 +3,7 @@ import '@fontsource-variable/fraunces/soft.css'
 import '@fontsource-variable/inter'
 import '@/styles/site.css'
 import '@/styles/content.css'
+import '@/styles/journal.css'
 import '@/styles/home.css'
 import '@/styles/catalogue.css'
 

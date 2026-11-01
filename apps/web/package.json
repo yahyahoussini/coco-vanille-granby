@@ -14,6 +14,7 @@
     "importmap": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload generate:importmap",
     "migrate": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload migrate",
     "seed": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/index.js",
+    "seed:journal": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/journal.js",
     "seed:demo": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/demo.js",
     "seed:studio-demo": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/studio-demo.js",
     "seed:demo-catalogue": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/demo-catalogue.js",

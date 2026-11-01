@@ -24,9 +24,10 @@ const LABELS = {
     url: 'Site',
     main: 'Pages principales',
     more: 'Autres pages',
+    journal: 'Journal',
     optional: 'Optional',
   },
-  en: { main: 'English' },
+  en: { main: 'English', journal: 'Journal (English)' },
 }
 
 const line = (label, value) => (value ? `- ${label} : ${value}` : null)
@@ -62,21 +63,34 @@ export function factLines(business, shop, { now = new Date() } = {}) {
 }
 
 const link = (p) => `- [${p.title}](${p.url})${p.description ? `: ${p.description}` : ''}`
+// A Journal post: its h1, its publication day and its own description (no new claim).
+const postLink = (p) => `- [${p.title}](${p.url})${p.date ? ` (${p.date})` : ''}${p.description ? `: ${p.description}` : ''}`
+const POSTS_MAX = 20
+const postsIn = (posts, locale) =>
+  posts
+    .filter((p) => p.locale === locale)
+    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
+    .slice(0, POSTS_MAX)
 
 // pages: [{ key, locale, status, template, url, title, description }] already filtered by the publish guard.
-export function buildLlmsTxt({ business, shop, pages = [] }) {
+// posts: [{ locale, url, title (the h1), description, date: 'YYYY-MM-DD' }] already filtered by the guard too.
+export function buildLlmsTxt({ business, shop, pages = [], posts = [] }) {
   const l = LABELS.fr
   const fr = pages.filter((p) => p.locale === 'fr')
   const main = fr.filter((p) => p.status === 'core' && p.template !== 'legal')
   const more = fr.filter((p) => p.status === 'conditional')
   const legal = fr.filter((p) => p.template === 'legal')
   const en = pages.filter((p) => p.locale === 'en')
+  const journalFr = postsIn(posts, 'fr')
+  const journalEn = postsIn(posts, 'en')
   const sections = [
     `# ${business?.name || 'Pâtisserie Coco Vanille'}`,
     business?.categorySentence ? `> ${business.categorySentence}` : null,
     [l.intro, ...factLines(business, shop)].join('\n'),
     main.length ? [`## ${l.main}`, ...main.map(link)].join('\n') : null,
     more.length ? [`## ${l.more}`, ...more.map(link)].join('\n') : null,
+    journalFr.length ? [`## ${l.journal}`, ...journalFr.map(postLink)].join('\n') : null,
+    journalEn.length ? [`## ${LABELS.en.journal}`, ...journalEn.map(postLink)].join('\n') : null,
     en.length ? [`## ${LABELS.en.main}`, ...en.map(link)].join('\n') : null,
     legal.length ? [`## ${l.optional}`, ...legal.map(link)].join('\n') : null,
   ]

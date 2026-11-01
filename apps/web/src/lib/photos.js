@@ -256,6 +256,8 @@ const PAGE_PHOTO = {
   buches: 'buche',
   allergenes: 'ingredients',
   faq: 'pause',
+  // The Journal index; each post shows its own illustration (lib/journal.js POST_PHOTO_KEYS).
+  journal: 'cafe',
   calculateur: 'parts',
   viennoiseries: 'viennoiseries',
   pains: 'pains',

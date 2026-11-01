@@ -66,3 +66,20 @@ test('an exceptional closure reaches llms.txt like the banner and the JSON-LD', 
   assert.match(text, /Jours spéciaux : 2026-10-30 fermé/)
   assert.doesNotMatch(factLines(business, { ...shop, closure: { active: false } }, { now: new Date('2026-10-30T15:00:00.000Z') }).join('\n'), /Fermeture/)
 })
+
+test('Journal sections: the posts given, newest first, 20 at most, dated, English apart, Optional still last', () => {
+  const posts = Array.from({ length: 22 }, (_, i) => ({ locale: 'fr', url: `https://cocovanillegranby.com/journal/b-${i}/`, title: `Billet ${i}`, description: `Description ${i}.`, date: `2026-${String(1 + Math.floor(i / 4)).padStart(2, '0')}-0${1 + (i % 4)}` }))
+  posts.push({ locale: 'en', url: 'https://cocovanillegranby.com/en/journal/post/', title: 'A post', description: 'About it.', date: '2026-11-02' })
+  const text = buildLlmsTxt({ business, shop: {}, pages, posts })
+  const fr = text.split('## Journal\n')[1].split('\n\n')[0].split('\n')
+  assert.equal(fr.length, 20)
+  assert.equal(fr[0], '- [Billet 21](https://cocovanillegranby.com/journal/b-21/) (2026-06-02): Description 21.')
+  assert.match(text, /## Journal \(English\)\n- \[A post\]\(https:\/\/cocovanillegranby\.com\/en\/journal\/post\/\) \(2026-11-02\): About it\./)
+  assert.ok(text.indexOf('## Journal') > text.indexOf('## Autres pages'))
+  assert.ok(text.indexOf('## Journal (English)') < text.indexOf('## English'))
+  assert.ok(text.indexOf('## Optional') > text.indexOf('## English'))
+})
+
+test('no Journal section without posts', () => {
+  assert.doesNotMatch(buildLlmsTxt({ business, shop: {}, pages }), /## Journal/)
+})

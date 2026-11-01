@@ -11,9 +11,10 @@ import { pillSchedule } from './hours'
 // « Commander » is also the header's button on large screens; the list keeps it for the row of chips that replaces
 // the menu sheet in a browser without the popover API.
 const NAV = ['carte', 'gateaux-personnalises', 'commander', 'nous-trouver', 'a-propos']
-// The phone menu: the same pages as large rows (« Commander » is its button), then the two most asked guides.
-const MENU = ['carte', 'gateaux-personnalises', 'nous-trouver', 'a-propos', 'prix', 'faq']
-const MENU_ICON = { carte: 'menu', 'gateaux-personnalises': 'cake', 'nous-trouver': 'pin', 'a-propos': 'heart', prix: 'tag', faq: 'help' }
+// The phone menu: the same pages as large rows (« Commander » is its button), then the two most asked guides and
+// the Journal.
+const MENU = ['carte', 'gateaux-personnalises', 'nous-trouver', 'a-propos', 'prix', 'faq', 'journal']
+const MENU_ICON = { carte: 'menu', 'gateaux-personnalises': 'cake', 'nous-trouver': 'pin', 'a-propos': 'heart', prix: 'tag', faq: 'help', journal: 'journal' }
 const MENU_ID = 'site-menu'
 
 // Skip link → info bar (live « Ouvert », address, phone, languages) → brand, nav and the order button.
@@ -24,11 +25,11 @@ const MENU_ID = 'site-menu'
 // `alternates`: the page's hreflang map (a product's own URL in each language); otherwise that language's
 // home, and no entry at all for a language the site does not answer.
 // The menu's families and products sit under « Carte »: that row is marked as the current section (as the tab
-// bar's « Carte » is), the page itself only when it is the menu.
+// bar's « Carte » is), the page itself only when it is the menu. A Journal post (`post`) marks « Journal » the same way.
 const MENU_SECTION = ['viennoiseries', 'pains', 'gateaux', 'patisseries']
 
-export function Header({ locale, pageKey, served, alternates = null, business = null, shop = null, product = false }) {
-  const current = (key) => (pageKey === key ? 'page' : key === 'carte' && (product || MENU_SECTION.includes(pageKey)) ? 'true' : undefined)
+export function Header({ locale, pageKey, served, alternates = null, business = null, shop = null, product = false, post = false }) {
+  const current = (key) => (pageKey === key ? (post ? 'true' : 'page') : key === 'carte' && (product || MENU_SECTION.includes(pageKey)) ? 'true' : undefined)
   const s = t(locale)
   const answers = (key, l) => !served || served[l]?.has(key)
   const toPath = (url) => (url && url.startsWith(SITE_ORIGIN) ? url.slice(SITE_ORIGIN.length) || '/' : null)

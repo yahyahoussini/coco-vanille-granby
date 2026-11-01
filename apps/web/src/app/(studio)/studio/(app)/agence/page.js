@@ -132,8 +132,8 @@ export default async function Agence() {
         )}
       </section>
 
-      <section aria-labelledby="journal">
-        <h2 id="journal">Journal (20 derniers changements)</h2>
+      <section aria-labelledby="registre">
+        <h2 id="registre">Registre des changements (20 derniers)</h2>
         <ul className="rows card">
           {log.docs.map((e) => (
             <li key={e.id}>
@@ -143,7 +143,7 @@ export default async function Agence() {
           ))}
         </ul>
         <p>
-          <a href="/admin/collections/audit-log">Tout le journal dans « Avancé »</a>
+          <a href="/admin/collections/audit-log">Tout le registre des changements dans « Avancé »</a>
         </p>
       </section>
     </div>
