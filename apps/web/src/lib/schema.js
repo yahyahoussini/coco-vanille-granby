@@ -67,6 +67,8 @@ export function bakeryNode(business = {}, shop = {}, locale = 'fr', specialDays 
     // The registered name, as in every page's footer (Registraire, NEQ 1177082220): it tells the shop apart from the
     // perfume and the other « Coco Vanille » businesses.
     legalName: business.legalName,
+    // The Québec enterprise number, visible in every footer.
+    identifier: business.neq ? { '@type': 'PropertyValue', propertyID: 'NEQ', value: business.neq } : undefined,
     description: business.categorySentence,
     url: `${SITE_ORIGIN}/`,
     telephone: business.phone,

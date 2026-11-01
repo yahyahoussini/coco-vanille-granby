@@ -44,6 +44,9 @@ async function resolve(locale, segments) {
 }
 
 // `served` (strict): crumbs only to pages the site answers; the current page always closes the trail.
+// WebPage subtypes (schema.org) for the pages whose job they name.
+const PAGE_TYPE = { 'a-propos': 'AboutPage', 'nous-trouver': 'ContactPage' }
+
 function crumbsFor(key, locale, lastName, served) {
   const chain = []
   let page = pageByKey(key)
@@ -228,6 +231,8 @@ export async function SitePage({ locale, segments = [], query }) {
       datePublished: post ? published : doc ? [doc.createdAt, doc.contentUpdatedAt].filter(Boolean).sort()[0] : props.product?.createdAt,
       dateModified: post ? modified : doc?.contentUpdatedAt || doc?.updatedAt || props.product?.updatedAt,
       mentions: hit.kind === 'page' && hit.page.key === 'zoo-de-granby' ? ZOO_DE_GRANBY : undefined,
+      // The About page is the source of truth about the shop; the Visit page holds the address, phones and hours.
+      ...(hit.kind === 'page' && PAGE_TYPE[hit.page.key] ? { type: PAGE_TYPE[hit.page.key] } : {}),
     }),
     breadcrumbNode(url, crumbs),
     post

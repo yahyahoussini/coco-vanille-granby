@@ -67,6 +67,13 @@ Règle : quand une tâche dépasse son temps prévu pendant deux semaines (mesur
 8. **Trois liens internes** vers la nouvelle page, depuis des pages qui sont déjà vues par Google.
 9. **Boucle des extraits** : si la page vise une question, on vérifie aux jours 7 et 14 qui tient l'extrait ([scoreboard/snippet-targets.csv](../scoreboard/snippet-targets.csv)). **Si l'extrait est perdu au jour 14** : on compare notre passage à celui qui le tient (longueur, première phrase, chiffre daté, format), on réécrit **une seule fois**, et on revérifie 14 jours plus tard. **Perdu encore** : la page manque d'autorité, pas de texte; on ne réécrit plus, et la question passe à la liste des mentions (palmarès, annuaires et médias qui la décident, [docs/06 §4 et §5](06-annuaires-listicles.md)). Détail : [scoreboard/README §2](../scoreboard/README.md), étape 6.
 
+## 4 bis. Le Journal (un billet par semaine)
+
+- **Un billet au plus par semaine**, publié le lundi à 6 h (heure de Granby) : Coco Studio le bloque au-delà, et le travailleur du serveur le met en ligne à son heure. Les politiques de Google contre le contenu produit en masse (« scaled content abuse », mises à jour le 28 août 2026) ne donnent pas de nombre : la règle est la valeur de chaque billet, pas la cadence.
+- **Les huit premiers billets sont prêts et programmés** du lundi 2 novembre au lundi 21 décembre 2026 (Coco Studio › Plus › « Journal »). Le mardi ou le mercredi, la plage « une page » sert aussi à préparer le billet suivant, quand aucune page n'attend.
+- **L'anglais d'un billet reste un brouillon** tant qu'une personne ne l'a pas relu ([docs/21](21-questions-proprietaire.md), question 37).
+- **Le contenu de chaque jour, ce n'est pas le Journal** : c'est la « Vitrine du jour » (photo réelle), les réponses aux avis et aux messages. La fiche Google garde une publication par semaine; les réseaux sociaux, trois au plus.
+
 ## 5. Chaque jour : avis, messages, vitrine
 
 | Tâche | Qui | Où | Règle |

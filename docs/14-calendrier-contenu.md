@@ -35,6 +35,21 @@ Si les réponses arrivent plus tard, les pages glissent de semaine en semaine; l
 
 ---
 
+## 1 bis. Le Journal : les huit premiers billets
+
+Un billet par lundi, 6 h, heure de Granby; chacun cite ses sources et renvoie vers deux à quatre pages du site. Ils sont dans Coco Studio › Plus › « Journal » (on peut les relire, les modifier ou les retirer avant leur sortie).
+
+| Lundi | Billet |
+|---|---|
+| 2 novembre 2026 | Chocolatine ou pain au chocolat? Ce que dit l'OQLF |
+| 9 novembre 2026 | Comment conserver des croissants et des viennoiseries |
+| 16 novembre 2026 | L'histoire du Paris-Brest, un gâteau né d'une course |
+| 23 novembre 2026 | D'où vient la bûche de Noël? Histoire et tradition |
+| 30 novembre 2026 | Une demi-journée à pied au centre-ville de Granby |
+| 7 décembre 2026 | Ateliers créatifs à Granby : déroulement et prix |
+| 14 décembre 2026 | Le vol-au-vent : son histoire et comment le servir |
+| 21 décembre 2026 | Les 11 allergènes prioritaires au Canada, expliqués |
+
 ## 1. Les dates clés
 
 **Vos heures habituelles** (fiche Google, relayées le 27 octobre 2026; à confirmer par vous, research/14 H1) : du mercredi au samedi de 8 h 30 à 17 h 30, le dimanche de 9 h 30 à 17 h; fermé le lundi et le mardi. Conséquence pratique : les jours fériés qui tombent un lundi tombent un jour où la boutique est déjà fermée. Seuls ceux qui tombent du mercredi au dimanche demandent des heures spéciales.
