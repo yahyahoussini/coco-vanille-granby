@@ -104,14 +104,15 @@ fi
 http_status "$web_port" "$public_host" /sitemap.xml >/dev/null
 sleep 3
 sitemap="$(curl -s --max-time 30 -H "Host: ${public_host}" -H 'X-Forwarded-Proto: https' "http://127.0.0.1:${web_port}/sitemap.xml" || true)"
-mapfile -t paths < <(
-  {
-    printf '/\n/en/\n'
-    printf '%s\n' "$sitemap" | grep -o '<loc>[^<]*</loc>' | sed -e 's#<loc>https\?://[^/]*##' -e 's#</loc>##'
-  } | awk 'NF && !seen[$0]++'
-)
-info "${#paths[@]} URLs (sitemap + both home pages)"
-for path in "${paths[@]}"; do http_status "$web_port" "$public_host" "$path" >/dev/null; done
+# Under PUBLISH_GUARD=strict the sitemap lists only the pages whose facts are all in (none at all while the
+# owner has not answered « Faits du site »): those must answer 200. Both home pages are warmed in any case and
+# must answer 200 only when the sitemap lists them, so Studio can go live before the public pages do.
+mapfile -t paths < <(printf '%s\n' "$sitemap" | grep -o '<loc>[^<]*</loc>' | sed -e 's#<loc>https\?://[^/]*##' -e 's#</loc>##' | awk 'NF && !seen[$0]++')
+for path in / /en/ "${paths[@]}"; do http_status "$web_port" "$public_host" "$path" >/dev/null; done
+if [ "${#paths[@]}" -eq 0 ]; then
+  warn "the sitemap lists no page: strict mode serves none until the owner's facts are in (Studio › Plus › Faits du site)"
+fi
+info "${#paths[@]} URLs in the sitemap"
 sleep 5
 failed=()
 for path in "${paths[@]}"; do

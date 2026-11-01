@@ -3,7 +3,8 @@ Description=Coco Vanille backup (%i) every night at 02:15
 
 [Timer]
 # The server clock is America/Toronto (harden-vps.sh).
-OnCalendar=*-*-* 02:15:00
+# Shop time, whatever the server clock says (a shared server often runs on UTC).
+OnCalendar=*-*-* 02:15:00 America/Toronto
 RandomizedDelaySec=5min
 Persistent=true
 

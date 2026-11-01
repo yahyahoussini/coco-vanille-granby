@@ -2,7 +2,7 @@
 Description=Coco Vanille reboot window, Mondays at 03:00 (shop listed as closed; [[FACT NEEDED: confirmed closed day]])
 
 [Timer]
-OnCalendar=Mon *-*-* 03:00:00
+OnCalendar=Mon *-*-* 03:00:00 America/Toronto
 
 [Install]
 WantedBy=timers.target

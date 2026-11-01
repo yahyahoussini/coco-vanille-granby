@@ -2,7 +2,7 @@
 # Checks infra/nginx with `nginx -t` without touching /etc: copies the files into a temporary
 # prefix, points every absolute path there, adds a self-signed certificate, a dummy htpasswd and
 # upstream files, then runs nginx -t. Used by CI (lint job) and before install-nginx.sh.
-# Usage: infra/scripts/nginx-test.sh            (needs nginx and openssl on PATH)
+# Usage: infra/scripts/nginx-test.sh            (needs nginx and openssl on PATH; RENDER_FLAGS: see below)
 #        NGINX_BIN=/usr/sbin/nginx infra/scripts/nginx-test.sh
 #        SERVE=1 WEB_PORT=3001 STUDIO_PORT=3002 infra/scripts/nginx-test.sh
 #          → after the test, runs nginx in the foreground on :80/:443 against those local ports
@@ -23,7 +23,10 @@ echo "==> Preparing a test prefix in $tmp"
 mkdir -p "$tmp"/{conf.d,snippets,sites,coco/upstreams,coco/tls,log,www/certbot,www/coco,opt/production/media,opt/staging/media,run}
 cp "$src"/conf.d/*.conf "$tmp/conf.d/"
 cp "$src"/snippets/*.conf "$tmp/snippets/"
-cp "$src"/sites/*.conf "$tmp/sites/"
+# The site files as install-nginx.sh writes them; RENDER_FLAGS tests another variant, e.g.
+# RENDER_FLAGS="--shared --no-staging --temporary --public-host coco.1-2-3-4.sslip.io --admin-host admin-coco.1-2-3-4.sslip.io"
+# shellcheck disable=SC2086
+bash "$here/render-sites.sh" "$tmp/sites" ${RENDER_FLAGS:-} >/dev/null
 cp "$src"/html/50x.html "$tmp/www/coco/"
 
 # Absolute paths of the real install → the test prefix.
@@ -67,6 +70,8 @@ error_log $tmp/log/error.log;
 events { worker_connections 64; }
 http {
   include $tmp/mime.types;
+  # As in Ubuntu's stock nginx.conf: a Coco file that set it again at http level would fail here.
+  gzip on;
   access_log $tmp/log/access.log;
   client_body_temp_path $tmp/run/body;
   proxy_temp_path $tmp/run/proxy;

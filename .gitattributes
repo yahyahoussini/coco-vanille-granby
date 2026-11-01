@@ -1,0 +1,6 @@
+# Files that run on the Linux server keep LF line endings, also in a Windows checkout (core.autocrlf=true):
+# a CRLF shell script fails with "$'\r': command not found", and nginx and systemd read these files as is.
+*.sh text eol=lf
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+infra/** text eol=lf

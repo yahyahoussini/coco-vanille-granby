@@ -41,6 +41,8 @@ ARG ENABLE_ES=false
 # Blue/green (17 §2): DEPLOYMENT_ID = this build (default the git SHA); the Server Actions key is shared by
 # every build, passed as the secret server_actions_key (the NEXT_SERVER_ACTIONS_ENCRYPTION_KEY GitHub secret).
 ARG DEPLOYMENT_ID=""
+# A small or shared server: --build-arg NEXT_BUILD_WORKERS=2 limits the prerender workers (next.config.mjs).
+ARG NEXT_BUILD_WORKERS=""
 ENV GIT_SHA=${GIT_SHA} PUBLISH_GUARD=${PUBLISH_GUARD} ENABLE_ES=${ENABLE_ES} \
     PAYLOAD_CONFIG_PATH=src/payload.config.js
 RUN --mount=type=secret,id=build_database_uri --mount=type=secret,id=server_actions_key \

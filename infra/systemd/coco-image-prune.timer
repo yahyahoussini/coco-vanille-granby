@@ -2,7 +2,7 @@
 Description=Coco Vanille Docker image prune, Sundays at 04:00
 
 [Timer]
-OnCalendar=Sun *-*-* 04:00:00
+OnCalendar=Sun *-*-* 04:00:00 America/Toronto
 Persistent=true
 
 [Install]

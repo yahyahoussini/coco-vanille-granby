@@ -159,7 +159,8 @@ describe('bookable days and windows', () => {
     const season = { key: 'noel', preorderOpensAt: '2026-11-01T04:00:00.000Z', preorderClosesAt: '2026-12-20T04:00:00.000Z', pickupDates: [{ date: '2026-12-19T12:00:00.000Z' }, { date: '2026-12-24T12:00:00.000Z' }] }
     const buche = cake({ season })
     const s = shop({ ordering: { maxDaysAhead: 60 } })
-    const before = bookableDays([line(buche)], s, { now: local('2026-10-27', '10:00'), pools: pools() })
+    // The line reads the clock too: pin it, or the test fails once the real date passes preorderOpensAt.
+    const before = bookableDays([productLine(buche, 0, 1, { now: local('2026-10-27', '10:00') })], s, { now: local('2026-10-27', '10:00'), pools: pools() })
     assert.equal(before.reason, 'season_closed')
     const open = bookableDays([productLine(buche, 0, 1, { now: local('2026-11-02', '10:00', '-05:00') })], s, { now: local('2026-11-02', '10:00', '-05:00'), pools: pools() })
     assert.deepEqual(open.days.map((d) => d.date), ['2026-12-19', '2026-12-24'])

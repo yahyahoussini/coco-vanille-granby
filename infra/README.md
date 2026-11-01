@@ -22,8 +22,8 @@ VPS (Québec) · nginx :80/:443 ──► 127.0.0.1:3001|3011 web-blue|green   (
 | `apps/web/scripts/rank-config.mjs` | `site.config.json` for the rank-first tools, from `src/lib/routes.js` and `data/facts.json` |
 | `infra/docker-compose.yml` | One environment: db, migrate, web/studio × blue/green, worker |
 | `infra/.env.example` | Every variable, commented. Copied to `/opt/coco/<env>/.env` |
-| `infra/nginx/` | `conf.d/coco.conf` (log format, rate limits, gzip), `snippets/` (TLS, HSTS, proxy), `sites/` (public, admin, staging pair, 444 default), `html/50x.html`. The public host serves uploads from `MEDIA_DIR` at `/media/<file>` (the URLs the templates write, `src/lib/media.js`) and 404s `/media/demandes/` (customer request photos, Studio only); `src/app/media/[...file]/route.js` does the same when Node serves it (dev, standalone) |
-| `infra/scripts/` | `harden-vps.sh`, `install-nginx.sh`, `deploy.sh`, `rollback.sh`, `retire.sh`, `backup.sh`, `restore-test.sh`, `nginx-test.sh`, `lib.sh` |
+| `infra/nginx/` | `conf.d/coco.conf` (log format and rate-limit zones, all named `coco_*`, so it sits beside other sites), `snippets/` (TLS, HSTS, proxy, `coco-server.conf` with gzip and server_tokens for Coco's server blocks only, `coco-noindex.conf` for a temporary address), `sites/` (templates under the final names: public, admin, staging pair, 444 default; `scripts/render-sites.sh` writes them for the names in use as `coco-public.conf`, `coco-admin.conf`, `coco-staging.conf`, `00-coco-default.conf`), `html/50x.html`. The public host serves uploads from `MEDIA_DIR` at `/media/<file>` (the URLs the templates write, `src/lib/media.js`) and 404s `/media/demandes/` (customer request photos, Studio only); `src/app/media/[...file]/route.js` does the same when Node serves it (dev, standalone) |
+| `infra/scripts/` | `harden-vps.sh` (dedicated server) or `setup-shared-host.sh` (a server with other apps), `install-nginx.sh`, `render-sites.sh`, `make-env.sh`, `build-image.sh` (image built on the server), `deploy.sh`, `rollback.sh`, `retire.sh`, `backup.sh`, `restore-test.sh`, `nginx-test.sh`, `lib.sh` |
 | `infra/systemd/` | `coco-backup@`, `coco-restore-test@`, `coco-image-prune`, `coco-reboot-window` (service + timer) |
 | `.github/workflows/` | `ci.yml`, `deploy-staging.yml`, `deploy-prod.yml`, `weekly.yml` |
 
@@ -87,6 +87,23 @@ VPS (Québec) · nginx :80/:443 ──► 127.0.0.1:3001|3011 web-blue|green   (
 13. **Monitoring.** Uptime checks on `https://cocovanillegranby.com/`, `https://cocovanillegranby.com/svc/health/` (deep: database included), the admin login page and certificate expiry; alert the agency, the owner after 10 minutes down. [[FACT NEEDED: who receives outage alerts, on which phone]]
 14. **HSTS ramp** (`snippets/coco-hsts.conf`, then `install-nginx.sh`): launch week `max-age=300` → after a week with every host on HTTPS `max-age=86400; includeSubDomains` → a month later `max-age=31536000; includeSubDomains`. No preload (owner decision after 3 months).
 
+## Shared server on a temporary address
+
+For a server that already runs other apps (the agency's Hostinger VPS), before the domain exists. Nothing the other apps rely on changes: no time zone, firewall, sshd, swap, Docker daemon or apt-upgrade change, no default_server, no reboot timer, and the weekly image prune removes Coco images only. Names: `cocovanille.<ip-with-dashes>.sslip.io` (public, answers noindex) and `admin-cocovanille.<ip-with-dashes>.sslip.io` (Studio); sslip.io resolves them to the IP, so no DNS record is needed.
+
+1. **Look first** (read-only): `ss -ltnp`, `docker ps`, `ls /etc/nginx/sites-enabled`, `free -h`, `df -h /`. `setup-shared-host.sh` stops before any change if ports 80/443 belong to something other than the host's nginx (Traefik, Caddy, a panel); that proxy then routes the two names to Coco instead.
+2. **Ship one commit** with LF line endings, whatever the laptop's git settings:
+   ```sh
+   sha=$(git rev-parse HEAD)
+   git -c core.autocrlf=false archive --format=tar "$sha" | ssh root@<ip> "mkdir -p /opt/coco/src/$sha && tar -xf - -C /opt/coco/src/$sha"
+   ```
+3. **Set up** (root): `DEPLOY_SSH_KEYS="<public key>" bash /opt/coco/src/<sha>/infra/scripts/setup-shared-host.sh --public-host <public> --admin-host <admin> --temporary --email <agency mailbox>`: deploy user, folders, Coco's timers, nginx sites, Let's Encrypt.
+4. **Release folder and `.env`** (as deploy): `cp -r /opt/coco/src/<sha>/infra /opt/coco/releases/<sha>`, then `bash /opt/coco/releases/<sha>/scripts/make-env.sh production --public-host <public> --admin-host <admin> --guard strict` (fresh secrets, never printed; payments off, messages kept in the log).
+5. **Build and deploy** (as deploy): `bash /opt/coco/releases/<sha>/scripts/build-image.sh production /opt/coco/src/<sha> <sha>`, then `bash /opt/coco/releases/<sha>/scripts/deploy.sh production <sha>`, then the verified facts: `cd /opt/coco/production && docker compose -p coco-production --env-file .env --env-file state.env run --rm migrate npm run --silent seed`.
+6. **First accounts right away**, so Payload's first-user screen is never open: the same command with `-e OWNER_EMAIL=… -e AGENCY_EMAIL=… -e AGENCY_NAME=…` and `npm run --silent accounts`; each new password is printed once.
+7. **Timers**: `systemctl enable --now coco-backup@production.timer coco-restore-test@production.timer`, then one backup and one restore test by hand (step 12 above).
+8. **Later, the real domain**: `make-env.sh` and `install-nginx.sh --shared --no-staging --issue-certs …` again with the final names and without `--temporary`, a redeploy, then a 301 from the temporary names. A passkey is tied to the admin host name: add passkeys after the switch.
+
 ## DNS records
 
 | Name | Type | Value | Note |
@@ -140,7 +157,7 @@ docker compose -p coco-production --env-file .env --env-file state.env logs --ta
 
 - **One build id per image.** CI builds with `DEPLOYMENT_ID=<git sha>` (`next.config.mjs` `deploymentId`): a browser that loaded pages from the old colour gets a full reload on its next navigation instead of mixing two builds.
 - **One Server Actions key for every build and colour.** `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` (the GitHub secret, passed to `docker build` as the secret `server_actions_key`, and the same value in `/opt/coco/<env>/.env`): forms and the « Avancé » admin keep working across a switch and a rollback. Rotate it with the quarterly keys; a rotation logs open admin sessions out of their pending forms, nothing else.
-- **Compression in nginx only.** `next.config.mjs` has `compress: false`; `snippets/coco-proxy.conf` asks Node for plain bodies and `conf.d/coco.conf` gzips.
+- **Compression in nginx only.** `next.config.mjs` has `compress: false`; `snippets/coco-proxy.conf` asks Node for plain bodies and `snippets/coco-server.conf` gzips.
 - **Client address.** nginx is the only proxy in front of Node: `snippets/coco-proxy.conf` sets `X-Real-IP` and overwrites `X-Forwarded-For` with `$remote_addr`, and the app reads `X-Real-IP` only (Studio sign-in throttles, the form limits, `audit_log.ip`). A CDN or a second proxy in front would need `set_real_ip_from` for its ranges first. The cake-request and checkout posts (`/svc/demande/`, `/svc/commande/`) share the `coco_forms` limit (10 per minute per IP, burst 10), on top of the app's own.
 - **Checkout CSP.** `/commander/paiement/`, `/en/order/checkout/` and `/es/pedidos/pago/` send a Content-Security-Policy that allows this site plus Stripe only (`js.stripe.com` script and frames, `hooks.stripe.com` frames for 3-D Secure, `api.stripe.com` calls). A new Stripe.js URL (`STRIPE_JS_URL`) must stay on `js.stripe.com`.
 
