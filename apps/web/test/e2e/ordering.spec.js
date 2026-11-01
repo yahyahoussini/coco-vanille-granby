@@ -100,7 +100,7 @@ test.describe('custom-cake request form', () => {
 
     await expect(page).toHaveURL(/\/commander\/merci\/\?demande=[\w-]{12}$/)
     await expect(page.locator('h1')).toHaveText('Merci, votre demande est envoyée')
-    await expect(page.locator('.answer')).toContainText('avec un prix et un lien pour l’acompte')
+    await expect(page.locator('.answer')).toContainText('avec un prix et la façon de verser l’acompte')
     await expect(page.locator('.notice')).toContainText('nous vous appellerons')
     expect(await page.locator('meta[name="robots"]').getAttribute('content')).toMatch(/noindex/)
 

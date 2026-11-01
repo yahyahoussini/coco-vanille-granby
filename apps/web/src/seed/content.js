@@ -11,12 +11,15 @@ import { hoursSummary, WEEK } from '../components/site/hours.js'
 const fn = marker
 // Noon in Granby (16:00 UTC), so the date reads the same in every time zone of the country.
 const UPDATED = '2026-10-25T16:00:00.000Z'
-// Pages changed by the owner-published facts relayed by Yahya on 2026-10-27 (hours, café, ateliers, chat).
-const UPDATED_1027 = '2026-10-27T16:00:00.000Z'
 // Pages changed on 2026-10-29 by the public facts of research/20c (parking, the Zoo) and the legal corrections of
 // research/20d (deposit refund, gift cards, orders not picked up), applied in research/21 §6. The terms version a
 // customer accepts follows the date of the conditions page (src/lib/payments/consent.js).
 const UPDATED_1029 = '2026-10-29T16:00:00.000Z'
+// Pages changed on 2026-11-01 by the Level 101–401 audits: « Granby » in every title, ordering by phone, at the
+// counter and by cake request first while online payment is off, one dated and sourced number in the answer blocks,
+// the review-named products kept apart from the shop's own offer, dated allergen sources, and change notes that say
+// what changed (never the workflow). The English copy of the chef, next-day cake and Yule log pages is new that day.
+const UPDATED_1101 = '2026-11-01T16:00:00.000Z'
 
 // Regular hours: the shop's Google listing, supplied by the operator on 2026-10-27 (research/01 « Update 2026-10-27 »,
 // 15 D26; owner sign-off still welcome, 14 H1). The seed writes this record to the shop global, the single source of
@@ -91,6 +94,12 @@ export const PARKING = {
 }
 const ZOO_FR = 'environ 5 à 8 minutes en auto du Zoo de Granby (3 à 4 km selon le trajet), sans compter la circulation'
 const ZOO_EN = 'about 5 to 8 minutes by car from the Granby Zoo (3 to 4 km depending on the route), not counting traffic'
+// What the shop sells: its own offer list (pinned post of 2026-08-25: viennoiseries and croissants, fresh bread,
+// pastries, custom cakes, Moroccan specialties; research/20b §1) and its 2026 posts are stated as fact. The six
+// products named only in public reviews (almond croissant, baguette, Paris-Brest, vol-au-vent, raspberry cake,
+// strawberry shortcake: RestoMontreal, Wanderlog and Three Best Rated, read 2026-10-29, research/20b §2) are said to
+// be cited by reviews, never to be on today's menu (research/20b §3–§4, 14 N4; Competition Act); today's list is
+// asked through the « liste-* » facts. The sentences read true before and after the owner's answer.
 
 // ---------- Home ----------
 const home = {
@@ -102,52 +111,52 @@ const home = {
       description: 'Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby : viennoiseries, pains et gâteaux sur commande. Carte, heures, commande et cueillette.',
       h1: 'Pâtisserie et boulangerie au centre-ville de Granby',
       answer:
-        `La Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby, au 3, rue Court : viennoiseries, pains, pâtisseries et gâteaux sur commande, à récupérer en boutique. Téléphone : 450-372-7177. Heures d’ouverture : ${HOURS_FR}.`,
+        `La Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby, au 3, rue Court : viennoiseries, pains et gâteaux sur commande. Immatriculée au Québec en 2021 (Registraire des entreprises). Téléphone : 450-372-7177. Heures : ${HOURS_FR}.`,
       sections: [
-        s('Que vend la Pâtisserie Coco Vanille?', 'La Pâtisserie Coco Vanille vend des viennoiseries, des pains et baguettes, des pâtisseries et des gâteaux sur commande. Sur sa page Facebook, la boutique résume son offre en une phrase : « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! »', {
-          list: ['Viennoiseries, dont le croissant aux amandes', 'Pains, dont la baguette', 'Pâtisseries, dont le Paris-Brest et le vol-au-vent', 'Gâteaux, dont le gâteau aux framboises et le shortcake aux fraises', 'Spécialités marocaines, dont les msemmens et les harchas'],
+        s('Que vend la Pâtisserie Coco Vanille?', 'La Pâtisserie Coco Vanille vend des viennoiseries et des croissants, des pains frais, des pâtisseries et des gâteaux personnalisés sur commande, selon la liste de son offre publiée en août 2026. Sur sa page Facebook, la boutique résume son offre en une phrase : « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! »', {
+          list: ['Viennoiseries et croissants', 'Pains frais', 'Pâtisseries', 'Gâteaux personnalisés sur commande, pour les anniversaires et les occasions spéciales', 'Spécialités marocaines, dont les msemmens et les harchas'],
         }),
-        s('Peut-on commander en ligne pour la cueillette?', 'Oui : la page Commander reçoit les commandes et les demandes de gâteau, pour une cueillette au 3, rue Court. Avant toute préparation, vous recevez un récapitulatif écrit avec les produits, la date de cueillette, le total et les taxes.'),
+        s('Comment commander pour la cueillette?', 'Appelez la boutique au 450-372-7177 ou passez au comptoir du 3, rue Court; pour un gâteau personnalisé, envoyez aussi votre demande sur la page Commander. Toutes les commandes se récupèrent en boutique.'),
         s('Où se trouve la Pâtisserie Coco Vanille à Granby?', 'La Pâtisserie Coco Vanille se trouve au 3, rue Court, au centre-ville de Granby (Québec), code postal J2G 4Y6. Les itinéraires Google Maps et Plans, les heures et le stationnement sont sur la page Nous trouver. En visite au Zoo de Granby? La page Depuis le Zoo de Granby donne le trajet, l’autobus et le stationnement.'),
         s('Pourquoi voit-on aussi le nom « Cocovanille »?', 'Les noms « Pâtisserie Cocovanille » et « Pâtisserie Coco Vanille » désignent la même boutique du 3, rue Court, à Granby. Google Maps et plusieurs annuaires l’écrivent en un mot; le registre des entreprises du Québec, la page Facebook et la presse l’écrivent en deux mots. Le téléphone, le 450-372-7177, est le même partout.'),
       ],
       faq: [
         q('La Pâtisserie Coco Vanille est-elle ouverte aujourd’hui?', `La boutique est ouverte ${OPEN_FR}; elle est fermée ${CLOSED_FR}. Le tableau des heures de cette page, tenu à jour par la boutique, signale aussi les jours fériés et les fermetures exceptionnelles. En cas de doute, appelez au 450-372-7177 avant de vous déplacer.`),
-        q('Peut-on avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande, que la boutique doit confirmer : ${NEXT_DAY_FR}. Le calendrier de la page Commander affiche seulement les dates que la boutique peut réellement préparer.`),
-        q('Faites-vous la livraison?', `La commande en ligne prévoit la cueillette en boutique, au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
+        q('Peut-on avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande : ${NEXT_DAY_FR}. Pour une date rapprochée, appelez la boutique au 450-372-7177.`),
+        q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
         q('Où se stationner près de la boutique?', `${PARKING_FR} La page Nous trouver donne les limites de temps et un deuxième stationnement, à environ 120 m.`),
         q('Avez-vous des produits sans gluten ou sans noix?', 'Ce site ne présente aucun produit comme « sans gluten » ou « sans noix » : ces mentions sont encadrées par la réglementation. Les allergènes de chaque produit paraissent sur la page Allergènes une fois vérifiés par une personne de l’équipe; en cas d’allergie grave, appelez avant de commander.'),
-        q('Peut-on payer par carte?', `En ligne, oui : le paiement se fait par carte sur la page sécurisée du processeur de paiement, et le numéro de carte n’est jamais conservé par la boutique. En boutique : ${fn('modes de paiement acceptés au comptoir')}.`),
+        q('Peut-on payer par carte?', `En boutique : ${fn('modes de paiement acceptés au comptoir')}. Quand un produit se paie en ligne, le paiement se fait par carte sur la page sécurisée du processeur de paiement, et le numéro de carte n’est jamais conservé par la boutique.`),
         q('Parlez-vous anglais?', `Le site de la Pâtisserie Coco Vanille est offert en français et en anglais. Service en anglais au comptoir : ${fn('personne qui sert la clientèle en anglais')}.`),
       ],
-      changeNote: 'Stationnement, trajet depuis le Zoo et spécialités marocaines ajoutés.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Année d’immatriculation et sa source ajoutées au résumé; commande par téléphone et au comptoir précisée; offre décrite selon la liste publiée par la boutique.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Pastry shop and bakery in Granby, Québec · Coco Vanille',
       description: 'Pâtisserie Coco Vanille, 3 rue Court in downtown Granby, Québec: viennoiseries, bread, pastries and cakes to order. Menu, hours and ordering for pickup.',
       h1: 'Pastry shop and bakery in downtown Granby',
       answer:
-        `Pâtisserie Coco Vanille is a pastry shop and bakery at 3 rue Court in downtown Granby, Québec: viennoiseries, bread, pastries and cakes to order, for pickup at the shop. Phone: 450-372-7177. Opening hours: ${HOURS_EN}.`,
+        `Pâtisserie Coco Vanille is a pastry shop and bakery at 3 rue Court in downtown Granby, Québec: viennoiseries, bread and cakes to order. Registered in Québec in 2021 (Registraire des entreprises). Phone: 450-372-7177. Hours: ${HOURS_EN}.`,
       sections: [
-        s('What does Pâtisserie Coco Vanille sell?', 'Pâtisserie Coco Vanille sells viennoiseries, bread and baguettes, pastries and cakes to order. On its Facebook page, the shop sums up its offer in one French sentence: « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! » (a wide variety of pastries, cakes and bread).', {
-          list: ['Viennoiseries, including the almond croissant', 'Bread, including the baguette', 'Pastries, including the Paris-Brest and the vol-au-vent', 'Cakes, including the raspberry cake and the strawberry shortcake', 'Moroccan specialties, including msemmen and harcha'],
+        s('What does Pâtisserie Coco Vanille sell?', 'Pâtisserie Coco Vanille sells viennoiseries and croissants, fresh bread, pastries and custom cakes to order, according to the list of its offer published in August 2026. On its Facebook page, the shop sums up its offer in one French sentence: « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! » (a wide variety of pastries, cakes and bread).', {
+          list: ['Viennoiseries and croissants', 'Fresh bread', 'Pastries', 'Custom cakes to order, for birthdays and special occasions', 'Moroccan specialties, including msemmen and harcha'],
         }),
-        s('Can I order online for pickup?', 'Yes: the Order page takes orders and cake requests for pickup at 3 rue Court. Before anything is made, you receive a written summary with the products, the pickup date, the total and the taxes.'),
+        s('How do I order for pickup?', 'Call the shop at 450-372-7177 or come to the counter at 3 rue Court; for a custom cake, also send your request on the Order page. Every order is picked up at the shop.'),
         s('Where is Pâtisserie Coco Vanille in Granby?', 'Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec, postal code J2G 4Y6. Google Maps and Apple Maps directions, hours and parking are on the Visit page. Visiting the Granby Zoo? The From the Granby Zoo page gives the route, the bus and parking.'),
         s('Why do some maps say “Cocovanille”?', '“Pâtisserie Cocovanille” and “Pâtisserie Coco Vanille” are the same shop at 3 rue Court, Granby. Google Maps and several directories write it as one word; the Québec business registry, the Facebook page and the press write it as two. The phone number, 450-372-7177, is the same everywhere.'),
       ],
       faq: [
         q('Is Pâtisserie Coco Vanille open today?', `The shop is open ${OPEN_EN}; it is closed ${CLOSED_EN}. The hours table on this page, kept up to date by the shop, also shows statutory holidays and exceptional closures. If in doubt, call 450-372-7177 before you head over.`),
-        q('Can I get a cake for tomorrow?', `It depends on the order cut-off time, which the shop still has to confirm: ${NEXT_DAY_EN}. The calendar on the Order page only shows dates the shop can actually prepare.`),
-        q('Do you deliver?', `Online orders are picked up at the shop, 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
+        q('Can I get a cake for tomorrow?', `It depends on the order cut-off time: ${NEXT_DAY_EN}. If the date is close, call the shop at 450-372-7177.`),
+        q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
         q('Where can I park?', `${PARKING_EN} The Visit page gives the time limits and a second lot, about 120 m away.`),
         q('Do you have gluten-free or nut-free products?', 'This website does not label any product “gluten-free” or “nut-free”: those claims are regulated. Each product’s allergens appear on the Allergens page once a team member has checked them; if you have a severe allergy, call before you order.'),
-        q('Do you accept US or foreign credit cards?', `Online, payment is made by card on the payment processor’s secure page, and the shop never stores your card number. Cards accepted in store: ${fn('payment methods accepted at the counter')}.`),
+        q('Do you accept US or foreign credit cards?', `Cards accepted in store: ${fn('payment methods accepted at the counter')}. When a product is paid online, payment is made by card on the payment processor’s secure page, and the shop never stores your card number.`),
         q('Do you speak English in the shop?', `This website is in French and English. English service at the counter: ${fn('staff who serve customers in English')}.`),
       ],
-      changeNote: 'Parking, the drive from the Zoo and Moroccan specialties added.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Year of registration and its source added to the summary; ordering by phone and at the counter made clear; offer described from the list the shop published.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -158,7 +167,7 @@ const carte = {
   status: 'core',
   locales: {
     fr: {
-      title: 'Carte : viennoiseries, pains et gâteaux · Coco Vanille',
+      title: 'Carte à Granby : pains, croissants, gâteaux · Coco Vanille',
       description: 'La carte de la Pâtisserie Coco Vanille à Granby : viennoiseries, pains et baguettes, pâtisseries et gâteaux, avec formats, prix et allergènes affichés en texte.',
       h1: 'Carte : viennoiseries, pains, pâtisseries et gâteaux à Granby',
       answer:
@@ -171,18 +180,18 @@ const carte = {
       ],
       faq: [
         q('Les produits changent-ils selon la saison?', `Chaque produit saisonnier a une page permanente qui indique son état : bientôt offert, en précommande, complet ou de retour plus tard. Produits saisonniers : ${fn('produits saisonniers offerts')}.`),
-        q('Peut-on réserver un produit de la vitrine?', `La réservation de la vitrine reste à confirmer par la boutique : ${fn('réservation des produits de la vitrine offerte ou non')}. Les gâteaux et les produits avec un délai de préparation se commandent sur la page Commander.`),
+        q('Peut-on réserver un produit de la vitrine?', `La réservation de la vitrine reste à confirmer par la boutique : ${fn('réservation des produits de la vitrine offerte ou non')}. Les gâteaux et les produits avec un délai de préparation se commandent par téléphone, au 450-372-7177, ou, pour un gâteau personnalisé, par une demande sur la page Commander.`),
         q('Les prix incluent-ils les taxes?', 'Non : les prix sont affichés avant taxes, et la TPS et la TVQ s’ajoutent seulement s’il y a lieu, selon le produit et la quantité. Le total avec chaque taxe est affiché avant le paiement.'),
         q('Vendez-vous du pain congelé?', `Le pain et les baguettes congelés restent à confirmer par la boutique : ${fn('pains et baguettes congelés offerts ou non')}.`),
         q('Servez-vous du café sur place?', `Oui : la boutique du 3, rue Court, présentée sur sa page Facebook comme « Pâtisserie & Café », sert, sur place ou à emporter, café, espresso, cappuccino, latte, macchiato, thé, tisane et chocolat chaud, et en boissons froides café glacé, moka glacé et matcha (liste publiée par la boutique en 2026). On peut s’y installer pour prendre un café. Prix et nombre de places : ${fn('prix des boissons et nombre de places assises')}.`),
-        q('Peut-on commander un produit pour une date précise?', 'Oui : la page Commander propose les dates et les heures de cueillette que la boutique peut préparer pour l’ensemble de votre commande.'),
+        q('Peut-on commander un produit pour une date précise?', 'Oui : appelez la boutique au 450-372-7177 pour convenir de la date et de l’heure de cueillette; une demande de gâteau personnalisé, sur la page Commander, indique aussi sa date.'),
         q('Avez-vous des spécialités marocaines?', `Oui : la Pâtisserie Coco Vanille, à Granby, annonce des spécialités marocaines, dont des msemmens et des harchas, dans la liste de son offre publiée en août 2026. Le msemmen est une crêpe marocaine feuilletée; la harcha, une galette de semoule cuite à la poêle. Jours et prix : ${fn('jours où les msemmens et les harchas sont offerts, et leurs prix')}.`),
       ],
-      changeNote: 'Spécialités marocaines ajoutées à la FAQ; allergènes affichés seulement une fois vérifiés; produits et prix encore à confirmer.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Commande d’un produit pour une date précise : par téléphone, ou par demande pour un gâteau personnalisé.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
-      title: 'Menu: viennoiseries, bread and cakes · Coco Vanille',
+      title: 'Menu in Granby: croissants, bread and cakes · Coco Vanille',
       description: 'The menu of Pâtisserie Coco Vanille in Granby, Québec: viennoiseries, bread and baguettes, pastries and cakes, with sizes, prices and allergens shown as text.',
       h1: 'Menu: viennoiseries, bread, pastries and cakes in Granby',
       answer:
@@ -195,93 +204,82 @@ const carte = {
       ],
       faq: [
         q('Does the menu change with the seasons?', `Each seasonal product has a permanent page that shows its state: coming soon, open for pre-order, sold out or back later. Seasonal products: ${fn('seasonal products offered')}.`),
-        q('Can I reserve something from the display case?', `Display-case reservations are still to be confirmed by the shop: ${fn('display-case reservations offered or not')}. Cakes and products with a lead time are ordered on the Order page.`),
+        q('Can I reserve something from the display case?', `Display-case reservations are still to be confirmed by the shop: ${fn('display-case reservations offered or not')}. Cakes and products with a lead time are ordered by phone, at 450-372-7177, or, for a custom cake, with a request on the Order page.`),
         q('Do prices include taxes?', 'No: prices are shown before taxes, and GST and QST are added only where they apply, depending on the product and quantity. The total with each tax is shown before you pay.'),
         q('Do you sell frozen bread?', `Frozen bread and baguettes are still to be confirmed by the shop: ${fn('frozen bread and baguettes offered or not')}.`),
         q('Do you serve coffee in the shop?', `Yes: the shop at 3 rue Court, presented on its Facebook page as « Pâtisserie & Café », serves, to stay or to go, coffee, espresso, cappuccino, latte, macchiato, tea, herbal tea and hot chocolate, and cold drinks: iced coffee, iced mocha and matcha (list published by the shop in 2026). You can sit down for a coffee. Prices and number of seats: ${fn('drink prices and number of seats')}.`),
-        q('Can I order a product for a specific date?', 'Yes: the Order page offers the dates and pickup times the shop can prepare for your whole order.'),
+        q('Can I order a product for a specific date?', 'Yes: call the shop at 450-372-7177 to agree on the pickup date and time; a custom-cake request, on the Order page, also gives its date.'),
         q('Do you have Moroccan specialties?', `Yes: Pâtisserie Coco Vanille in Granby lists Moroccan specialties, including msemmen and harcha, in the list of its offer published in August 2026. Msemmen is a flaky Moroccan crêpe; harcha is a semolina flatbread cooked in a pan. Days and prices: ${fn('days msemmen and harcha are offered, and their prices')}.`),
       ],
-      changeNote: 'Moroccan specialties added to the FAQ; allergens shown only once checked; products and prices still to be confirmed.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Ordering a product for a specific date: by phone, or by request for a custom cake.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
 
 // ---------- Order (the ordering module renders the form under this copy) ----------
+// Until online payment is live (decision M20; docs/19 §3.1 #10), the page leads with what works today: the phone,
+// the counter and the cake request form. The products block above the form appears only once the shop turns online
+// ordering on in Studio; this copy never says it works, and reads true on both sides of that switch.
 const commander = {
   key: 'commander',
   status: 'core',
   locales: {
     fr: {
-      title: 'Commande en ligne et cueillette à Granby · Coco Vanille',
-      description: 'Commandez en ligne à la Pâtisserie Coco Vanille, à Granby : gâteaux, viennoiseries et pains à récupérer au 3, rue Court, avec un récapitulatif écrit.',
-      h1: 'Commander en ligne à Granby, pour la cueillette',
+      title: 'Commander à Granby : téléphone ou boutique · Coco Vanille',
+      description: 'Commandez à la Pâtisserie Coco Vanille, à Granby, par téléphone au 450-372-7177 ou au comptoir du 3, rue Court; un gâteau personnalisé se demande en ligne.',
+      h1: 'Commander à Granby : par téléphone, au comptoir ou par demande de gâteau',
       answer:
-        `La Pâtisserie Coco Vanille, à Granby, reçoit les commandes en ligne pour une cueillette en boutique au 3, rue Court. Vous choisissez vos produits, la date et l’heure de cueillette, puis vous recevez un récapitulatif écrit avant la préparation. Délais de préparation et heure limite : ${fn('délais par produit et heure limite de commande')}.`,
+        `La Pâtisserie Coco Vanille, à Granby, prend les commandes par téléphone au 450-372-7177 et au comptoir du 3, rue Court, pour une cueillette en boutique. Pour un gâteau personnalisé, envoyez la demande de cette page : la boutique vous répond avec un prix. Délais de préparation et heure limite : ${fn('délais par produit et heure limite de commande')}.`,
       sections: [
-        s('Comment se passe une commande en ligne?', 'Une commande en ligne à la Pâtisserie Coco Vanille se fait en six étapes, du choix des produits jusqu’à la confirmation écrite, qui sert de copie du contrat.', {
-          list: [
-            'Choisir les produits et les ajouter à « Ma boîte »',
-            'Choisir la date, puis une des plages de cueillette proposées',
-            'Vérifier le récapitulatif : produits, date, total, TPS et TVQ',
-            'Accepter les conditions de vente en cochant la case',
-            'Payer sur la page sécurisée du processeur de paiement',
-            'Recevoir la confirmation par courriel, en français d’abord',
-          ],
+        s('Comment commander à la Pâtisserie Coco Vanille?', 'Appelez la boutique au 450-372-7177 ou passez au comptoir du 3, rue Court, à Granby, pendant les heures d’ouverture; pour un gâteau personnalisé, envoyez aussi la demande de cette page.', {
+          body: `Heures d’ouverture : ${HOURS_FR}. Toutes les commandes se récupèrent en boutique.`,
         }),
-        s('Où et quand récupérer ma commande?', 'Votre commande se récupère au 3, rue Court, à Granby, pendant la plage de cueillette choisie. Donnez le numéro de commande de votre confirmation au comptoir. La boutique ne déplace jamais une date confirmée sans votre accord.'),
-        s('Comment commander un gâteau personnalisé?', `Un gâteau personnalisé commence par une demande : photo de référence, nombre d’invités, date et message. La boutique répond avec un prix; un acompte de ${DEPOSIT_FR} réserve la date, et la préparation commence après votre approbation du récapitulatif.`),
+        s('Comment commander un gâteau personnalisé?', `Un gâteau personnalisé commence par la demande de cette page : photo de référence, nombre d’invités, date et message. La boutique répond avec un prix; un acompte de ${DEPOSIT_FR} réserve la date, et la préparation commence après votre approbation du récapitulatif.`),
+        s('Peut-on commander en ligne?', 'Les demandes de gâteau personnalisé s’envoient en ligne, sur cette page. Les produits de la carte qui se commandent en ligne, s’il y en a, s’affichent aussi sur cette page avec leurs dates de cueillette; sinon, commandez par téléphone ou au comptoir.'),
+        s('Où et quand récupérer ma commande?', 'Votre commande se récupère au 3, rue Court, à Granby, à la date et à l’heure convenues avec la boutique. La boutique ne déplace jamais une date confirmée sans votre accord.'),
         s('Quels frais s’ajoutent au prix affiché?', 'Aucun frais ne s’ajoute au prix affiché : ni frais de service, ni frais d’emballage, ni frais de carte. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu, et le prix est le même quel que soit le mode de paiement.'),
-        s('Comment annuler ou changer la date d’une commande?', 'Pour annuler ou changer une date, appelez la boutique au 450-372-7177; les conditions de vente précisent les délais et le sort de l’acompte. Si la boutique ne peut pas honorer une commande, vous choisissez une autre plage de cueillette ou un remboursement complet, versé dans les 15 jours.'),
+        s('Comment annuler ou changer la date d’une commande?', 'Pour annuler ou changer une date, appelez la boutique au 450-372-7177; les conditions de vente précisent les délais et le sort de l’acompte. Si la boutique ne peut pas honorer une commande, vous choisissez une autre date de cueillette ou un remboursement complet, versé dans les 15 jours.'),
       ],
       faq: [
-        q('C’est-tu possible d’avoir un gâteau pour demain?', `Ça dépend de l’heure limite, que la boutique doit confirmer : ${NEXT_DAY_FR}. Le calendrier de commande affiche seulement les dates réellement possibles.`),
-        q('Combien de jours d’avance faut-il commander un gâteau?', `Le délai dépend du gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Chaque page de produit affiche son délai, et le calendrier propose la première date possible.`),
+        q('C’est-tu possible d’avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande : ${NEXT_DAY_FR}. Pour demain, appelez la boutique au 450-372-7177.`),
+        q('Combien de jours d’avance faut-il commander un gâteau?', `Le délai dépend du gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Chaque page de produit affiche aussi son délai.`),
         q('Faut-il verser un acompte?', `Pour un gâteau personnalisé, un acompte de ${DEPOSIT_FR} est demandé après l’acceptation de la soumission; le solde se paie à la cueillette. Le montant de l’acompte et le solde sont écrits dans le récapitulatif avant le paiement.`),
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez votre photo de référence à la demande, puis vous recevez un récapitulatif écrit : format, saveur, couleurs et message. La préparation commence seulement après votre approbation.'),
-        q('Faites-vous la livraison?', `La commande en ligne prévoit la cueillette au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
-        q('Puis-je commander par téléphone?', 'Oui : appelez la boutique au 450-372-7177. Les commandes prises par téléphone entrent dans le même calendrier que les commandes en ligne, avec les mêmes dates possibles.'),
-        q('Comment payer ma commande en ligne?', 'Le paiement en ligne se fait par carte, sur la page sécurisée du processeur de paiement : le numéro de carte n’arrive jamais sur les serveurs de la boutique. Le montant exact est écrit sur le bouton de paiement.'),
-        q('Que se passe-t-il si j’arrive après ma plage de cueillette?', 'Appelez la boutique au 450-372-7177 : la commande reste prête jusqu’à la fermeture le jour prévu, et vous pouvez convenir d’une autre heure ce jour-là. Les produits frais ne peuvent pas être gardés au-delà de ce jour; comme la commande a été préparée pour vous, le montant payé n’est alors pas remboursé.'),
+        q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
+        q('Comment payer ma commande?', `Au comptoir : ${fn('modes de paiement acceptés au comptoir')}. Quand un produit se paie en ligne, le paiement se fait par carte sur la page sécurisée du processeur de paiement : le numéro de carte n’arrive jamais sur les serveurs de la boutique.`),
+        q('Que se passe-t-il si j’arrive en retard pour ma cueillette?', 'Appelez la boutique au 450-372-7177 : la commande reste prête jusqu’à la fermeture le jour prévu, et vous pouvez convenir d’une autre heure ce jour-là. Les produits frais ne peuvent pas être gardés au-delà de ce jour; comme la commande a été préparée pour vous, le montant payé n’est alors pas remboursé.'),
       ],
-      changeNote: 'Réponse sur la commande non récupérée précisée; délais de commande encore à confirmer par la boutique.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Commande par téléphone, au comptoir et par demande de gâteau mise en premier; réponse sur la cueillette en retard précisée.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
-      title: 'Order online for pickup in Granby, Québec · Coco Vanille',
-      description: 'Order online from Pâtisserie Coco Vanille in Granby, Québec: cakes, viennoiseries and bread for pickup at 3 rue Court, with a written summary first.',
-      h1: 'Order online in Granby, for pickup at the shop',
+      title: 'Order in Granby: by phone or in store · Coco Vanille',
+      description: 'Order from Pâtisserie Coco Vanille in Granby, Québec, by phone at 450-372-7177 or at the counter, 3 rue Court; custom cakes can also be requested online.',
+      h1: 'Order in Granby: by phone, at the counter or with a cake request',
       answer:
-        `Pâtisserie Coco Vanille in Granby, Québec, takes online orders for pickup at the shop, 3 rue Court. You choose your products, the date and a pickup time, then you receive a written summary before anything is made. Lead times and cut-off time: ${fn('lead time per product and order cut-off time')}.`,
+        `Pâtisserie Coco Vanille in Granby, Québec, takes orders by phone at 450-372-7177 and at the counter, 3 rue Court, for pickup at the shop. For a custom cake, send the request on this page: the shop replies with a price. Lead times and cut-off time: ${fn('lead time per product and order cut-off time')}.`,
       sections: [
-        s('How does an online order work?', 'An online order at Pâtisserie Coco Vanille takes six steps, from choosing products to the written confirmation, which is your copy of the contract.', {
-          list: [
-            'Choose products and add them to “My box”',
-            'Pick a date, then one of the pickup slots offered',
-            'Check the summary: products, date, total, GST and QST',
-            'Accept the conditions of sale by ticking the box',
-            'Pay on the payment processor’s secure page',
-            'Receive the confirmation email, French version first',
-          ],
+        s('How do I order from Pâtisserie Coco Vanille?', 'Call the shop at 450-372-7177 or come to the counter at 3 rue Court, Granby, during opening hours; for a custom cake, also send the request on this page.', {
+          body: `Opening hours: ${HOURS_EN}. Every order is picked up at the shop.`,
         }),
-        s('Where and when do I pick up my order?', 'Your order is picked up at 3 rue Court, Granby, during the pickup slot you chose. Give the order number from your confirmation at the counter. The shop never moves a confirmed date without your agreement.'),
-        s('How do I order a custom cake?', `A custom cake starts with a request: a reference photo, the number of guests, the date and the message. The shop replies with a price; a deposit of ${DEPOSIT_EN} holds the date, and baking starts once you approve the written summary.`),
+        s('How do I order a custom cake?', `A custom cake starts with the request on this page: a reference photo, the number of guests, the date and the message. The shop replies with a price; a deposit of ${DEPOSIT_EN} holds the date, and baking starts once you approve the written summary.`),
+        s('Can I order online?', 'Custom-cake requests are sent online, on this page. Menu products that can be ordered online, if any, also appear on this page with their pickup dates; otherwise, order by phone or at the counter.'),
+        s('Where and when do I pick up my order?', 'Your order is picked up at 3 rue Court, Granby, on the date and at the time agreed with the shop. The shop never moves a confirmed date without your agreement.'),
         s('What fees are added to the price shown?', 'No fees are added to the price shown: no service fee, no packaging fee, no card fee. Only GST and QST are added where they apply, and the price is the same whatever the payment method.'),
-        s('How do I cancel or change the date of an order?', 'To cancel or change a date, call the shop at 450-372-7177; the conditions of sale set out the deadlines and what happens to the deposit. If the shop cannot fill an order, you choose another pickup slot or a full refund, paid within 15 days.'),
+        s('How do I cancel or change the date of an order?', 'To cancel or change a date, call the shop at 450-372-7177; the conditions of sale set out the deadlines and what happens to the deposit. If the shop cannot fill an order, you choose another pickup date or a full refund, paid within 15 days.'),
       ],
       faq: [
-        q('Can I get a cake for tomorrow?', `It depends on the cut-off time, which the shop still has to confirm: ${NEXT_DAY_EN}. The order calendar only shows dates that are actually possible.`),
-        q('How far in advance should I order a cake?', `It depends on the cake: ${fn('minimum lead time per cake type, in days')}. Each product page shows its lead time, and the calendar offers the first possible date.`),
+        q('Can I get a cake for tomorrow?', `It depends on the order cut-off time: ${NEXT_DAY_EN}. For tomorrow, call the shop at 450-372-7177.`),
+        q('How far in advance should I order a cake?', `It depends on the cake: ${fn('minimum lead time per cake type, in days')}. Each product page also shows its lead time.`),
         q('Is a deposit required?', `For a custom cake, a deposit of ${DEPOSIT_EN} is requested once you accept the quote; the balance is paid at pickup. The deposit and the balance are written in the summary before you pay.`),
         q('Will my cake look like the photo?', 'You attach your reference photo to the request, then you receive a written summary: size, flavour, colours and message. Baking starts only after you approve it.'),
-        q('Do you deliver?', `Online orders are picked up at 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
-        q('Can I order by phone?', 'Yes: call the shop at 450-372-7177. Phone orders go into the same calendar as online orders, with the same available dates.'),
-        q('How do I pay for my online order?', 'Online payment is by card, on the payment processor’s secure page: your card number never reaches the shop’s servers. The exact amount is written on the payment button.'),
-        q('What if I arrive after my pickup slot?', 'Call the shop at 450-372-7177: the order stays ready until closing on the planned day, and you can agree on another time that day. Fresh products cannot be kept beyond that day; because the order was made for you, the amount paid is then not refunded.'),
+        q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
+        q('How do I pay for my order?', `At the counter: ${fn('payment methods accepted at the counter')}. When a product is paid online, payment is by card on the payment processor’s secure page: your card number never reaches the shop’s servers.`),
+        q('What if I am late for my pickup?', 'Call the shop at 450-372-7177: the order stays ready until closing on the planned day, and you can agree on another time that day. Fresh products cannot be kept beyond that day; because the order was made for you, the amount paid is then not refunded.'),
       ],
-      changeNote: 'Answer on orders not picked up made clearer, and online payment added to the FAQ; order lead times still to be confirmed by the shop.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Ordering by phone, at the counter and by cake request now comes first; answer on late pickups made clearer.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -296,12 +294,12 @@ const nousTrouver = {
       description: 'Adresse, heures et stationnement de la Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby. Itinéraire Google Maps ou Plans et téléphone.',
       h1: 'Nous trouver au 3, rue Court, au centre-ville de Granby',
       answer:
-        `La Pâtisserie Coco Vanille est au 3, rue Court, au centre-ville de Granby, au Québec; téléphone : 450-372-7177. Heures : ${HOURS_FR}. Cette page donne aussi le stationnement et les itinéraires vers la boutique.`,
+        `La Pâtisserie Coco Vanille est au 3, rue Court, au centre-ville de Granby, au Québec; téléphone : 450-372-7177. Heures, selon sa fiche Google relevée le 27 octobre 2026 : ${HOURS_FR}. Stationnement et itinéraires ci-dessous.`,
       sections: [
         s('Quelles sont les heures d’ouverture de la Pâtisserie Coco Vanille?', `La Pâtisserie Coco Vanille est ouverte ${OPEN_FR}; elle est fermée ${CLOSED_FR}. Le tableau de cette page, tenu à jour par la boutique, signale aussi les jours fériés et les fermetures exceptionnelles. Les annuaires en ligne affichent parfois d’autres horaires; le tableau de cette page fait foi.`),
         s('Comment se rendre au 3, rue Court?', `Le 3, rue Court est au centre-ville de Granby; les boutons Itinéraire ouvrent l’adresse dans Google Maps ou dans Plans d’Apple. Repère pour trouver la porte : ${fn('repère visuel près de la boutique, approuvé par le propriétaire')}.`),
         s('Où se stationner près de la Pâtisserie Coco Vanille?', `${PARKING_FR} ${PARKING_MORE_FR}`),
-        s('À quelle distance du Zoo de Granby est la boutique?', `La Pâtisserie Coco Vanille est à ${ZOO_FR}. Le Zoo est au 1050, boulevard David-Bouchard Nord. Pour un arrêt en route, la commande en ligne permet de choisir une heure de cueillette. La page Depuis le Zoo de Granby donne le trajet en autobus, le stationnement et les règles du Zoo pour le lunch.`),
+        s('À quelle distance du Zoo de Granby est la boutique?', `La Pâtisserie Coco Vanille est à ${ZOO_FR}. Le Zoo est au 1050, boulevard David-Bouchard Nord. Pour un arrêt en route, commandez d’avance par téléphone au 450-372-7177. La page Depuis le Zoo de Granby donne le trajet en autobus, le stationnement et les règles du Zoo pour le lunch.`),
         s('Comment joindre la boutique?', `Par téléphone, au 450-372-7177. Par courriel : bonjour@cocovanillegranby.com.`),
       ],
       faq: [
@@ -310,23 +308,23 @@ const nousTrouver = {
         q('Y a-t-il des places assises?', `Oui : la boutique se décrit comme un endroit chaleureux où l’on peut s’installer pour prendre un café. Nombre de places : ${fn('nombre de places assises')}.`),
         q('La boutique est-elle accessible en fauteuil roulant?', `L’accès en fauteuil roulant reste à décrire par la boutique : ${fn('marches, largeur de porte et accès en fauteuil roulant')}.`),
         q('Pourquoi Google Maps écrit-il « Cocovanille »?', 'Google Maps écrit « Pâtisserie Cocovanille » en un mot, mais c’est bien la même boutique : la Pâtisserie Coco Vanille, au 3, rue Court, à Granby, au 450-372-7177.'),
-        q('Livrez-vous à Bromont ou à Waterloo?', `La commande en ligne prévoit la cueillette au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
+        q('Livrez-vous à Bromont ou à Waterloo?', `Non. Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
         q('Acceptez-vous les dollars américains?', `Les modes de paiement acceptés au comptoir restent à confirmer : ${fn('devises et modes de paiement acceptés au comptoir')}.`),
       ],
-      changeNote: 'Stationnement (règles de la Ville en vigueur depuis le 12 juin 2026), trajet depuis le Zoo et places assises ajoutés; accès à la porte encore à confirmer par la boutique.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Source et date des heures ajoutées au résumé; commande d’avance par téléphone précisée.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Hours and address: 3 rue Court, Granby · Coco Vanille',
       description: 'Address, opening hours and parking for Pâtisserie Coco Vanille at 3 rue Court in downtown Granby, Québec. Google Maps or Apple Maps directions and phone number.',
       h1: 'Visit us at 3 rue Court, in downtown Granby',
       answer:
-        `Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec; phone: 450-372-7177. Hours: ${HOURS_EN}. This page also gives parking and directions to the shop, including from the Granby Zoo.`,
+        `Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec; phone: 450-372-7177. Hours, from its Google listing as read on October 27, 2026: ${HOURS_EN}. Parking and directions below.`,
       sections: [
         s('What are Pâtisserie Coco Vanille’s opening hours?', `Pâtisserie Coco Vanille is open ${OPEN_EN}; it is closed ${CLOSED_EN}. The table on this page, kept up to date by the shop, also shows statutory holidays and exceptional closures. Online directories sometimes show other hours; the table on this page is the reference.`),
         s('How do I get to 3 rue Court?', `3 rue Court is in downtown Granby; the Directions buttons open the address in Google Maps or Apple Maps. Landmark to find the door: ${fn('visual landmark near the shop, approved by the owner')}.`),
         s('Where can I park near Pâtisserie Coco Vanille?', `${PARKING_EN} ${PARKING_MORE_EN}`),
-        s('How far is the shop from the Granby Zoo?', `Pâtisserie Coco Vanille is ${ZOO_EN}. The Zoo is at 1050 boulevard David-Bouchard Nord. To stop on your way, online ordering lets you choose a pickup time. The From the Granby Zoo page gives the bus route, parking and the Zoo’s rules for bringing lunch.`),
+        s('How far is the shop from the Granby Zoo?', `Pâtisserie Coco Vanille is ${ZOO_EN}. The Zoo is at 1050 boulevard David-Bouchard Nord. To stop on your way, order ahead by phone at 450-372-7177. The From the Granby Zoo page gives the bus route, parking and the Zoo’s rules for bringing lunch.`),
         s('How do I contact the shop?', `By phone at 450-372-7177. By email: bonjour@cocovanillegranby.com.`),
       ],
       faq: [
@@ -336,10 +334,10 @@ const nousTrouver = {
         q('Is the shop wheelchair accessible?', `Wheelchair access is still to be described by the shop: ${fn('steps, door width and wheelchair access')}.`),
         q('Why does Google Maps say “Cocovanille”?', 'Google Maps writes “Pâtisserie Cocovanille” as one word, but it is the same shop: Pâtisserie Coco Vanille, 3 rue Court, Granby, 450-372-7177.'),
         q('Do you accept US dollars?', `Payment methods accepted at the counter are still to be confirmed: ${fn('currencies and payment methods accepted at the counter')}.`),
-        q('Do you deliver to Bromont or Waterloo?', `Online orders are picked up at 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
+        q('Do you deliver to Bromont or Waterloo?', `No. Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
       ],
-      changeNote: 'Parking (City rules in force since June 12, 2026), the drive from the Zoo and seating added; access at the door still to be confirmed by the shop.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Source and date of the hours added to the summary; ordering ahead by phone made clear.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -359,7 +357,7 @@ const zooDeGranby = {
       description: 'À environ 5 à 8 minutes en auto du Zoo de Granby, la Pâtisserie Coco Vanille sert café, viennoiseries et salé au 3, rue Court. Trajet, autobus, stationnement.',
       h1: 'Café et pâtisserie près du Zoo de Granby',
       answer:
-        `La Pâtisserie Coco Vanille est au 3, rue Court, au centre-ville de Granby, à environ 5 à 8 minutes en auto du Zoo de Granby. On y sert café, viennoiseries et salé, sur place ou à emporter. Elle est ouverte ${SUNDAY_FR} et fermée ${CLOSED_FR}.`,
+        `La Pâtisserie Coco Vanille est au 3, rue Court, au centre-ville de Granby, à environ 5 à 8 minutes en auto du Zoo de Granby (calcul du 29 octobre 2026). Elle sert café, viennoiseries et salé, sur place ou à emporter. Elle est ouverte ${SUNDAY_FR} et fermée ${CLOSED_FR}.`,
       sections: [
         s('Combien de temps faut-il pour aller du Zoo de Granby à la boutique?', 'Il faut environ 5 à 8 minutes en auto pour aller du Zoo de Granby à la Pâtisserie Coco Vanille, soit 3 à 4 km selon le trajet, sans compter la circulation.', {
           body: 'Le calcul part du stationnement principal du Zoo, dont l’adresse pour les visiteurs est le 1050, boulevard David-Bouchard Nord, et va jusqu’au 3, rue Court. Selon votre GPS, le trajet passe par la rue Saint-Hubert et la rue Principale, ou par le boulevard David-Bouchard Nord et la rue Dufferin.\n\nMéthode : deux calculateurs d’itinéraire, OSRM et Valhalla, sur les données d’OpenStreetMap, le 29 octobre 2026. Les durées ne comptent ni la circulation, ni les feux, ni le temps pour se stationner.',
@@ -387,17 +385,17 @@ const zooDeGranby = {
         q('La Pâtisserie Coco Vanille est-elle sur le site du Zoo?', 'Non : la Pâtisserie Coco Vanille est au centre-ville de Granby, au 3, rue Court, à environ 3 à 4 km du Zoo par la route. Le Zoo a ses propres points de restauration sur le site, selon sa foire aux questions.'),
         q('Offrez-vous des ateliers créatifs?', 'Oui : la Pâtisserie Coco Vanille offre des ateliers créatifs du vendredi au dimanche, sur réservation au 438-528-7818. Un atelier de peinture, ou de décoration de perles et de strass sur un objet de votre choix, dure 2 h 30 et coûte 37 $ par personne, avec le matériel, une boisson et une part de gâteau. Les places sont limitées.'),
         q('Quelle adresse entrer dans le GPS pour le Zoo de Granby?', 'Pour s’y rendre, le Zoo de Granby donne l’adresse du 1050, boulevard David-Bouchard Nord, à Granby (J2H 0Y6), sur sa page Horaire et directions, où se trouve aussi son horaire : zoodegranby.com/horaire. Pour la boutique, entrez le 3, rue Court, à Granby (J2G 4Y6).'),
-        q('Peut-on commander à l’avance pour passer en allant au Zoo?', 'Oui, pour les produits qui ont des plages de cueillette ce jour-là : commandez sur la page Commander ou par téléphone au 450-372-7177, puis passez au 3, rue Court pendant votre plage.'),
+        q('Peut-on commander à l’avance pour passer en allant au Zoo?', 'Oui : commandez d’avance par téléphone au 450-372-7177, puis passez au 3, rue Court à l’heure convenue avec la boutique.'),
       ],
-      changeNote: 'Première version : trajet depuis le Zoo calculé le 29 octobre 2026; règles du Zoo et plans de stationnement de la Ville lus le même jour.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Date du calcul du trajet ajoutée au résumé; commande d’avance par téléphone précisée. Trajet calculé le 29 octobre 2026; règles du Zoo et plans de stationnement de la Ville lus le même jour.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Bakery and café near the Granby Zoo, Québec · Coco Vanille',
       description: 'About 5 to 8 minutes by car from the Granby Zoo, Pâtisserie Coco Vanille serves coffee, viennoiseries and savoury food at 3 rue Court. Route, bus and parking.',
       h1: 'Bakery and café near the Granby Zoo',
       answer:
-        `Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec, about 5 to 8 minutes by car from the Granby Zoo. You can have coffee, viennoiseries and savoury snacks there, to stay or to go. The shop is open ${SUNDAY_EN} and closed ${CLOSED_EN}.`,
+        `Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec, about 5 to 8 minutes by car from the Granby Zoo (route calculated on October 29, 2026). You can have coffee, viennoiseries and savoury snacks there, to stay or to go. The shop is open ${SUNDAY_EN} and closed ${CLOSED_EN}.`,
       sections: [
         s('How long does it take to get from the Granby Zoo to the shop?', 'It takes about 5 to 8 minutes by car to get from the Granby Zoo to Pâtisserie Coco Vanille, or 3 to 4 km depending on the route, not counting traffic.', {
           body: 'The calculation runs from the Zoo’s main parking lot, whose visitor address is 1050 boulevard David-Bouchard Nord, to 3 rue Court. Depending on your GPS, the route takes rue Saint-Hubert and rue Principale, or boulevard David-Bouchard Nord and rue Dufferin.\n\nMethod: two route planners, OSRM and Valhalla, on OpenStreetMap data, on October 29, 2026. The times count neither traffic, nor traffic lights, nor the time to park.',
@@ -425,10 +423,10 @@ const zooDeGranby = {
         q('Is Pâtisserie Coco Vanille inside the Zoo?', 'No: Pâtisserie Coco Vanille is in downtown Granby, at 3 rue Court, about 3 to 4 km from the Zoo by road. The Zoo has its own food outlets on site, according to its FAQ.'),
         q('Do you offer creative workshops?', 'Yes: Pâtisserie Coco Vanille offers creative workshops Friday to Sunday, by reservation at 438-528-7818. A workshop of painting, or of decorating an item of your choice with beads and rhinestones, lasts 2.5 hours and costs $37 per person, with the materials, one drink and one slice of cake. Places are limited.'),
         q('What address should I enter in my GPS for the Granby Zoo?', 'For directions, the Granby Zoo gives 1050 boulevard David-Bouchard Nord, Granby (J2H 0Y6), on its Schedule and directions page, which also has its hours: zoodegranby.com/en/schedule. For the shop, enter 3 rue Court, Granby (J2G 4Y6).'),
-        q('Can I pre-order pastries for pickup on the way to the Zoo?', 'Yes, when the products have pickup slots that day: order on the Order page or by phone at 450-372-7177, then pick up at 3 rue Court during your slot.'),
+        q('Can I pre-order pastries for pickup on the way to the Zoo?', 'Yes: order ahead by phone at 450-372-7177, then pick up at 3 rue Court at the time agreed with the shop.'),
       ],
-      changeNote: 'First version: the drive from the Zoo was calculated on October 29, 2026; the Zoo’s rules and the City’s parking plans were read the same day.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Date of the route calculation added to the summary; ordering ahead by phone made clear. Route calculated on October 29, 2026; the Zoo’s rules and the City’s parking plans were read the same day.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -442,7 +440,7 @@ const aPropos = {
       description: 'Qui est la Pâtisserie Coco Vanille? Une pâtisserie-boulangerie du 3, rue Court, à Granby, immatriculée au Québec en 2021 : histoire, équipe et faits.',
       h1: 'À propos de la Pâtisserie Coco Vanille, à Granby',
       answer:
-        `La Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby, au 3, rue Court : viennoiseries, pains et gâteaux sur commande. L’entreprise Pâtisserie Coco Vanille inc. est immatriculée au Québec depuis le 9 novembre 2021, sous le numéro 1177082220. Équipe : ${fn('noms et rôles de l’équipe, avec consentement')}.`,
+        `La Pâtisserie Coco Vanille est une pâtisserie-boulangerie du centre-ville de Granby, au 3, rue Court : viennoiseries, pains et gâteaux sur commande. L’entreprise Pâtisserie Coco Vanille inc. est immatriculée au Québec depuis le 9 novembre 2021, sous le numéro 1177082220, selon le Registraire des entreprises. Équipe : ${fn('noms et rôles de l’équipe, avec consentement')}.`,
       sections: [
         s('Qui est la Pâtisserie Coco Vanille?', 'La Pâtisserie Coco Vanille est une pâtisserie-boulangerie de Granby exploitée par l’entreprise Pâtisserie Coco Vanille inc., inscrite au registre des entreprises du Québec dans l’activité « Boulangeries et pâtisseries ». La boutique décrit elle-même son offre ainsi : « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! »'),
         s('Depuis quand la Pâtisserie Coco Vanille existe-t-elle?', `L’entreprise est immatriculée au Québec depuis le 9 novembre 2021. Date d’ouverture de la boutique du 3, rue Court : ${fn('date d’ouverture de la boutique')}.`),
@@ -458,15 +456,15 @@ const aPropos = {
         q('Où voir des photos de la boutique?', 'Les photos publiées par la boutique sont sur son compte Instagram, @coco_vanillegranby, et sur sa page Facebook, facebook.com/PatisserieCocoVanille. Sur ce site, toute photo qui n’est pas celle de la boutique porte la mention « Photo d’illustration ».'),
         q('Comment joindre la Pâtisserie Coco Vanille?', `Par téléphone, au 450-372-7177, ou en personne au 3, rue Court, à Granby. Courriel : bonjour@cocovanillegranby.com.`),
       ],
-      changeNote: 'Compte Instagram et courriel de la boutique ajoutés; équipe à présenter avec son accord.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Source de l’immatriculation ajoutée au résumé; compte Instagram et courriel de la boutique ajoutés.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'About: pastry shop and bakery in Granby · Coco Vanille',
       description: 'Who is Pâtisserie Coco Vanille? A pastry shop and bakery at 3 rue Court, Granby, Québec, registered in Québec since 2021: its story, team and facts.',
       h1: 'About Pâtisserie Coco Vanille, in Granby',
       answer:
-        `Pâtisserie Coco Vanille is a pastry shop and bakery in downtown Granby, Québec, at 3 rue Court: viennoiseries, bread and cakes to order. The company, Pâtisserie Coco Vanille inc., has been registered in Québec since November 9, 2021, under number 1177082220. Team: ${fn('team names and roles, with consent')}.`,
+        `Pâtisserie Coco Vanille is a pastry shop and bakery in downtown Granby, Québec, at 3 rue Court: viennoiseries, bread and cakes to order. The company, Pâtisserie Coco Vanille inc., has been registered in Québec since November 9, 2021, under number 1177082220, according to the Registraire des entreprises. Team: ${fn('team names and roles, with consent')}.`,
       sections: [
         s('Who is Pâtisserie Coco Vanille?', 'Pâtisserie Coco Vanille is a Granby pastry shop and bakery run by the company Pâtisserie Coco Vanille inc., listed in the Québec business registry under the activity “Bakeries and pastry shops”. The shop describes its own offer in French: « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! » (a wide variety of pastries, cakes and bread).'),
         s('How long has Pâtisserie Coco Vanille been around?', `The company has been registered in Québec since November 9, 2021. Opening date of the shop at 3 rue Court: ${fn('shop opening date')}.`),
@@ -482,13 +480,19 @@ const aPropos = {
         q('Where can I see photos of the shop?', 'Photos posted by the shop are on its Instagram account, @coco_vanillegranby, and its Facebook page, facebook.com/PatisserieCocoVanille. On this site, any photo that is not the shop’s own is labelled “Illustrative photo”.'),
         q('How do I contact Pâtisserie Coco Vanille?', `By phone at 450-372-7177, or in person at 3 rue Court, Granby. Email: bonjour@cocovanillegranby.com.`),
       ],
-      changeNote: 'Instagram account and shop email added; team to be introduced with consent.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Source of the registration added to the summary; Instagram account and shop email added.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
 
 // ---------- Allergens ----------
+// Sources, read 2026-10-25 (research/07 A1, A6, A8); the copy names them as plain text with their date until the
+// page sections can carry links:
+//   CFIA, food allergen labelling: https://inspection.canada.ca/en/food-labels/labelling/industry/how-label-allergens
+//   CFIA, gluten-free claims: https://inspection.canada.ca/en/food-labels/labelling/industry/allergens-and-gluten/gluten-free-claims
+//   Health Canada, gluten-free claims: https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-allergies-intolerances/celiac-disease/health-canada-position-gluten-free-claims.html
+// The 20 ppm limit is a ceiling (« pas plus de », "not more than"), not a strict « sous ».
 const allergenes = {
   key: 'allergenes',
   status: 'core',
@@ -500,24 +504,26 @@ const allergenes = {
       answer:
         'La Pâtisserie Coco Vanille, à Granby, indique pour chaque produit les allergènes prioritaires qu’il contient, une fois la liste vérifiée par une personne de l’équipe. Ce site ne présente aucun produit comme « sans gluten », « sans noix » ou « sans arachides ». En cas d’allergie, appelez au 450-372-7177 avant de commander.',
       sections: [
-        s('Quels allergènes la Pâtisserie Coco Vanille indique-t-elle?', 'La Pâtisserie Coco Vanille indique les allergènes prioritaires reconnus par Santé Canada et l’Agence canadienne d’inspection des aliments, plus les sources de gluten.', {
+        s('Quels allergènes la Pâtisserie Coco Vanille indique-t-elle?', 'La Pâtisserie Coco Vanille indique les allergènes prioritaires reconnus par Santé Canada et l’Agence canadienne d’inspection des aliments, plus les sources de gluten. Source : la page de l’Agence sur l’étiquetage des allergènes alimentaires, sur inspection.canada.ca, lue le 25 octobre 2026.', {
           list: ['Œufs', 'Lait', 'Moutarde', 'Arachides', 'Crustacés et mollusques', 'Poisson', 'Sésame', 'Soya', 'Sulfites', 'Noix', 'Blé et triticale', 'Sources de gluten : orge, avoine, seigle'],
         }),
-        s('Avez-vous des produits sans gluten ou sans noix?', 'Ce site ne présente aucun produit comme « sans gluten », « sans noix » ou « sans arachides ». Au Canada, « sans gluten » est une allégation encadrée : le produit ne doit contenir aucune protéine de gluten, et le gluten venu d’une contamination croisée doit rester sous 20 ppm.'),
+        s('Avez-vous des produits sans gluten ou sans noix?', 'Ce site ne présente aucun produit comme « sans gluten », « sans noix » ou « sans arachides ». Au Canada, « sans gluten » est une allégation encadrée : le produit ne doit contenir aucune protéine de gluten, et le gluten venu d’une contamination croisée ne doit pas dépasser 20 ppm.', {
+          body: 'Sources : la position de Santé Canada sur les allégations « sans gluten », sur canada.ca, et la page de l’Agence canadienne d’inspection des aliments sur le contrôle de ces allégations, sur inspection.canada.ca, lues le 25 octobre 2026.',
+        }),
         s('Y a-t-il un risque de contamination croisée?', `Le risque dépend des ingrédients manipulés dans la même cuisine, que la boutique doit confirmer : ${fn('allergènes manipulés dans la cuisine et précautions contre la contamination croisée')}. La mention « Peut contenir » n’apparaît que lorsqu’un risque réel demeure.`),
         s('Comment les allergènes sont-ils vérifiés?', 'Chaque liste d’allergènes est vérifiée et datée par une personne de l’équipe, jamais générée automatiquement. Tant qu’un produit n’est pas vérifié, sa page le dit au lieu d’afficher une liste incomplète.'),
         s('Que faire en cas d’allergie grave?', 'Appelez la boutique au 450-372-7177 avant de commander pour parler des ingrédients et de la préparation. Dans le formulaire de commande, la note d’allergie est facultative et sert seulement à préparer votre commande.'),
       ],
       faq: [
-        q('Le croissant aux amandes contient-il des noix?', 'Oui : l’amande fait partie des noix, un des allergènes prioritaires. Sa liste complète paraît sur sa page une fois vérifiée par une personne de l’équipe.'),
+        q('Le croissant aux amandes contient-il des noix?', 'Oui : l’amande fait partie des noix, un des allergènes prioritaires, donc un croissant aux amandes en contient. Les allergènes de chaque produit offert paraissent sur sa page une fois vérifiés par une personne de l’équipe.'),
         q('Que veut dire « Peut contenir »?', '« Peut contenir » signale un risque de contamination croisée qui demeure malgré les précautions. La Pâtisserie Coco Vanille l’utilise seulement quand ce risque est réel, jamais comme mention générale.'),
         q('Avez-vous des gâteaux sans lactose ou véganes?', `Ce site ne présente aucun produit comme « sans lactose » ou « végane ». Produits préparés sans lait ou sans œufs : ${fn('produits sans lait ou sans œufs, s’il y en a')}.`),
         q('Puis-je indiquer une allergie dans ma commande?', 'Oui : le formulaire de commande a un champ facultatif pour une allergie. Cette note sert seulement à préparer votre commande; elle n’est jamais copiée dans les courriels ou les textos.'),
         q('Où trouver la liste des ingrédients?', `La page de chaque produit affiche ses allergènes une fois vérifiés. Liste complète des ingrédients : ${fn('liste des ingrédients par produit')}.`),
         q('Les allergènes sont-ils affichés en boutique?', `L’affichage des allergènes au comptoir reste à confirmer par la boutique : ${fn('affichage des allergènes en boutique')}.`),
       ],
-      changeNote: 'Les mentions « sans gluten » décrivent désormais ce site; vérification par produit en cours.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Sources de Santé Canada et de l’Agence canadienne d’inspection des aliments ajoutées, avec leur date; limite de 20 ppm précisée. Aucune allégation « sans gluten » sur ce site.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Allergies and allergens in Granby · Pâtisserie Coco Vanille',
@@ -526,24 +532,26 @@ const allergenes = {
       answer:
         'Pâtisserie Coco Vanille in Granby, Québec, shows the priority allergens each product contains, once a team member has checked the list. This website presents no product as “gluten-free”, “nut-free” or “peanut-free”. If you have an allergy, call 450-372-7177 before you order, to talk about ingredients and preparation.',
       sections: [
-        s('Which allergens does Pâtisserie Coco Vanille list?', 'Pâtisserie Coco Vanille lists the priority allergens recognised by Health Canada and the Canadian Food Inspection Agency, plus gluten sources.', {
+        s('Which allergens does Pâtisserie Coco Vanille list?', 'Pâtisserie Coco Vanille lists the priority allergens recognised by Health Canada and the Canadian Food Inspection Agency, plus gluten sources. Source: the Agency’s page on food allergen labelling, on inspection.canada.ca, read on October 25, 2026.', {
           list: ['Eggs', 'Milk', 'Mustard', 'Peanuts', 'Crustaceans and molluscs', 'Fish', 'Sesame', 'Soy', 'Sulphites', 'Tree nuts', 'Wheat and triticale', 'Gluten sources: barley, oats, rye'],
         }),
-        s('Do you have gluten-free or nut-free products?', 'This website does not label any product “gluten-free”, “nut-free” or “peanut-free”. In Canada, “gluten-free” is a regulated claim: the food must contain no gluten protein, and gluten from cross-contact must stay under 20 ppm.'),
+        s('Do you have gluten-free or nut-free products?', 'This website does not label any product “gluten-free”, “nut-free” or “peanut-free”. In Canada, “gluten-free” is a regulated claim: the food must contain no gluten protein, and gluten from cross-contact must not exceed 20 ppm.', {
+          body: 'Sources: Health Canada’s position on gluten-free claims, on canada.ca, and the Canadian Food Inspection Agency’s page on enforcing those claims, on inspection.canada.ca, read on October 25, 2026.',
+        }),
         s('Is there a risk of cross-contact?', `The risk depends on the ingredients handled in the same kitchen, which the shop still has to confirm: ${fn('allergens handled in the kitchen and cross-contact precautions')}. “May contain” only appears when a real risk remains.`),
         s('How are allergens checked?', 'Each allergen list is checked and dated by a team member, never generated automatically. Until a product is checked, its page says so instead of showing an incomplete list.'),
         s('What should I do if I have a severe allergy?', 'Call the shop at 450-372-7177 before you order to talk about ingredients and preparation. On the order form, the allergy note is optional and is only used to prepare your order.'),
       ],
       faq: [
-        q('Does the almond croissant contain tree nuts?', 'Yes: almonds are tree nuts, one of the priority allergens. Its full list appears on its page once a team member has checked it.'),
+        q('Does the almond croissant contain tree nuts?', 'Yes: almonds are tree nuts, one of the priority allergens, so an almond croissant contains them. The allergens of each product offered appear on its page once a team member has checked them.'),
         q('What does “may contain” mean?', '“May contain” flags a cross-contact risk that remains despite precautions. Pâtisserie Coco Vanille only uses it when that risk is real, never as a blanket statement.'),
         q('Do you have lactose-free or vegan cakes?', `This website does not label any product “lactose-free” or “vegan”. Products made without milk or eggs: ${fn('products without milk or eggs, if any')}.`),
         q('Can I mention an allergy in my order?', 'Yes: the order form has an optional allergy field. That note is only used to prepare your order; it is never copied into emails or text messages.'),
         q('Where can I find the ingredient list?', `Each product page shows its allergens once they are checked. Full ingredient list: ${fn('ingredient list per product')}.`),
         q('Are allergens posted in the shop?', `Allergen information at the counter is still to be confirmed by the shop: ${fn('allergen display in the shop')}.`),
       ],
-      changeNote: 'The “gluten-free” wording now describes this website; per-product checks in progress.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Health Canada and Canadian Food Inspection Agency sources added, with their date; the 20 ppm limit made precise. No “gluten-free” claim on this website.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -554,13 +562,13 @@ const faq = {
   status: 'core',
   locales: {
     fr: {
-      title: 'FAQ : commandes, heures et gâteaux · Pâtisserie Coco Vanille',
+      title: 'FAQ à Granby : commandes, heures et gâteaux · Coco Vanille',
       description: 'Questions fréquentes sur la Pâtisserie Coco Vanille, à Granby : commande et cueillette, délais, prix, portions, allergènes, heures, stationnement et paiement.',
       h1: 'Questions fréquentes sur la Pâtisserie Coco Vanille',
       answer:
         'Cette page de la Pâtisserie Coco Vanille, à Granby, répond aux questions des clients sur la boutique du 3, rue Court : commande et cueillette, délais, prix, portions, allergènes, heures, stationnement et ateliers. Chaque réponse commence par l’essentiel, puis renvoie à la page qui donne le détail.',
       sections: [
-        s('Comment commander à la Pâtisserie Coco Vanille?', 'Vous commandez en ligne sur la page Commander, ou par téléphone au 450-372-7177, pour une cueillette au 3, rue Court. Les deux passent par le même calendrier, qui affiche seulement les dates possibles.'),
+        s('Comment commander à la Pâtisserie Coco Vanille?', 'Vous commandez par téléphone au 450-372-7177 ou au comptoir du 3, rue Court, pour une cueillette en boutique. Pour un gâteau personnalisé, la page Commander reçoit aussi votre demande en ligne, avec une photo de référence.'),
         s('Combien coûte un gâteau de fête?', `Le prix d’un gâteau de fête dépend du format et du nombre de portions : ${fn('prix des gâteaux par format')}. La page Prix affiche chaque format avec son prix en texte, avant taxes, et la date de mise à jour; elle sert aussi pour un gâteau d’anniversaire sur commande.`),
         s('Quelle grosseur de gâteau pour 20 personnes?', `Pour 20 personnes, le bon format dépend du nombre de portions par taille, que la boutique doit fournir : ${fn('portions par format de gâteau')}. Le calculateur de portions donne la réponse dès que ces chiffres sont publiés.`),
         s('Quelles sont les heures d’ouverture?', `La boutique est ouverte ${OPEN_FR}; elle est fermée ${CLOSED_FR}. Le tableau de la page Nous trouver, tenu à jour par la boutique, donne aussi les jours fériés et les fermetures exceptionnelles.`),
@@ -568,26 +576,26 @@ const faq = {
         s('Y a-t-il une pâtisserie près du Zoo de Granby?', `Oui : la Pâtisserie Coco Vanille est au centre-ville de Granby, au 3, rue Court, à ${ZOO_FR}. La page Depuis le Zoo de Granby donne le trajet en autobus, le stationnement et les règles du Zoo pour le lunch.`),
       ],
       faq: [
-        q('Combien de jours d’avance faut-il commander un gâteau personnalisé?', `Le délai dépend du type de gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Le calendrier de la page Commander propose toujours la première date possible.`),
+        q('Combien de jours d’avance faut-il commander un gâteau personnalisé?', `Le délai dépend du type de gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Pour une date rapprochée, appelez la boutique au 450-372-7177.`),
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez une photo de référence à votre demande et recevez un récapitulatif écrit avant la préparation. Rien n’est préparé sans votre approbation.'),
         q('Faut-il un dépôt? Puis-je annuler?', `Un acompte de ${DEPOSIT_FR} réserve la date d’un gâteau personnalisé. Les règles d’annulation et de remboursement sont écrites dans les conditions de vente, avant le paiement.`),
-        q('Faites-vous la livraison?', `La commande en ligne prévoit la cueillette au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
+        q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
         q('Avez-vous des gâteaux sans noix ou sans gluten?', 'Ce site ne fait aucune allégation « sans noix » ou « sans gluten ». Les allergènes de chaque produit sont sur la page Allergènes, une fois vérifiés.'),
         q('Où se stationner près de la Pâtisserie Coco Vanille?', `${PARKING_FR} La page Nous trouver donne les limites de temps et un deuxième stationnement, à environ 120 m.`),
         q('Vendez-vous des cartes-cadeaux?', 'Le site ne vend pas de cartes-cadeaux pour l’instant; pour savoir si la boutique en offre au comptoir, appelez au 450-372-7177. Au Québec, la carte-cadeau d’un commerce n’a pas de date d’expiration, et aucuns frais ne peuvent être exigés pour sa délivrance ou son utilisation.'),
-        q('Peut-on payer comptant à la cueillette?', `Le paiement en ligne se fait par carte. Paiement à la cueillette : ${fn('paiement comptant ou par carte à la cueillette')}.`),
+        q('Peut-on payer comptant à la cueillette?', `Paiement à la cueillette : ${fn('paiement comptant ou par carte à la cueillette')}. Quand un produit se paie en ligne, le paiement se fait par carte.`),
       ],
-      changeNote: 'Stationnement et pâtisserie près du Zoo ajoutés; réponse sur les cartes-cadeaux précisée selon la Loi sur la protection du consommateur.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Commande par téléphone, au comptoir et par demande de gâteau en ligne précisée.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
-      title: 'FAQ: orders, hours and cakes · Pâtisserie Coco Vanille',
+      title: 'FAQ: orders, hours and cakes in Granby · Coco Vanille',
       description: 'Frequently asked questions about Pâtisserie Coco Vanille in Granby, Québec: ordering and pickup, lead times, prices, servings, allergens, hours, parking.',
       h1: 'Frequently asked questions about Pâtisserie Coco Vanille',
       answer:
         'This page of Pâtisserie Coco Vanille in Granby, Québec, answers customers’ questions about the shop at 3 rue Court: ordering and pickup, lead times, prices, servings, allergens, hours, parking and workshops. Each answer starts with the essentials, then points to the page that has the details.',
       sections: [
-        s('How do I order from Pâtisserie Coco Vanille?', 'You order online on the Order page, or by phone at 450-372-7177, for pickup at 3 rue Court. Both use the same calendar, which only shows the dates that are possible.'),
+        s('How do I order from Pâtisserie Coco Vanille?', 'You order by phone at 450-372-7177 or at the counter, 3 rue Court, for pickup at the shop. For a custom cake, the Order page also takes your request online, with a reference photo.'),
         s('How much is a custom birthday cake?', `The price of a birthday cake depends on the size and the number of servings: ${fn('cake prices per size')}. The Prices page shows each size with its price as text, before taxes, and the date it was updated.`),
         s('What size cake for 20 people?', `For 20 people, the right size depends on the number of servings per size, which the shop still has to provide: ${fn('servings per cake size')}. The serving calculator gives the answer as soon as those numbers are published.`),
         s('What are the opening hours?', `The shop is open ${OPEN_EN}; it is closed ${CLOSED_EN}. The table on the Visit page, kept up to date by the shop, also shows statutory holidays and exceptional closures.`),
@@ -595,17 +603,17 @@ const faq = {
         s('Is there a bakery near the Granby Zoo?', `Yes: Pâtisserie Coco Vanille, a pastry shop and bakery at 3 rue Court in downtown Granby, is ${ZOO_EN}. The From the Granby Zoo page gives the bus route, parking and the Zoo’s rules for bringing lunch.`),
       ],
       faq: [
-        q('How far in advance should I order a custom cake?', `The lead time depends on the type of cake: ${fn('minimum lead time per cake type, in days')}. The calendar on the Order page always offers the first possible date.`),
+        q('How far in advance should I order a custom cake?', `The lead time depends on the type of cake: ${fn('minimum lead time per cake type, in days')}. If the date is close, call the shop at 450-372-7177.`),
         q('Will my cake look like the photo?', 'You attach a reference photo to your request and receive a written summary before anything is made. Nothing is made without your approval.'),
         q('Is there a deposit? Can I cancel?', `A deposit of ${DEPOSIT_EN} holds the date for a custom cake. The cancellation and refund rules are written in the conditions of sale, before you pay.`),
-        q('Do you deliver?', `Online orders are picked up at 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
+        q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
         q('Do you have nut-free or gluten-free cakes?', 'This website makes no “nut-free” or “gluten-free” claims. Each product’s allergens are on the Allergens page once checked.'),
         q('Where can I park near Pâtisserie Coco Vanille?', `${PARKING_EN} The Visit page gives the time limits and a second lot, about 120 m away.`),
         q('Do you sell gift cards?', 'The website does not sell gift cards for now; to find out whether the shop offers them at the counter, call 450-372-7177. In Québec, a shop’s gift card has no expiry date, and no fee can be charged to issue or use it.'),
-        q('Can I pay cash at pickup?', `Online payment is by card. Payment at pickup: ${fn('cash or card payment at pickup')}.`),
+        q('Can I pay cash at pickup?', `Payment at pickup: ${fn('cash or card payment at pickup')}. When a product is paid online, payment is by card.`),
       ],
-      changeNote: 'Parking and a bakery near the Zoo added; gift-card answer made precise under the Consumer Protection Act.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Ordering by phone, at the counter and by online cake request made clear.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -617,47 +625,47 @@ const viennoiseries = {
   locales: {
     fr: {
       title: 'Croissants et viennoiseries à Granby · Coco Vanille',
-      description: 'Croissants et viennoiseries de la Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, dont le croissant aux amandes. Prix et allergènes.',
+      description: 'Croissants et viennoiseries de la Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, à récupérer en boutique. Prix et allergènes en texte.',
       h1: 'Croissants et viennoiseries à Granby',
       answer:
-        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, propose des viennoiseries, dont le croissant aux amandes. Chaque viennoiserie a sa page avec son prix écrit en texte et, une fois vérifiés, ses allergènes; tout se récupère en boutique. Liste du jour et heures de sortie du four : ${fn('viennoiseries offertes et heures de cuisson')}.`,
+        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, propose des viennoiseries et des croissants, selon la liste de son offre publiée en août 2026. Chaque viennoiserie a sa page avec son prix écrit en texte et, une fois vérifiés, ses allergènes; tout se récupère en boutique. Liste du jour et heures de sortie du four : ${fn('viennoiseries offertes et heures de cuisson')}.`,
       sections: [
-        s('Quelles viennoiseries trouve-t-on à la Pâtisserie Coco Vanille?', `On y trouve le croissant aux amandes, que les clients citent souvent dans leurs avis. La liste complète des viennoiseries reste à confirmer par la boutique : ${fn('liste des viennoiseries')}.`),
+        s('Quelles viennoiseries trouve-t-on à la Pâtisserie Coco Vanille?', `La boutique annonce des viennoiseries et des croissants dans la liste de son offre publiée en août 2026; viennoiseries offertes en ce moment : ${fn('liste des viennoiseries')}. Des avis publics de clients, lus le 29 octobre 2026, citent notamment le croissant aux amandes.`),
         s('Qu’est-ce qu’une viennoiserie?', 'Une viennoiserie est un produit de boulangerie à pâte levée, souvent feuilletée et enrichie de beurre, de sucre ou d’œufs, comme le croissant ou la brioche. Elle se situe entre le pain et la pâtisserie.'),
         s('À quelle heure les croissants sont-ils prêts le matin?', `L’heure de sortie du four reste à confirmer par la boutique : ${fn('heure de sortie des croissants le matin')}. La vitrine du jour, sur la page d’accueil, montre ce qui est en vente aujourd’hui.`),
         s('Peut-on commander des viennoiseries pour une réunion?', `Les boîtes de viennoiseries pour les réunions restent à confirmer : ${fn('boîtes de viennoiseries pour groupes offertes ou non, quantité minimale et délai')}.`),
       ],
       faq: [
         q('Faites-vous des chocolatines?', `La chocolatine (pain au chocolat) reste à confirmer à la carte : ${fn('chocolatines offertes ou non')}.`),
-        q('Le croissant aux amandes contient-il des noix?', 'Oui : l’amande est une noix, un des allergènes prioritaires. La page du croissant aux amandes affiche sa liste d’allergènes une fois vérifiée.'),
+        q('Le croissant aux amandes contient-il des noix?', 'Oui : l’amande est une noix, un des allergènes prioritaires, donc un croissant aux amandes en contient. Les allergènes de chaque viennoiserie offerte paraissent sur sa page une fois vérifiés.'),
         q('Combien coûte un croissant?', `Le prix de chaque viennoiserie est écrit en texte sur sa page : ${fn('prix des viennoiseries')}.`),
         q('Peut-on réserver des croissants pour le lendemain?', `La réservation des viennoiseries reste à confirmer : ${fn('réservation de viennoiseries pour le lendemain')}. Les produits commandables apparaissent sur la page Commander.`),
         q('Les viennoiseries sont-elles faites le matin même?', `Le moment de cuisson reste à confirmer par la boutique : ${fn('viennoiseries cuites le matin même ou non')}.`),
       ],
-      changeNote: 'Allergènes affichés seulement une fois vérifiés; liste des viennoiseries et heures de cuisson à confirmer.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Viennoiseries décrites selon l’offre publiée par la boutique; le croissant aux amandes est présenté comme cité dans des avis publics.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Croissants and viennoiseries in Granby · Coco Vanille',
-      description: 'Croissants and viennoiseries from Pâtisserie Coco Vanille, 3 rue Court in downtown Granby, Québec, including the almond croissant. Prices and allergens as text.',
+      description: 'Croissants and viennoiseries from Pâtisserie Coco Vanille, 3 rue Court in downtown Granby, Québec, for pickup at the shop. Prices and allergens as text.',
       h1: 'Croissants and viennoiseries in Granby',
       answer:
-        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes viennoiseries, including the almond croissant. Each viennoiserie has its own page with its price written as text and, once checked, its allergens; everything is picked up at the shop. Today’s list and baking times: ${fn('viennoiseries offered and baking times')}.`,
+        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes viennoiseries and croissants, according to the list of its offer published in August 2026. Each viennoiserie has its own page with its price written as text and, once checked, its allergens; everything is picked up at the shop. Today’s list and baking times: ${fn('viennoiseries offered and baking times')}.`,
       sections: [
-        s('Which viennoiseries does Pâtisserie Coco Vanille make?', `The almond croissant, which customers often mention in their reviews. The full list of viennoiseries is still to be confirmed by the shop: ${fn('list of viennoiseries')}.`),
+        s('Which viennoiseries does Pâtisserie Coco Vanille make?', `The shop lists viennoiseries and croissants in the list of its offer published in August 2026; viennoiseries offered right now: ${fn('list of viennoiseries')}. Public customer reviews, read on October 29, 2026, mention the almond croissant in particular.`),
         s('What is a viennoiserie?', 'A viennoiserie is a yeast-raised baked good, often laminated and enriched with butter, sugar or eggs, like a croissant or a brioche. It sits between bread and pastry.'),
         s('What time are the croissants ready in the morning?', `The time the croissants come out of the oven is still to be confirmed by the shop: ${fn('time the croissants are ready in the morning')}. Today’s display case, on the home page, shows what is for sale today.`),
         s('Can I order viennoiseries for a meeting?', `Viennoiserie boxes for meetings are still to be confirmed: ${fn('group viennoiserie boxes offered or not, minimum quantity and lead time')}.`),
       ],
       faq: [
         q('Do you make chocolatines?', `The chocolatine (chocolate croissant, pain au chocolat) is still to be confirmed on the menu: ${fn('chocolatines offered or not')}.`),
-        q('Does the almond croissant contain tree nuts?', 'Yes: almonds are tree nuts, one of the priority allergens. The almond croissant page shows its allergen list once it is checked.'),
+        q('Does the almond croissant contain tree nuts?', 'Yes: almonds are tree nuts, one of the priority allergens, so an almond croissant contains them. The allergens of each viennoiserie offered appear on its page once checked.'),
         q('How much is a croissant?', `Each viennoiserie’s price is written as text on its page: ${fn('viennoiserie prices')}.`),
         q('Can I reserve croissants for the next day?', `Reserving viennoiseries is still to be confirmed: ${fn('next-day viennoiserie reservations')}. Products you can order appear on the Order page.`),
         q('Are the viennoiseries baked the same morning?', `Baking times are still to be confirmed by the shop: ${fn('viennoiseries baked the same morning or not')}.`),
       ],
-      changeNote: 'Allergens shown only once checked; list of viennoiseries and baking times to be confirmed.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Viennoiseries described from the shop’s published offer; the almond croissant is presented as mentioned in public reviews.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -668,12 +676,12 @@ const pains = {
   locales: {
     fr: {
       title: 'Pains et baguettes à Granby · Pâtisserie Coco Vanille',
-      description: 'Pains et baguettes de la Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, à récupérer en boutique. Prix, allergènes et variétés.',
+      description: 'Pains frais de la Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, à récupérer en boutique. Variétés, prix et allergènes écrits en texte.',
       h1: 'Pains et baguettes à Granby',
       answer:
-        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, fait des pains et des baguettes à récupérer en boutique. La page de chaque pain affiche son prix écrit en texte et, une fois vérifiés, ses allergènes. Variétés de pains et heures de sortie du four : ${fn('pains offerts et heures de cuisson')}.`,
+        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, vend des pains frais à récupérer en boutique, selon la liste de son offre publiée en août 2026. La page de chaque pain affiche son prix écrit en texte et, une fois vérifiés, ses allergènes. Variétés de pains et heures de sortie du four : ${fn('pains offerts et heures de cuisson')}.`,
       sections: [
-        s('Quels pains la Pâtisserie Coco Vanille fait-elle?', `La baguette est à la carte de la Pâtisserie Coco Vanille. Les autres variétés de pains restent à confirmer par la boutique : ${fn('liste des pains')}.`),
+        s('Quels pains la Pâtisserie Coco Vanille fait-elle?', `La boutique annonce des pains frais dans la liste de son offre publiée en août 2026; pains offerts en ce moment : ${fn('liste des pains')}. Des avis publics de clients, lus le 29 octobre 2026, citent la baguette.`),
         s('Vendez-vous du pain congelé?', `Le pain et les baguettes congelés restent à confirmer par la boutique : ${fn('pains et baguettes congelés offerts ou non')}.`),
         s('Comment garder une baguette fraîche?', 'Une baguette se garde dans un sac de papier, à la température de la pièce, et se mange de préférence le jour même. Pour la garder plus longtemps, congelez-la le jour de l’achat, bien emballée.'),
         s('Peut-on réserver du pain pour le lendemain?', `La réservation de pain reste à confirmer par la boutique : ${fn('réservation de pain pour le lendemain')}. Les produits commandables apparaissent sur la page Commander.`),
@@ -685,17 +693,17 @@ const pains = {
         q('Faites-vous du pain sans gluten?', 'Ce site ne présente aucun pain comme « sans gluten ». Les allergènes de chaque pain sont sur la page Allergènes, une fois vérifiés.'),
         q('Peut-on commander du pain en grande quantité?', `Les commandes de pain en grande quantité restent à confirmer : ${fn('commandes de pain en quantité, minimum et délai')}.`),
       ],
-      changeNote: 'Allergènes et mention « sans gluten » précisés; variétés de pains et heures de cuisson à confirmer.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Pains décrits selon l’offre publiée par la boutique; la baguette est présentée comme citée dans des avis publics.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Bread and baguettes in Granby · Pâtisserie Coco Vanille',
-      description: 'Bread and baguettes from Pâtisserie Coco Vanille, 3 rue Court in downtown Granby, Québec, for pickup at the shop. Prices, allergens and varieties shown as text.',
+      description: 'Fresh bread from Pâtisserie Coco Vanille, 3 rue Court in downtown Granby, Québec, for pickup at the shop. Varieties, prices and allergens written as text.',
       h1: 'Bread and baguettes in Granby',
       answer:
-        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes bread and baguettes for pickup at the shop. Each bread’s page shows its price written as text and, once checked, its allergens. Bread varieties and the times they come out of the oven: ${fn('breads offered and baking times')}.`,
+        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, sells fresh bread for pickup at the shop, according to the list of its offer published in August 2026. Each bread’s page shows its price written as text and, once checked, its allergens. Bread varieties and the times they come out of the oven: ${fn('breads offered and baking times')}.`,
       sections: [
-        s('Which breads does Pâtisserie Coco Vanille make?', `The baguette is on the Pâtisserie Coco Vanille menu. Other bread varieties are still to be confirmed by the shop: ${fn('list of breads')}.`),
+        s('Which breads does Pâtisserie Coco Vanille make?', `The shop lists fresh bread in the list of its offer published in August 2026; breads offered right now: ${fn('list of breads')}. Public customer reviews, read on October 29, 2026, mention the baguette.`),
         s('Do you sell frozen bread?', `Frozen bread and baguettes are still to be confirmed by the shop: ${fn('frozen bread and baguettes offered or not')}.`),
         s('How do I keep a baguette fresh?', 'Keep a baguette in a paper bag at room temperature and eat it the same day if you can. To keep it longer, wrap it well and freeze it on the day you buy it.'),
         s('Can I reserve bread for the next day?', `Bread reservations are still to be confirmed by the shop: ${fn('next-day bread reservations')}. Products you can order appear on the Order page.`),
@@ -707,8 +715,8 @@ const pains = {
         q('Do you make gluten-free bread?', 'This website does not label any bread “gluten-free”. Each bread’s allergens are on the Allergens page once checked.'),
         q('Can I order bread in large quantities?', `Large bread orders are still to be confirmed: ${fn('bulk bread orders, minimum and lead time')}.`),
       ],
-      changeNote: 'Allergens and the “gluten-free” wording made precise; bread varieties and baking times to be confirmed.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Bread described from the shop’s published offer; the baguette is presented as mentioned in public reviews.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -722,46 +730,46 @@ const gateaux = {
       description: 'Gâteaux de fête et gâteaux sur commande de la Pâtisserie Coco Vanille, au 3, rue Court, à Granby : formats, portions, prix en texte et délai de commande.',
       h1: 'Gâteaux de fête et gâteaux sur commande à Granby',
       answer:
-        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, prépare des gâteaux sur commande à récupérer en boutique, dont le gâteau aux framboises et le shortcake aux fraises. Chaque gâteau a sa page avec ses formats, ses portions et son prix en texte. Délai de commande : ${fn('délai minimum par type de gâteau')}.`,
+        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, prépare des gâteaux personnalisés sur commande pour les anniversaires et les occasions spéciales, à récupérer en boutique. Chaque gâteau a sa page avec ses formats, ses portions et son prix en texte. Délai de commande : ${fn('délai minimum par type de gâteau')}.`,
       sections: [
-        s('Quels gâteaux la Pâtisserie Coco Vanille prépare-t-elle?', `La Pâtisserie Coco Vanille, à Granby, prépare des gâteaux personnalisés sur commande pour les anniversaires et les occasions spéciales, selon la liste de son offre publiée en août 2026. Le gâteau aux framboises et le shortcake aux fraises sont à la carte. Les autres gâteaux, saveurs et décors restent à confirmer par la boutique : ${fn('liste des gâteaux, saveurs et décors')}.`),
-        s('Combien de jours d’avance commander un gâteau?', `Le délai dépend du gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Le calendrier de la page Commander propose toujours la première date de cueillette possible.`),
+        s('Quels gâteaux la Pâtisserie Coco Vanille prépare-t-elle?', `La Pâtisserie Coco Vanille, à Granby, prépare des gâteaux personnalisés sur commande pour les anniversaires et les occasions spéciales, selon la liste de son offre publiée en août 2026. Gâteaux, saveurs et décors offerts en ce moment : ${fn('liste des gâteaux, saveurs et décors')}. Des avis publics de clients, lus le 29 octobre 2026, citent le gâteau aux framboises et le shortcake aux fraises.`),
+        s('Combien de jours d’avance commander un gâteau?', `Le délai dépend du gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Pour une date rapprochée, appelez la boutique au 450-372-7177.`),
         s('Quelle grosseur de gâteau choisir pour mes invités?', `Le bon format dépend du nombre de portions par taille, que la boutique doit fournir : ${fn('portions par format de gâteau')}. Le calculateur de portions fera le calcul pour votre nombre d’invités.`),
         s('Combien coûte un gâteau d’anniversaire?', `Le prix d’un gâteau d’anniversaire dépend du format et du décor : ${fn('prix des gâteaux par format')}. Les prix sont écrits en texte, avant taxes, sans frais ajoutés.`),
       ],
       faq: [
-        q('C’est-tu possible d’avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande, que la boutique doit confirmer : ${NEXT_DAY_FR}. Le calendrier de commande affiche seulement les dates possibles.`),
+        q('C’est-tu possible d’avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande : ${NEXT_DAY_FR}. Pour demain, appelez la boutique au 450-372-7177.`),
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez une photo de référence à votre demande, puis vous recevez un récapitulatif écrit du format, de la saveur, des couleurs et du message. La préparation commence seulement après votre approbation.'),
         q('Pouvez-vous écrire un message sur le gâteau?', `Le message sur le gâteau reste à confirmer par la boutique : ${fn('message écrit sur le gâteau offert ou non, longueur maximale')}.`),
         q('Pouvez-vous faire un gâteau avec un personnage?', `La boutique doit confirmer sa politique pour les thèmes et les personnages : ${fn('politique pour les thèmes et les personnages')}.`),
         q('Faut-il un acompte pour un gâteau?', `Pour un gâteau personnalisé, un acompte de ${DEPOSIT_FR} réserve la date; le solde se paie à la cueillette.`),
         q('Comment conserver un gâteau à la crème jusqu’au lendemain?', `Les consignes de conservation de la boutique restent à confirmer : ${fn('consignes de conservation des gâteaux à la crème')}.`),
       ],
-      changeNote: 'Gâteaux personnalisés décrits selon l’offre publiée par la boutique; formats, portions, prix et délais encore à confirmer.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Gâteaux cités dans des avis publics présentés comme tels; gâteaux personnalisés décrits selon l’offre publiée par la boutique.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Birthday cakes to order in Granby, Québec · Coco Vanille',
       description: 'Birthday cakes and cakes to order from Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec: sizes, servings, prices as text and the lead time for each cake.',
       h1: 'Birthday cakes and cakes to order in Granby',
       answer:
-        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes cakes to order for pickup at the shop, including the raspberry cake and the strawberry shortcake. Each cake has its own page with its sizes, servings and price as text. Lead time: ${fn('minimum lead time per cake type')}.`,
+        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes custom cakes to order for birthdays and special occasions, for pickup at the shop. Each cake has its own page with its sizes, servings and price as text. Lead time: ${fn('minimum lead time per cake type')}.`,
       sections: [
-        s('Which cakes does Pâtisserie Coco Vanille make?', `Pâtisserie Coco Vanille in Granby makes custom cakes to order for birthdays and special occasions, according to the list of its offer published in August 2026. The raspberry cake and the strawberry shortcake are on the menu. Other cakes, flavours and decorations are still to be confirmed by the shop: ${fn('list of cakes, flavours and decorations')}.`),
-        s('How far in advance should I order a cake?', `It depends on the cake: ${fn('minimum lead time per cake type, in days')}. The calendar on the Order page always offers the first possible pickup date.`),
+        s('Which cakes does Pâtisserie Coco Vanille make?', `Pâtisserie Coco Vanille in Granby makes custom cakes to order for birthdays and special occasions, according to the list of its offer published in August 2026. Cakes, flavours and decorations offered right now: ${fn('list of cakes, flavours and decorations')}. Public customer reviews, read on October 29, 2026, mention the raspberry cake and the strawberry shortcake.`),
+        s('How far in advance should I order a cake?', `It depends on the cake: ${fn('minimum lead time per cake type, in days')}. If the date is close, call the shop at 450-372-7177.`),
         s('What size cake should I choose for my guests?', `The right size depends on the number of servings per size, which the shop still has to provide: ${fn('servings per cake size')}. The serving calculator will do the maths for your number of guests.`),
         s('How much is a birthday cake?', `The price of a birthday cake depends on its size and decoration: ${fn('cake prices per size')}. Prices are written as text, before taxes, with no added fees.`),
       ],
       faq: [
-        q('Can you make a cake for tomorrow?', `It depends on the order cut-off time, which the shop still has to confirm: ${NEXT_DAY_EN}. The order calendar only shows possible dates.`),
+        q('Can you make a cake for tomorrow?', `It depends on the order cut-off time: ${NEXT_DAY_EN}. For tomorrow, call the shop at 450-372-7177.`),
         q('Will my cake look like the photo?', 'You attach a reference photo to your request, then receive a written summary of the size, flavour, colours and message. Baking starts only after you approve it.'),
         q('Can you write a message on the cake?', `Messages on cakes are still to be confirmed by the shop: ${fn('message on the cake offered or not, maximum length')}.`),
         q('Can you make a cake with a character on it?', `The shop still has to confirm its policy on themes and characters: ${fn('policy on themes and characters')}.`),
         q('Is a deposit required for a cake?', `For a custom cake, a deposit of ${DEPOSIT_EN} holds the date; the balance is paid at pickup.`),
         q('How do I keep a cream cake fresh overnight?', `The shop’s storage instructions are still to be confirmed: ${fn('storage instructions for cream cakes')}.`),
       ],
-      changeNote: 'Custom cakes described from the shop’s published offer; sizes, servings, prices and lead times still to be confirmed.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Cakes mentioned in public reviews presented as such; custom cakes described from the shop’s published offer.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -771,50 +779,50 @@ const patisseries = {
   status: 'core',
   locales: {
     fr: {
-      title: 'Paris-Brest et pâtisseries à Granby · Coco Vanille',
-      description: 'Pâtisseries de la Pâtisserie Coco Vanille, au 3, rue Court, à Granby : Paris-Brest, vol-au-vent et autres classiques, avec prix et allergènes écrits en texte.',
-      h1: 'Pâtisseries à Granby : du Paris-Brest au vol-au-vent',
+      title: 'Pâtisseries sucrées et salées à Granby · Coco Vanille',
+      description: 'Pâtisseries sucrées et salées de la Pâtisserie Coco Vanille, au 3, rue Court, à Granby : classiques, feuilletés et pastillas, avec prix et allergènes en texte.',
+      h1: 'Pâtisseries sucrées et salées à Granby',
       answer:
-        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, propose des pâtisseries sucrées et salées, dont le Paris-Brest et le vol-au-vent. Chaque pâtisserie a sa page avec son prix écrit en texte et, une fois vérifiés, ses allergènes. Pâtisseries offertes cette saison : ${fn('liste des pâtisseries offertes')}.`,
+        `La Pâtisserie Coco Vanille, au 3, rue Court, au centre-ville de Granby, propose des pâtisseries sucrées et du salé, selon la liste de son offre et ses publications de 2026. Chaque pâtisserie a sa page avec son prix écrit en texte et, une fois vérifiés, ses allergènes. Pâtisseries offertes cette saison : ${fn('liste des pâtisseries offertes')}.`,
       sections: [
-        s('Quelles pâtisseries trouve-t-on à la Pâtisserie Coco Vanille?', `Le Paris-Brest et le vol-au-vent sont à la carte de la Pâtisserie Coco Vanille. Les autres pâtisseries restent à confirmer par la boutique : ${fn('liste des pâtisseries')}.`),
+        s('Quelles pâtisseries trouve-t-on à la Pâtisserie Coco Vanille?', `La boutique annonce des pâtisseries gourmandes dans la liste de son offre publiée en août 2026, et du salé, comme des feuilletés et des pastillas au poulet, dans ses publications de septembre 2026. Pâtisseries offertes en ce moment : ${fn('liste des pâtisseries')}. Des avis publics de clients, lus le 29 octobre 2026, citent le Paris-Brest et le vol-au-vent.`),
         s('Qu’est-ce qu’un Paris-Brest?', `Le Paris-Brest est une couronne de pâte à choux garnie de crème pralinée; sa forme rappelle une roue de vélo, en hommage à la course cycliste Paris-Brest-Paris. Garniture du Paris-Brest de la boutique : ${fn('garniture du Paris-Brest')}.`),
         s('Qu’est-ce qu’un vol-au-vent?', `Un vol-au-vent est une bouchée creuse de pâte feuilletée, garnie d’une préparation salée chaude, souvent du poulet en sauce. Garniture du vol-au-vent de la boutique : ${fn('garniture du vol-au-vent')}.`),
-        s('Peut-on commander des pâtisseries à l’avance?', 'Oui, pour les pâtisseries marquées commandables : la page Commander les affiche avec leur délai, et la boutique prend aussi les commandes au 450-372-7177.'),
+        s('Peut-on commander des pâtisseries à l’avance?', 'Oui : la boutique prend les commandes au 450-372-7177. Les pâtisseries qui se commandent en ligne, s’il y en a, paraissent sur la page Commander avec leur délai.'),
       ],
       faq: [
-        q('Le Paris-Brest contient-il des noix?', 'La crème pralinée classique est faite de noisettes ou d’amandes, deux noix. La liste du Paris-Brest de la boutique paraît sur sa page une fois vérifiée.'),
+        q('Le Paris-Brest contient-il des noix?', 'La crème pralinée classique est faite de noisettes ou d’amandes, deux noix. Les allergènes de chaque pâtisserie offerte paraissent sur sa page une fois vérifiés.'),
         q('Combien coûte un Paris-Brest?', `Le prix de chaque pâtisserie est écrit en texte sur sa page : ${fn('prix des pâtisseries')}.`),
         q('Les pâtisseries se conservent-elles jusqu’au lendemain?', `Les consignes de conservation de la boutique restent à confirmer : ${fn('consignes de conservation des pâtisseries à la crème')}.`),
         q('Faites-vous des tartes?', `Les tartes restent à confirmer à la carte : ${fn('tartes offertes ou non')}.`),
         q('Peut-on commander des pâtisseries pour un événement?', `Les commandes de pâtisseries en quantité restent à confirmer : ${fn('commandes de pâtisseries pour événements, minimum et délai')}.`),
         q('Avez-vous du salé pour le dîner?', 'Oui : la Pâtisserie Coco Vanille, à Granby, annonce du salé, sur place ou à emporter : des feuilletés, des mini pizzas, des pastillas au poulet et des sandwichs, selon ses publications de septembre 2026. Pour un pique-nique au Zoo de Granby, la page Depuis le Zoo de Granby donne le trajet et les règles du Zoo.'),
       ],
-      changeNote: 'Salé pour le dîner ajouté; allergènes affichés seulement une fois vérifiés; liste des pâtisseries et garnitures à confirmer.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Pâtisseries décrites selon l’offre publiée par la boutique; le Paris-Brest et le vol-au-vent sont présentés comme cités dans des avis publics.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
-      title: 'Paris-Brest and pastries in Granby · Coco Vanille',
-      description: 'Pastries from Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec: Paris-Brest, vol-au-vent and other French classics, with prices and allergens as text.',
-      h1: 'Pastries in Granby, from Paris-Brest to vol-au-vent',
+      title: 'Sweet and savoury pastries in Granby · Coco Vanille',
+      description: 'Sweet and savoury pastries from Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec: classics, puff pastries and pastillas, with prices and allergens as text.',
+      h1: 'Sweet and savoury pastries in Granby',
       answer:
-        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes sweet and savoury pastries, including the Paris-Brest and the vol-au-vent. Each pastry has its own page with its price written as text and, once checked, its allergens. Pastries offered this season: ${fn('list of pastries offered')}.`,
+        `Pâtisserie Coco Vanille, at 3 rue Court in downtown Granby, Québec, makes sweet pastries and savoury food, according to its offer list and its 2026 posts. Each pastry has its own page with its price written as text and, once checked, its allergens. Pastries offered this season: ${fn('list of pastries offered')}.`,
       sections: [
-        s('Which pastries does Pâtisserie Coco Vanille make?', `The Paris-Brest and the vol-au-vent are on the Pâtisserie Coco Vanille menu. Other pastries are still to be confirmed by the shop: ${fn('list of pastries')}.`),
+        s('Which pastries does Pâtisserie Coco Vanille make?', `The shop lists gourmet pastries in the list of its offer published in August 2026, and savoury food, such as puff pastries and chicken pastillas, in its posts of September 2026. Pastries offered right now: ${fn('list of pastries')}. Public customer reviews, read on October 29, 2026, mention the Paris-Brest and the vol-au-vent.`),
         s('What is a Paris-Brest?', `A Paris-Brest is a ring of choux pastry filled with praline cream; its shape recalls a bicycle wheel, in honour of the Paris-Brest-Paris cycling race. The shop’s Paris-Brest filling: ${fn('Paris-Brest filling')}.`),
         s('What is a vol-au-vent?', `A vol-au-vent is a hollow puff-pastry case filled with a hot savoury mixture, often chicken in sauce. The shop’s vol-au-vent filling: ${fn('vol-au-vent filling')}.`),
-        s('Can I order pastries ahead?', 'Yes, for pastries marked as orderable: the Order page lists them with their lead time, and the shop also takes orders at 450-372-7177.'),
+        s('Can I order pastries ahead?', 'Yes: the shop takes orders at 450-372-7177. Pastries that can be ordered online, if any, appear on the Order page with their lead time.'),
       ],
       faq: [
-        q('Does the Paris-Brest contain tree nuts?', 'Classic praline cream is made from hazelnuts or almonds, both tree nuts. The list for the shop’s Paris-Brest appears on its page once checked.'),
+        q('Does the Paris-Brest contain tree nuts?', 'Classic praline cream is made from hazelnuts or almonds, both tree nuts. The allergens of each pastry offered appear on its page once checked.'),
         q('How much is a Paris-Brest?', `Each pastry’s price is written as text on its page: ${fn('pastry prices')}.`),
         q('Do pastries keep until the next day?', `The shop’s storage instructions are still to be confirmed: ${fn('storage instructions for cream pastries')}.`),
         q('Do you make tarts?', `Tarts are still to be confirmed on the menu: ${fn('tarts offered or not')}.`),
         q('Can I order pastries for an event?', `Large pastry orders are still to be confirmed: ${fn('pastry orders for events, minimum and lead time')}.`),
         q('Do you have savoury food for lunch?', 'Yes: Pâtisserie Coco Vanille in Granby offers savoury food to stay or to go: puff pastries, mini pizzas, chicken pastillas and sandwiches, according to its posts of September 2026. For a picnic at the Granby Zoo, the From the Granby Zoo page gives the route and the Zoo’s rules.'),
       ],
-      changeNote: 'Savoury food for lunch added; allergens shown only once checked; list of pastries and fillings to be confirmed.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Pastries described from the shop’s published offer; the Paris-Brest and the vol-au-vent are presented as mentioned in public reviews.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -827,7 +835,7 @@ const confidentialite = {
   status: 'core',
   locales: {
     fr: {
-      title: 'Politique de confidentialité · Pâtisserie Coco Vanille',
+      title: 'Politique de confidentialité · Coco Vanille, Granby',
       description: 'Comment la Pâtisserie Coco Vanille, à Granby, recueille, utilise et protège vos renseignements personnels selon la Loi 25, et comment exercer vos droits.',
       h1: 'Politique de confidentialité',
       answer:
@@ -873,7 +881,7 @@ const confidentialite = {
         q('Mes renseignements servent-ils à entraîner une intelligence artificielle?', 'Non : aucun renseignement de commande ni aucune note d’allergie n’est transmis à un outil d’intelligence artificielle.'),
         q('Que deviennent les messages envoyés avec « Écrivez-nous »?', 'Vos messages, et le prénom, le numéro de téléphone ou l’adresse courriel que vous choisissez de donner, servent seulement à vous répondre. Ils sont conservés sur le serveur et dans la base de données du site de la boutique, sans service de clavardage externe, puis supprimés 90 jours après le dernier message. Une réponse par texto ou par courriel est envoyée seulement si vous la demandez; elle passe alors par le fournisseur d’envoi de textos ou de courriels de la boutique.'),
       ],
-      changeNote: 'Fournisseurs, hébergement et durées de conservation précisés; texte rédigé par l’Agence, à valider par la propriétaire.',
+      changeNote: 'Fournisseurs, hébergement et durées de conservation précisés.',
       contentUpdatedAt: UPDATED_1029,
     },
     en: {
@@ -923,7 +931,7 @@ const confidentialite = {
         q('Is my information used to train artificial intelligence?', 'No: no order information and no allergy note is sent to an artificial-intelligence tool.'),
         q('What happens to messages sent with “Message us”?', 'Your messages, and the first name, phone number or email address you choose to give, are only used to answer you. They are kept on the server and in the database of the shop’s own website, with no outside chat service, then deleted 90 days after the last message. A reply by text message or email is only sent if you ask for one; it then goes through the shop’s text-message or email provider.'),
       ],
-      changeNote: 'Providers, hosting and retention periods made precise; text written by the Agency, to be approved by the owner.',
+      changeNote: 'Providers, hosting and retention periods made precise.',
       contentUpdatedAt: UPDATED_1029,
     },
   },
@@ -967,7 +975,7 @@ const conditionsDeVente = {
         q('Les cartes-cadeaux expirent-elles?', 'Non : au Québec, la carte-cadeau d’un commerce n’a pas de date d’expiration, et aucuns frais ne peuvent être exigés pour sa délivrance ou son utilisation. Le site ne vend pas de cartes-cadeaux pour l’instant; pour la boutique, appelez au 450-372-7177.'),
         q('Comment obtenir une copie de mon contrat?', 'La confirmation envoyée par courriel est votre copie du contrat. Pour en recevoir une autre, appelez au 450-372-7177.'),
       ],
-      changeNote: 'Validité des soumissions, annulation sans frais et produit non conforme précisés; texte rédigé par l’Agence, à valider par la propriétaire.',
+      changeNote: 'Validité des soumissions, annulation sans frais et produit non conforme précisés.',
       contentUpdatedAt: UPDATED_1029,
     },
     en: {
@@ -1004,7 +1012,7 @@ const conditionsDeVente = {
         q('Do gift cards expire?', 'No: in Québec, a shop’s gift card has no expiry date, and no fee can be charged to issue or use it. The website does not sell gift cards for now; for the shop, call 450-372-7177.'),
         q('How do I get a copy of my contract?', 'The confirmation sent by email is your copy of the contract. For another copy, call 450-372-7177.'),
       ],
-      changeNote: 'Quote validity, free cancellation and products not as ordered made precise; text written by the Agency, to be approved by the owner.',
+      changeNote: 'Quote validity, free cancellation and products not as ordered made precise.',
       contentUpdatedAt: UPDATED_1029,
     },
   },
@@ -1015,7 +1023,7 @@ const temoins = {
   status: 'core',
   locales: {
     fr: {
-      title: 'Témoins et consentement · Pâtisserie Coco Vanille',
+      title: 'Témoins et consentement · Pâtisserie Coco Vanille, Granby',
       description: 'Quels témoins le site de la Pâtisserie Coco Vanille, à Granby, utilise-t-il? Les essentiels seulement; la mesure d’audience reste éteinte sans votre accord.',
       h1: 'Témoins et consentement',
       answer:
@@ -1040,11 +1048,11 @@ const temoins = {
         q('Mon choix est-il enregistré?', 'Oui : votre choix est enregistré avec sa date et la version du texte affiché, sans votre nom, pour prouver le consentement.'),
         q('Puis-je bloquer aussi les témoins essentiels?', 'Oui, dans les réglages de votre navigateur, mais « Ma boîte » et le paiement en ligne ne fonctionneront plus.'),
       ],
-      changeNote: 'Durée de chaque témoin précisée; aucun outil de mesure n’est actif; texte rédigé par l’Agence, à valider par la propriétaire.',
+      changeNote: 'Durée de chaque témoin précisée.',
       contentUpdatedAt: UPDATED,
     },
     en: {
-      title: 'Cookies and consent · Pâtisserie Coco Vanille',
+      title: 'Cookies and consent · Pâtisserie Coco Vanille, Granby',
       description: 'Which cookies does the Pâtisserie Coco Vanille website in Granby, Québec, use? Only essential ones by default; audience measurement stays off without consent.',
       h1: 'Cookies and consent',
       answer:
@@ -1069,7 +1077,7 @@ const temoins = {
         q('Is my choice recorded?', 'Yes: your choice is recorded with its date and the version of the text shown, without your name, to prove consent.'),
         q('Can I block essential cookies too?', 'Yes, in your browser settings, but “My box” and online payment will stop working.'),
       ],
-      changeNote: 'Each cookie’s retention made precise; no measurement tool is active; text written by the Agency, to be approved by the owner.',
+      changeNote: 'Each cookie’s retention made precise.',
       contentUpdatedAt: UPDATED,
     },
   },
@@ -1102,14 +1110,14 @@ const accessibilite = {
         s('La boutique est-elle accessible en personne?', `L’accès à la boutique du 3, rue Court reste à décrire : ${fn('marches, largeur de porte et accès en fauteuil roulant')}.`),
       ],
       faq: [
-        q('Puis-je commander sans utiliser le site?', 'Oui : appelez la boutique au 450-372-7177. Les commandes par téléphone suivent le même calendrier que les commandes en ligne.'),
+        q('Puis-je commander sans utiliser le site?', 'Oui : appelez la boutique au 450-372-7177 ou passez au comptoir du 3, rue Court, pendant les heures d’ouverture.'),
         q('Le site fonctionne-t-il sans JavaScript?', 'Oui pour le contenu : les heures, les prix, la FAQ et les allergènes sont dans le HTML de chaque page. JavaScript ajoute seulement des améliorations.'),
         q('Puis-je agrandir le texte?', 'Oui : le texte s’agrandit avec le zoom du navigateur, jusqu’à 200 %, sans perte de contenu.'),
         q('Les animations peuvent-elles être désactivées?', 'Oui : le site respecte le réglage « réduire les animations » de votre appareil et reste complet sans animation.'),
         q('Le site est-il offert en anglais?', 'Oui, en français et en anglais. La version française est la version de référence.'),
       ],
-      changeNote: 'Délai de réponse et contrôles précisés; texte rédigé par l’Agence, à valider par la propriétaire.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Commande sans le site précisée : par téléphone ou au comptoir.',
+      contentUpdatedAt: UPDATED_1101,
     },
     en: {
       title: 'Website accessibility · Pâtisserie Coco Vanille, Granby',
@@ -1134,14 +1142,14 @@ const accessibilite = {
         s('Is the shop accessible in person?', `Access to the shop at 3 rue Court is still to be described: ${fn('steps, door width and wheelchair access')}.`),
       ],
       faq: [
-        q('Can I order without using the website?', 'Yes: call the shop at 450-372-7177. Phone orders use the same calendar as online orders.'),
+        q('Can I order without using the website?', 'Yes: call the shop at 450-372-7177 or come to the counter at 3 rue Court during opening hours.'),
         q('Does the site work without JavaScript?', 'Yes for the content: hours, prices, the FAQ and allergens are in the HTML of every page. JavaScript only adds enhancements.'),
         q('Can I make the text bigger?', 'Yes: text grows with your browser zoom, up to 200%, without losing content.'),
         q('Can animations be turned off?', 'Yes: the site follows your device’s “reduce motion” setting and stays complete without animation.'),
         q('Is the site available in French?', 'Yes: French is the main version of the site, and the French text prevails.'),
       ],
-      changeNote: 'Response time and checks made precise; text written by the Agency, to be approved by the owner.',
-      contentUpdatedAt: UPDATED_1029,
+      changeNote: 'Ordering without the website made clear: by phone or at the counter.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -1178,7 +1186,7 @@ const prix = {
         q('Le prix est-il le même en boutique et en ligne?', `La politique de prix entre la boutique et le site reste à confirmer : ${fn('prix identiques en ligne et en boutique ou non')}.`),
         q('Combien coûte un gâteau pour 20 personnes?', `Le prix pour 20 personnes est celui du plus petit format qui donne au moins 20 portions : ${fn('format et prix pour 20 portions')}. Le calculateur de portions fait ce calcul pour vous.`),
       ],
-      changeNote: 'Première version : la grille de prix attend les chiffres de la boutique.',
+      changeNote: 'Première version : tableau des prix par format, avant taxes, avec le prix par portion.',
       contentUpdatedAt: UPDATED,
     },
     en: {
@@ -1202,7 +1210,7 @@ const prix = {
         q('Is the price the same in store and online?', `The pricing policy between the shop and the website is still to be confirmed: ${fn('same prices online and in store or not')}.`),
         q('How much is a cake for 20 people?', `The price for 20 people is the price of the smallest size with at least 20 servings: ${fn('size and price for 20 servings')}. The serving calculator does this for you.`),
       ],
-      changeNote: 'First version: the price grid is waiting for the shop’s numbers.',
+      changeNote: 'First version: price table per size, before taxes, with the price per serving.',
       contentUpdatedAt: UPDATED,
     },
   },
@@ -1214,7 +1222,7 @@ const calculateur = {
   condition: 'Portions par taille fournies par le propriétaire',
   locales: {
     fr: {
-      title: 'Calculateur de portions de gâteau · Pâtisserie Coco Vanille',
+      title: 'Calculateur de portions de gâteau · Coco Vanille, Granby',
       description: 'Quelle grosseur de gâteau pour vos invités? Le calculateur de portions de la Pâtisserie Coco Vanille, à Granby, propose les formats qui suffisent.',
       h1: 'Quelle grosseur de gâteau pour mon nombre d’invités?',
       answer:
@@ -1232,11 +1240,11 @@ const calculateur = {
         q('Le calculateur donne-t-il le prix?', 'Oui, quand le prix du format est confirmé : chaque format proposé affiche son prix et son prix par portion.'),
         q('Comment commander le format proposé?', 'Choisissez ce format sur la page du gâteau ou sur la page Commander; le calendrier propose la première date de cueillette possible.'),
       ],
-      changeNote: 'Première version : le calcul attend les portions par format de la boutique.',
+      changeNote: 'Première version : calcul des formats selon le nombre d’invités, aussi sans JavaScript.',
       contentUpdatedAt: UPDATED,
     },
     en: {
-      title: 'Cake serving calculator · Pâtisserie Coco Vanille',
+      title: 'Cake serving calculator · Pâtisserie Coco Vanille, Granby',
       description: 'What size cake for your guests? The serving calculator of Pâtisserie Coco Vanille in Granby, Québec, suggests the sizes that are enough, with their prices.',
       h1: 'What size cake do I need for my guests?',
       answer:
@@ -1254,7 +1262,7 @@ const calculateur = {
         q('What about 50 guests or more?', `For a large number of guests, call 450-372-7177: the shop suggests a size or several cakes. Largest size offered: ${fn('largest cake size offered')}.`),
         q('Does the calculator show the price?', 'Yes, when the price of the size is confirmed: each size suggested shows its price and its price per serving.'),
       ],
-      changeNote: 'First version: the calculation is waiting for the shop’s servings per size.',
+      changeNote: 'First version: sizes worked out from the number of guests, also without JavaScript.',
       contentUpdatedAt: UPDATED,
     },
   },
@@ -1294,7 +1302,7 @@ const gateauxPersonnalises = {
         q('Puis-je modifier ma commande après l’acompte?', `Les modifications après l’acompte suivent les conditions de vente : ${fn('délai de modification après l’acompte')}.`),
         q('Livrez-vous les gâteaux?', `Les gâteaux se récupèrent au 3, rue Court, à Granby. Livraison : ${DELIVERY_FR}.`),
       ],
-      changeNote: 'Première version : délais, formats, prix et thèmes des gâteaux personnalisés à confirmer.',
+      changeNote: 'Première version : demande, soumission, acompte et cueillette d’un gâteau personnalisé.',
       contentUpdatedAt: UPDATED,
     },
     en: {
@@ -1326,7 +1334,7 @@ const gateauxPersonnalises = {
         q('Can I change my order after the deposit?', `Changes after the deposit follow the terms of sale: ${fn('deadline for changes after the deposit')}.`),
         q('Do you deliver cakes?', `Cakes are picked up at 3 rue Court, Granby. Delivery: ${DELIVERY_EN}.`),
       ],
-      changeNote: 'First version: custom-cake lead times, sizes, prices and themes to be confirmed.',
+      changeNote: 'First version: request, quote, deposit and pickup of a custom cake.',
       contentUpdatedAt: UPDATED,
     },
   },
@@ -1352,12 +1360,34 @@ const gateauPourDemain = {
       faq: [
         q('C’est-tu possible d’avoir un gâteau pour demain?', `Oui, si vous commandez avant ${fn('heure limite de commande pour le lendemain')}, dans les formats offerts pour le lendemain. Après l’heure limite, le calendrier propose le jour suivant.`),
         q('Peut-on personnaliser un gâteau pour demain?', `La personnalisation d’un gâteau pour le lendemain reste à confirmer : ${fn('personnalisation possible pour le lendemain ou non')}.`),
-        q('Peut-on commander un gâteau pour demain par téléphone?', 'Oui : appelez au 450-372-7177 avant l’heure limite. La commande entre dans le même calendrier que les commandes en ligne.'),
+        q('Peut-on commander un gâteau pour demain par téléphone?', 'Oui : appelez au 450-372-7177 avant l’heure limite. La commande entre dans le même calendrier que les autres commandes.'),
         q('Peut-on commander pour un lendemain de fermeture?', `Non : le calendrier saute les jours de fermeture et propose la prochaine journée ouverte. La boutique est fermée ${CLOSED_FR}; les autres jours de fermeture, fériés ou exceptionnels, sont signalés dans le tableau des heures.`),
         q('Peut-on écrire un message sur un gâteau pour demain?', `Le message sur un gâteau pour le lendemain reste à confirmer : ${fn('message possible sur un gâteau pour le lendemain')}.`),
       ],
-      changeNote: 'Jours de fermeture ajoutés; la page attend la confirmation de la commande pour le lendemain et de l’heure limite.',
-      contentUpdatedAt: UPDATED_1027,
+      changeNote: 'Commande par téléphone précisée; jours de fermeture ajoutés.',
+      contentUpdatedAt: UPDATED_1101,
+    },
+    en: {
+      title: 'Cake for tomorrow in Granby · Pâtisserie Coco Vanille',
+      description: 'Need a cake for tomorrow in Granby? At Pâtisserie Coco Vanille, order before the cut-off time for next-day pickup at 3 rue Court, in downtown Granby, Québec.',
+      h1: 'A cake for tomorrow in Granby',
+      answer:
+        `Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec, makes cakes for the next day when the order comes in before the cut-off time: ${fn('next-day order cut-off time')}. The sizes offered for the next day are ${fn('sizes offered for the next day')}, for pickup at the shop. The calendar only shows possible dates.`,
+      sections: [
+        s('Can I get a cake for tomorrow in Granby?', `Yes, if the order comes in before ${fn('next-day order cut-off time')}: Pâtisserie Coco Vanille then makes a cake for pickup the next day at 3 rue Court.`),
+        s('Which cakes are offered for the next day?', `The cakes offered for the next day are still to be confirmed by the shop: ${fn('cakes and sizes offered for the next day')}.`),
+        s('What is the cut-off time to order for tomorrow?', `The cut-off time is ${fn('next-day order cut-off time')}. The calendar works out the first possible date from the cut-off time, the closed days and the spots left that day.`),
+        s('What if it is for today?', 'For today, the display case on the home page shows the cakes and pastries for sale. Call 450-372-7177 to check before you head over.'),
+      ],
+      faq: [
+        q('Is a cake for tomorrow really possible?', `Yes, if you order before ${fn('next-day order cut-off time')}, in the sizes offered for the next day. After the cut-off time, the calendar offers the following day.`),
+        q('Can I customize a cake for tomorrow?', `Customizing a next-day cake is still to be confirmed: ${fn('next-day customization possible or not')}.`),
+        q('Can I order a cake for tomorrow by phone?', 'Yes: call 450-372-7177 before the cut-off time. The order goes into the same calendar as the other orders.'),
+        q('Can I order for tomorrow if the shop is closed tomorrow?', `No: the calendar skips closed days and offers the next open day. The shop is closed ${CLOSED_EN}; other closures, statutory holidays or exceptional, are shown in the hours table.`),
+        q('Can you write a message on a cake for tomorrow?', `A message on a next-day cake is still to be confirmed: ${fn('message possible on a next-day cake')}.`),
+      ],
+      changeNote: 'First English version.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -1372,7 +1402,7 @@ const buches = {
       description: 'Bûches de Noël de la Pâtisserie Coco Vanille, à Granby : saveurs, formats, portions, prix et dates de précommande pour une cueillette au 3, rue Court.',
       h1: 'Bûches de Noël à Granby',
       answer:
-        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, publie sur cette page permanente ses bûches de Noël, leurs formats, leurs portions et leurs prix, avec l’état des précommandes : bientôt, ouvertes, complet ou de retour l’an prochain. Bûches offertes en 2026 : ${fn('bûches offertes, oui ou non, avant le 1er novembre')}.`,
+        `La Pâtisserie Coco Vanille, au 3, rue Court, à Granby, publie sur cette page permanente ses bûches de Noël, leurs formats, leurs portions et leurs prix, avec l’état des précommandes : bientôt, ouvertes, complet ou saison terminée. Bûches offertes en 2026 : ${fn('bûches offertes, oui ou non, avant le 1er novembre')}.`,
       sections: [
         s('Où acheter une bûche de Noël à Granby?', `À la Pâtisserie Coco Vanille, au 3, rue Court, si la boutique offre des bûches cette année : ${fn('bûches offertes en 2026')}. Elles se précommandent sur cette page et se récupèrent en boutique.`),
         s('Quand faut-il commander sa bûche de Noël?', `Les précommandes ouvrent et ferment aux dates affichées en haut de cette page : ${fn('dates d’ouverture et de fermeture des précommandes')}. Une fois les places prises, la page affiche « Complet ».`),
@@ -1387,8 +1417,31 @@ const buches = {
         q('Que se passe-t-il quand les bûches sont complètes?', `La page affiche « Complet » et les dates de cueillette disparaissent du calendrier. Liste d’attente : ${fn('liste d’attente offerte ou non')}.`),
         q('Faut-il payer à la précommande?', 'Les conditions de vente précisent quand le paiement est pris. Si la boutique annule une précommande, vous êtes remboursé au complet dans les 15 jours.'),
       ],
-      changeNote: 'Première version de la page permanente des bûches; offre 2026 à confirmer avant le 1er novembre.',
-      contentUpdatedAt: UPDATED,
+      changeNote: 'Fin de saison décrite sans date de retour; première version de la page permanente des bûches de Noël.',
+      contentUpdatedAt: UPDATED_1101,
+    },
+    en: {
+      title: 'Yule logs in Granby, Québec · Pâtisserie Coco Vanille',
+      description: 'Yule logs (bûches de Noël) from Pâtisserie Coco Vanille in Granby, Québec: flavours, sizes, servings, prices and pre-order dates, for pickup at 3 rue Court.',
+      h1: 'Yule logs in Granby',
+      answer:
+        `Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec, posts its Yule logs on this permanent page, with their sizes, servings and prices and the state of pre-orders: coming soon, open, sold out or season over. Yule logs offered in 2026: ${fn('Yule logs offered, yes or no, before November 1')}.`,
+      sections: [
+        s('Where can I buy a Yule log in Granby?', `At Pâtisserie Coco Vanille, 3 rue Court, if the shop offers Yule logs this year: ${fn('Yule logs offered in 2026')}. They are pre-ordered on this page and picked up at the shop.`),
+        s('When should I order my Yule log?', `Pre-orders open and close on the dates shown at the top of this page: ${fn('pre-order opening and closing dates')}. Once every spot is taken, the page shows “Sold out”.`),
+        s('How much is a Yule log?', `Each Yule log’s price is written as text on its page, before taxes: ${fn('Yule log prices per size')}.`),
+        s('How many people does a Yule log serve?', `The number of servings depends on the size of the log: ${fn('servings per Yule log size')}.`),
+        s('What is a bûche de Noël?', 'A bûche de Noël, or Yule log, is a rolled cake shaped like a log, filled with cream and decorated, served over the holidays.'),
+      ],
+      faq: [
+        q('What are the pickup dates for Christmas?', `Pickup dates are shown with the pre-orders: ${fn('Yule log pickup dates')}.`),
+        q('Can I choose the flavour of my Yule log?', `The flavours offered are still to be confirmed: ${fn('Yule log flavours')}.`),
+        q('Do you make ice cream Yule logs?', `Ice cream Yule logs are still to be confirmed: ${fn('ice cream Yule logs offered or not')}.`),
+        q('What happens when the Yule logs are sold out?', `The page shows “Sold out” and the pickup dates disappear from the calendar. Waiting list: ${fn('waiting list offered or not')}.`),
+        q('Do I pay when I pre-order?', 'The conditions of sale say when payment is taken. If the shop cancels a pre-order, you are refunded in full within 15 days.'),
+      ],
+      changeNote: 'First English version.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }
@@ -1416,8 +1469,29 @@ const chef = {
         q('Où voir le travail du chef?', 'Les photos publiées par la boutique sont sur son compte Instagram, @coco_vanillegranby, et sur sa page Facebook, facebook.com/PatisserieCocoVanille.'),
         q('Qui prépare les viennoiseries?', `L’équipe de production reste à présenter, avec son accord : ${fn('équipe de production')}.`),
       ],
-      changeNote: 'Compte Instagram ajouté; la page attend la biographie et le consentement photo du chef.',
+      changeNote: 'Compte Instagram ajouté.',
       contentUpdatedAt: UPDATED_1029,
+    },
+    en: {
+      title: 'The chef at Pâtisserie Coco Vanille in Granby, Québec',
+      description: 'Who makes the cakes and viennoiseries at Pâtisserie Coco Vanille in Granby, Québec? The chef’s background, training and specialties, shared with consent.',
+      h1: 'The chef at Pâtisserie Coco Vanille',
+      answer:
+        `This page introduces the person who runs the kitchen at Pâtisserie Coco Vanille, at 3 rue Court in Granby, Québec: their name, background, training and specialties. It is published only with their written consent and a photo they have approved. Chef: ${fn('name, role and background, with consent')}.`,
+      sections: [
+        s('Who is the chef at Pâtisserie Coco Vanille?', `The chef will be introduced here with their consent: ${fn('chef’s name and role')}.`),
+        s('What is the chef’s training?', `The chef’s training is still to be confirmed: ${fn('chef’s training and background')}.`),
+        s('What are the chef’s specialties?', `The chef’s specialties are still to be confirmed: ${fn('chef’s specialties')}.`),
+      ],
+      faq: [
+        q('How long has the chef worked at Pâtisserie Coco Vanille?', `The year the chef joined is still to be confirmed: ${fn('year the chef joined')}.`),
+        q('Can I meet the chef about a custom cake?', `Meetings about a custom cake are still to be confirmed: ${fn('meeting with the chef offered or not')}.`),
+        q('Has the chef won any awards?', `No award is listed for now: ${fn('awards or distinctions, with dated proof')}.`),
+        q('Where can I see the chef’s work?', 'Photos posted by the shop are on its Instagram account, @coco_vanillegranby, and its Facebook page, facebook.com/PatisserieCocoVanille.'),
+        q('Who makes the viennoiseries?', `The production team is still to be introduced, with their consent: ${fn('production team')}.`),
+      ],
+      changeNote: 'First English version.',
+      contentUpdatedAt: UPDATED_1101,
     },
   },
 }

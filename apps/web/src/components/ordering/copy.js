@@ -1,11 +1,14 @@
 // Ordering interface copy. Québec French is the source; EN/ES adapt it. « vous », « cueillette », « acompte » (16 §0).
+// No reply time is promised to customers: the shop has not answered « En combien de temps répondez-vous à une
+// demande de gâteau? » (Studio fact `reponse-demandes`, research/14 P9), and interface strings get past the publish
+// guard. Nor is a deposit link promised while online payment is off; « la façon de verser l’acompte » holds either way.
 const fr = {
   steps: { label: 'Étapes de votre commande', box: 'Boîte', day: 'Date', you: 'Coordonnées', pay: 'Paiement', done: '(étape terminée)' },
   pageTitles: { box: 'Ma boîte', checkout: 'Vos coordonnées et le récapitulatif', pay: 'Paiement', thanks: 'Merci!', requestThanks: 'Merci, votre demande est envoyée', pending: 'Paiement en cours de confirmation' },
   metaTitles: { box: 'Ma boîte · Coco Vanille', checkout: 'Récapitulatif et paiement · Coco Vanille', thanks: 'Merci · Coco Vanille' },
   request: {
     title: 'Que faut-il nous dire pour un gâteau personnalisé?',
-    intro: 'Remplissez cette demande : la boutique vous répond d’ici 24 heures avec un prix et un lien pour l’acompte. Rien n’est préparé avant votre accord.',
+    intro: 'Remplissez cette demande : la boutique vous répond avec un prix et la façon de verser l’acompte. Rien n’est préparé avant votre accord.',
     cake: 'Votre gâteau',
     occasion: 'Pour quelle occasion?',
     occasionHint: 'Anniversaire, baptême, fête au bureau…',
@@ -154,7 +157,7 @@ const fr = {
     pendingText: 'Nous attendons la confirmation du processeur de paiement. Cette page se met à jour toute seule; vous recevrez aussi un courriel.',
     refresh: 'Mettre à jour',
     cancelled: 'Cette commande a été annulée.',
-    requestText: (when) => `La boutique vous répond d’ici le ${when}, avec un prix et un lien pour l’acompte.`,
+    requestText: () => 'La boutique vous répond avec un prix et la façon de verser l’acompte.',
     requestAllergy: 'Vous avez signalé une allergie : nous vous appellerons pour en parler.',
     requestSummary: 'Votre demande',
     call: (p) => `Une question? Appelez-nous au ${p}.`,
@@ -184,7 +187,7 @@ const en = {
   request: {
     ...fr.request,
     title: 'What should you tell us for a custom cake?',
-    intro: 'Fill in this request: the shop replies within 24 hours with a price and a deposit link. Nothing is made before you agree.',
+    intro: 'Fill in this request: the shop replies with a price and how to pay the deposit. Nothing is made before you agree.',
     cake: 'Your cake',
     occasion: 'What is the occasion?',
     occasionHint: 'Birthday, baptism, office party…',
@@ -334,7 +337,7 @@ const en = {
     pendingText: 'We are waiting for the payment processor’s confirmation. This page updates itself; you will also get an email.',
     refresh: 'Refresh',
     cancelled: 'This order was cancelled.',
-    requestText: (when) => `The shop replies by ${when}, with a price and a deposit link.`,
+    requestText: () => 'The shop replies with a price and how to pay the deposit.',
     requestAllergy: 'You mentioned an allergy: we will call you to talk about it.',
     requestSummary: 'Your request',
     call: (p) => `A question? Call us at ${p}.`,
@@ -363,7 +366,7 @@ const es = {
   request: {
     ...en.request,
     title: '¿Qué debe decirnos para un pastel personalizado?',
-    intro: 'Complete esta solicitud: la tienda responde en 24 horas con un precio y un enlace para el anticipo. Nada se prepara sin su acuerdo.',
+    intro: 'Complete esta solicitud: la tienda le responde con un precio y la forma de pagar el anticipo. Nada se prepara sin su acuerdo.',
     cake: 'Su pastel',
     occasion: '¿Para qué ocasión?',
     occasionHint: 'Cumpleaños, bautizo, fiesta de oficina…',
@@ -512,7 +515,7 @@ const es = {
     pendingText: 'Esperamos la confirmación del procesador de pagos. Esta página se actualiza sola; también recibirá un correo.',
     refresh: 'Actualizar',
     cancelled: 'Este pedido fue cancelado.',
-    requestText: (when) => `La tienda le responde antes del ${when}, con un precio y un enlace para el anticipo.`,
+    requestText: () => 'La tienda le responde con un precio y la forma de pagar el anticipo.',
     requestAllergy: 'Señaló una alergia: le llamaremos para hablarlo.',
     requestSummary: 'Su solicitud',
     call: (p) => `¿Una pregunta? Llámenos al ${p}.`,
