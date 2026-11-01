@@ -1,0 +1,4 @@
+﻿famille,nom_fr,nom_en,format,format_en,prix,portions_min,portions_max,poids_g,delai_heures,contient,peut_contenir,en_ligne,description_fr,notes
+viennoiseries,Croissant aux amandes,Almond croissant,À l’unité,Each,,1,1,,0,ble-triticale oeufs lait noix,arachides sesame,non,,EXEMPLE : remplacez ou effacez cette ligne
+gateaux,Gâteau aux framboises,Raspberry cake,6 po,6-inch,,6,8,,48,ble-triticale oeufs lait,noix,oui,,EXEMPLE : une ligne par format
+gateaux,Gâteau aux framboises,Raspberry cake,8 po,8-inch,,10,12,,48,ble-triticale oeufs lait,noix,oui,,EXEMPLE : même nom = même produit

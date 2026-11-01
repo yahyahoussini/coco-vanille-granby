@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Date | Vendredi 30 octobre 2026 |
+| Date | Vendredi 30 octobre 2026 (mise à jour le dimanche 1er novembre 2026 : bloc 5, vos produits, vos photos et le Journal) |
 | Pour | La propriétaire de la Pâtisserie Coco Vanille inc. |
 | Par | L'Agence (Yahya, BrandHub.ma) |
 | Comment répondre | Directement dans Coco Studio › Plus › « Faits du site » (les questions y sont rangées par sujet), ou par écrit, par message vocal ou en photo à l'Agence, qui les y entre. « Je ne sais pas » est une bonne réponse. |
@@ -70,6 +70,13 @@ Le site est construit et testé. Il ne manque plus que des faits que vous seule 
 31. **Les messages** : le 438-528-7818 reçoit-il des textos? Qui répond aux messages « Écrivez-nous » et qui reçoit les alertes en cas de panne?
 32. **Votre accord sur les décisions de l'Agence** : acompte de 30 % sur les gâteaux personnalisés (remboursé moins les frais engagés si vous annulez), cueillette seulement (pas de livraison), pas de cartes-cadeaux en ligne pour l'instant, commande non récupérée gardée jusqu'à la fermeture le jour prévu, soumission valide 72 heures, annulation sans frais jusqu'à 24 heures avant la cueillette, et les textes des pages légales. Chacune se change d'un mot.
 33. **Votre budget mensuel maximum** pour les outils et l'hébergement (estimation actuelle : environ 21 à 31 $ par mois, avant taxes).
+
+## Bloc 5 — Vos produits, vos photos et le Journal
+
+34. **La liste de vos produits**, d'un coup : la feuille `produits-a-remplir` (une ligne par format : famille, nom, format, prix, portions, délai, allergènes, en ligne oui ou non), ou simplement une photo de votre menu et de vos prix, que l'Agence entre pour vous. Chaque produit s'affiche alors sur le site; ses allergènes ne s'affichent comme vérifiés qu'après votre confirmation dans Coco Studio › Plus › Produits.
+35. **Vos vraies photos**, avec votre accord : la devanture, le comptoir, chaque gâteau (entier et coupé), les viennoiseries, le café. Le site montre pour l'instant des photos d'illustration, marquées « Photo d'illustration »; chacune est remplacée par la vôtre dès qu'elle existe.
+36. **Le Journal** (une courte publication par semaine sur le site) : votre accord pour publier les huit premiers textes préparés par l'Agence (chocolatine ou pain au chocolat, conserver les croissants, l'histoire du Paris-Brest, la bûche de Noël, une demi-journée au centre-ville, vos ateliers créatifs, le vol-au-vent, les allergènes prioritaires), et qui les relit avant leur sortie.
+37. **Qui relit les textes en anglais**, s'il y a quelqu'un : sinon, l'anglais reste un brouillon et seule la version française paraît.
 
 ---
 

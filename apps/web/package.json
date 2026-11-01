@@ -18,6 +18,7 @@
     "seed:studio-demo": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/studio-demo.js",
     "seed:demo-catalogue": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/demo-catalogue.js",
     "accounts": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/accounts.js",
+    "products:import": "PAYLOAD_CONFIG_PATH=src/payload.config.js payload run src/seed/products-import.js",
     "test": "node --test test/unit",
     "lint:contract": "node ../../tools/audit.mjs .next/server/app --quiet",
     "migrate:create": "node scripts/migrate-create.mjs",
