@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # From one commit of the repository to a live site, on a CyberPanel server, as root, with nothing else than a
 # terminal on the server (Hostinger hPanel › Web console):
-#   nohup bash -c 'curl -fsSL https://raw.githubusercontent.com/yahyahoussini/coco-vanille-granby/<sha>/infra/scripts/panel-install.sh \
-#     | bash -s -- <sha> <public-host> <admin-host> <server-ip>' > /root/coco-install.log 2>&1 &
-# Steps: code → setup-panel-host.sh → make-env.sh → build-image.sh → run-task.sh (migrate, seed, seed:catalogue,
-# seed:journal, accounts) → deploy.sh, in that order: Studio never opens with no account. Safe to run again: secrets,
-# accounts and what was typed in Studio are kept, an image already built is reused. The accounts' passwords go to
-# /root/coco-accounts.txt (root only), printed once by src/seed/accounts.js; nothing else here prints a secret.
+#   curl -fsSL https://raw.githubusercontent.com/yahyahoussini/coco-vanille-granby/<sha>/infra/scripts/panel-install.sh -o /root/panel-install.sh
+#   nohup bash /root/panel-install.sh <sha> <public-host> <admin-host> <server-ip> </dev/null >/root/coco-install.log 2>&1 &
+# (Downloaded first: a script piped into bash would have its next lines eaten by the commands it runs.)
+# First time: code → setup-panel-host.sh → make-env.sh → build-image.sh → run-task.sh (migrate, seed, seed:catalogue,
+# seed:journal, accounts) → deploy.sh, in that order: Studio never opens with no account. Next times, to ship a new
+# commit: the same command; the database tasks are skipped (deploy.sh migrates), so nothing typed in Studio changes.
+# Secrets are kept. The accounts' passwords go to /root/coco-accounts.txt (root only), printed once by
+# src/seed/accounts.js; nothing else here prints a secret.
 # Options (env): PORT_BASE=3000 · OWNER_EMAIL · OWNER_NAME · AGENCY_EMAIL · AGENCY_NAME · GUARD=show
 set -euo pipefail
 
@@ -52,23 +54,31 @@ else
   as_coco "bash '$release/scripts/build-image.sh' production '$src' '$sha'"
 fi
 
-step "Database: migrations, verified seed, the shop's products, the Journal"
-for task in migrate seed seed:catalogue seed:journal; do
-  echo "--- $task"
-  as_coco "bash '$release/scripts/run-task.sh' production '$task' --tag '$sha'" 2>&1 | grep -vE 'Pulling schema' | tail -8
-done
+if grep -q '^LIVE_COLOR=.' /opt/coco/production/state.env 2>/dev/null; then
+  step "Database tasks skipped: the site is live, what was typed in Studio stays (deploy.sh migrates)"
+else
+  step "Database: migrations, verified seed, the shop's products, the Journal"
+  for task in migrate seed seed:catalogue seed:journal; do
+    echo "--- $task"
+    as_coco "bash '$release/scripts/run-task.sh' production '$task' --tag '$sha'" 2>&1 | grep -vE 'Pulling schema' | tail -8
+  done
 
-step "Accounts (passwords in /root/coco-accounts.txt, root only)"
-touch /root/coco-accounts.txt
-chmod 600 /root/coco-accounts.txt
-as_coco "bash '$release/scripts/run-task.sh' production accounts --tag '$sha' -e 'OWNER_EMAIL=${OWNER_EMAIL:-proprietaire@cocovanillegranby.com}' -e 'OWNER_NAME=${OWNER_NAME:-Propriétaire}' -e 'AGENCY_EMAIL=${AGENCY_EMAIL:-agence@cocovanillegranby.com}' -e 'AGENCY_NAME=${AGENCY_NAME:-Agence}'" >>/root/coco-accounts.txt 2>&1 || {
-  echo "accounts failed: see the last lines of /root/coco-accounts.txt"
-  exit 1
-}
-grep -cE 'created|kept' /root/coco-accounts.txt || true
+  step "Accounts (passwords in /root/coco-accounts.txt, root only)"
+  touch /root/coco-accounts.txt
+  chmod 600 /root/coco-accounts.txt
+  as_coco "bash '$release/scripts/run-task.sh' production accounts --tag '$sha' -e 'OWNER_EMAIL=${OWNER_EMAIL:-proprietaire@cocovanillegranby.com}' -e 'OWNER_NAME=${OWNER_NAME:-Propriétaire}' -e 'AGENCY_EMAIL=${AGENCY_EMAIL:-agence@cocovanillegranby.com}' -e 'AGENCY_NAME=${AGENCY_NAME:-Agence}'" >>/root/coco-accounts.txt 2>&1 || {
+    echo "accounts failed: see the last lines of /root/coco-accounts.txt"
+    exit 1
+  }
+  grep -cE 'created|kept' /root/coco-accounts.txt || true
+fi
 
 step "Deploy"
 as_coco "bash '$release/scripts/deploy.sh' production '$sha'"
+
+step "Nightly database copy (on this server's disk until BACKUP_REMOTES names an off-site bucket)"
+systemctl enable --now coco-backup@production.timer coco-restore-test@production.timer >/dev/null
+as_coco "bash /opt/coco/production/infra/scripts/backup.sh production" 2>&1 | tail -3 || echo "first backup failed: see backup.sh"
 
 step "From the outside"
 for url in "https://$public/" "https://$public/gateaux/" "https://$public/robots.txt" "https://$admin/connexion/"; do

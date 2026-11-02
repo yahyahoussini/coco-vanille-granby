@@ -62,3 +62,5 @@ const stop = () => {
 }
 process.on('SIGTERM', stop)
 process.on('SIGINT', stop)
+// `payload run` ends the process as soon as this module has finished loading: the worker lives until stop().
+await new Promise(() => {})

@@ -181,11 +181,16 @@ fi
 mounts=(-v "$edge/conf.d:/etc/nginx/conf.d:ro" -v "$edge/snippets:/etc/nginx/snippets:ro" -v "$edge/coco:/etc/nginx/coco:ro" -v "$edge/html:/var/www/coco:ro" -v "$edge/log:/var/log/nginx" -v /opt/coco/production/media:/opt/coco/production/media:ro)
 docker pull -q "$EDGE_IMAGE" >/dev/null
 docker run --rm --network host "${mounts[@]}" "$EDGE_IMAGE" nginx -t -q || die "coco-edge's configuration does not pass nginx -t: OpenLiteSpeed and the other sites were not touched"
-docker rm -f coco-edge >/dev/null 2>&1 || true
-docker run -d --name coco-edge --restart unless-stopped --network host --memory 128m --log-opt max-size=10m --log-opt max-file=2 "${mounts[@]}" "$EDGE_IMAGE" >/dev/null
-sleep 2
-docker ps --format '{{.Names}} {{.Status}}' | grep -q '^coco-edge Up' || die "coco-edge did not start: $(docker logs --tail 5 coco-edge 2>&1)"
-info "running"
+if docker ps --format '{{.Names}}' | grep -qx coco-edge; then
+  docker exec coco-edge nginx -s reload
+  info "reloaded"
+else
+  docker rm -f coco-edge >/dev/null 2>&1 || true
+  docker run -d --name coco-edge --restart unless-stopped --network host --memory 128m --log-opt max-size=10m --log-opt max-file=2 "${mounts[@]}" "$EDGE_IMAGE" >/dev/null
+  sleep 2
+  docker ps --format '{{.Names}} {{.Status}}' | grep -q '^coco-edge Up' || die "coco-edge did not start: $(docker logs --tail 5 coco-edge 2>&1)"
+  info "running"
+fi
 # How deploy.sh and rollback.sh switch colours on this server (read by lib.sh).
 cat >/opt/coco/host.env <<HOSTENV
 NGINX_COCO_DIR="$edge/coco"
@@ -198,14 +203,16 @@ step "CyberPanel websites and certificates"
 # Written once per website, between these two lines: the proxy to coco-edge. Everything else in the file is CyberPanel's.
 BEGIN="# BEGIN coco-edge (infra/scripts/setup-panel-host.sh)"
 END="# END coco-edge"
+ols_changed=0
 site() {
-  local host="$1" port="$2" conf="$vhosts/$1/vhost.conf" out
+  local host="$1" port="$2" conf="$vhosts/$1/vhost.conf" out before
   if [ ! -f "$conf" ]; then
     # The website's PHP is never used (everything is proxied), but CyberPanel asks for one it has.
     php="$(ls -d /usr/local/lsws/lsphp[0-9]* 2>/dev/null | sed 's#.*/lsphp##' | sort -n | tail -n 1 | sed 's/^\(.\)\(.*\)$/\1.\2/')"
     out="$(cyberpanel createWebsite --package Default --owner admin --domainName "$host" --email "webmaster@${host}" --php "${php:-8.2}" 2>&1 || true)"
     [ -f "$conf" ] || die "CyberPanel did not create ${host}: ${out}"
     info "website ${host} created"
+    ols_changed=1
   else
     info "website ${host} exists"
   fi
@@ -216,6 +223,7 @@ site() {
     info "certificate exists for ${host}"
   fi
   [ -f "$conf.before-coco" ] || cp -p "$conf" "$conf.before-coco"
+  before="$(md5sum <"$conf")"
   sed -i "/^${BEGIN//\//\\/}\$/,/^${END}\$/d" "$conf"
   cat >>"$conf" <<CONF
 $BEGIN
@@ -235,12 +243,17 @@ context / {
 }
 $END
 CONF
+  [ "$before" = "$(md5sum <"$conf")" ] || ols_changed=1
 }
 site "$public" "$edge_public"
 site "$admin" "$edge_admin"
-/usr/local/lsws/bin/lswsctrl restart >/dev/null
-sleep 3
-ss -Hltnp '( sport = :443 )' 2>/dev/null | grep -q litespeed || die "OpenLiteSpeed is not back on port 443: put back $vhosts/{$public,$admin}/vhost.conf.before-coco and run lswsctrl restart"
-info "OpenLiteSpeed reloaded gracefully, back on 80/443"
+if [ "$ols_changed" = 1 ]; then
+  /usr/local/lsws/bin/lswsctrl restart >/dev/null
+  sleep 3
+  ss -Hltnp '( sport = :443 )' 2>/dev/null | grep -q litespeed || die "OpenLiteSpeed is not back on port 443: put back $vhosts/{$public,$admin}/vhost.conf.before-coco and run lswsctrl restart"
+  info "OpenLiteSpeed reloaded gracefully, back on 80/443"
+else
+  info "nothing changed for OpenLiteSpeed: not reloaded"
+fi
 
 step "Done. Next, as ${DEPLOY_USER}: make-env.sh → build-image.sh → run-task.sh migrate, seed, seed:catalogue, seed:journal and accounts --tag <sha> → deploy.sh."

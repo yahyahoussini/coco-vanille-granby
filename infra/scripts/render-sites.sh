@@ -15,8 +15,9 @@
 #                 switch HTTP/2 on for the other sites too;
 #               - no IPv6 listens: a socket the other sites may not use (the temporary names have IPv4 only).
 # --edge <public-port>:<admin-port>:<server-ip>   behind another web server on this machine (setup-panel-host.sh):
-#               only the two site blocks, on 127.0.0.1 without TLS; the server's own address may call /svc/revalidate
-#               (the containers reach the public host through it).
+#               only the two site blocks, on 127.0.0.1 without TLS; plain HTTP is redirected from the header the web
+#               server in front sets; the server's own address may call /svc/revalidate (the containers reach the
+#               public host through it).
 # Output names do not depend on the hosts (coco-public.conf, coco-admin.conf, coco-staging.conf and
 # 00-coco-default.conf; zz-coco-*.conf with --shared), so switching to the final domain rewrites the same files.
 set -euo pipefail
@@ -85,7 +86,8 @@ if [ -n "$edge" ]; then
       inside { block = block $0 "\n"; if ($0 ~ /^\}/) { inside = 0; if (block !~ /listen 80;/ && block !~ /server_name www\./) printf "%s", block } ; next }
       { print }' "$file" >"$file.tmp"
     sed -e "s/^\(\s*\)listen 443 ssl;/\1listen 127.0.0.1:${port};/" -e '/coco-tls\.conf/d' \
-      -e "s/^\(\s*\)allow 127\.0\.0\.1;/&\n\1allow ${edge_ip};/" "$file.tmp" >"$file"
+      -e "s/^\(\s*\)allow 127\.0\.0\.1;/&\n\1allow ${edge_ip};/" \
+      -e "s/^\(\s*\)server_name .*;/&\n\1if (\$http_x_forwarded_proto != \"https\") {\n\1  return 301 https:\/\/\$host\$request_uri;\n\1}/" "$file.tmp" >"$file"
     rm -f "$file.tmp"
   done
 fi
