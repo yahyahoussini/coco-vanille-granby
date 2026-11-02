@@ -106,6 +106,26 @@ For a server that already runs other apps (the agency's Hostinger VPS), before t
 9. **Proof the others were left alone** (root): `bash /opt/coco/releases/<sha>/scripts/snapshot.sh > /root/coco-after.txt && diff /root/coco-before.txt /root/coco-after.txt`. Besides files, containers and units, it compares how nginx routes each socket (default server, flags), the certificate a client without SNI gets, each service's main pid and start time, out-of-memory kills and package versions. Expected differences only: packages that `setup-shared-host.sh` had to install (new lines, with their units). Any other difference means stop and look.
 10. **Later, the real domain**: `make-env.sh` with the final names, `install-nginx.sh --public-host <domain> --admin-host admin.<domain> --no-temporary --issue-certs none` (it keeps the shared settings), a redeploy, then a 301 from the temporary names. A passkey is tied to the admin host name: add passkeys after the switch.
 
+## CyberPanel server (the agency's Hostinger VPS)
+
+The live temporary site runs this way: `https://cocovanille.brandhubos.cloud` and `https://admin-cocovanille.brandhubos.cloud`,
+on srv2062670 (72.60.92.29, AlmaLinux 9), beside the eight Omra sites of that server, which nothing here changes. DNS: two A
+records in hPanel › Domains › brandhubos.cloud; the apex of that domain is untouched.
+
+- **Traffic:** OpenLiteSpeed (two CyberPanel websites, their certificates, renewed by CyberPanel) → `coco-edge`, Coco's nginx in
+  a container on 127.0.0.1:3080 and :3081 → the blue or green containers. `/opt/coco/host.env` tells deploy.sh and rollback.sh to
+  reload `coco-edge`: a deploy never touches OpenLiteSpeed.
+- **First install and every new commit, as root** (Web console is enough, no SSH key needed; type, don't paste, its paste is unreliable):
+  ```bash
+  S=<full sha>; curl -fsSL https://raw.githubusercontent.com/yahyahoussini/coco-vanille-granby/$S/infra/scripts/panel-install.sh -o /root/panel-install.sh
+  nohup bash /root/panel-install.sh $S cocovanille.brandhubos.cloud admin-cocovanille.brandhubos.cloud 72.60.92.29 </dev/null >/root/coco-install.log 2>&1 &
+  ```
+  The database tasks run only the first time (`LIVE_COLOR` empty): a new commit never overwrites what was typed in Studio.
+- **Accounts:** passwords printed once, in `/root/coco-accounts.txt` (root only). Delete the file once they are in a password manager.
+- **Backups:** nightly dump in `/opt/coco/production/backups`, same disk as the database, until `BACKUP_REMOTES` names an off-site bucket.
+- **To the real domain:** new A records, then the same command with the new hosts and `GUARD=strict`, once the owner's facts are in.
+- **To remove Coco:** `docker rm -f coco-edge`, `docker compose -p coco-production down -v`, delete the two websites in CyberPanel, delete `/opt/coco` and the `coco` account. Docker stays unless you remove it too.
+
 ## DNS records
 
 | Name | Type | Value | Note |

@@ -4,8 +4,8 @@
 |---|---|
 | Pour | La propriétaire de la Pâtisserie Coco Vanille inc. |
 | Par | L'Agence (Yahya, BrandHub.ma) |
-| Votre site (adresse temporaire) | `<lien du site>` |
-| Coco Studio (votre tableau de bord) | `<lien de Studio>` |
+| Votre site (adresse temporaire) | https://cocovanille.brandhubos.cloud |
+| Coco Studio (votre tableau de bord) | https://admin-cocovanille.brandhubos.cloud/connexion/ |
 | Votre connexion | votre courriel et un mot de passe, remis à part (jamais par écrit dans ce document) |
 
 ## Ce que vous voyez
