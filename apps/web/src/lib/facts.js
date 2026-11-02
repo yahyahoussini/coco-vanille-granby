@@ -4,6 +4,10 @@ export const MARKER_RE = /\[\[FACT NEEDED[^\]]*\]\]/
 
 export const marker = (label) => `[[FACT NEEDED: ${label}]]`
 
+// What a reader sees of a marker: its label (the badge's CSS adds « À confirmer : »). The marker itself stays in the
+// element's data-marker attribute, so the audit still counts it and the page stays out of the index.
+export const factLabel = (text) => String(text).replace(/\[\[FACT NEEDED:? ?([^\]]*)\]\]/g, '$1')
+
 export const isMissing = (value) =>
   value === undefined ||
   value === null ||

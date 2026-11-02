@@ -33,13 +33,15 @@ export function servedByLocale(docsByLocale = {}, { strict = false } = {}) {
 const positive = (n) => typeof n === 'number' && Number.isFinite(n) && n > 0
 
 // A product page states only facts: under strict it needs its description, every size with its price and
-// servings, the lead time and allergens checked by a person (the template shows a marker for each missing one).
+// servings (or « Prix sur demande »: quoted cake by cake, a price and servings are not owed), the lead time and
+// allergens checked by a person (the template shows a marker for each missing one).
 export function productReady(product) {
   const variants = product?.variants || []
+  const quoted = Boolean(product?.priceOnRequest)
   return (
     Boolean(product?.summary && String(product.summary).trim()) &&
     variants.length > 0 &&
-    variants.every((v) => v?.label && positive(v.priceCents) && (positive(v.portionsMin) || positive(v.portionsMax))) &&
+    variants.every((v) => v?.label && (quoted || (positive(v.priceCents) && (positive(v.portionsMin) || positive(v.portionsMax))))) &&
     positive(product.leadTimeHours) &&
     Boolean(product.allergensVerified?.at) &&
     !containsMarker(product)

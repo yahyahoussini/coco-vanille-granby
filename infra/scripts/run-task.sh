@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs one npm script of the app (migrate, seed, accounts) once, in a throwaway container, on the environment's
+# Runs one npm script of the app (migrate, seed, seed:journal, seed:catalogue, accounts) once, in a throwaway container, on the environment's
 # database. Run as the deploy user:
 #   bash run-task.sh production seed                                       (the image live in production)
 #   bash run-task.sh production accounts --tag <sha> -e OWNER_EMAIL=… -e AGENCY_EMAIL=…
@@ -17,8 +17,8 @@ ENV_NAME="${1:-}"
 task="${2:-}"
 require_env_name "$ENV_NAME"
 case "$task" in
-  migrate | seed | accounts) ;;
-  *) die "usage: run-task.sh <env> <migrate|seed|accounts> [--tag <image-tag>] [-e KEY=VALUE …]" ;;
+  migrate | seed | seed:journal | seed:catalogue | accounts) ;;
+  *) die "usage: run-task.sh <env> <migrate|seed|seed:journal|seed:catalogue|accounts> [--tag <image-tag>] [-e KEY=VALUE …]" ;;
 esac
 shift 2
 tag=""

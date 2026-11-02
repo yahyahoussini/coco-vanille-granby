@@ -6,23 +6,38 @@ import { Icon } from '../site/Icon'
 import { StockPhoto } from '../site/StockPhoto'
 import { productPhotoKey } from '@/lib/photos'
 import { AnswerBlock, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
-import { SizesTable, AllergenBlock, LaCoupe, OfferBadge, PriceLine, familyOf, portionsLabel } from '../site/Products'
-import { leadTimeText, offerBadge } from '../site/offer'
+import { SizesTable, AllergenBlock, Photo, OfferBadge, PriceLine, familyOf, portionsLabel } from '../site/Products'
+import { leadTimeText, offerBadge, fromPriceCents } from '../site/offer'
 import { AddToBoxForm, AddLabel, pricedVariants } from '../catalogue/AddToBox'
 import { LivePrice } from '../catalogue/LivePrice'
 import { catalogueCopy } from '../catalogue/copy'
 import { phoneAction, mapsAction, addressLine } from './shared'
 
-// The picture: the owner's photos (« La coupe ») in an arch-topped frame, or, until she adds them, an illustration
+// The picture: the owner's first photo in an arch-topped frame, her other angles below, or, until she adds them, an illustration
 // photo of the kind of product, labelled « Photo d'illustration » with its credit (src/lib/photos.js). The
 // illustration never reaches the Product JSON-LD below (images: the shop's photos only).
 function ProductMedia({ product, locale }) {
   const family = familyOf(product)
   const photos = (product.photos || []).filter((p) => mediaFile(p))
   if (photos.length) {
+    const [first, ...others] = photos
     return (
-      <div className={`product-media has-photo media-${family}`}>
-        <LaCoupe photos={photos} caption={product.title} locale={locale} />
+      <div className="product-gallery">
+        <div className={`product-media has-photo media-${family}`}>
+          <figure className="product-figure">
+            <Photo media={first} size="hero" priority />
+            <figcaption>{product.title}</figcaption>
+          </figure>
+        </div>
+        {others.length > 0 && (
+          <ul className="product-angles">
+            {others.slice(0, 3).map((p) => (
+              <li key={p.id}>
+                <Photo media={p} size="card" />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     )
   }
@@ -50,6 +65,8 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
   const formId = `pp-${product.id}-form`
   // The buy bar (phones) needs the form it submits: a product with no priced size has neither.
   const buyBar = canAdd && pricedVariants(product).length > 0
+  // Quoted cake by cake: no sizes table full of blanks, one sentence.
+  const onRequest = Boolean(product.priceOnRequest) && fromPriceCents(product) === null
   return (
     <article className={`wrap page product family-${familyOf(product)}`}>
       <div className="product-head">
@@ -120,7 +137,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
       </div>
       <section aria-labelledby="product-sizes" className="product-sizes">
         <h2 id="product-sizes">{o.sizesTitle}</h2>
-        <SizesTable variants={product.variants} locale={locale} caption={`${product.title} · ${o.pricesCaption}`} />
+        {onRequest ? <p className="product-on-request">{o.onRequestLine}</p> : <SizesTable variants={product.variants} locale={locale} caption={`${product.title} · ${o.pricesCaption}`} />}
       </section>
       <div className="product-info">
         <section aria-labelledby="product-ready" className="info-card ready-card">
@@ -131,7 +148,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
             <h2 id="product-ready">{o.readyTitle}</h2>
           </div>
           {ready && <OfferBadge state={offer} orderingEnabled={orderingEnabled} />}
-          <p>{lead ? o.leadTime(lead) : <Fact value={null} label="délai de préparation" id="leadTimeHours" />}</p>
+          <p>{lead ? o.leadTime(lead) : onRequest ? o.leadOnRequest : <Fact value={null} label="délai de préparation" id="leadTimeHours" />}</p>
         </section>
         <AllergenBlock product={product} business={business} locale={locale} />
       </div>

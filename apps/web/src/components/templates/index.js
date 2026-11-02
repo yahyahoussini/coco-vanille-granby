@@ -245,9 +245,11 @@ async function PricesTemplate(props) {
         ) : (
           <p><Fact value={null} label="grille de prix par format" /></p>
         )}
-        <p className="small prices-as-of">
-          {o.pricesAsOf} {asOf ? <time dateTime={asOf}>{longDate(asOf, locale)}</time> : <Fact value={null} label="date de la grille de prix" />} · {s.taxesExtra}
-        </p>
+        {(priced.length > 0 || !products.every((p) => p.priceOnRequest)) && (
+          <p className="small prices-as-of">
+            {o.pricesAsOf} {asOf ? <time dateTime={asOf}>{longDate(asOf, locale)}</time> : <Fact value={null} label="date de la grille de prix" />} · {s.taxesExtra}
+          </p>
+        )}
       </section>
     </ContentTemplate>
   )

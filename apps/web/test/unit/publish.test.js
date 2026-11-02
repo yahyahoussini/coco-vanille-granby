@@ -45,6 +45,14 @@ describe('served pages (publish guard)', () => {
     assert.equal(productServed(ready, { strict: true, servedHere: home }), true)
     assert.equal(productServed(ready, { strict: true, servedHere: new Set() }), false)
   })
+  test('« Prix sur demande »: no price or servings owed, the rest still is', () => {
+    const quoted = { summary: 'Un gâteau.', priceOnRequest: true, leadTimeHours: 48, allergensVerified: { at: '2026-11-02' }, variants: [{ label: 'Sur commande' }] }
+    assert.equal(productReady(quoted), true)
+    assert.equal(productReady({ ...quoted, priceOnRequest: false }), false)
+    assert.equal(productReady({ ...quoted, leadTimeHours: 0 }), false)
+    assert.equal(productReady({ ...quoted, allergensVerified: null }), false)
+    assert.equal(productReady({ ...quoted, summary: '' }), false)
+  })
 
   test('strict, French first (Loi 96): no English or Spanish page goes live before its French page', () => {
     const marked = (d) => ({ ...d, sections: [{ body: '[[FACT NEEDED: heures]]' }] })

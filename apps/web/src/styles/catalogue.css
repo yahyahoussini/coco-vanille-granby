@@ -1111,8 +1111,7 @@ html:has(.cat-nav) {
   box-shadow: var(--shadow-soft);
 }
 
-.product-media.has-photo .product-figure,
-.product-media.has-photo .la-coupe-stack {
+.product-media.has-photo .product-figure {
   block-size: 100%;
   inline-size: 100%;
 }
@@ -1154,34 +1153,35 @@ html:has(.cat-nav) {
   color: var(--ink-soft);
 }
 
-/* « La coupe »: the outside photo, then the cross-section revealed by a vertical cut on hover or focus.
-   Pure CSS, the two photos sit in the HTML with their own alt text and intrinsic size (no layout shift). */
-.la-coupe {
-  cursor: zoom-in;
-  border-radius: inherit;
-}
-
-.la-coupe-stack {
+/* The owner's other angles, under the main picture. */
+.product-gallery {
   display: grid;
-  overflow: hidden;
+  gap: var(--space-1);
+  align-content: start;
 }
 
-.la-coupe-stack img {
-  grid-area: 1 / 1;
+.product-angles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-angles img {
+  display: block;
   inline-size: 100%;
-  block-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: var(--radius);
 }
 
-.la-coupe-inside {
-  clip-path: inset(0 0 0 100%);
-  transition: clip-path 700ms var(--ease-whip);
-}
-
-.la-coupe:hover .la-coupe-inside,
-.la-coupe:focus-visible .la-coupe-inside {
-  clip-path: inset(0 0 0 0);
+.price-request,
+.sizes-on-request {
+  font-weight: 600;
+  color: var(--ink-soft);
 }
 
 /* Sizes table: a clean card, prices right-aligned in tabular figures (stacked into one card per size on phones). */

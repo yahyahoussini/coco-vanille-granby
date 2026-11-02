@@ -74,7 +74,7 @@ test.describe('templates', () => {
     await expect(page.locator('h1')).toHaveCount(1)
     await expect(page.locator('#home-vitrine')).toHaveText('Qu’y a-t-il dans la vitrine aujourd’hui?')
     await expect(page.locator('#key-facts-title')).toHaveText('Coco Vanille en bref')
-    for (const text of await page.locator('.key-facts li').allTextContents()) expect(text).toMatch(/Coco Vanille|FACT NEEDED/)
+    for (const html of await page.locator('.key-facts li').evaluateAll((items) => items.map((li) => li.innerHTML))) expect(html).toMatch(/Coco Vanille|FACT NEEDED/)
     // The rating strip exists only with a rating AND its date (never review markup).
     if (!res.body.includes('google.rating')) await expect(page.locator('.rating-strip')).toHaveCount(0)
   })

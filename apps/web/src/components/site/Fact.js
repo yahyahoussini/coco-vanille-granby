@@ -1,11 +1,11 @@
-import { isMissing, marker } from '@/lib/facts'
+import { isMissing, marker, factLabel } from '@/lib/facts'
 
 // Renders a fact or a visible [[FACT NEEDED]] marker (zero-invention rule).
 export function Fact({ value, label, id, children }) {
   if (isMissing(value)) {
     return (
-      <span className="fact-needed" data-fact={id} data-nosnippet="">
-        {marker(label)}
+      <span className="fact-needed" data-marker={marker(label)} data-fact={id} data-nosnippet="">
+        {factLabel(marker(label))}
       </span>
     )
   }

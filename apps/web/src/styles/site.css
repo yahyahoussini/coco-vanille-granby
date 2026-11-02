@@ -1391,11 +1391,23 @@ html:not(.js) .nav-today {
 
 /* A missing fact is loud on staging, never silent (zero-invention rule). */
 
+.fact-needed::before {
+  content: 'À confirmer\A0: ';
+  font-weight: 600;
+}
+
+.fact-needed:lang(en)::before {
+  content: 'To confirm: ';
+}
+
+.fact-needed:lang(es)::before {
+  content: 'Por confirmar: ';
+}
+
 .fact-needed {
   color: var(--ink-fact);
   background: var(--paper-notice);
-  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-  font-size: 0.84em;
+  font-size: 0.9em;
   padding: 0.05em 0.35em;
   border: 1px dashed rgb(138 43 0 / 0.45);
   border-radius: 6px;

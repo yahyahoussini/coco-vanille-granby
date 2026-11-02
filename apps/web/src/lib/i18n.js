@@ -120,6 +120,10 @@ const strings = {
     },
     offer: {
       notOnline: (address) => `Ce produit ne se commande pas en ligne pour l’instant : appelez la boutique, ou passez la voir${address ? ` au ${address}` : ''}.`,
+      priceOnRequest: 'Prix sur demande',
+      onRequest: 'Sur demande',
+      onRequestLine: 'Fait sur commande : le format, les portions et le prix se confirment avec la boutique.',
+      leadOnRequest: 'Le délai se confirme avec la boutique au moment de commander.',
       product: 'Produit',
       portions: 'Portions',
       size: 'Format',
@@ -306,6 +310,10 @@ const strings = {
     },
     offer: {
       notOnline: (address) => `This item can’t be ordered online yet: call the shop, or drop by${address ? ` at ${address}` : ''}.`,
+      priceOnRequest: 'Price on request',
+      onRequest: 'On request',
+      onRequestLine: 'Made to order: size, servings and price are confirmed with the shop.',
+      leadOnRequest: 'Lead time is confirmed with the shop when you order.',
       product: 'Product',
       portions: 'Servings',
       size: 'Size',
@@ -489,6 +497,10 @@ const strings = {
     },
     offer: {
       notOnline: (address) => `Este producto aún no se pide en línea: llame a la tienda o pase por ella${address ? ` en ${address}` : ''}.`,
+      priceOnRequest: 'Precio a consultar',
+      onRequest: 'A consultar',
+      onRequestLine: 'Hecho por encargo: el tamaño, las porciones y el precio se confirman con la tienda.',
+      leadOnRequest: 'El plazo se confirma con la tienda al hacer el pedido.',
       product: 'Producto',
       portions: 'Porciones',
       size: 'Tamaño',

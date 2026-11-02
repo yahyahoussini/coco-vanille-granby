@@ -104,6 +104,8 @@ export const Products = {
         { name: 'packCount', type: 'number', min: 1, admin: { description: 'Portions individuelles par boîte (vide = à l’unité).' } },
       ],
     },
+    // Sur mesure: the shop quotes each cake. A size with a price always wins over this.
+    { name: 'priceOnRequest', type: 'checkbox', defaultValue: false, label: 'Prix sur demande', access: moneyPG, admin: { description: 'La fiche dit « Prix sur demande » tant qu’aucun format n’a de prix.' } },
     { name: 'allergens', type: 'relationship', relationTo: 'allergens', hasMany: true, access: moneyPG },
     { name: 'mayContain', type: 'relationship', relationTo: 'allergens', hasMany: true, label: 'Peut contenir', access: moneyPG },
     {

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { t, money, longDate } from '@/lib/i18n'
-import { containsMarker, publishGuard } from '@/lib/facts'
+import { containsMarker, publishGuard, factLabel } from '@/lib/facts'
 import { productReady } from '@/lib/publish'
 import { mediaFile } from '@/lib/media'
 import { getOfferStates, getShop } from '@/lib/data'
@@ -70,33 +70,6 @@ export function CardMedia({ product, className = '', size = 'card', priority = f
   )
 }
 
-// « La coupe »: the whole cake, then the cross-section on hover or keyboard focus. Pure CSS, ready for
-// the owner's photos (first = outside, second = the cut). One photo → a plain figure.
-export function LaCoupe({ photos = [], caption, locale }) {
-  const [outside, inside] = photos.filter((p) => mediaFile(p))
-  if (!outside) return null
-  if (!inside) {
-    return (
-      <figure className="product-figure">
-        <Photo media={outside} size="hero" priority />
-        {caption && <figcaption>{caption}</figcaption>}
-      </figure>
-    )
-  }
-  const hint = locale === 'en' ? 'Hover or focus to see the cut' : locale === 'es' ? 'Pase el cursor o enfoque para ver el corte' : 'Survolez ou sélectionnez pour voir la coupe'
-  return (
-    <figure className="product-figure la-coupe" tabIndex={0} aria-describedby="la-coupe-hint">
-      <span className="la-coupe-stack">
-        <Photo media={outside} size="hero" priority className="la-coupe-outside" />
-        <Photo media={inside} size="hero" className="la-coupe-inside" />
-      </span>
-      <figcaption>
-        {caption} <span id="la-coupe-hint" className="small">{hint}</span>
-      </figcaption>
-    </figure>
-  )
-}
-
 // The engine's availability line (« Prête dès … », « Épuisé », « De retour le … »); a missing fact stays a marker.
 export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
   const badge = offerBadge(state, { orderingEnabled })
@@ -104,8 +77,8 @@ export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
   return (
     <p className={`badge badge-${badge.tone}`} data-fact="availability">
       {containsMarker(badge.text) ? (
-        <span className="fact-needed" data-nosnippet="">
-          {badge.text}
+        <span className="fact-needed" data-marker={badge.text} data-nosnippet="">
+          {factLabel(badge.text)}
         </span>
       ) : (
         badge.text
@@ -127,6 +100,8 @@ export function PriceLine({ product, locale, className = 'price', fromLabel, ...
           {several && <span className="price-from">{fromLabel || s.priceFrom} </span>}
           <span className="price-amount">{money(from, locale)}</span> <span className="price-tax">({s.taxesExtra})</span>
         </>
+      ) : product.priceOnRequest ? (
+        <span className="price-request">{s.offer.priceOnRequest}</span>
       ) : (
         <Fact value={null} label="prix" />
       )}
@@ -268,13 +243,15 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows }
                   {sizeText(variant, locale) || <Fact value={null} label="nom du format" />}
                 </th>
                 <td role="cell" className="sizes-detail" data-label={o.portions} data-unit={portionsUnit(portions)}>
-                  {portions || <Fact value={null} label="portions" />}
+                  {portions || (product?.priceOnRequest ? '—' : <Fact value={null} label="portions" />)}
                 </td>
                 <td role="cell" className="sizes-num sizes-price-cell" data-label={o.price}>
                   {price ? (
                     <>
                       <strong className="sizes-price">{price}</strong> <span className="sizes-tax">({s.taxesExtra})</span>
                     </>
+                  ) : product?.priceOnRequest ? (
+                    <span className="sizes-on-request">{o.onRequest}</span>
                   ) : (
                     <Fact value={null} label="prix" />
                   )}

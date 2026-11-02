@@ -1,4 +1,5 @@
 import { t, longDate } from '@/lib/i18n'
+import { factLabel } from '@/lib/facts'
 import { PAGES, pathFor } from '@/lib/routes'
 import { Fact } from '../site/Fact'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
@@ -27,7 +28,7 @@ export function categoryHref(c, locale, served) {
 
 export function Missing({ text }) {
   if (!text) return null
-  return <p className="notice fact-needed" data-nosnippet="">{text}</p>
+  return <p className="notice fact-needed" data-marker={text} data-nosnippet="">{factLabel(text)}</p>
 }
 
 // `served` (lib/publish.js): no « Commander » button while the order page is not published in that language.

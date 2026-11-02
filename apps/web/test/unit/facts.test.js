@@ -3,11 +3,16 @@ import test, { describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { MARKER_RE, marker, isMissing, factOr, publishGuard, containsMarker } from '../../src/lib/facts.js'
+import { MARKER_RE, marker, factLabel, isMissing, factOr, publishGuard, containsMarker } from '../../src/lib/facts.js'
 
 const AUDIT = fileURLToPath(new URL('../../../../tools/audit.mjs', import.meta.url))
 
 describe('marker', () => {
+  it('reads as its label on the page, inside other words too', () => {
+    assert.equal(factLabel(marker('prix')), 'prix')
+    assert.equal(factLabel(`Délai : ${marker('délai')}.`), 'Délai : délai.')
+    assert.equal(factLabel('[[FACT NEEDED]]'), '')
+  })
   test('has the rank-first shape', () => {
     assert.equal(marker('heures confirmées'), '[[FACT NEEDED: heures confirmées]]')
     assert.match(marker('x'), MARKER_RE)
