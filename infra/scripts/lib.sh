@@ -7,6 +7,11 @@
 # <env> is "production" or "staging". COCO_ROOT and NGINX_COCO_DIR can be overridden for tests.
 
 COCO_ROOT="${COCO_ROOT:-/opt/coco}"
+# A server where Coco's nginx runs in a container (setup-panel-host.sh) says so here; root-owned, not a secret.
+if [ -f "$COCO_ROOT/host.env" ]; then
+  # shellcheck disable=SC1091
+  . "$COCO_ROOT/host.env"
+fi
 NGINX_COCO_DIR="${NGINX_COCO_DIR:-/etc/nginx/coco}"
 # How nginx is checked and reloaded (the deploy user has sudo for exactly these; harden-vps.sh).
 NGINX_TEST_CMD="${NGINX_TEST_CMD:-sudo -n /usr/sbin/nginx -t -q}"
