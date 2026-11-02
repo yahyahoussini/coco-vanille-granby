@@ -3,3 +3,6 @@ node_modules/
 *.log
 .DS_Store
 .claude/worktrees/
+
+# Originals the shop sent (customers' names on the cakes): never committed, the repository is public.
+/nimages/
