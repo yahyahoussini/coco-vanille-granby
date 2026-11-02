@@ -66,6 +66,8 @@ services:
     restart: 'no'
     healthcheck:
       disable: true
+    # seed:catalogue uploads the shop's photos: they must land in the same folder as the app's.
+    volumes: ['${MEDIA_DIR:-./media}:/app/media']
     networks: [private]
 
   web-blue:

@@ -201,7 +201,9 @@ END="# END coco-edge"
 site() {
   local host="$1" port="$2" conf="$vhosts/$1/vhost.conf" out
   if [ ! -f "$conf" ]; then
-    out="$(cyberpanel createWebsite --package Default --owner admin --domainName "$host" --email "webmaster@${host}" --php 8.2 2>&1 || true)"
+    # The website's PHP is never used (everything is proxied), but CyberPanel asks for one it has.
+    php="$(ls -d /usr/local/lsws/lsphp[0-9]* 2>/dev/null | sed 's#.*/lsphp##' | sort -n | tail -n 1 | sed 's/^\(.\)\(.*\)$/\1.\2/')"
+    out="$(cyberpanel createWebsite --package Default --owner admin --domainName "$host" --email "webmaster@${host}" --php "${php:-8.2}" 2>&1 || true)"
     [ -f "$conf" ] || die "CyberPanel did not create ${host}: ${out}"
     info "website ${host} created"
   else
@@ -213,7 +215,7 @@ site() {
   else
     info "certificate exists for ${host}"
   fi
-  cp -p "$conf" "$conf.before-coco"
+  [ -f "$conf.before-coco" ] || cp -p "$conf" "$conf.before-coco"
   sed -i "/^${BEGIN//\//\\/}\$/,/^${END}\$/d" "$conf"
   cat >>"$conf" <<CONF
 $BEGIN
