@@ -1,12 +1,14 @@
 // Puts the shop's cakes on the site from the owner's photos, without prices (« Prix sur demande »). Safe to run again:
 // a photo already uploaded is reused, and nothing typed in Studio (a price, a summary, a photo) is replaced.
 // A product is made only when at least one of its photos is in src/seed/client-photos/ (a cake with no picture of
-// its own would show a stock illustration under the name of a real cake). Allergens stay unchecked: a person of the
-// shop confirms them in Studio › Plus › Produits.
+// its own would show a stock illustration under the name of a real cake). The photos are cut out on a transparent 4:5
+// canvas (.webp, or .png, or .jpg). Allergens stay unchecked: a person of the shop confirms them in Studio › Plus › Produits.
 //
 //   npm run seed:catalogue                          adds the products whose photos are there, completes the others
-//   CATALOGUE_MODE=clear npm run seed:catalogue     takes those photos off the site (and out of the media folder) and
-//                                                   unpublishes the cakes made from them, until new photos are seeded
+//   CATALOGUE_MODE=clear npm run seed:catalogue     starts the series over: takes these photos off the site and out of the
+//                                                   media folder, and deletes the cakes the seed made that nobody has
+//                                                   priced (« Prix sur demande », still a draft or in the list); a cake
+//                                                   with a price is kept, as a draft, without its photos
 import path from 'node:path'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -33,20 +35,28 @@ if (process.env.CATALOGUE_MODE === 'clear') {
   const all = [...NEW_PRODUCTS, ...EXISTING_PRODUCTS]
   const media = (await payload.find({ collection: 'media', where: { filename: { in: all.flatMap((p) => p.photos).map((name) => `${name}.avif`) } }, limit: 500, ...SYS })).docs
   const gone = new Set(media.map((m) => m.id))
-  let unpublished = 0
-  for (const p of all) {
-    const found = await findBySlug(slugOf(p))
-    if (!found) continue
-    const left = (found.photos || []).map(idOf).filter((id) => !gone.has(id))
-    const isNew = Boolean(p.title)
-    const unpublish = isNew && !left.length && found._status === 'published'
-    if (left.length === (found.photos || []).length && !unpublish) continue
-    await payload.update({ collection: 'products', id: found.id, data: { photos: left, ...(unpublish ? { _status: 'draft' } : {}) }, ...SYS })
-    if (unpublish) unpublished++
+  const unpriced = (doc) => !hasPrice(doc)
+  let deleted = 0
+  let kept = 0
+  const seedMade = (await payload.find({ collection: 'products', where: { priceOnRequest: { equals: true } }, locale: 'fr', limit: 1000, draft: true, ...SYS })).docs
+  const newSlugs = new Set(NEW_PRODUCTS.map(slugOf))
+  for (const doc of seedMade) {
+    const isSeedCake = newSlugs.has(doc.slug) || doc._status === 'draft'
+    if (isSeedCake && unpriced(doc)) {
+      await payload.delete({ collection: 'products', id: doc.id, ...SYS })
+      deleted++
+    } else {
+      const left = (doc.photos || []).map(idOf).filter((id) => !gone.has(id))
+      const priced = isSeedCake
+      if (left.length !== (doc.photos || []).length || (priced && doc._status === 'published')) {
+        await payload.update({ collection: 'products', id: doc.id, data: { photos: left, ...(priced ? { _status: 'draft' } : {}) }, ...SYS })
+        if (priced) kept++
+      }
+    }
   }
   for (const m of media) await payload.delete({ collection: 'media', id: m.id, ...SYS })
   const { totalDocs: published } = await payload.count({ collection: 'products', where: { _status: { equals: 'published' } }, ...SYS })
-  console.log(`Catalogue cleared: ${media.length} photo(s) removed, ${unpublished} cake page(s) unpublished (kept as drafts in Studio), ${published} product(s) still published.`)
+  console.log(`Catalogue cleared: ${media.length} photo(s) removed, ${deleted} unpriced cake(s) deleted, ${kept} priced cake(s) kept as drafts, ${published} product(s) still published.`)
   process.exit(0)
 }
 
@@ -72,9 +82,12 @@ for (const p of NEW_PRODUCTS) {
   const slug = slugOf(p)
   const found = await findBySlug(slug)
   if (found) {
-    // Already there: only what is still empty (its photos, its place on the site after a clear).
-    const data = { ...(found.photos?.length ? {} : { photos: await photos(p) }), ...(found._status === 'published' ? {} : { _status: 'published' }) }
-    if (Object.keys(data).length) await payload.update({ collection: 'products', id: found.id, data, ...SYS })
+    // Already there: only what is still empty (its photos), and its place on the site after a clear, with its
+    // description from this file again (nobody has typed in a draft the seed made).
+    const back = found._status !== 'published'
+    const data = { ...(found.photos?.length ? {} : { photos: await photos(p) }), ...(back ? { _status: 'published', summary: summaryOf(p, 'fr') } : {}) }
+    if (Object.keys(data).length) await payload.update({ collection: 'products', id: found.id, locale: 'fr', data, ...SYS })
+    if (back) await payload.update({ collection: 'products', id: found.id, locale: 'en', data: { summary: summaryOf(p, 'en') }, ...SYS })
     continue
   }
   const doc = await payload.create({

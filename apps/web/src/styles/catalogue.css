@@ -1123,6 +1123,19 @@ html:has(.cat-nav) {
   border-radius: 0;
 }
 
+/* The shop's own pictures are cut out on a transparent 4:5 canvas (nimages → src/seed/client-photos): shown whole, on
+   the pastel of their family, with a soft shadow that follows the cake (drop-shadow follows the transparency). The
+   illustrations keep filling their frame. */
+.card-media.has-photo:not(.is-illustration) img,
+.product-media.has-photo:not(.is-illustration) img {
+  object-fit: contain;
+  filter: drop-shadow(0 0.7rem 0.6rem rgb(59 36 28 / 0.2));
+}
+
+.product-media.has-photo:not(.is-illustration) {
+  aspect-ratio: 1;
+}
+
 /* The caption is the product's name, already the h1: kept for readers, out of the arch. */
 .product-media.has-photo figcaption {
   position: absolute;
@@ -1155,6 +1168,7 @@ html:has(.cat-nav) {
 
 /* The owner's other angles, under the main picture. */
 .product-gallery {
+  order: -1;
   display: grid;
   gap: var(--space-1);
   align-content: start;
@@ -1930,6 +1944,10 @@ table.sizes tbody tr {
   .product-media.has-photo {
     aspect-ratio: 4 / 5;
     border-radius: 50% 50% var(--radius-lg) var(--radius-lg) / 40% 40% var(--radius-lg) var(--radius-lg);
+  }
+
+  .product-media.has-photo:not(.is-illustration) {
+    aspect-ratio: 4 / 5;
   }
 
   .product-media-emblem {
