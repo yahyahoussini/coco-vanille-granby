@@ -8,7 +8,7 @@ import { MARKER_RE, marker, factLabel, isMissing, factOr, publishGuard, contains
 const AUDIT = fileURLToPath(new URL('../../../../tools/audit.mjs', import.meta.url))
 
 describe('marker', () => {
-  it('reads as its label on the page, inside other words too', () => {
+  test('reads as its label on the page, inside other words too', () => {
     assert.equal(factLabel(marker('prix')), 'prix')
     assert.equal(factLabel(`Délai : ${marker('délai')}.`), 'Délai : délai.')
     assert.equal(factLabel('[[FACT NEEDED]]'), '')

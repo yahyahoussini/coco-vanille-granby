@@ -969,7 +969,7 @@
     line-height: 1.45;
   }
 
-  /* The café keeps its photo: the same row, set on the picture. */
+  /* Each service keeps its photo: the same row, set on the picture. */
   .services-grid .service.has-photo {
     min-block-size: 8.25rem;
     align-content: end;

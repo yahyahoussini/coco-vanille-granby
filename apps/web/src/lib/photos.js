@@ -167,6 +167,24 @@ export const PHOTOS = {
     { fr: 'Mains qui pétrissent une pâte sur une table farinée, à côté d’un rouleau à pâte', en: 'Hands kneading a ball of dough on a floured table beside a rolling pin', es: 'Manos amasando una bola de masa sobre una mesa enharinada, junto a un rodillo' },
     { author: 'Nadya Spetnitskaya', profile: 'https://unsplash.com/@kiboka', source: 'https://unsplash.com/photos/person-making-dough-beside-brown-wooden-rolling-pin-tOYiQxF9-Ys' },
   ),
+  // The workshops are painting and beads on an object (shop's reel, research/20b): paint and brushes, no baking.
+  peinture: wide(
+    { fr: 'Boîtier de peintures de couleur et deux pinceaux sur une table blanche', en: 'A tray of coloured paints and two brushes on a white table', es: 'Una caja de pinturas de colores y dos pinceles sobre una mesa blanca' },
+    { author: 'Megan Lee', profile: 'https://unsplash.com/@meganlee007', source: 'https://unsplash.com/photos/a-tray-of-paint-and-a-brush-on-a-table-fmfO0rdP2g8' },
+  ),
+  // One of the shop's own cakes (the owner's photo, 2026-11-02): true, so not labelled an illustration.
+  'gateau-boutique': {
+    kind: 'shop',
+    widths: [480, 800],
+    width: 800,
+    height: 600,
+    alt: {
+      fr: 'Gâteau blanc de la boutique, bordé de rosaces de crème et coiffé d’une couronne de fils dorés et de perles',
+      en: 'A white cake from the shop, edged with cream rosettes and topped with a crown of gold wire and pearls',
+      es: 'Pastel blanco de la tienda, con rosetas de crema y una corona de hilos dorados y perlas',
+    },
+    credit: { author: 'Pâtisserie Coco Vanille' },
+  },
   // The Zoo de Granby itself (Wikimedia Commons, September 2023): CC BY-SA 4.0 asks for the author, the licence and
   // the change (cropped and resized), all in the page caption; the changed photo stays under CC BY-SA 4.0.
   zoo: {

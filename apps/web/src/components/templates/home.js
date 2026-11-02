@@ -18,6 +18,9 @@ import { PHOTOS } from '@/lib/photos'
 import { categoryHref, pageHref, orderAction, googleMapsUrl, mapsAction, phoneAction, streetFor, addressLine, ratingOf } from './shared'
 import { PostCard } from './journal'
 
+// The picture behind each card of « Ce que vous trouverez chez nous », by the card's icon (lib/i18n.js home.services).
+const SERVICE_PHOTO = { croissant: 'viennoiseries', cake: 'gateau-boutique', coffee: 'cafe', palette: 'peinture' }
+
 // The home page template (registry key « home »): the logo stage, services, vitrine du jour, categories, cakes,
 // hours and visit, the newest Journal posts, Q&A, FAQ. Styles: src/styles/home.css (the post cards: journal.css).
 
@@ -265,8 +268,8 @@ export async function HomeTemplate(props) {
           <h2 id="home-services" className="section-title">{h.servicesTitle}</h2>
           <ul className="services-grid" data-reveal-stagger="">
             {h.services.map((sv) => (
-              <li key={sv.title} className={`service${sv.icon === 'coffee' && PHOTOS.cafe ? ' has-photo' : ''}`} data-reveal="">
-                {sv.icon === 'coffee' && PHOTOS.cafe && <StockPhoto name="cafe" locale={locale} decorative className="service-bg" sizes="(min-width: 60rem) 18rem, (min-width: 48rem) 45vw, 92vw" />}
+              <li key={sv.title} className={`service${PHOTOS[SERVICE_PHOTO[sv.icon]] ? ' has-photo' : ''}`} data-reveal="">
+                <StockPhoto name={SERVICE_PHOTO[sv.icon]} locale={locale} decorative className="service-bg" sizes="(min-width: 60rem) 18rem, (min-width: 48rem) 45vw, 92vw" />
                 <span className="icon-badge">
                   <Icon name={sv.icon} size={26} />
                 </span>

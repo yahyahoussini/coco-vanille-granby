@@ -15,15 +15,15 @@ const ILLUSTRATION_NOTE = {
 
 // An illustration photo (src/lib/photos.js) until the shop's own photo replaces it (research/sessions/04 #12).
 // Always labelled « Photo d'illustration »: it shows the kind of thing, never a specific Coco Vanille product. The
-// map and the Zoo photo are real (kind map / place) and carry their credit instead. Intrinsic size on the <img>, lazy unless `priority`.
+// map, the Zoo photo and the shop's own cake are real (kind map / place / shop) and carry their credit instead. Intrinsic size on the <img>, lazy unless `priority`.
 // `caption`: a <figure> with the label and the credit under the picture (page heroes; a CC licence needs it).
 export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = false, className, label = true, decorative = false, caption = false, compact = false }) {
   const photo = Object.hasOwn(PHOTOS, name || '') ? PHOTOS[name] : null
   if (!photo) return null
   const src = photoSources(name)
   const isMap = photo.kind === 'map'
-  // A map, or a real photo of the place itself (the Zoo): true pictures, credited but not « d'illustration ».
-  const isReal = isMap || photo.kind === 'place'
+  // A map, a real photo of the place itself (the Zoo) or of the shop's own cake: true pictures, not « d'illustration ».
+  const isReal = isMap || photo.kind === 'place' || photo.kind === 'shop'
   const picture = (
     <picture>
       <source type="image/avif" srcSet={src.avif} sizes={sizes} />
