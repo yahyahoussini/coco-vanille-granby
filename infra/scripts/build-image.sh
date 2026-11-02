@@ -87,6 +87,7 @@ fi
 # Default (bridge) network for the build steps: they reach the build database by its address, not the host.
 DOCKER_BUILDKIT=1 docker build "${secrets[@]}" \
   --build-arg GIT_SHA="$TAG" --build-arg DEPLOYMENT_ID="$TAG" --build-arg NEXT_BUILD_WORKERS="$workers" \
+  --build-arg PUBLISH_GUARD="$(env_get PUBLISH_GUARD strict)" \
   -t "${image}:${TAG}" "$src/apps/web"
 
 step "Smoke test: the web role answers its health check"

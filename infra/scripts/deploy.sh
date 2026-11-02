@@ -119,6 +119,39 @@ if [ "${#paths[@]}" -eq 0 ]; then
   warn "the sitemap lists no page: strict mode serves none until the owner's facts are in (Studio › Plus › Faits du site)"
 fi
 info "${#paths[@]} URLs in the sitemap"
+# Pages outside the sitemap too (PUBLISH_GUARD=show keeps a page with a missing fact out of it, and every product):
+# what the home pages link to, three levels down. Each gets its re-render here rather than from its first visitor.
+warm_links() {
+  local depth=0 path link body
+  local frontier=(/ /en/) next=()
+  declare -A seen=([/]=1 [/en/]=1)
+  while [ "$depth" -lt 3 ] && [ "${#frontier[@]}" -gt 0 ] && [ "${#seen[@]}" -lt 400 ]; do
+    next=()
+    for path in "${frontier[@]}"; do
+      body="$(curl -s --max-time 30 -H "Host: ${public_host}" -H 'X-Forwarded-Proto: https' "http://127.0.0.1:${web_port}${path}" || true)"
+      while IFS= read -r link; do
+        if [ -n "$link" ] && [ -z "${seen[$link]:-}" ]; then
+          seen[$link]=1
+          next+=("$link")
+        fi
+      done < <(printf '%s' "$body" | grep -oE 'href="/[^"#?]*/"' | sed -e 's/^href="//' -e 's/"$//' | grep -vE '^/(_next|media|photos|brand|svc|og)/' | sort -u || true)
+    done
+    frontier=("${next[@]}")
+    depth=$((depth + 1))
+  done
+  printf '%s\n' "${!seen[@]}"
+}
+mapfile -t linked < <(warm_links)
+sleep 5
+missing=0
+for path in "${linked[@]}"; do
+  code="$(http_status "$web_port" "$public_host" "$path")"
+  if [ "$code" != 200 ]; then
+    warn "${code} ${path}"
+    missing=$((missing + 1))
+  fi
+done
+info "${#linked[@]} pages reached from the home pages, ${missing} not answering 200"
 sleep 5
 failed=()
 for path in "${paths[@]}"; do
