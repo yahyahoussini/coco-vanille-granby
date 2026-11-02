@@ -19,7 +19,7 @@ import { categoryHref, pageHref, orderAction, googleMapsUrl, mapsAction, phoneAc
 import { PostCard } from './journal'
 
 // The picture behind each card of « Ce que vous trouverez chez nous », by the card's icon (lib/i18n.js home.services).
-const SERVICE_PHOTO = { croissant: 'viennoiseries', cake: 'gateau-boutique', coffee: 'cafe', palette: 'peinture' }
+const SERVICE_PHOTO = { croissant: 'viennoiseries', cake: 'gateaux', coffee: 'cafe', palette: 'peinture' }
 
 // The home page template (registry key « home »): the logo stage, services, vitrine du jour, categories, cakes,
 // hours and visit, the newest Journal posts, Q&A, FAQ. Styles: src/styles/home.css (the post cards: journal.css).
