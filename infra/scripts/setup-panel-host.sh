@@ -168,6 +168,9 @@ install -m 644 "$infra"/nginx/snippets/*.conf "$edge/snippets/"
 install -m 644 "$infra/nginx/html/50x.html" "$edge/html/50x.html"
 # OpenLiteSpeed in front: it ended TLS, and it is the only client of these sockets, so its X-Forwarded-For names the visitor.
 sed -i 's/X-Forwarded-Proto \$scheme/X-Forwarded-Proto https/' "$edge/snippets/coco-proxy.conf"
+# OpenLiteSpeed keeps its connections to coco-edge open while there is traffic, and a reload leaves an old nginx worker
+# on every connection already open: without keepalive_time it would go on sending visitors to the previous colour until
+# that colour is stopped (a 502 for whoever is still on it). With 20 s, every visitor is on the new colour within seconds.
 printf '# OpenLiteSpeed is the only client (127.0.0.1): the visitor is its X-Forwarded-For.\nset_real_ip_from 127.0.0.1;\nreal_ip_header X-Forwarded-For;\n' >"$edge/conf.d/coco-edge.conf"
 flags=(--no-staging --shared --public-host "$public" --admin-host "$admin" --edge "${edge_public}:${edge_admin}:${server_ip}")
 if [ "$temporary" = 1 ]; then flags+=(--temporary); fi
