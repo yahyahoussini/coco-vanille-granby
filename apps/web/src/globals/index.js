@@ -154,5 +154,30 @@ export const Shop = {
 }
 
 // Both show on every public page (footer NAP and hours, closure banner, JSON-LD): a change refreshes the site.
-export const globals = [Business, Shop].map((g) => withRevalidation(g, { global: true }))
+// How customers pay and the shop's Stripe account (Studio › Plus › Paiement, lib/studio/actions/payment.js). Studio writes it;
+// nothing reads it over the API but the owner, and the secret key and the webhook secret are stored encrypted
+// (lib/payments/secrets.js), so a database dump alone gives nothing.
+const sealed = { read: () => false, update: () => false, create: () => false }
+export const PaymentSettings = {
+  slug: 'payment-settings',
+  admin: { group: 'Boutique', hidden: true },
+  access: { read: isOwner, update: () => false },
+  hooks: auditHooks('payment-settings', { global: true }),
+  fields: [
+    { name: 'counterEnabled', type: 'checkbox' },
+    { name: 'onlineEnabled', type: 'checkbox' },
+    { name: 'stripePublishableKey', type: 'text' },
+    { name: 'stripeSecretKey', type: 'textarea', access: sealed },
+    { name: 'stripeWebhookSecret', type: 'textarea', access: sealed },
+    { name: 'stripeWebhookId', type: 'text' },
+    { name: 'stripeWebhookUrl', type: 'text' },
+    { name: 'stripeAccountId', type: 'text' },
+    { name: 'stripeAccountName', type: 'text' },
+    { name: 'stripeLive', type: 'checkbox' },
+    { name: 'stripeChargesEnabled', type: 'checkbox' },
+    { name: 'stripeConnectedAt', type: 'date' },
+  ],
+}
+
+export const globals = [Business, Shop, PaymentSettings].map((g) => withRevalidation(g, { global: true }))
 export { isOwner }

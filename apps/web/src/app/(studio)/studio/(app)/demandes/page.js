@@ -7,7 +7,8 @@ import { answerTimer, customerName, money, whenFr } from '@/lib/studio/format'
 import { declineText, otherDateText } from '@/lib/studio/requests'
 import { PRODUCTION_CATEGORIES } from '@/collections/Catalog'
 import { toGive } from '@/lib/facts'
-import { paymentProvider } from '@/lib/payments/provider'
+import { quotesByLink } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
 import { liveChannels } from '@/lib/messaging/senders'
 import { phoneDisplay } from '@/lib/ordering/customer'
 import { LangBadge } from '@/components/studio/OrderCard'
@@ -49,8 +50,8 @@ export default async function Demandes({ searchParams }) {
   const phone = senderFacts(business).phone
   const caps = await Promise.all(open.map((r) => capacityOn(ctx.payload, { date: dayOf(r.eventDate), category: r.productionCategory || 'gateaux', now })))
   const waiting = open.filter((r) => r.status === 'new').length
-  const reserve = paymentProvider() === 'counter'
   const channels = liveChannels()
+  const reserve = !quotesByLink(await paymentOptions(ctx.payload), channels)
   const canSend = (r) => (r.customer?.email ? channels.email : channels.sms)
 
   return (

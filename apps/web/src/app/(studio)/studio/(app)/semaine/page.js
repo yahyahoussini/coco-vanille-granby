@@ -1,7 +1,9 @@
 import { studioPage } from '@/lib/studio/guard'
 import { shortDay } from '@/lib/studio/time'
 import { weekBounds, fiveNumbers, weekCards, systemTile } from '@/lib/studio/week'
-import { paymentProvider } from '@/lib/payments/provider'
+import { quotesByLink } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
+import { liveChannels } from '@/lib/messaging/senders'
 
 export const metadata = { title: 'Cette semaine · Coco Studio' }
 
@@ -23,7 +25,7 @@ export default async function Semaine() {
     systemTile(ctx.payload, { now }),
   ])
   const numbers = fiveNumbers({ orders: orders.docs, prevOrders: prevOrders.docs, requests: requests.docs, reviews: reviews.docs })
-  const cards = weekCards({ shop, products: products.docs, pools: pools.docs, now, reserve: paymentProvider() === 'counter' })
+  const cards = weekCards({ shop, products: products.docs, pools: pools.docs, now, reserve: !quotesByLink(await paymentOptions(ctx.payload), liveChannels()) })
   const readOnly = ctx.user.role === 'gerant'
   return (
     <>

@@ -201,7 +201,7 @@ export const orderActions = {
       const order = await ctx.payload.findByID({ collection: 'orders', id: entry.entityId, ...SYS })
       if (order.payment?.status === 'paid') refuse('undo_state', `la commande ${order.number} est déjà payée : annulez-la avec un remboursement.`)
       await cancelQueued(ctx.payload, { orderId: order.id })
-      if (order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(order.payment.reference)
+      if (order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(ctx.payload, order.payment.reference)
       await ctx.payload.update({ collection: 'orders', id: order.id, data: { status: 'cancelled', holdExpiresAt: null, timeline: pushTimeline(order, timelineEntry(ctx, 'cancelled', 'Commande téléphone annulée (« Annuler »)')) }, ...SYS })
       return { message: `Commande ${order.number} annulée · rien n’est parti au client.` }
     },
@@ -245,7 +245,7 @@ export const orderActions = {
       await cancelQueued(ctx.payload, { orderId: order.id })
       // A payment page still open must not bring the order back: its intent is cancelled first (settle.js
       // records a payment that slips through anyway as a refund due, never as a confirmed order).
-      if (!paid && order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(order.payment.reference)
+      if (!paid && order.payment?.provider === 'stripe' && order.payment?.reference) await cancelIntent(ctx.payload, order.payment.reference)
       await ctx.payload.update({
         collection: 'orders',
         id: order.id,
@@ -277,7 +277,7 @@ export const orderActions = {
       let reference = null
       let how = 'au comptoir'
       if (p.provider === 'stripe') {
-        const stripe = stripeClient()
+        const stripe = await stripeClient(ctx.payload)
         if (!stripe || !p.reference) refuse('stripe_unavailable', 'Stripe n’est pas relié : remboursez dans le tableau de bord Stripe, puis réessayez.', 503)
         const refund = await stripe.refunds.create({ payment_intent: p.reference, amount: paidCents, metadata: { orderId: String(order.id), number: String(order.number) } }, { idempotencyKey: `refund-${order.id}-${paidCents}` })
         reference = refund.id

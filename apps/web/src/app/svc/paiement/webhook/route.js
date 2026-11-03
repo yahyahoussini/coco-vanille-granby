@@ -1,6 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { verifyWebhook } from '@/lib/payments/stripe'
+import { verifyWebhook, webhookSecret } from '@/lib/payments/stripe'
 import { markOrderPaid, markDepositPaid, markOrderPaymentFailed } from '@/lib/payments/settle'
 
 // POST /svc/paiement/webhook/: Stripe events. The signature is checked on the raw body; only
@@ -10,15 +10,16 @@ export const dynamic = 'force-dynamic'
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } })
 
 export async function POST(request) {
-  if (!process.env.STRIPE_WEBHOOK_SECRET) return json({ error: 'not configured' }, 503)
+  const payload = await getPayload({ config })
+  const secret = await webhookSecret(payload)
+  if (!secret) return json({ error: 'not configured' }, 503)
   const raw = await request.text()
   let event
   try {
-    event = verifyWebhook(raw, request.headers.get('stripe-signature'))
+    event = verifyWebhook(raw, request.headers.get('stripe-signature'), secret)
   } catch {
     return json({ error: 'bad signature' }, 400)
   }
-  const payload = await getPayload({ config })
   const intent = event.data?.object || {}
   const meta = intent.metadata || {}
   try {

@@ -1,6 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { paymentProvider } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
 import { markOrderPaid, markDepositPaid } from '@/lib/payments/settle'
 import { checkoutPath, thanksPath, Q } from '@/lib/ordering/paths'
 import { seeOther } from '@/lib/ordering/cookies'
@@ -12,12 +12,12 @@ import { quoteConsent } from '@/lib/payments/consent'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request) {
-  if (paymentProvider() !== 'mock') return new Response('Introuvable', { status: 404 })
+  const payload = await getPayload({ config })
+  if ((await paymentOptions(payload)).online !== 'mock') return new Response('Introuvable', { status: 404 })
   const form = await request.formData().catch(() => null)
   if (!form) return new Response('Formulaire illisible', { status: 400 })
   const get = (k) => (typeof form.get(k) === 'string' ? form.get(k).trim() : '')
   const locale = ['fr', 'en', 'es'].includes(get('locale')) ? get('locale') : 'fr'
-  const payload = await getPayload({ config })
   const SYS = { overrideAccess: true, depth: 0, limit: 1 }
 
   if (get('commande')) {

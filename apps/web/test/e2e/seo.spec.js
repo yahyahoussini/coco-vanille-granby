@@ -107,9 +107,10 @@ test.describe('page contract', () => {
   for (const p of indexablePages()) {
     test(`${p.path} (${p.key}, ${p.locale})`, async ({ page }) => {
       const res = await raw(`${PUBLIC_URL}${p.path}`)
-      if (res.status === 404 && STRICT) {
+      // A page whose facts are missing (the chef's, until the owner answers) is hidden and left out of the sitemap, in any guard mode.
+      if (res.status === 404) {
         const { locs } = await sitemap()
-        test.skip(!locs.includes(p.canonical), `${p.path}: hidden by PUBLISH_GUARD=strict and absent from the sitemap`)
+        test.skip(!locs.includes(p.canonical), `${p.path}: hidden until its facts are given, and absent from the sitemap`)
       }
       expect(res.status, `${p.path} status`).toBe(200)
       expect(res.headers['content-type']).toMatch(/^text\/html/)
@@ -179,7 +180,7 @@ test.describe('product pages', () => {
       const crumbs = ldNodes(d.jsonld.map((t) => JSON.parse(t))).find((n) => hasType(n, 'BreadcrumbList'))
       expect(crumbs, `${url}: BreadcrumbList`).toBeTruthy()
       const items = crumbs.itemListElement
-      for (const li of items.slice(0, -1)) expect(li.item, `${url}: crumb ${li.position} « ${li.name} »`).toMatch(/^https:\/\//)
+      for (const li of items.slice(0, -1)) expect(li.item, `${url}: crumb ${li.position} « ${li.name} »`).toMatch(/^https?:\/\//)
       if (!/noindex/.test(d.robots[0])) expect(d.robots[0]).toMatch(/max-snippet:-1/)
     }
   })

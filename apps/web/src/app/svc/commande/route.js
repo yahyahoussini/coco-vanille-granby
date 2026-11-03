@@ -14,7 +14,7 @@ import { termsVersionOf } from '@/lib/payments/consent'
 export const dynamic = 'force-dynamic'
 
 const DRAFT = 'cv_caisse'
-const KEEP = ['firstName', 'lastName', 'email', 'phone', 'marketing', 'birthdayReminder', 'reviewRequest']
+const KEEP = ['firstName', 'lastName', 'email', 'phone', 'marketing', 'birthdayReminder', 'reviewRequest', 'paiement']
 
 export async function POST(request) {
   let form
@@ -41,6 +41,7 @@ export async function POST(request) {
     items: decodeBox(box),
     pickup: { date: day, windowStart: start },
     customer: { firstName: get('firstName'), lastName: get('lastName'), email: get('email'), phone: get('phone'), language: locale },
+    payment: { method: ['comptoir', 'en-ligne'].includes(get('paiement')) ? get('paiement') : null },
     consent: {
       terms: checked('terms'),
       frenchFirst: checked('frenchFirst'),

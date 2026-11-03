@@ -6,6 +6,7 @@ import { pages } from '../../src/seed/content.js'
 import { NEW_PRODUCTS, EXISTING_PRODUCTS } from '../../src/seed/catalogue-data.js'
 import { OFFERS, SHOP_PRODUCTS, ORDERING, POOLS, SEASON } from '../../src/seed/launch-data.js'
 import { FACTS, factIdFor } from '../../src/lib/facts-catalog.js'
+import { paymentAnswers } from '../../src/lib/payment-facts.js'
 import { PROPOSALS, NO_PROPOSAL, REPEATS_PRODUCTS } from '../../src/lib/facts-proposals.js'
 import { answerMap, resolveFacts, containsMarker } from '../../src/lib/facts.js'
 import { countWords, firstSentence, BANNED } from '../../src/lib/copy-rules.js'
@@ -17,6 +18,7 @@ const slugify = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowe
 const records = Object.entries(PROPOSALS).map(([key, v]) => ({ key, ...v }))
 const filled = (locale) => {
   const answers = answerMap(records, locale)
+  for (const [key, sentence] of paymentAnswers('counter', locale)) answers.set(key, sentence)
   return pages.filter((p) => p.locales[locale]).map((p) => ({ key: p.key, copy: resolveFacts(p.locales[locale], answers, (l) => factIdFor(locale, l)) }))
 }
 const PENDING = /[àa] confirmer|restent? à|doit fournir|doit confirmer|sera publié|sera présent|une fois vérifi|to be confirmed|once checked|still has to|will be introduced|will be published|bonjour@|confidentialite@|soumission|\bquote\b/i

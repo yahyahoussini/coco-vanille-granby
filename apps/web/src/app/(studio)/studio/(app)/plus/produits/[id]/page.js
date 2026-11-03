@@ -81,7 +81,7 @@ export default async function Produit({ params, searchParams }) {
         </h2>
         {p.priceEstimated && (
           <div className="st-banner" data-tone="warn">
-            <span>Prix proposés par l’agence : le site affiche « prix indicatif », et une réservation garde le prix affiché.</span>
+            <span>Prix proposés par l’agence : le site affiche « prix indicatif », et une commande garde le prix affiché.</span>
             {ctx.can('product.pricesOk') && (
               <ActionForm type="product.pricesOk" fields={{ productId: p.id }} back={back} needsNetwork>
                 <button className="btn btn-primary" type="submit">
@@ -180,7 +180,7 @@ export default async function Produit({ params, searchParams }) {
             </div>
             <label className="check">
               <input type="checkbox" name="online" value="true" defaultChecked={Boolean(p.onlineOrderable)} />
-              <span>Se réserve en ligne</span>
+              <span>Se commande en ligne</span>
             </label>
             <button className="btn" type="submit">
               Enregistrer la fiche

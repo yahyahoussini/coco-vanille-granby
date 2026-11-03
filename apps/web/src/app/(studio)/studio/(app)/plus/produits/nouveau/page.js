@@ -79,7 +79,7 @@ export default async function NouveauProduit({ searchParams }) {
             )}
             <label className="check">
               <input type="checkbox" name="online" value="true" defaultChecked />
-              <span>Se réserve en ligne</span>
+              <span>Se commande en ligne</span>
             </label>
             <button className="btn btn-primary" type="submit">
               Ajouter à la carte

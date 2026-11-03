@@ -81,7 +81,7 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
   if (canSee(user, 'commandes') && user.role !== 'agence') {
     const since = new Date(now.getTime() - 24 * 3600000).toISOString()
     const fresh = await payload.count({ collection: 'orders', where: { and: [{ source: { equals: 'web' } }, { createdAt: { greater_than_equal: since } }, { status: { in: ['paid', 'ready'] } }] }, overrideAccess: true }).catch(() => null)
-    if (fresh?.totalDocs) cards.push({ key: 'fresh', rank: 1, title: `${fresh.totalDocs} ${fresh.totalDocs > 1 ? 'réservations reçues' : 'réservation reçue'} sur le site depuis hier`, why: 'À préparer pour leur jour de cueillette.', href: '/commandes/', action: 'Voir' })
+    if (fresh?.totalDocs) cards.push({ key: 'fresh', rank: 1, title: `${fresh.totalDocs} ${fresh.totalDocs > 1 ? 'commandes reçues' : 'commande reçue'} sur le site depuis hier`, why: 'À préparer pour leur jour de cueillette.', href: '/commandes/', action: 'Voir' })
   }
 
   if (['proprietaire', 'gerant'].includes(user.role)) {
@@ -98,11 +98,11 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
   // The launch list (2026-11-03): what the agency filled in with approximations, for the owner to check. After the shop's work.
   if (['proprietaire', 'gerant'].includes(user.role)) {
     const count = async (collection, where) => (await payload.count({ collection, where, overrideAccess: true }).catch(() => null))?.totalDocs ?? 0
-    if (!(await count('push-subscriptions', { user: { exists: true } }))) cards.push({ key: 'push', rank: 4, title: 'Recevoir les nouvelles commandes sur votre téléphone', why: 'Sans alerte, une réservation ne se voit que Studio ouvert : aucun courriel ni texto ne part encore.', href: '/plus/reglages/#alertes-section', action: 'Activer' })
+    if (!(await count('push-subscriptions', { user: { exists: true } }))) cards.push({ key: 'push', rank: 4, title: 'Recevoir les nouvelles commandes sur votre téléphone', why: 'Sans alerte, une commande ne se voit que Studio ouvert : aucun courriel ni texto ne part encore.', href: '/plus/reglages/#alertes-section', action: 'Activer' })
     const facts = await count('site-facts', { proposed: { equals: true } })
     if (facts) cards.push({ key: 'facts', rank: 5, title: `${facts} ${facts > 1 ? 'réponses du site' : 'réponse du site'} à vérifier`, why: 'Le site affiche des réponses proposées par l’agence : lisez-les et touchez « C’est bon », ou changez-les.', href: '/plus/faits/', action: 'Vérifier' })
     const prices = await count('products', { and: [{ priceEstimated: { equals: true } }, { availability: { not_equals: 'discontinued' } }] })
-    if (prices) cards.push({ key: 'prices', rank: 6, title: `${prices} ${prices > 1 ? 'produits' : 'produit'} : prix à vérifier`, why: 'Le site affiche « prix indicatif », et une réservation garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
+    if (prices) cards.push({ key: 'prices', rank: 6, title: `${prices} ${prices > 1 ? 'produits' : 'produit'} : prix à vérifier`, why: 'Le site affiche « prix indicatif », et une commande garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
     const allergens = await count('products', { and: [{ 'allergensVerified.at': { exists: false } }, { _status: { equals: 'published' } }, { availability: { not_equals: 'discontinued' } }] })
     if (allergens) cards.push({ key: 'allergens', rank: 7, title: `${allergens} ${allergens > 1 ? 'fiches' : 'fiche'} d’allergènes à cocher`, why: 'Sans cette vérification, le site invite le client à appeler avant de commander.', href: '/plus/produits/?vue=allergenes', action: 'Cocher' })
   }

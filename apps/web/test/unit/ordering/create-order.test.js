@@ -47,7 +47,7 @@ describe('a reservation (PAYMENT_PROVIDER=counter)', () => {
     assert.equal(r.paymentLink, null)
     assert.deepEqual([r.order.payment.provider, r.order.payment.status], ['counter', 'pending'])
     assert.equal(r.order.totals.balanceCents, r.order.totals.totalCents)
-    assert.match(r.order.timeline[0].note, /Réservation en ligne/)
+    assert.match(r.order.timeline[0].note, /Commande en ligne/)
   })
 
   test('asks for a phone number, not an email, and still needs the terms', async () => {

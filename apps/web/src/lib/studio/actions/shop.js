@@ -263,8 +263,8 @@ export const shopActions = {
         entityId: 'ordering',
         before,
         after: { enabled, nextDayCutoff: cutoff, windowMinutes, maxPerWindow, maxDaysAhead, pools: caps },
-        summary: sentence(ctx.user, ctx.device, `a réglé la réservation en ligne (${enabled ? 'ouverte' : 'fermée'})`, ctx.now),
-        message: enabled ? 'Réservation en ligne enregistrée · le site suit aussitôt.' : 'Réservation en ligne fermée · le site invite à appeler la boutique.',
+        summary: sentence(ctx.user, ctx.device, `a réglé la commande en ligne (${enabled ? 'ouverte' : 'fermée'})`, ctx.now),
+        message: enabled ? 'Commande en ligne enregistrée · le site suit aussitôt.' : 'Commande en ligne fermée · le site invite à appeler la boutique.',
       }
     },
     async undo(ctx, entry) {

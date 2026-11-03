@@ -12,12 +12,13 @@ export default async function Plus() {
   const toCheck = canSee(user, 'faits') ? ((await payload.count({ collection: 'site-facts', where: { proposed: { equals: true } }, overrideAccess: true }).catch(() => null))?.totalDocs ?? 0) : 0
   const links = [
     ['messages', '/messages/', 'Messages du site', '« Écrivez-nous » : répondre aux visiteurs'],
-    ['boutique', '/boutique/', 'Boutique & heures', 'Fermeture, délai, pause, heures, réservation en ligne'],
+    ['boutique', '/boutique/', 'Boutique & heures', 'Fermeture, délai, pause, heures, commande en ligne'],
     ['semaine', '/semaine/', 'Cette semaine', '5 chiffres et 3 actions au plus'],
     ['vitrine', '/vitrine/', 'Vitrine', 'Épuisé, photo du jour'],
     ['faits', '/plus/faits/', 'Faits du site', 'Les réponses du site à vérifier, par sujet'],
     ['journal', '/plus/journal/', 'Journal', 'Billets du site : écrire, traduire, programmer'],
     ['produits', '/plus/produits/', 'Produits', 'Ajouter, formats, prix, photos, allergènes, taxes'],
+    ['paiement', '/plus/paiement/', 'Paiement', 'À la cueillette, en ligne : connecter Stripe'],
     ['question', '/plus/question/', 'Noter une question de client', 'Pour la FAQ du site'],
     ['agence', '/agence/', 'Agence', 'Rapports et système'],
     ['reglages', '/plus/reglages/', 'Réglages', 'Appareil, équipe, NIP, clés'],

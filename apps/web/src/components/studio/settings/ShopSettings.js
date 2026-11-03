@@ -1,6 +1,8 @@
 import { ActionForm } from '../ActionForm'
 import { toGive } from '@/lib/facts'
-import { paymentProvider } from '@/lib/payments/provider'
+import { quotesByLink } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
+import { liveChannels } from '@/lib/messaging/senders'
 
 // Réglages › Boutique (owner): deposit % for custom-cake quotes, the /avis QR target (16 §8.1).
 export async function ShopSettings({ ctx, back }) {
@@ -10,7 +12,7 @@ export async function ShopSettings({ ctx, back }) {
   return (
     <section aria-labelledby="reglages-boutique-titre" id="reglages-boutique">
       <h2 id="reglages-boutique-titre">Boutique</h2>
-      {paymentProvider() !== 'counter' && (
+      {quotesByLink(await paymentOptions(ctx.payload), liveChannels()) && (
       <ActionForm type="settings.deposit" back={back} needsNetwork className="card">
         <div className="field">
           <label htmlFor="acompte">Acompte des gâteaux sur demande (%)</label>

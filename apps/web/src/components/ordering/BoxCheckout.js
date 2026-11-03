@@ -15,9 +15,10 @@ import { errorText } from '@/lib/ordering/errors'
 import { longDayLabel, windowLabel } from '@/lib/ordering/labels'
 import { boxPath, checkoutPath, thanksPath, orderPath, termsPath, Q } from '@/lib/ordering/paths'
 import { openInBrowserHref } from '@/lib/ordering/iab'
-import { paymentProvider } from '@/lib/payments/provider'
+import { paymentMode } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
 import { liveChannels } from '@/lib/messaging/senders'
-import { ensureIntent, publishableKey, STRIPE_JS_URL } from '@/lib/payments/stripe'
+import { ensureIntent, STRIPE_JS_URL } from '@/lib/payments/stripe'
 import { senderFacts } from '@/lib/messaging/templates'
 import { CardMedia, familyOf } from '@/components/site/Products'
 import { Icon } from '@/components/site/Icon'
@@ -77,9 +78,17 @@ function TotalsTable({ totals, locale, id }) {
   )
 }
 
+// While the owner tries Stripe with its test keys (Studio › Plus › Paiement).
+const TEST_LABEL = { fr: 'mode essai', en: 'test mode', es: 'modo de prueba' }
+const TEST_NOTE = {
+  fr: 'Mode essai : aucune vraie carte n’est débitée. Carte d’essai : 4242 4242 4242 4242, date future, n’importe quel code.',
+  en: 'Test mode: no real card is charged. Test card: 4242 4242 4242 4242, any future date, any code.',
+  es: 'Modo de prueba: no se cobra ninguna tarjeta real. Tarjeta de prueba: 4242 4242 4242 4242, fecha futura, cualquier código.',
+}
+
 function InAppNotice({ iab, ua, url, locale }) {
-  // Its point is the card form: a reservation asks for no card.
-  if (!iab || paymentProvider() === 'counter') return null
+  // Its point is the card form: paying at pickup asks for no card.
+  if (!iab || paymentMode() === 'counter') return null
   const c = orderingCopy(locale).iab
   const href = openInBrowserHref(url, ua)
   return (
@@ -381,6 +390,7 @@ export async function CheckoutTemplate({ locale, business, shop, query = {} }) {
 }
 
 async function ReviewStep({ locale, business, box, day, start }) {
+  const options = await paymentOptions(await payloadClient())
   const s = orderingCopy(locale)
   const c = s.checkout
   const ctx = await requestContext()
@@ -412,8 +422,8 @@ async function ReviewStep({ locale, business, box, day, start }) {
     totals = null
   }
   const facts = senderFacts(business)
-  const provider = paymentProvider()
-  const reserve = provider === 'counter'
+  const reserve = options.mode === 'counter'
+  const both = options.mode === 'both'
   const channels = liveChannels()
   const url = `${origin()}${boxPath(locale, box)}`
   const checkoutUrl = (w) => `${checkoutPath(locale)}?boite=${box}&${Q.day}=${day}&${Q.window}=${w}`
@@ -531,8 +541,8 @@ async function ReviewStep({ locale, business, box, day, start }) {
                 </Field>
               </div>
               <div className="field-row">
-                <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')} optional={reserve} optionalLabel={optionalLabel(locale)}>
-                  <input id="c-email" name="email" type="email" required={!reserve} maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
+                <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')} optional={reserve || both} optionalLabel={optionalLabel(locale)}>
+                  <input id="c-email" name="email" type="email" required={!reserve && !both} maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
                 </Field>
                 <Field id="c-phone" label={c.phone} hint={c.phoneHint} error={err('phone')}>
                   <input id="c-phone" name="phone" type="tel" required maxLength={30} autoComplete="tel" inputMode="tel" defaultValue={values.phone || ''} aria-invalid={err('phone') ? 'true' : undefined} aria-describedby={describedBy('c-phone', { hint: true, error: err('phone') })} />
@@ -571,6 +581,35 @@ async function ReviewStep({ locale, business, box, day, start }) {
               </fieldset>
             )}
 
+            {both && (
+              <fieldset className="form-group pay-choice">
+                <legend>
+                  <span className="legend-icon" aria-hidden="true">
+                    <Icon name="tag" size={20} />
+                  </span>
+                  {c.payTitle}
+                </legend>
+                {err('paiement') && <p className="field-error">{err('paiement')}</p>}
+                <label className="pay-option">
+                  <input type="radio" name="paiement" value="comptoir" defaultChecked={values.paiement !== 'en-ligne'} />
+                  <span>
+                    <strong>{c.payCounter}</strong>
+                    <span className="small">{c.payCounterHint}</span>
+                  </span>
+                </label>
+                <label className="pay-option">
+                  <input type="radio" name="paiement" value="en-ligne" defaultChecked={values.paiement === 'en-ligne'} />
+                  <span>
+                    <strong>
+                      {c.payOnline}
+                      {options.testMode ? ` · ${TEST_LABEL[locale] || TEST_LABEL.fr}` : ''}
+                    </strong>
+                    <span className="small">{c.payOnlineHint}</span>
+                  </span>
+                </label>
+              </fieldset>
+            )}
+
             <div className="checkout-policy">
               <h3>{c.cancelTitle}</h3>
               <p>
@@ -594,7 +633,7 @@ async function ReviewStep({ locale, business, box, day, start }) {
               </CheckboxField>
               {locale !== 'fr' && c.frenchFirst && <CheckboxField id="c-frenchFirst" name="frenchFirst" required label={c.frenchFirst} error={err('frenchFirst')} />}
             </div>
-            {provider === 'none' ? (
+            {options.mode === 'none' ? (
               <p className="notice">{c.noPayment}</p>
             ) : (
               <>
@@ -612,9 +651,10 @@ async function ReviewStep({ locale, business, box, day, start }) {
 }
 
 async function PaymentStep({ locale, business, token }) {
+  const payload = await payloadClient()
+  const options = await paymentOptions(payload)
   const s = orderingCopy(locale)
   const c = s.pay
-  const payload = await payloadClient()
   const order = TOKEN.test(token || '') ? (await payload.find({ collection: 'orders', where: { accessToken: { equals: token } }, limit: 1, ...SYS })).docs[0] : null
   if (!order) {
     return (
@@ -631,10 +671,17 @@ async function PaymentStep({ locale, business, token }) {
   const until = order.holdExpiresAt ? localParts(new Date(order.holdExpiresAt)) : null
   const day = dayOf(order.pickupDate)
   let stripe = null
+  let stripeDown = false
   if (live && order.payment?.provider === 'stripe') {
-    const intent = await ensureIntent({ kind: 'order', id: order.id, number: order.number, amountCents: order.totals.totalCents, reference: order.payment?.reference, description: `Commande ${order.number} · Pâtisserie Coco Vanille`, email: order.customer?.email })
-    if (intent.id !== order.payment?.reference) await payload.update({ collection: 'orders', id: order.id, data: { payment: { reference: intent.id } }, ...SYS })
-    stripe = intent
+    try {
+      const intent = await ensureIntent(payload, { kind: 'order', id: order.id, number: order.number, amountCents: order.totals.totalCents, reference: order.payment?.reference, description: `Commande ${order.number} · Pâtisserie Coco Vanille`, email: order.customer?.email })
+      if (intent.id !== order.payment?.reference) await payload.update({ collection: 'orders', id: order.id, data: { payment: { reference: intent.id } }, ...SYS })
+      stripe = intent
+    } catch (e) {
+      // Stripe unreachable, or disconnected while this page was open: words and the phone number, not an error page.
+      payload.logger?.error?.({ err: e, order: order.number }, 'payment page: no intent')
+      stripeDown = true
+    }
   }
   return (
     <article className="wrap page ordering checkout pay">
@@ -665,6 +712,8 @@ async function PaymentStep({ locale, business, token }) {
               <p className="pay-amount">{amount}</p>
               <TotalsTable totals={order.totals} locale={locale} id="paiement-totaux" />
               <p className="small pay-secure">{c.secure}</p>
+              {options.testMode && <p className="notice">{TEST_NOTE[locale] || TEST_NOTE.fr}</p>}
+              {stripeDown && <p className="notice">{business?.phoneDisplay ? `${c.failed} ${s.thanks.call(business.phoneDisplay)}` : c.failed}</p>}
               {order.payment?.provider === 'mock' && (
                 <form method="post" action="/svc/paiement/mock/" className="pay-panel">
                   <Hidden fields={{ commande: order.accessToken, locale }} />
@@ -678,7 +727,7 @@ async function PaymentStep({ locale, business, token }) {
                 <>
                   <StripePayment
                     scriptUrl={STRIPE_JS_URL}
-                    publishableKey={publishableKey()}
+                    publishableKey={options.publishableKey}
                     clientSecret={stripe.clientSecret}
                     returnPath={`${thanksPath(locale)}?${Q.order}=${order.accessToken}`}
                     locale={locale}
@@ -700,9 +749,10 @@ async function PaymentStep({ locale, business, token }) {
 }
 
 async function QuoteStep({ locale, business, token, error }) {
+  const payload = await payloadClient()
+  const options = await paymentOptions(payload)
   const s = orderingCopy(locale)
   const c = s.pay
-  const payload = await payloadClient()
   const req = TOKEN.test(token || '') ? (await payload.find({ collection: 'requests', where: { accessToken: { equals: token } }, limit: 1, ...SYS })).docs[0] : null
   if (!req || !req.quote?.depositCents) {
     return (
@@ -721,10 +771,10 @@ async function QuoteStep({ locale, business, token, error }) {
   const valid = q.validUntil ? localParts(new Date(q.validUntil)) : null
   const totals = { subtotalCents: q.subtotalCents, gstCents: q.gstCents, qstCents: q.qstCents, totalCents: q.totalCents, depositCents: q.depositCents !== q.totalCents ? q.depositCents : null, balanceCents: q.balanceCents }
   const deposit = money(q.depositCents, locale)
-  const provider = paymentProvider()
+  const provider = options.online || 'none'
   let stripe = null
   if (!expired && provider === 'stripe') {
-    stripe = await ensureIntent({ kind: 'deposit', id: req.id, amountCents: q.depositCents, reference: req.payment?.reference, description: `Acompte · ${req.occasion} · Pâtisserie Coco Vanille`, email: req.customer?.email })
+    stripe = await ensureIntent(payload, { kind: 'deposit', id: req.id, amountCents: q.depositCents, reference: req.payment?.reference, description: `Acompte · ${req.occasion} · Pâtisserie Coco Vanille`, email: req.customer?.email })
     if (stripe.id !== req.payment?.reference) await payload.update({ collection: 'requests', id: req.id, data: { payment: { provider: 'stripe', reference: stripe.id, status: 'pending' } }, ...SYS })
   }
   const ck = s.checkout
@@ -797,12 +847,12 @@ async function QuoteStep({ locale, business, token, error }) {
                   </button>
                 </>
               )}
-              {(provider === 'none' || provider === 'counter') && <p className="notice">{ck.noPayment}</p>}
+              {provider === 'none' && <p className="notice">{ck.noPayment}</p>}
             </form>
             {stripe && (
               <StripePayment
                 scriptUrl={STRIPE_JS_URL}
-                publishableKey={publishableKey()}
+                publishableKey={options.publishableKey}
                 clientSecret={stripe.clientSecret}
                 returnPath={`${thanksPath(locale)}?${Q.request}=${req.accessToken}`}
                 locale={locale}

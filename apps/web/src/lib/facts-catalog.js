@@ -7,6 +7,7 @@
 // and tax (Produits), opening hours and closures (Boutique & heures), the person in charge (Réglages).
 // test/unit/facts-catalog.test.js checks that every slot of the copy belongs to one fact, and the reverse.
 // Pure module (relative imports only): node --test and the seed read it too.
+import { PAYMENT_FACTS } from './payment-facts.js'
 
 export const FACT_GROUPS = [
   { id: 'produits', title: 'Produits et prix', hint: 'Ce que la boutique vend, en mots. Les prix et portions de chaque produit se mettent dans Produits.' },
@@ -137,7 +138,7 @@ const norm = (s) => String(s || '').replace(/ /g, ' ').trim()
 
 // label → fact id, per language.
 const BY_LABEL = { fr: new Map(), en: new Map() }
-for (const f of FACTS) for (const l of ['fr', 'en']) for (const label of f[l] || []) BY_LABEL[l].set(norm(label), f.id)
+for (const f of [...FACTS, ...PAYMENT_FACTS]) for (const l of ['fr', 'en']) for (const label of f[l] || []) BY_LABEL[l].set(norm(label), f.id)
 
 // The fact a slot belongs to; a slot the catalog does not know gets its own key, so it can still be answered.
 export const factIdFor = (locale, label) => BY_LABEL[locale]?.get(norm(label)) || `autre:${locale}:${norm(label)}`

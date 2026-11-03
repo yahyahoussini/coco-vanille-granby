@@ -65,7 +65,7 @@ export const PROPOSALS = {
   'lendemain-formats': { fr: 'le 6 po et le 8 po', en: '6-inch and 8-inch' },
   'lendemain-message': { fr: 'Oui : un court message est possible, s’il est donné au moment de commander.', en: 'Yes: a short message is possible if you give it when you order.' },
   'lendemain-perso': { fr: 'Non : un décor personnalisé demande au moins 7 jours. Pour demain, choisissez un gâteau classique de la carte.', en: 'No: a custom decoration takes at least 7 days. For tomorrow, choose a classic cake from the menu.' },
-  'delais-produits': { fr: '24 h pour les viennoiseries et le pain, 48 h pour les gâteaux classiques, 7 jours pour un gâteau décoré', en: '24 hours for viennoiseries and bread, 48 hours for classic cakes, 7 days for a decorated cake' },
+  'delais-produits': { fr: '24 h pour viennoiseries et pain, 48 h pour les gâteaux, 7 jours pour un gâteau décoré', en: '24 hours for viennoiseries and bread, 48 hours for classic cakes, 7 days for a decorated cake' },
   'modif-acompte': { fr: `Oui : appelez au ${PHONE} au moins 7 jours avant la cueillette pour changer le décor, et 48 h avant pour changer le message.`, en: `Yes: call ${PHONE} at least 7 days before pickup to change the decoration, and 48 hours before to change the message.` },
   'reponse-demandes': { fr: '2 jours ouvrables', en: '2 business days' },
   'boites-groupes': { fr: `Oui : à partir de 12 viennoiseries, avec 48 h d’avance, par téléphone au ${PHONE}.`, en: `Yes: from 12 viennoiseries, 48 hours ahead, by phone at ${PHONE}.` },

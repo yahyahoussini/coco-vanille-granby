@@ -4,7 +4,7 @@
 import { clockOf } from './time.js'
 
 // Never copied into the log.
-const SECRET = new Set(['hash', 'salt', 'pinHash', 'sessions', 'backupCodes', 'passkeys', 'resetPasswordToken', 'resetPasswordExpiration', 'loginAttempts', 'lockUntil', 'apiKey', 'apiKeyIndex', 'accessToken', 'webauthnChallenge'])
+const SECRET = new Set(['stripeSecretKey', 'stripeWebhookSecret', 'hash', 'salt', 'pinHash', 'sessions', 'backupCodes', 'passkeys', 'resetPasswordToken', 'resetPasswordExpiration', 'loginAttempts', 'lockUntil', 'apiKey', 'apiKeyIndex', 'accessToken', 'webauthnChallenge'])
 
 export function scrub(value, depth = 0) {
   if (value === null || value === undefined || typeof value !== 'object') return value ?? null

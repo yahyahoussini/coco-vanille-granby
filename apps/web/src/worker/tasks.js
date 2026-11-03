@@ -85,7 +85,7 @@ export async function expireHolds(payload, { now = new Date() } = {}) {
     })
     if (!done) continue
     expired += 1
-    if (done.payment?.provider === 'stripe' && done.payment?.reference) await cancelIntent(done.payment.reference)
+    if (done.payment?.provider === 'stripe' && done.payment?.reference) await cancelIntent(payload, done.payment.reference)
   }
   return { holdsExpired: expired }
 }
@@ -105,7 +105,7 @@ export async function expireQuotes(payload, { now = new Date() } = {}) {
     })
     if (!done) continue
     expired += 1
-    if (done.payment?.reference) await cancelIntent(done.payment.reference)
+    if (done.payment?.reference) await cancelIntent(payload, done.payment.reference)
   }
   return { quotesExpired: expired }
 }

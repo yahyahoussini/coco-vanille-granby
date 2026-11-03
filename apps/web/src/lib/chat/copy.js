@@ -39,7 +39,7 @@ const fr = {
     cake: 'Pour un gâteau sur commande, décrivez votre projet dans le formulaire : l’occasion, le nombre de personnes et la date de cueillette. La boutique vous appelle avec un prix.',
     cakeCall: (phone) => `Pour un gâteau sur commande, appelez-nous au ${phone}.`,
     cakeLink: 'Faire une demande de gâteau',
-    order: 'Réservez en ligne, puis passez chercher et payer votre commande à la boutique (cueillette seulement).',
+    order: 'Commandez en ligne sur la page Commander, puis passez chercher votre commande à la boutique (cueillette seulement).',
     orderOff: 'La commande en ligne n’est pas ouverte pour le moment.',
     orderOffCall: (phone) => `La commande en ligne n’est pas ouverte pour le moment : appelez-nous au ${phone}.`,
     orderLink: 'Commander en ligne',

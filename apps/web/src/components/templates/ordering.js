@@ -15,6 +15,7 @@ import { termsPath, Q } from '@/lib/ordering/paths'
 import { AnswerBlock, Sections, Faq, MetaLine, Unbroken } from '../site/Contract'
 import { Icon } from '../site/Icon'
 import { orderingCopy } from '../ordering/copy'
+import { paymentOptions } from '@/lib/payments/settings'
 import { RequestForm } from '../ordering/RequestForm'
 import { ProductOrderList } from '../ordering/ProductOrderList'
 import { AutoRefresh } from '../ordering/AutoRefresh'
@@ -138,6 +139,7 @@ function OrderThanks({ order, locale, business }) {
         </div>
       )}
       {dueAtCounter && t.reserved && <p className="answer thanks-reserved">{t.reserved(money(order.totals.balanceCents, locale))}</p>}
+      {paid && order.payment?.status === 'paid' && order.payment?.provider !== 'counter' && t.paidOnline && <p className="answer thanks-reserved">{t.paidOnline(money(order.payment.amountCents ?? order.totals?.totalCents, locale))}</p>}
       {paid && (
         <div className="thanks-layout">
           <div className="pickup-code" role="group" aria-labelledby="code-title">
@@ -264,6 +266,7 @@ export function TotalsTable({ totals, locale, id, caption }) {
 // ---------- /commander/merci/: ?commande=<token> (order) or ?demande=<token> (custom-cake request) ----------
 async function ThanksTemplate({ locale, business, query = {} }) {
   const payload = await payloadClient()
+  await paymentOptions(payload)
   const orderToken = one(query[Q.order])
   const requestToken = one(query[Q.request])
   const s = orderingCopy(locale)

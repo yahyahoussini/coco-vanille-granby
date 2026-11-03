@@ -52,6 +52,11 @@ jobs:
       # show: markers render (pages stay noindex), so the gate can list every missing fact.
       PUBLISH_GUARD: show
       ENABLE_ES: 'false'
+      # Texts « on »: Studio says what happens when they really leave. Nothing is sent: the test's worker uses the log sender.
+      SMS_PROVIDER: twilio
+      TWILIO_ACCOUNT_SID: ACtest
+      TWILIO_AUTH_TOKEN: test
+      TWILIO_FROM: '+15550000000'
       # Seeds and Studio writes refresh the running server's ISR pages through /svc/revalidate/.
       REVALIDATE_SECRET: ci-${{ github.run_id }}-${{ github.run_attempt }}
     steps:

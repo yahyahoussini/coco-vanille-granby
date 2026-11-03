@@ -51,4 +51,6 @@ La communication peut se faire pendant le lancement sur l'adresse temporaire, si
 
 Décision de la personne responsable : ______________________  Date : ______________  Signature : ______________________
 
-Fournisseurs à ajouter ici avant leur mise en service : Stripe (paiement), Twilio (textos), Amazon SES (courriels).
+**Stripe (paiement en ligne)** : en service seulement si la propriétaire le connecte dans Coco Studio › Plus › Paiement. Le client qui choisit de payer en ligne donne sa carte directement à Stripe, dans ses formulaires; le site n'en voit jamais le numéro. Stripe reçoit aussi le courriel, le montant et le numéro de commande, et les traite au Canada et aux États-Unis. Le client qui paie à la cueillette ne donne rien à Stripe. La politique de confidentialité le nomme automatiquement dès la connexion. Cette partie reste à relire par la propriétaire avant d'activer le paiement, comme le reste de cette évaluation.
+
+Fournisseurs à ajouter ici avant leur mise en service : Twilio (textos), Amazon SES (courriels).

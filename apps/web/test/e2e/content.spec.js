@@ -40,7 +40,7 @@ test.describe('/llms.txt', () => {
     expect(res.body).toContain(bakery.address.streetAddress)
 
     const locs = new Set(sitemapLocs((await raw(`${PUBLIC_URL}/sitemap.xml`)).body))
-    const links = [...res.body.matchAll(/\]\((https:\/\/[^)]+)\)/g)].map((m) => m[1])
+    const links = [...res.body.matchAll(/\]\((https?:\/\/[^)]+)\)/g)].map((m) => m[1])
     expect(links.length).toBeGreaterThan(10)
     for (const href of links) expect(locs.has(href), `${href} is in the sitemap`).toBe(true)
   })

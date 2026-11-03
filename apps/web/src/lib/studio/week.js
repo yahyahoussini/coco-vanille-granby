@@ -48,7 +48,7 @@ export function weekCards({ shop = {}, products = [], pools = [], now = new Date
   if (noPrice.length) cards.push({ key: 'price', rank: 2, title: `Valider le prix ${noPrice.length > 1 ? `de ${noPrice.length} produits` : `du ${noPrice[0].title}`}`, why: 'Un prix manquant reste « à confirmer » sur le site.', href: `/plus/produits/${noPrice.length === 1 ? `${noPrice[0].id}/` : ''}`, action: 'Valider' })
   if (!pools.some((p) => typeof p.defaultPerDay === 'number')) cards.push({ key: 'capacity', rank: 3, title: 'Indiquer la capacité de production par jour', why: 'Sans capacité, rien ne se commande en ligne.', href: '/boutique/#reservation', action: 'Répondre' })
   const estimated = products.filter((p) => p.priceEstimated)
-  if (estimated.length) cards.push({ key: 'estimated', rank: 2, title: `Vérifier le prix ${estimated.length > 1 ? `de ${estimated.length} produits` : `de ${estimated[0].title}`}`, why: 'Le site affiche « prix indicatif », et une réservation garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
+  if (estimated.length) cards.push({ key: 'estimated', rank: 2, title: `Vérifier le prix ${estimated.length > 1 ? `de ${estimated.length} produits` : `de ${estimated[0].title}`}`, why: 'Le site affiche « prix indicatif », et une commande garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
   const holiday = holidaySuggestions(shop, { fromISO: today }).find((h) => h.date <= addDays(today, 30))
   if (holiday) cards.push({ key: `hol-${holiday.date}`, rank: 1, title: `Le ${shortDay(holiday.date)} approche : ouvert ou fermé?`, why: `${holiday.label} · à confirmer`, href: '/boutique/#jours-speciaux', action: 'Choisir' })
   return cards.sort((a, b) => a.rank - b.rank).slice(0, 3)

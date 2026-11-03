@@ -105,7 +105,7 @@ const home = {
         s('Que vend la Pâtisserie Coco Vanille?', 'La Pâtisserie Coco Vanille vend des viennoiseries et des croissants, des pains frais, des pâtisseries et des gâteaux personnalisés sur commande, selon la liste de son offre publiée en août 2026. Sur sa page Facebook, la boutique résume son offre en une phrase : « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! »', {
           list: ['Viennoiseries et croissants', 'Pains frais', 'Pâtisseries', 'Gâteaux personnalisés sur commande, pour les anniversaires et les occasions spéciales', 'Spécialités marocaines, dont les msemmens et les harchas'],
         }),
-        s('Comment commander pour la cueillette?', 'Réservez en ligne sur la page Commander et payez à la cueillette, appelez la boutique au 450-372-7177 ou passez au comptoir du 3, rue Court. Pour un gâteau personnalisé, envoyez votre demande sur la même page. Toutes les commandes se récupèrent en boutique.'),
+        s('Comment commander pour la cueillette?', `Commandez en ligne sur la page Commander et payez ${fn('façon de payer une commande du site')}, appelez la boutique au 450-372-7177 ou passez au comptoir du 3, rue Court. Pour un gâteau personnalisé, envoyez votre demande sur la même page. Toutes les commandes se récupèrent en boutique.`),
         s('Où se trouve la Pâtisserie Coco Vanille à Granby?', 'La Pâtisserie Coco Vanille se trouve au 3, rue Court, au centre-ville de Granby (Québec), code postal J2G 4Y6. Les itinéraires Google Maps et Plans, les heures et le stationnement sont sur la page Nous trouver. En visite au Zoo de Granby? La page Depuis le Zoo de Granby donne le trajet, l’autobus et le stationnement.'),
         s('Pourquoi voit-on aussi le nom « Cocovanille »?', 'Les noms « Pâtisserie Cocovanille » et « Pâtisserie Coco Vanille » désignent la même boutique du 3, rue Court, à Granby. Google Maps et plusieurs annuaires l’écrivent en un mot; le registre des entreprises du Québec, la page Facebook et la presse l’écrivent en deux mots. Le téléphone, le 450-372-7177, est le même partout.'),
       ],
@@ -115,7 +115,7 @@ const home = {
         q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
         q('Où se stationner près de la boutique?', `${PARKING_FR} La page Nous trouver donne les limites de temps et un deuxième stationnement, à environ 120 m.`),
         q('Avez-vous des produits sans gluten ou sans noix?', 'Ce site ne présente aucun produit comme « sans gluten » ou « sans noix » : ces mentions sont encadrées par la réglementation. Les allergènes d’un produit paraissent sur la page Allergènes quand une personne de l’équipe les a vérifiés; en cas d’allergie, appelez avant de commander.'),
-        q('Peut-on payer par carte?', `En boutique : ${fn('modes de paiement acceptés au comptoir')}. Une commande réservée sur ce site se paie à la cueillette : aucune carte n’est demandée en ligne.`),
+        q('Peut-on payer par carte?', `En boutique : ${fn('modes de paiement acceptés au comptoir')}. Une commande passée sur ce site se paie ${fn('façon de payer une commande du site')}. ${fn('carte demandée en ligne')}`),
         q('Parlez-vous anglais?', `Le site de la Pâtisserie Coco Vanille est offert en français et en anglais. Service en anglais au comptoir : ${fn('personne qui sert la clientèle en anglais')}.`),
       ],
       changeNote: 'Réservation en ligne, payée à la cueillette, ajoutée; réponses sur le paiement et les allergènes précisées.',
@@ -131,7 +131,7 @@ const home = {
         s('What does Pâtisserie Coco Vanille sell?', 'Pâtisserie Coco Vanille sells viennoiseries and croissants, fresh bread, pastries and custom cakes to order, according to the list of its offer published in August 2026. On its Facebook page, the shop sums up its offer in one French sentence: « Nous offrons une grande variété de pâtisseries, gâteaux et pains ! » (a wide variety of pastries, cakes and bread).', {
           list: ['Viennoiseries and croissants', 'Fresh bread', 'Pastries', 'Custom cakes to order, for birthdays and special occasions', 'Moroccan specialties, including msemmen and harcha'],
         }),
-        s('How do I order for pickup?', 'Reserve online on the Order page and pay at pickup, call the shop at 450-372-7177 or come to the counter at 3 rue Court. For a custom cake, send your request on the same page. Every order is picked up at the shop.'),
+        s('How do I order for pickup?', `Order online on the Order page and pay ${fn('how a website order is paid')}, call the shop at 450-372-7177 or come to the counter at 3 rue Court. For a custom cake, send your request on the same page. Every order is picked up at the shop.`),
         s('Where is Pâtisserie Coco Vanille in Granby?', 'Pâtisserie Coco Vanille is at 3 rue Court in downtown Granby, Québec, postal code J2G 4Y6. Google Maps and Apple Maps directions, hours and parking are on the Visit page. Visiting the Granby Zoo? The From the Granby Zoo page gives the route, the bus and parking.'),
         s('Why do some maps say “Cocovanille”?', '“Pâtisserie Cocovanille” and “Pâtisserie Coco Vanille” are the same shop at 3 rue Court, Granby. Google Maps and several directories write it as one word; the Québec business registry, the Facebook page and the press write it as two. The phone number, 450-372-7177, is the same everywhere.'),
       ],
@@ -141,7 +141,7 @@ const home = {
         q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
         q('Where can I park?', `${PARKING_EN} The Visit page gives the time limits and a second lot, about 120 m away.`),
         q('Do you have gluten-free or nut-free products?', 'This website does not label any product “gluten-free” or “nut-free”: those claims are regulated. A product’s allergens appear on the Allergens page when a team member has checked them; if you have an allergy, call before you order.'),
-        q('Do you accept US or foreign credit cards?', `In store: ${fn('payment methods accepted at the counter')}. An order reserved on this website is paid at pickup: no card is asked for online.`),
+        q('Do you accept US or foreign credit cards?', `In store: ${fn('payment methods accepted at the counter')}. An order placed on this website is paid ${fn('how a website order is paid')}. ${fn('card asked for online')}`),
         q('Do you speak English in the shop?', `This website is in French and English. English service at the counter: ${fn('staff who serve customers in English')}.`),
       ],
       changeNote: 'Online reservation, paid at pickup, added; answers on payment and allergens made clearer.',
@@ -216,16 +216,16 @@ const commander = {
   locales: {
     fr: {
       title: 'Commander et réserver à Granby · Coco Vanille',
-      description: 'Réservez en ligne à la Pâtisserie Coco Vanille, à Granby, et payez à la cueillette au 3, rue Court, ou commandez au 450-372-7177. Gâteaux personnalisés aussi.',
+      description: 'Commandez en ligne à la Pâtisserie Coco Vanille, à Granby, et récupérez au 3, rue Court, ou appelez au 450-372-7177. Gâteaux personnalisés aussi.',
       h1: 'Commander à Granby : en ligne, par téléphone ou au comptoir',
       answer:
-        `La Pâtisserie Coco Vanille, à Granby, prend les commandes sur cette page, au 450-372-7177 et au comptoir du 3, rue Court. Tout se récupère en boutique et se paie à la cueillette. Un gâteau personnalisé se demande ici. Délais : ${fn('délais par produit et heure limite de commande')}.`,
+        `La Pâtisserie Coco Vanille, à Granby, prend les commandes sur cette page, au 450-372-7177 et au comptoir du 3, rue Court. Tout se récupère en boutique et se paie ${fn('façon de payer une commande du site')}. Un gâteau personnalisé se demande ici, avec une photo. Délais : ${fn('délais par produit et heure limite de commande')}.`,
       sections: [
-        s('Comment commander à la Pâtisserie Coco Vanille?', 'Ajoutez vos produits à « Ma boîte », choisissez la journée et l’heure de cueillette, puis confirmez : vous payez à la cueillette. Vous pouvez aussi appeler au 450-372-7177 ou passer au comptoir du 3, rue Court, à Granby.', {
+        s('Comment commander à la Pâtisserie Coco Vanille?', `Ajoutez vos produits à « Ma boîte », choisissez la journée et l’heure de cueillette, puis confirmez : vous payez ${fn('façon de payer une commande du site')}. Vous pouvez aussi appeler au 450-372-7177 ou passer au comptoir du 3, rue Court, à Granby.`, {
           body: `Heures d’ouverture : ${HOURS_FR}. Toutes les commandes se récupèrent en boutique.`,
         }),
         s('Comment commander un gâteau personnalisé?', `Un gâteau personnalisé commence par la demande de cette page : photo de référence, nombre d’invités, date et message. La boutique vous appelle avec un prix, et la préparation commence après votre accord. Le gâteau se paie à la cueillette; pour une grosse commande, la boutique peut demander un acompte et vous le dit avant de confirmer.`),
-        s('Peut-on commander en ligne?', 'Oui : les produits de la carte se réservent sur cette page, avec leurs dates de cueillette, et se paient à la cueillette. Aucune carte n’est demandée en ligne. Les demandes de gâteau personnalisé s’envoient aussi sur cette page.'),
+        s('Peut-on commander en ligne?', `Oui : les produits de la carte se commandent sur cette page, avec leurs dates de cueillette, et se paient ${fn('façon de payer une commande du site')}. ${fn('carte demandée en ligne')} Les demandes de gâteau personnalisé s’envoient aussi sur cette page.`),
         s('Où et quand récupérer ma commande?', 'Votre commande se récupère au 3, rue Court, à Granby, à la date et à l’heure que vous avez choisies ou convenues avec la boutique. La boutique ne déplace jamais une date confirmée sans votre accord.'),
         s('Quels frais s’ajoutent au prix affiché?', 'Aucun frais ne s’ajoute au prix affiché : ni frais de service, ni frais d’emballage, ni frais de carte. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu, et le prix est le même quel que soit le mode de paiement.'),
         s('Comment annuler ou changer la date d’une commande?', 'Pour annuler ou changer une date, appelez la boutique au 450-372-7177; les conditions de vente précisent les délais. Si la boutique ne peut pas honorer une commande, vous choisissez une autre date de cueillette ou l’annulation, sans frais.'),
@@ -233,10 +233,10 @@ const commander = {
       faq: [
         q('C’est-tu possible d’avoir un gâteau pour demain?', `Ça dépend de l’heure limite de commande : ${NEXT_DAY_FR}. Pour demain, appelez la boutique au 450-372-7177.`),
         q('Combien de jours d’avance faut-il commander un gâteau?', `Le délai dépend du gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Chaque page de produit affiche aussi son délai.`),
-        q('Faut-il verser un acompte?', 'Non pour une commande réservée en ligne : vous payez à la cueillette. Pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte et vous le dit avant de confirmer.'),
+        q('Faut-il verser un acompte?', `Non pour une commande passée en ligne : vous payez ${fn('façon de payer une commande du site')}. Pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte et vous le dit avant de confirmer.`),
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez votre photo de référence à la demande, puis la boutique confirme avec vous le format, la saveur, les couleurs et le message. La préparation commence seulement après votre accord.'),
         q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
-        q('Comment payer ma commande?', `À la cueillette, au comptoir : ${fn('modes de paiement acceptés au comptoir')}. Aucune carte n’est demandée en ligne.`),
+        q('Comment payer ma commande?', `À la cueillette, au comptoir : ${fn('modes de paiement acceptés au comptoir')}. ${fn('carte demandée en ligne')}`),
         q('Que se passe-t-il si j’arrive en retard pour ma cueillette?', 'Appelez la boutique au 450-372-7177 : la commande reste prête jusqu’à la fermeture le jour prévu, et vous pouvez convenir d’une autre heure ce jour-là. Les produits frais ne peuvent pas être gardés au-delà de ce jour : prévenez la boutique si vous ne pouvez pas venir.'),
       ],
       changeNote: 'Réservation en ligne, payée à la cueillette, ajoutée.',
@@ -244,16 +244,16 @@ const commander = {
     },
     en: {
       title: 'Order and reserve in Granby, Québec · Coco Vanille',
-      description: 'Reserve online at Pâtisserie Coco Vanille in Granby, Québec, and pay at pickup at 3 rue Court, or order at 450-372-7177. Custom cakes on the same page.',
+      description: 'Order online at Pâtisserie Coco Vanille in Granby, Québec, and pick up at 3 rue Court, or call 450-372-7177. Custom cakes on this same page too.',
       h1: 'Order in Granby: online, by phone or at the counter',
       answer:
-        `Pâtisserie Coco Vanille in Granby, Québec, takes orders on this page, at 450-372-7177 and at the counter, 3 rue Court. Everything is picked up at the shop and paid at pickup. Custom cakes are requested here too. Lead times: ${fn('lead time per product and order cut-off time')}.`,
+        `Pâtisserie Coco Vanille in Granby, Québec, takes orders on this page, at 450-372-7177 and at the counter, 3 rue Court. Everything is picked up at the shop and paid ${fn('how a website order is paid')}. Custom cakes are requested here too, with a photo. Lead times: ${fn('lead time per product and order cut-off time')}.`,
       sections: [
-        s('How do I order from Pâtisserie Coco Vanille?', 'Add your products to “My box”, choose the pickup day and time, then confirm: you pay at pickup. You can also call 450-372-7177 or come to the counter at 3 rue Court, Granby.', {
+        s('How do I order from Pâtisserie Coco Vanille?', `Add your products to “My box”, choose the pickup day and time, then confirm: you pay ${fn('how a website order is paid')}. You can also call 450-372-7177 or come to the counter at 3 rue Court, Granby.`, {
           body: `Opening hours: ${HOURS_EN}. Every order is picked up at the shop.`,
         }),
         s('How do I order a custom cake?', `A custom cake starts with the request on this page: a reference photo, the number of guests, the date and the message. The shop calls you with a price, and baking starts once you agree. The cake is paid at pickup; for a large order, the shop may ask for a deposit and tells you before confirming.`),
-        s('Can I order online?', 'Yes: menu products are reserved on this page, with their pickup dates, and paid at pickup. No card is asked for online. Custom-cake requests are also sent on this page.'),
+        s('Can I order online?', `Yes: menu products are ordered on this page, with their pickup dates, and paid ${fn('how a website order is paid')}. ${fn('card asked for online')} Custom-cake requests are also sent on this page.`),
         s('Where and when do I pick up my order?', 'Your order is picked up at 3 rue Court, Granby, on the date and at the time you chose or agreed with the shop. The shop never moves a confirmed date without your agreement.'),
         s('What fees are added to the price shown?', 'No fees are added to the price shown: no service fee, no packaging fee, no card fee. Only GST and QST are added where they apply, and the price is the same whatever the payment method.'),
         s('How do I cancel or change the date of an order?', 'To cancel or change a date, call the shop at 450-372-7177; the terms of sale set out the deadlines. If the shop cannot fill an order, you choose another pickup date or cancellation, at no charge.'),
@@ -261,10 +261,10 @@ const commander = {
       faq: [
         q('Can I get a cake for tomorrow?', `It depends on the order cut-off time: ${NEXT_DAY_EN}. For tomorrow, call the shop at 450-372-7177.`),
         q('How far in advance should I order a cake?', `It depends on the cake: ${fn('minimum lead time per cake type, in days')}. Each product page also shows its lead time.`),
-        q('Is a deposit required?', 'No for an order reserved online: you pay at pickup. For a custom cake or a large order, the shop may ask for a deposit and tells you before confirming.'),
+        q('Is a deposit required?', `No for an order placed online: you pay ${fn('how a website order is paid')}. For a custom cake or a large order, the shop may ask for a deposit and tells you before confirming.`),
         q('Will my cake look like the photo?', 'You attach your reference photo to the request, then the shop confirms the size, flavour, colours and message with you. Baking starts only after you agree.'),
         q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
-        q('How do I pay for my order?', `At pickup, at the counter: ${fn('payment methods accepted at the counter')}. No card is asked for online.`),
+        q('How do I pay for my order?', `At pickup, at the counter: ${fn('payment methods accepted at the counter')}. ${fn('card asked for online')}`),
         q('What if I am late for my pickup?', 'Call the shop at 450-372-7177: the order stays ready until closing on the planned day, and you can agree on another time that day. Fresh products cannot be kept beyond that day: let the shop know if you cannot come.'),
       ],
       changeNote: 'Online reservation, paid at pickup, added.',
@@ -557,7 +557,7 @@ const faq = {
       answer:
         'Cette page de la Pâtisserie Coco Vanille, à Granby, répond aux questions des clients sur la boutique du 3, rue Court : commande et cueillette, délais, prix, portions, allergènes, heures, stationnement et ateliers. Chaque réponse commence par l’essentiel, puis renvoie à la page qui donne le détail.',
       sections: [
-        s('Comment commander à la Pâtisserie Coco Vanille?', 'Vous réservez sur la page Commander et payez à la cueillette, ou vous commandez au 450-372-7177 ou au comptoir du 3, rue Court. Pour un gâteau personnalisé, la même page reçoit votre demande, avec une photo de référence.'),
+        s('Comment commander à la Pâtisserie Coco Vanille?', `Vous commandez sur la page Commander et payez ${fn('façon de payer une commande du site')}, ou vous appelez au 450-372-7177, ou vous passez au comptoir du 3, rue Court. Pour un gâteau personnalisé, la même page reçoit votre demande, avec une photo de référence.`),
         s('Combien coûte un gâteau de fête?', `Le prix d’un gâteau de fête dépend du format et du nombre de portions : ${fn('prix des gâteaux par format')}. La page Prix affiche chaque format avec son prix en texte, avant taxes, et la date de mise à jour; elle sert aussi pour un gâteau d’anniversaire sur commande.`),
         s('Quelle grosseur de gâteau pour 20 personnes?', `Pour 20 personnes, le bon format dépend du nombre de portions par taille : ${fn('portions par format de gâteau')}. Le calculateur de portions fait le calcul pour votre nombre d’invités.`),
         s('Quelles sont les heures d’ouverture?', `La boutique est ouverte ${OPEN_FR}; elle est fermée ${CLOSED_FR}. Le tableau de la page Nous trouver, tenu à jour par la boutique, donne aussi les jours fériés et les fermetures exceptionnelles.`),
@@ -567,7 +567,7 @@ const faq = {
       faq: [
         q('Combien de jours d’avance faut-il commander un gâteau personnalisé?', `Le délai dépend du type de gâteau : ${fn('délai minimum par type de gâteau, en jours')}. Pour une date rapprochée, appelez la boutique au 450-372-7177.`),
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez une photo de référence à votre demande, et la boutique confirme les détails avec vous avant la préparation. Rien n’est préparé sans votre accord.'),
-        q('Faut-il un dépôt? Puis-je annuler?', 'Une commande réservée en ligne se paie à la cueillette, sans dépôt; pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte. Vous pouvez annuler sans frais jusqu’à 24 heures avant votre cueillette : les conditions de vente donnent le détail.'),
+        q('Faut-il un dépôt? Puis-je annuler?', `Une commande passée en ligne se paie ${fn('façon de payer une commande du site')}, sans dépôt; pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte. Vous pouvez annuler sans frais jusqu’à 24 heures avant votre cueillette : les conditions de vente donnent le détail.`),
         q('Faites-vous la livraison?', `Livraison : ${DELIVERY_FR}, au 3, rue Court, à Granby.`),
         q('Avez-vous des gâteaux sans noix ou sans gluten?', 'Ce site ne fait aucune allégation « sans noix » ou « sans gluten ». Les allergènes vérifiés sont sur la page Allergènes; en cas d’allergie, appelez avant de commander.'),
         q('Où se stationner près de la Pâtisserie Coco Vanille?', `${PARKING_FR} La page Nous trouver donne les limites de temps et un deuxième stationnement, à environ 120 m.`),
@@ -584,7 +584,7 @@ const faq = {
       answer:
         'This page of Pâtisserie Coco Vanille in Granby, Québec, answers customers’ questions about the shop at 3 rue Court: ordering and pickup, lead times, prices, servings, allergens, hours, parking and workshops. Each answer starts with the essentials, then points to the page that has the details.',
       sections: [
-        s('How do I order from Pâtisserie Coco Vanille?', 'You reserve on the Order page and pay at pickup, or you order at 450-372-7177 or at the counter, 3 rue Court. For a custom cake, the same page takes your request, with a reference photo.'),
+        s('How do I order from Pâtisserie Coco Vanille?', `You order on the Order page and pay ${fn('how a website order is paid')}, or you call 450-372-7177, or you come to the counter, 3 rue Court. For a custom cake, the same page takes your request, with a reference photo.`),
         s('How much is a custom birthday cake?', `The price of a birthday cake depends on the size and the number of servings: ${fn('cake prices per size')}. The Prices page shows each size with its price as text, before taxes, and the date it was updated.`),
         s('What size cake for 20 people?', `For 20 people, the right size depends on the number of servings per size: ${fn('servings per cake size')}. The serving calculator does the maths for your number of guests.`),
         s('What are the opening hours?', `The shop is open ${OPEN_EN}; it is closed ${CLOSED_EN}. The table on the Visit page, kept up to date by the shop, also shows statutory holidays and exceptional closures.`),
@@ -594,7 +594,7 @@ const faq = {
       faq: [
         q('How far in advance should I order a custom cake?', `The lead time depends on the type of cake: ${fn('minimum lead time per cake type, in days')}. If the date is close, call the shop at 450-372-7177.`),
         q('Will my cake look like the photo?', 'You attach a reference photo to your request, and the shop confirms the details with you before anything is made. Nothing is made without your agreement.'),
-        q('Is there a deposit? Can I cancel?', 'An order reserved online is paid at pickup, with no deposit; for a custom cake or a large order, the shop may ask for one. You can cancel at no charge up to 24 hours before your pickup: the terms of sale give the details.'),
+        q('Is there a deposit? Can I cancel?', `An order placed online is paid ${fn('how a website order is paid')}, with no deposit; for a custom cake or a large order, the shop may ask for one. You can cancel at no charge up to 24 hours before your pickup: the terms of sale give the details.`),
         q('Do you deliver?', `Delivery: ${DELIVERY_EN}, 3 rue Court, Granby.`),
         q('Do you have nut-free or gluten-free cakes?', 'This website makes no “nut-free” or “gluten-free” claims. Checked allergens are on the Allergens page; if you have an allergy, call before you order.'),
         q('Where can I park near Pâtisserie Coco Vanille?', `${PARKING_EN} The Visit page gives the time limits and a second lot, about 120 m away.`),
@@ -783,7 +783,7 @@ const gateaux = {
         q('Est-ce que mon gâteau va ressembler à la photo?', 'Vous joignez une photo de référence à votre demande, puis la boutique confirme avec vous le format, la saveur, les couleurs et le message. La préparation commence seulement après votre accord.'),
         q('Pouvez-vous écrire un message sur le gâteau?', fn('message écrit sur le gâteau offert ou non, longueur maximale')),
         q('Pouvez-vous faire un gâteau avec un personnage?', fn('politique pour les thèmes et les personnages')),
-        q('Faut-il un acompte pour un gâteau?', 'Non pour un gâteau de la carte réservé en ligne : vous payez à la cueillette. Pour un gâteau personnalisé, la boutique peut demander un acompte et vous le dit avant de confirmer.'),
+        q('Faut-il un acompte pour un gâteau?', `Non pour un gâteau de la carte commandé en ligne : vous payez ${fn('façon de payer une commande du site')}. Pour un gâteau personnalisé, la boutique peut demander un acompte et vous le dit avant de confirmer.`),
         q('Comment conserver un gâteau à la crème jusqu’au lendemain?', fn('consignes de conservation des gâteaux à la crème')),
       ],
       changeNote: 'Formats, portions, prix indicatifs, délais et réservation en ligne précisés.',
@@ -806,7 +806,7 @@ const gateaux = {
         q('Will my cake look like the photo?', 'You attach a reference photo to your request, then the shop confirms the size, flavour, colours and message with you. Baking starts only after you agree.'),
         q('Can you write a message on the cake?', fn('message on the cake offered or not, maximum length')),
         q('Can you make a cake with a character on it?', fn('policy on themes and characters')),
-        q('Is a deposit required for a cake?', 'No for a cake from the menu reserved online: you pay at pickup. For a custom cake, the shop may ask for a deposit and tells you before confirming.'),
+        q('Is a deposit required for a cake?', `No for a cake from the menu ordered online: you pay ${fn('how a website order is paid')}. For a custom cake, the shop may ask for a deposit and tells you before confirming.`),
         q('How do I keep a cream cake fresh overnight?', fn('storage instructions for cream cakes')),
       ],
       changeNote: 'Sizes, servings, indicative prices, lead times and online reservation made clear.',
@@ -852,7 +852,7 @@ const patisseries = {
         s('Which pastries does Pâtisserie Coco Vanille make?', `The shop lists gourmet pastries in the list of its offer published in August 2026, and savoury food, such as puff pastries and chicken pastillas, in its posts of September 2026. Pastries offered right now: ${fn('list of pastries')}. Public customer reviews, read on October 29, 2026, mention the Paris-Brest and the vol-au-vent.`),
         s('What is a Paris-Brest?', `A Paris-Brest is a ring of choux pastry filled with praline cream; its shape recalls a bicycle wheel, in honour of the Paris-Brest-Paris cycling race. The shop’s Paris-Brest filling: ${fn('Paris-Brest filling')}.`),
         s('What is a vol-au-vent?', `A vol-au-vent is a hollow puff-pastry case filled with a hot savoury mixture, often chicken in sauce. The shop’s vol-au-vent filling: ${fn('vol-au-vent filling')}.`),
-        s('Can I order pastries ahead?', 'Yes: reserve them on the Order page, with their lead time, or call 450-372-7177.'),
+        s('Can I order pastries ahead?', 'Yes: order them on the Order page, with their lead time, or call 450-372-7177.'),
       ],
       faq: [
         q('Does the Paris-Brest contain tree nuts?', 'Classic praline cream is made from hazelnuts or almonds, both tree nuts. A pastry’s allergens appear on its page when a team member has checked them.'),
@@ -891,13 +891,13 @@ const confidentialite = {
             'Demande de gâteau : description, photo de référence, nombre d’invités et date, pour préparer le prix et la commande.',
             'Messagerie « Écrivez-nous » : vos messages et, seulement si vous choisissez de les donner, votre prénom et un numéro de téléphone ou une adresse courriel, pour vous répondre.',
             'Note d’allergie, facultative : seulement pour préparer votre commande; elle n’est jamais copiée dans un courriel, un texto ou un outil d’intelligence artificielle.',
-            'Paiement : au comptoir, à la cueillette; le site ne demande aucun numéro de carte.',
+            fn('paiement, liste de la vie privée'),
             'Consentements aux témoins et aux messages : votre choix, sa date et la version du texte accepté, pour prouver votre consentement.',
             'Journaux du serveur : adresse IP et pages demandées, pour la sécurité du site.',
           ],
         }),
         s('Vos renseignements sortent-ils du Québec?', `Oui : le site et sa base de données sont hébergés hors du Québec, chez Hostinger, sur un serveur situé à Paris, en France. Avant de communiquer un renseignement hors du Québec, la boutique fait une évaluation des facteurs relatifs à la vie privée et encadre le service par écrit, comme l’exige l’article 17 de la loi.`, {
-          body: 'Fournisseur en service : Hostinger, pour l’hébergement du site et de la base de données (France). Aucun processeur de paiement ni service d’envoi de courriels ou de textos n’est en service; un fournisseur ajouté plus tard sera nommé ici avant sa mise en service. Les outils de mesure d’audience restent désactivés tant que vous ne les activez pas.',
+          body: `Fournisseur en service : Hostinger, pour l’hébergement du site et de la base de données (France). ${fn('processeur de paiement en service')} Aucun service d’envoi de courriels ou de textos n’est en service; un fournisseur ajouté plus tard sera nommé ici avant sa mise en service. Les outils de mesure d’audience restent désactivés tant que vous ne les activez pas.`,
         }),
         s('Quels sont vos droits?', `Vous pouvez demander l’accès à vos renseignements, leur rectification et leur communication dans un format technologique structuré et couramment utilisé, et retirer un consentement à tout moment. Adressez-vous à la personne responsable, au 450-372-7177 ou au 3, rue Court; délai de réponse : 30 jours au plus.`, {
           body: 'Si vous n’êtes pas satisfait de la réponse, vous pouvez porter plainte à la Commission d’accès à l’information du Québec.',
@@ -915,7 +915,7 @@ const confidentialite = {
       ],
       faq: [
         q('Vendez-vous mes renseignements personnels?', 'Non : la Pâtisserie Coco Vanille ne vend ni ne loue vos renseignements personnels.'),
-        q('Mon numéro de carte est-il conservé?', 'Non : le site ne demande aucun numéro de carte; le paiement se fait au comptoir, à la cueillette.'),
+        q('Mon numéro de carte est-il conservé?', fn('numéro de carte conservé')),
         q('Allez-vous m’envoyer des courriels promotionnels?', 'Seulement si vous cochez la case prévue pour chaque type de message : précommandes saisonnières, rappel d’anniversaire ou demande d’avis. Chaque message permet de vous désabonner.'),
         q('Utilisez-vous des témoins?', 'Seulement les témoins essentiels par défaut. Les outils de mesure d’audience restent désactivés tant que vous ne les activez pas; la page Témoins donne le détail.'),
         q('Comment retirer mon consentement?', 'Pour les témoins, le lien « Témoins » en bas de chaque page permet de changer votre choix. Pour les messages, utilisez le lien de désabonnement ou répondez STOP à un texto.'),
@@ -941,13 +941,13 @@ const confidentialite = {
             'Cake request: description, reference photo, number of guests and date, to prepare the price and the order.',
             '“Message us” messaging: your messages and, only if you choose to give them, your first name and a phone number or email address, to answer you.',
             'Allergy note, optional: only used to prepare your order; never copied into an email, a text message or an artificial-intelligence tool.',
-            'Payment: at the counter, at pickup; the website never asks for a card number.',
+            fn('payment, privacy list'),
             'Cookie and message consents: your choice, its date and the version of the text you accepted, to prove your consent.',
             'Server logs: IP address and pages requested, for the security of the site.',
           ],
         }),
         s('Does your information leave Québec?', 'Yes: the website and its database are hosted outside Québec, with Hostinger, on a server in Paris, France. Before sharing information outside Québec, the shop carries out a privacy impact assessment and puts the service under a written agreement, as section 17 of the law requires.', {
-          body: 'Provider in service: Hostinger, for hosting the website and the database (France). No payment processor and no email or text-message service is in service; a provider added later will be named here before it starts. Audience-measurement tools stay off until you turn them on.',
+          body: `Provider in service: Hostinger, for hosting the website and the database (France). ${fn('payment processor in service')} No email or text-message service is in service; a provider added later will be named here before it starts. Audience-measurement tools stay off until you turn them on.`,
         }),
         s('What are your rights?', `You may ask to access your information, to correct it and to receive it in a structured, commonly used technological format, and you may withdraw a consent at any time. Contact the person in charge, at 450-372-7177 or at 3 rue Court; response time: 30 days at most.`, {
           body: 'If you are not satisfied with the answer, you may file a complaint with the Commission d’accès à l’information du Québec.',
@@ -965,7 +965,7 @@ const confidentialite = {
       ],
       faq: [
         q('Do you sell my personal information?', 'No: Pâtisserie Coco Vanille does not sell or rent your personal information.'),
-        q('Is my card number stored?', 'No: the website never asks for a card number; payment is made at the counter, at pickup.'),
+        q('Is my card number stored?', fn('card number stored')),
         q('Will you send me promotional emails?', 'Only if you tick the box for each kind of message: seasonal pre-orders, birthday reminder or review request. Every message lets you unsubscribe.'),
         q('Do you use cookies?', 'Only essential cookies by default. Audience-measurement tools stay off until you turn them on; the Cookies page has the details.'),
         q('How do I withdraw my consent?', 'For cookies, the “Cookies” link at the bottom of every page lets you change your choice. For messages, use the unsubscribe link or reply STOP to a text message.'),
@@ -984,10 +984,10 @@ const conditionsDeVente = {
   locales: {
     fr: {
       title: 'Conditions de vente · Pâtisserie Coco Vanille, Granby',
-      description: 'Conditions de vente de la Pâtisserie Coco Vanille, à Granby : réservation en ligne, prix, paiement à la cueillette, annulation et remboursement en 15 jours.',
+      description: 'Conditions de vente de la Pâtisserie Coco Vanille, à Granby : commande en ligne, prix, façons de payer, annulation et remboursement en 15 jours.',
       h1: 'Conditions de vente',
       answer:
-        `Ces conditions s’appliquent aux commandes passées en ligne ou par téléphone à la Pâtisserie Coco Vanille, au 3, rue Court, à Granby, pour une cueillette en boutique. Elles précisent les prix, le paiement à la cueillette, l’annulation et le remboursement, selon la Loi sur la protection du consommateur.`,
+        `Ces conditions s’appliquent aux commandes passées en ligne ou par téléphone à la Pâtisserie Coco Vanille, au 3, rue Court, à Granby, pour une cueillette en boutique. Elles précisent les prix, le paiement, l’annulation et le remboursement, selon la Loi sur la protection du consommateur.`,
       sections: [
         s('Qui vend et comment nous joindre?', `Le commerçant est Pâtisserie Coco Vanille inc., 3, rue Court, Granby (Québec) J2G 4Y6, numéro d’entreprise du Québec 1177082220, téléphone 450-372-7177.`, {
           body: `Numéros d’inscription à la TPS et à la TVQ : ${fn('numéros de TPS et de TVQ')}.`,
@@ -998,7 +998,7 @@ const conditionsDeVente = {
         s('Quels prix et quels frais s’appliquent?', 'Le prix affiché comprend tous les frais obligatoires; seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Aucun frais de service, d’emballage ou de carte n’est ajouté, et le prix est le même quel que soit le mode de paiement.', {
           body: 'Les taxes dépendent du produit et de la quantité; leur montant est affiché séparément avant la confirmation. Un prix marqué « indicatif » sur le site peut changer, mais le prix écrit dans votre récapitulatif est celui que vous payez. La boutique n’exige jamais plus que le prix annoncé.',
         }),
-        s('Quand se fait le paiement?', 'Une commande réservée en ligne ou par téléphone se paie au comptoir, à la cueillette; aucune carte n’est demandée en ligne. Pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte et vous le dit avant de confirmer.', {
+        s('Quand se fait le paiement?', `${fn('quand se paie une commande')} Pour un gâteau personnalisé ou une grosse commande, la boutique peut demander un acompte et vous le dit avant de confirmer.`, {
           body: `L’acompte réserve votre date et s’applique au prix du gâteau. Si vous annulez, la boutique vous rembourse l’acompte, moins les frais qu’elle a réellement engagés pour votre gâteau avant l’annulation, comme les ingrédients ou les décorations achetés pour vous et le travail déjà fait; elle vous en remet le détail par écrit. Le remboursement est versé dans les 15 jours suivant l’annulation.`,
         }),
         s('Comment se passe la cueillette?', `Vous récupérez votre commande au 3, rue Court, à Granby, pendant la plage choisie, en donnant votre code de cueillette. La boutique ne change jamais une date ou une plage confirmée sans votre accord.`, {
@@ -1021,10 +1021,10 @@ const conditionsDeVente = {
     },
     en: {
       title: 'Terms of sale · Pâtisserie Coco Vanille, Granby',
-      description: 'Terms of sale of Pâtisserie Coco Vanille in Granby, Québec: online reservations, prices, payment at pickup, cancellation and refunds within 15 days.',
+      description: 'Terms of sale of Pâtisserie Coco Vanille in Granby, Québec: ordering online, prices, the ways to pay, cancellation and refunds within 15 days.',
       h1: 'Terms of sale',
       answer:
-        `These terms apply to orders placed online or by phone with Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec, for pickup at the shop. They cover prices, payment at pickup, cancellation and refunds under Québec’s Consumer Protection Act. ${PREVAILS}`,
+        `These terms apply to orders placed online or by phone with Pâtisserie Coco Vanille, 3 rue Court, Granby, Québec, for pickup at the shop. They cover prices, payment, cancellation and refunds under Québec’s Consumer Protection Act. ${PREVAILS}`,
       sections: [
         s('Who is the seller, and how do I reach you?', `The merchant is Pâtisserie Coco Vanille inc., 3 rue Court, Granby, Québec J2G 4Y6, Québec enterprise number 1177082220, phone 450-372-7177.`, {
           body: `GST and QST registration numbers: ${fn('GST and QST numbers')}.`,
@@ -1035,7 +1035,7 @@ const conditionsDeVente = {
         s('Which prices and fees apply?', 'The price shown includes every mandatory fee; only GST and QST are added where they apply. No service, packaging or card fee is added, and the price is the same whatever the payment method.', {
           body: 'Taxes depend on the product and quantity; their amount is shown separately before you confirm. A price marked “indicative” on the website may change, but the price in your summary is the one you pay. The shop never charges more than the advertised price.',
         }),
-        s('When is payment made?', 'An order reserved online or by phone is paid at the counter, at pickup; no card is asked for online. For a custom cake or a large order, the shop may ask for a deposit and tells you before confirming.', {
+        s('When is payment made?', `${fn('when an order is paid')} For a custom cake or a large order, the shop may ask for a deposit and tells you before confirming.`, {
           body: `The deposit holds your date and is applied to the price of the cake. If you cancel, the shop refunds the deposit, less the costs it actually incurred for your cake before you cancelled, such as ingredients or decorations bought for you and work already done; it gives you the details in writing. The refund is paid within 15 days of the cancellation.`,
         }),
         s('How does pickup work?', 'You pick up your order at 3 rue Court, Granby, during the slot you chose, by giving your pickup code. The shop never changes a confirmed date or slot without your agreement.', {
@@ -1076,6 +1076,7 @@ const temoins = {
             'Essentiels, toujours actifs : « Ma boîte », sécurité des formulaires, mémoire de votre choix de témoins. Sans eux, la commande en ligne ne fonctionne pas.',
             `Mesure d’audience, désactivée par défaut : outils qui comptent les visites et peuvent suivre votre navigation. Ils ne se chargent qu’après votre accord. Outils retenus : aucun pour l’instant; un outil ajouté plus tard sera nommé ici avant d’être activé.`,
             'Publicité : aucun témoin et aucun pixel publicitaire.',
+            fn('témoins de paiement'),
           ],
         }),
         s('Comment donner ou changer votre choix?', 'Quand un outil de mesure est offert, un bandeau vous demande votre choix, avec « Tout refuser » et « Tout accepter » de même taille, et « Choisir ». Le lien « Témoins », en bas de chaque page, permet de changer ce choix à tout moment, aussi facilement que vous l’avez donné.'),
@@ -1087,7 +1088,7 @@ const temoins = {
         q('Utilisez-vous le pixel de Facebook?', 'Non : le site n’utilise aucun pixel publicitaire, de Meta ou d’ailleurs.'),
         q('Pourquoi « Tout refuser » est-il aussi visible que « Tout accepter »?', 'Parce que refuser doit être aussi simple qu’accepter : les deux boutons ont la même taille et le même style.'),
         q('Mon choix est-il enregistré?', 'Oui : votre choix est enregistré avec sa date et la version du texte affiché, sans votre nom, pour prouver le consentement.'),
-        q('Puis-je bloquer aussi les témoins essentiels?', 'Oui, dans les réglages de votre navigateur, mais « Ma boîte » et la réservation en ligne ne fonctionneront plus.'),
+        q('Puis-je bloquer aussi les témoins essentiels?', 'Oui, dans les réglages de votre navigateur, mais « Ma boîte » et la commande en ligne ne fonctionneront plus.'),
       ],
       changeNote: 'Témoins essentiels mis à jour : il n’y a plus de paiement en ligne.',
       contentUpdatedAt: UPDATED_1103,
@@ -1105,6 +1106,7 @@ const temoins = {
             'Essential, always on: “My box”, form security and remembering your cookie choice. Without them, online ordering does not work.',
             `Audience measurement, off by default: tools that count visits and may track your browsing. They only load after you agree. Tools chosen: none for now; a tool added later will be named here before it is turned on.`,
             'Advertising: no advertising cookies and no advertising pixels.',
+            fn('payment cookies'),
           ],
         }),
         s('How do I give or change my choice?', 'When a measurement tool is offered, a banner asks for your choice, with “Refuse all” and “Accept all” the same size, plus “Choose”. The “Cookies” link at the bottom of every page lets you change that choice at any time, as easily as you gave it.'),
@@ -1116,7 +1118,7 @@ const temoins = {
         q('Do you use the Facebook pixel?', 'No: the site uses no advertising pixel, from Meta or anyone else.'),
         q('Why is “Refuse all” as visible as “Accept all”?', 'Because refusing must be as easy as accepting: both buttons have the same size and style.'),
         q('Is my choice recorded?', 'Yes: your choice is recorded with its date and the version of the text shown, without your name, to prove consent.'),
-        q('Can I block essential cookies too?', 'Yes, in your browser settings, but “My box” and online reservations will stop working.'),
+        q('Can I block essential cookies too?', 'Yes, in your browser settings, but “My box” and online ordering will stop working.'),
       ],
       changeNote: 'Essential cookies updated: there is no online payment any more.',
       contentUpdatedAt: UPDATED_1103,
@@ -1223,7 +1225,7 @@ const prix = {
         q('Y a-t-il des frais de service en ligne?', 'Non : aucun frais de service, d’emballage ou de carte ne s’ajoute au prix affiché.'),
         q('Le prix change-t-il selon le mode de paiement?', 'Non : le prix est le même quel que soit le mode de paiement, sans supplément pour la carte de crédit.'),
         q('La boîte est-elle comprise dans le prix?', 'Oui : l’emballage est compris dans le prix du produit; aucun frais de boîte n’est ajouté.'),
-        q('Faut-il payer un acompte?', 'Non pour une commande réservée en ligne : vous payez à la cueillette. Pour un gâteau personnalisé, la boutique peut demander un acompte et vous le dit avant de confirmer.'),
+        q('Faut-il payer un acompte?', `Non pour une commande passée en ligne : vous payez ${fn('façon de payer une commande du site')}. Pour un gâteau personnalisé, la boutique peut demander un acompte et vous le dit avant de confirmer.`),
         q('Le prix est-il le même en boutique et en ligne?', fn('prix identiques en ligne et en boutique ou non')),
         q('Combien coûte un gâteau pour 20 personnes?', `Le prix pour 20 personnes est celui du plus petit format qui donne au moins 20 portions : ${fn('format et prix pour 20 portions')}. Le calculateur de portions fait ce calcul pour vous.`),
       ],
@@ -1247,7 +1249,7 @@ const prix = {
         q('Are there service fees online?', 'No: no service, packaging or card fee is added to the price shown.'),
         q('Does the price change with the payment method?', 'No: the price is the same whatever the payment method, with no credit-card surcharge.'),
         q('Is the box included in the price?', 'Yes: packaging is included in the product price; no box fee is added.'),
-        q('Is a deposit required?', 'No for an order reserved online: you pay at pickup. For a custom cake, the shop may ask for a deposit and tells you before confirming.'),
+        q('Is a deposit required?', `No for an order placed online: you pay ${fn('how a website order is paid')}. For a custom cake, the shop may ask for a deposit and tells you before confirming.`),
         q('Is the price the same in store and online?', fn('same prices online and in store or not')),
         q('How much is a cake for 20 people?', `The price for 20 people is the price of the smallest size with at least 20 servings: ${fn('size and price for 20 servings')}. The serving calculator does this for you.`),
       ],
@@ -1454,7 +1456,7 @@ const buches = {
         q('Peut-on choisir la saveur de sa bûche?', fn('saveurs de bûches')),
         q('Faites-vous des bûches glacées?', fn('bûches glacées offertes ou non')),
         q('Que se passe-t-il quand les bûches sont complètes?', `La page affiche « Complet » et les dates de cueillette disparaissent du calendrier. Liste d’attente : ${fn('liste d’attente offerte ou non')}.`),
-        q('Faut-il payer à la précommande?', 'Non : une bûche réservée sur ce site se paie à la cueillette. Si la boutique doit annuler une précommande, elle vous appelle et rien ne vous est facturé.'),
+        q('Faut-il payer à la précommande?', `Une bûche commandée sur ce site se paie ${fn('façon de payer une commande du site')}. Si la boutique doit annuler une précommande, elle vous appelle, et rien ne reste à votre charge.`),
       ],
       changeNote: 'Bûches de Noël, formats, prix indicatifs et dates de cueillette ajoutés.',
       contentUpdatedAt: UPDATED_1103,
@@ -1477,7 +1479,7 @@ const buches = {
         q('Can I choose the flavour of my Yule log?', fn('Yule log flavours')),
         q('Do you make ice cream Yule logs?', fn('ice cream Yule logs offered or not')),
         q('What happens when the Yule logs are sold out?', `The page shows “Sold out” and the pickup dates disappear from the calendar. Waiting list: ${fn('waiting list offered or not')}.`),
-        q('Do I pay when I pre-order?', 'No: a Yule log reserved on this website is paid at pickup. If the shop has to cancel a pre-order, it calls you and you are not charged.'),
+        q('Do I pay when I pre-order?', `A Yule log ordered on this website is paid ${fn('how a website order is paid')}. If the shop has to cancel a pre-order, it calls you, and you owe nothing.`),
       ],
       changeNote: 'First English version.',
       contentUpdatedAt: UPDATED_1101,

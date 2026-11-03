@@ -6,6 +6,8 @@ import { effectiveAvailability } from '@/lib/ordering/lines'
 import { money } from '@/lib/studio/format'
 import { shortDay, clockFr } from '@/lib/studio/time'
 import { toGive } from '@/lib/facts'
+import { paymentOptions } from '@/lib/payments/settings'
+import { liveChannels } from '@/lib/messaging/senders'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Stepper } from '@/components/studio/Stepper'
 import { Flash } from '@/components/studio/Flash'
@@ -18,6 +20,8 @@ const BASE = '/commandes/telephone/'
 // Same pools and slots as the web (createOrder, source 'phone'); works as plain GET/POST forms.
 export default async function Telephone({ searchParams }) {
   const ctx = await studioPage('commandes')
+  // A payment link goes out by text: it needs a card to take and a text service.
+  const canSendLink = Boolean((await paymentOptions(ctx.payload)).online && liveChannels().sms)
   if (!ctx.can('order.phone')) redirect('/commandes/')
   const q = (await searchParams) || {}
   const shop = await ctx.payload.findGlobal({ slug: 'shop', locale: 'fr', depth: 0, ...ctx.as })
@@ -176,10 +180,12 @@ export default async function Telephone({ searchParams }) {
                 <input type="radio" name="payment" value="comptoir" defaultChecked />
                 <span>Au comptoir</span>
               </label>
-              <label className="choice">
-                <input type="radio" name="payment" value="lien" />
-                <span>Lien par texto</span>
-              </label>
+              {canSendLink && (
+                <label className="choice">
+                  <input type="radio" name="payment" value="lien" />
+                  <span>Lien par texto</span>
+                </label>
+              )}
             </div>
           </fieldset>
 

@@ -5,7 +5,8 @@
 #   bash infra/scripts/make-env.sh production --public-host cocovanille.<ip-with-dashes>.sslip.io \
 #     --admin-host admin-cocovanille.<ip-with-dashes>.sslip.io [--guard strict|show] [--image coco-vanille-web] [--port-base 3000]
 # Messages stay in the container log (EMAIL_PROVIDER=log, SMS_PROVIDER=log) and no payment is taken online
-# (PAYMENT_PROVIDER=counter: a reservation, paid at pickup) until the owner's Amazon SES, Twilio and Stripe accounts exist (docs/13).
+# (PAYMENT_PROVIDER=counter: paid at pickup) until the owner's Amazon SES and Twilio accounts exist (docs/13). The owner connects Stripe in
+# Studio › Plus › Paiement: no server change for that.
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

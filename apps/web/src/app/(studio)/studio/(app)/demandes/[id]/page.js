@@ -6,7 +6,9 @@ import { shortDay, longDay, dayOf } from '@/lib/studio/time'
 import { customerName, whenFr } from '@/lib/studio/format'
 import { toGive } from '@/lib/facts'
 import { ActionForm } from '@/components/studio/ActionForm'
-import { paymentProvider } from '@/lib/payments/provider'
+import { quotesByLink } from '@/lib/payments/provider'
+import { paymentOptions } from '@/lib/payments/settings'
+import { liveChannels } from '@/lib/messaging/senders'
 import { phoneDisplay } from '@/lib/ordering/customer'
 import { QuotePreview } from '@/components/studio/QuotePreview'
 import { Flash } from '@/components/studio/Flash'
@@ -33,7 +35,7 @@ export default async function Chiffrer({ params, searchParams }) {
   const photo = (r.photos || []).find((p) => p && typeof p === 'object')
   const validUntil = typeof hours === 'number' ? new Date(now.getTime() + hours * 3600000) : null
 
-  if (paymentProvider() === 'counter') {
+  if (!quotesByLink(await paymentOptions(ctx.payload), liveChannels())) {
     return (
       <>
         <p>

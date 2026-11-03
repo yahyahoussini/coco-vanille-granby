@@ -1,4 +1,5 @@
 import { studioPage } from '@/lib/studio/guard'
+import { paymentOptions } from '@/lib/payments/settings'
 import { shortDay, localParts, clockOf, relative } from '@/lib/studio/time'
 import { readReport, integrations } from '@/lib/studio/reports'
 import { systemTile } from '@/lib/studio/week'
@@ -93,7 +94,7 @@ export default async function Agence() {
       <section aria-labelledby="integrations">
         <h2 id="integrations">Intégrations</h2>
         <ul className="rows card">
-          {integrations().map((i) => (
+          {integrations(process.env, { stripe: (await paymentOptions(ctx.payload)).connected }).map((i) => (
             <li key={i.key}>
               <span className="grow">{i.label}</span>
               <span className="tag" data-tone={i.ok ? 'ok' : 'warn'}>

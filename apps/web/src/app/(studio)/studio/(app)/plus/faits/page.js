@@ -95,7 +95,7 @@ export default async function Faits({ searchParams }) {
           Le site affiche déjà une réponse proposée par l’agence. Lisez-la : si elle est juste, touchez « C’est bon ». Sinon, changez-la : le site suit aussitôt, en français et en anglais. Une réponse effacée revient à la proposition.
         </p>
         <p className="meta">
-          Aussi dans Studio : <Link href="/plus/produits/">Produits</Link> (formats, prix, photos, allergènes, délai, taxe) · <Link href="/boutique/">Boutique &amp; heures</Link> (heures, fermetures, réservation en ligne) ·{' '}
+          Aussi dans Studio : <Link href="/plus/produits/">Produits</Link> (formats, prix, photos, allergènes, délai, taxe) · <Link href="/boutique/">Boutique &amp; heures</Link> (heures, fermetures, commande en ligne) ·{' '}
           <Link href="/plus/reglages/">Réglages</Link>.
         </p>
         <p className="meta">{all ? <Link href={BACK}>Voir seulement ce qui reste à faire</Link> : <Link href={`${BACK}?tout=1`}>Voir aussi les réponses déjà vérifiées</Link>}</p>

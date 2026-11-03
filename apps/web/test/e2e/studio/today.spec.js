@@ -10,7 +10,7 @@ test('T2 « La commande de Julie est prête. Prévenez-la. »: 1 tap, texto queu
   const julie = card(page, 'Julie T.')
   const started = Date.now()
   await julie.getByRole('button', { name: 'Marquer prête' }).click()
-  await expect(page.locator('.st-snack')).toContainText('texto à Julie T.')
+  await expect(page.locator('.st-snack')).toContainText(/texto à Julie T\.|appelez Julie T\./)
   await expect(julie).toContainText('Prête')
   expect(Date.now() - started).toBeLessThan(10_000)
   const order = await demoOrder('Julie')

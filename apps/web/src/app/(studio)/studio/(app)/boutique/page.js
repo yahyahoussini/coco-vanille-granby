@@ -327,12 +327,12 @@ export default async function Boutique({ searchParams }) {
       </section>
 
       <section aria-labelledby="reservation">
-        <h2 id="reservation">Réservation en ligne</h2>
+        <h2 id="reservation">Commande en ligne</h2>
         {canOrdering ? (
           <ActionForm type="shop.ordering" back={`${BACK}#reservation`} needsNetwork className="card">
             <label className="check">
               <input type="checkbox" name="enabled" value="true" defaultChecked={Boolean(shop.ordering?.enabled)} />
-              <span>Les clients peuvent réserver sur le site</span>
+              <span>Les clients peuvent commander sur le site</span>
             </label>
             <p className="meta">Décoché : le site n’affiche plus « Ajouter à ma boîte » et invite à appeler ou à envoyer une demande. Pour une courte pause, utilisez plutôt « Pause en ligne ».</p>
             <div className="field">
@@ -367,7 +367,7 @@ export default async function Boutique({ searchParams }) {
               {!pools.length && <p className="meta">Pas encore de familles : à créer dans « Avancé ».</p>}
             </fieldset>
             <button className="btn btn-primary" type="submit">
-              Enregistrer la réservation en ligne
+              Enregistrer la commande en ligne
             </button>
           </ActionForm>
         ) : (

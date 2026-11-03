@@ -25,25 +25,26 @@ test('Cette semaine: 5 numbers, at most 3 cards, the Système tile', async ({ pa
   await expect(page.locator('.st-banner')).toContainText(/Système|textos/)
 })
 
-test('price change: step-up first, then applied with « Annuler », history kept', async ({ page }) => {
+test('price change: step-up first, then saved; history kept', async ({ page }) => {
   await login(page, MARC)
   await page.goto('/plus/produits/')
   await page.getByRole('link', { name: /Paris-Brest/ }).click()
   await expect(page.locator('h1')).toHaveText('Paris-Brest')
-  const field = page.getByLabel(/Nouveau prix/).first()
-  await field.fill('7,25')
-  await page.getByRole('button', { name: 'Changer le prix' }).first().click()
+  const change = async () => {
+    await page.locator('summary', { hasText: 'Changer les formats et les prix' }).click()
+    await page.getByLabel('Prix, avant taxes').first().fill('7,25')
+    await page.getByRole('button', { name: 'Enregistrer les formats et les prix' }).click()
+  }
+  await change()
   await expect(page).toHaveURL(/\/verifier\//)
   await page.getByLabel(/Mot de passe/).fill(MARC.password)
   await page.getByRole('button', { name: 'Confirmer', exact: true }).click()
   await expect(page.locator('h1')).toHaveText('Paris-Brest')
-  await page.getByLabel(/Nouveau prix/).first().fill('7,25')
-  await page.getByRole('button', { name: 'Changer le prix' }).first().click()
-  await expect(page.locator('.st-snack')).toContainText('7,25')
-  await page.locator('.st-snack').getByRole('button', { name: 'Annuler' }).click()
-  await expect(page.locator('.st-snack')).toContainText('ancien prix remis')
-  const rows = await sql(`select action from audit_log where action like 'product.price%' order by id desc limit 2`)
-  expect(rows.map((r) => r.action).sort()).toEqual(['product.price', 'product.price.undo'])
+  await change()
+  await expect(page.locator('.st-snack')).toContainText('formats et prix enregistrés')
+  await expect(page.getByText('7,25 $').first()).toBeVisible()
+  const rows = await sql(`select action from audit_log where action = 'product.formats' order by id desc limit 1`)
+  expect(rows.map((r) => r.action)).toEqual(['product.formats'])
 })
 
 test('allergens: checked by a person, with a dated stamp', async ({ page }) => {

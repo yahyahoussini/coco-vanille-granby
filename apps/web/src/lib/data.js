@@ -6,6 +6,8 @@ import { engineContext } from '@/lib/ordering/context'
 import { productOfferState } from '@/lib/ordering/availability'
 import { LOCALES } from '@/lib/routes'
 import { publishGuard, answerMap, resolveFacts } from '@/lib/facts'
+import { paymentAnswers } from '@/lib/payment-facts'
+import { paymentOptions } from '@/lib/payments/settings'
 import { factIdFor } from '@/lib/facts-catalog'
 import { servedByLocale, productReady } from '@/lib/publish'
 import { servedPosts, withJournal } from '@/lib/journal'
@@ -27,7 +29,11 @@ export const getShop = cache(async (locale = 'fr') => {
 export const getFactAnswers = cache(async (locale = 'fr') => {
   const payload = await payloadClient()
   const res = await payload.find({ collection: 'site-facts', limit: 1000, depth: 0, pagination: false }).catch(() => ({ docs: [] }))
-  return answerMap(res.docs, locale)
+  const answers = answerMap(res.docs, locale)
+  // How an order is paid follows Studio › Plus › Paiement (lib/payment-facts.js).
+  const { mode } = await paymentOptions(payload)
+  for (const [key, sentence] of paymentAnswers(mode, locale)) answers.set(key, sentence)
+  return answers
 })
 
 // Page copy with its answered [[FACT NEEDED]] slots filled (lib/facts.js resolveFacts).

@@ -48,6 +48,7 @@ async function query(sql, params = []) {
 function runWorkerOnce(logFile) {
   return new Promise((resolve, reject) => {
     const child = spawn('npx', ['payload', 'run', 'src/worker/index.js'], {
+      shell: process.platform === 'win32', // Windows runs npx through its .cmd shim
       cwd: APP_DIR,
       env: { ...process.env, WORKER_ONCE: '1', MESSAGE_LOG_FILE: logFile, SMS_PROVIDER: 'log', EMAIL_PROVIDER: 'log', PAYLOAD_CONFIG_PATH: 'src/payload.config.js' },
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -174,7 +175,9 @@ test.describe.serial('« Ma boîte » → checkout → mock payment → worker',
     await expect(page.locator('h1')).toHaveText('Vos coordonnées et le récapitulatif')
     await expect(page.locator('#recapitulatif')).toHaveText('Votre récapitulatif est-il exact?')
     await expect(page.locator('#recap-totaux .totals-total td')).toHaveText(/\d+,\d{2}\s\$/)
-    for (const id of ['#c-terms', '#c-marketing', '#c-birthdayReminder', '#c-reviewRequest']) await expect(page.locator(id)).not.toBeChecked()
+    // The message consents only show once a channel really sends (lib/messaging/senders.js liveChannels).
+    await expect(page.locator('#c-terms')).not.toBeChecked()
+    for (const id of ['#c-marketing', '#c-birthdayReminder', '#c-reviewRequest']) if (await page.locator(id).count()) await expect(page.locator(id)).not.toBeChecked()
     expect(await seriousViolations(page)).toEqual([])
 
     await page.getByLabel('Prénom').fill('Julie')

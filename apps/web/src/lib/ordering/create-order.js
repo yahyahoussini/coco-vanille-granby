@@ -2,7 +2,7 @@
 //
 // createOrder(payload, { source: 'web'|'phone', items: [{ productId, variantIndex, qty, message }],
 //   pickup: { date: 'YYYY-MM-DD', windowStart: 'HH:MM' }, customer: { firstName, lastName, phone, email, language },
-//   payment: { provider: 'stripe'|'mock'|'counter'|'none' }, consent, attribution, allergyNote, req })
+//   payment: { method: 'comptoir'|'en-ligne' (web, the customer's choice), provider: 'stripe'|'mock'|'counter'|'none' (phone) }, consent, attribution, allergyNote, req })
 // → { order, totals, errors: [], paymentLink }   (validates capacity, slot, prices, tax classes; never invents a price)
 //
 // sendQuote(payload, { requestId, totalCents, depositPercent, validHours, taxClass, force, req }) → { request, paymentLink, errors, messages }
@@ -20,7 +20,8 @@ import { taxBlocker } from './tax.js'
 import { cleanCustomer } from './customer.js'
 import { orderError } from './errors.js'
 import { getShopSettings, getPools, getUsage, engineContext, withCapacityLock, newToken, newPickupCode, nextOrderNumber, storedDay, publicOrigin } from './context.js'
-import { paymentProvider } from '../payments/provider.js'
+import { webProvider } from '../payments/provider.js'
+import { paymentOptions } from '../payments/settings.js'
 import { cancelIntent } from '../payments/stripe.js'
 import { notifyOrderConfirmed, notifyQuoteSent, scheduleReminder } from '../messaging/notify.js'
 import { pushToTeam } from '../studio/push.js'
@@ -75,8 +76,10 @@ export async function createOrder(payload, args = {}) {
   errors.push(...built.errors)
   const { lines } = built
 
-  const provider = source === 'web' ? paymentProvider() : payment.provider === 'counter' || !payment.provider ? 'counter' : payment.provider === 'stripe' || payment.provider === 'mock' ? paymentProvider() : 'counter'
+  const options = await paymentOptions(payload)
+  const provider = source === 'web' ? webProvider(options, payment.method) : payment.provider === 'stripe' || payment.provider === 'mock' ? options.online || (options.counter ? 'counter' : 'none') : 'counter'
   if (provider === 'none') errors.push(orderError('payment_unavailable'))
+  if (provider === null) errors.push(orderError('payment_method_unavailable', { field: 'paiement' }))
 
   // A reservation asks for a phone number only: the confirmation is its page, and the shop calls if a detail is missing.
   const { customer, errors: customerErrors } = cleanCustomer(rawCustomer, { requireEmail: source === 'web' && provider !== 'counter', requirePhone: true, locale })
@@ -174,15 +177,15 @@ export async function createOrder(payload, args = {}) {
       },
       attribution: attribution || null,
       boxToken: boxToken || null,
-      timeline: [timelineEntry(status, { by, source, at: now, note: counter ? (source === 'web' ? 'Réservation en ligne · paiement à la cueillette' : 'Commande téléphone · paiement au comptoir') : 'Plage réservée pendant le paiement' })],
+      timeline: [timelineEntry(status, { by, source, at: now, note: counter ? (source === 'web' ? 'Commande en ligne · paiement à la cueillette' : 'Commande téléphone · paiement au comptoir') : 'Plage réservée pendant le paiement' })],
     }
     const order = await payload.create({ collection: 'orders', data, ...SYS })
     // Booked at once: same confirmation as a paid web order (16 §3.2), after the undo window on a phone order.
     if (counter) {
       await notifyOrderConfirmed(payload, order).catch(() => null)
       await scheduleReminder(payload, order, { now }).catch(() => null)
-      // A reservation on the site: the only thing that tells the team while Studio is closed. No customer's name in it.
-      if (source === 'web') await pushToTeam(payload, { title: `Nouvelle réservation · ${order.number}`, body: `${longDayLabel(pickup.date, 'fr')}, ${windowLabel(window.start, window.end, 'fr')} · ${lines.length > 1 ? `${lines.length} produits` : lines[0].title}`, url: `/commandes/${order.id}/`, tag: `commande-${order.id}` })
+      // An order on the site to pay at pickup: the only thing that tells the team while Studio is closed. No customer's name in it.
+      if (source === 'web') await pushToTeam(payload, { title: `Nouvelle commande · ${order.number}`, body: `${longDayLabel(pickup.date, 'fr')}, ${windowLabel(window.start, window.end, 'fr')} · ${lines.length > 1 ? `${lines.length} produits` : lines[0].title}`, url: `/commandes/${order.id}/`, tag: `commande-${order.id}` })
     }
     return { order, totals, errors: [], paymentLink: counter ? null : paymentLinkFor(order) }
   })
@@ -263,7 +266,7 @@ export async function sendQuote(payload, { requestId, totalCents, depositPercent
     const timeline = [...(Array.isArray(request.timeline) ? request.timeline : []), timelineEntry('quoted', { by: req?.user?.id ?? null, at: now, note: `Soumission ${totalCents} ¢ avant taxes, acompte ${pct} %` })]
     // A new quote replaces the old one: its deposit intent (if any) is cancelled, the page makes a new one.
     const previous = request.payment?.status !== 'paid' && request.payment?.provider === 'stripe' ? request.payment?.reference : null
-    if (previous) await cancelIntent(previous)
+    if (previous) await cancelIntent(payload, previous)
     const updated = await payload.update({
       collection: 'requests',
       id: request.id,

@@ -1,7 +1,7 @@
 // Ordering interface copy. Québec French is the source; EN/ES adapt it. « vous », « cueillette », « acompte » (16 §0).
 // No reply time is promised here: it is the owner's answer to the fact `reponse-demandes`, on the custom-cake page.
-// While reservations are on (PAYMENT_PROVIDER=counter) the words of RESERVE, at the end, replace the ones about payment.
-import { paymentProvider } from '../../lib/payments/provider.js'
+// How customers pay is the owner's choice in Studio › Plus › Paiement: paying at pickup only takes the words of RESERVE, at the end; both ways, the words of BOTH on top of them.
+import { paymentMode } from '../../lib/payments/provider.js'
 
 const fr = {
   steps: { label: 'Étapes de votre commande', box: 'Boîte', day: 'Date', you: 'Coordonnées', pay: 'Paiement', done: '(étape terminée)' },
@@ -544,20 +544,20 @@ const RESERVE = {
   fr: {
     steps: { pay: 'Confirmation' },
     pageTitles: { pay: 'Confirmation' },
-    metaTitles: { checkout: 'Récapitulatif et réservation · Coco Vanille' },
+    metaTitles: { checkout: 'Récapitulatif et commande · Coco Vanille' },
     request: {
       intro: 'Remplissez cette demande : la boutique vous appelle avec un prix. Rien n’est préparé avant votre accord, et le gâteau se paie à la cueillette.',
       phoneHint: 'La boutique vous appelle à ce numéro avec le prix.',
       emailHint: 'Facultatif.',
     },
     products: {
-      title: 'Que peut-on réserver en ligne?',
+      title: 'Que peut-on commander en ligne?',
       intro: 'Ajoutez les produits à « Ma boîte », puis choisissez la journée et l’heure de cueillette. Aucune carte n’est demandée : vous payez à la cueillette.',
-      none: 'Aucun produit ne se réserve en ligne pour le moment. Envoyez une demande ou appelez la boutique.',
+      none: 'Aucun produit ne se commande en ligne pour le moment. Envoyez une demande ou appelez la boutique.',
     },
     box: {
-      browse: 'Voir ce qui se réserve en ligne',
-      unavailable: 'Ce produit ne peut plus être réservé en ligne :',
+      browse: 'Voir ce qui se commande en ligne',
+      unavailable: 'Ce produit ne peut plus être commandé en ligne :',
       totalsNote: 'Aucuns frais de service ou d’emballage. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Vous payez au comptoir, à la cueillette.',
     },
     checkout: {
@@ -565,33 +565,33 @@ const RESERVE = {
       phoneHint: 'La boutique vous appelle à ce numéro si un détail doit être précisé.',
       cancelTitle: 'Annulation',
       cancelText: (p) => `Pour annuler ou changer la date, appelez la boutique${p ? ` au ${p}` : ''} au plus tard 24 heures avant votre cueillette. Si la boutique ne peut pas honorer la commande, elle vous appelle et vous choisissez une autre plage ou l’annulation, sans frais.`,
-      pay: (amount) => `Réserver · ${amount} à payer à la cueillette`,
+      pay: (amount) => `Commander · ${amount} à payer à la cueillette`,
       reserveNote: 'Aucune carte n’est demandée. Vous payez au comptoir, à la cueillette, le prix écrit dans ce récapitulatif.',
-      errorsTitle: 'La réservation n’est pas passée. Vérifiez ces points :',
+      errorsTitle: 'La commande n’est pas passée. Vérifiez ces points :',
     },
     thanks: {
       requestText: () => 'La boutique vous appelle avec un prix. Rien n’est préparé avant votre accord.',
-      reserved: (amount) => `Votre réservation est confirmée. À payer au comptoir, à la cueillette : ${amount}. La boutique vous appelle si un détail doit être précisé.`,
+      reserved: (amount) => `Votre commande est confirmée. À payer au comptoir, à la cueillette : ${amount}. La boutique vous appelle si un détail doit être précisé.`,
       keep: 'Gardez cette page, ou notez votre code de cueillette : c’est votre confirmation.',
     },
   },
   en: {
     steps: { pay: 'Confirmation' },
     pageTitles: { pay: 'Confirmation' },
-    metaTitles: { checkout: 'Summary and reservation · Coco Vanille' },
+    metaTitles: { checkout: 'Summary and order · Coco Vanille' },
     request: {
       intro: 'Fill in this request: the shop calls you with a price. Nothing is made before you agree, and the cake is paid at pickup.',
       phoneHint: 'The shop calls you at this number with the price.',
       emailHint: 'Optional.',
     },
     products: {
-      title: 'What can I reserve online?',
+      title: 'What can I order online?',
       intro: 'Add products to “My box”, then pick the pickup day and time. No card is asked for: you pay at pickup.',
-      none: 'Nothing can be reserved online right now. Send a request or call the shop.',
+      none: 'Nothing can be ordered online right now. Send a request or call the shop.',
     },
     box: {
-      browse: 'See what can be reserved online',
-      unavailable: 'This product can no longer be reserved online:',
+      browse: 'See what can be ordered online',
+      unavailable: 'This product can no longer be ordered online:',
       totalsNote: 'No service or packaging fee. Only GST and QST are added where they apply. You pay at the counter, at pickup.',
     },
     checkout: {
@@ -599,13 +599,13 @@ const RESERVE = {
       phoneHint: 'The shop calls you at this number if a detail needs clearing up.',
       cancelTitle: 'Cancellation',
       cancelText: (p) => `To cancel or change the date, call the shop${p ? ` at ${p}` : ''} at least 24 hours before your pickup. If the shop cannot fill the order, it calls you and you choose another slot or cancellation, at no charge.`,
-      pay: (amount) => `Reserve · ${amount} to pay at pickup`,
+      pay: (amount) => `Order · ${amount} to pay at pickup`,
       reserveNote: 'No card is asked for. You pay at the counter, at pickup, the price written in this summary.',
-      errorsTitle: 'The reservation was not placed. Please check:',
+      errorsTitle: 'The order was not placed. Please check:',
     },
     thanks: {
       requestText: () => 'The shop calls you with a price. Nothing is made before you agree.',
-      reserved: (amount) => `Your reservation is confirmed. To pay at the counter, at pickup: ${amount}. The shop calls you if a detail needs clearing up.`,
+      reserved: (amount) => `Your order is confirmed. To pay at the counter, at pickup: ${amount}. The shop calls you if a detail needs clearing up.`,
       keep: 'Keep this page, or write down your pickup code: it is your confirmation.',
     },
   },
@@ -645,11 +645,72 @@ const RESERVE = {
   },
 }
 
-const COPY = { fr, en, es }
-// One level deep: a section of RESERVE replaces only the lines it names.
+// Paid online, whichever way the shop offers it.
+const PAID = {
+  fr: { thanks: { paidOnline: (amount) => `Votre commande est confirmée et payée : ${amount}. Stripe vous envoie le reçu par courriel.` } },
+  en: { thanks: { paidOnline: (amount) => `Your order is confirmed and paid: ${amount}. Stripe emails you the receipt.` } },
+  es: { thanks: { paidOnline: (amount) => `Su pedido está confirmado y pagado: ${amount}. Stripe le envía el recibo por correo.` } },
+}
+
+// Both ways offered: the customer chooses in the summary. Everything else reads like RESERVE.
+const BOTH = {
+  fr: {
+    pageTitles: { pay: 'Paiement' },
+    products: { intro: 'Ajoutez les produits à « Ma boîte », puis choisissez la journée et l’heure de cueillette. Vous payez à la cueillette ou en ligne par carte, à votre choix.' },
+    box: { totalsNote: 'Aucuns frais de service ou d’emballage. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Le prix est le même à la cueillette et en ligne.' },
+    checkout: {
+      emailHint: 'Facultatif si vous payez à la cueillette; obligatoire en ligne, pour votre reçu.',
+      cancelText: (p) => `Pour annuler ou changer la date, appelez la boutique${p ? ` au ${p}` : ''} au plus tard 24 heures avant votre cueillette. Un paiement en ligne est remboursé sur la même carte. Si la boutique ne peut pas honorer la commande, elle vous appelle et vous choisissez une autre plage ou l’annulation, sans frais.`,
+      pay: (amount) => `Commander · ${amount}`,
+      payTitle: 'Comment voulez-vous payer?',
+      payCounter: 'À la cueillette, au comptoir (comptant)',
+      payCounterHint: 'Vous payez quand vous venez chercher votre commande. Aucune carte n’est demandée en ligne.',
+      payOnline: 'En ligne, par carte',
+      payOnlineHint: 'Vous payez à l’étape suivante, sur le formulaire sécurisé de Stripe. Le site ne voit jamais votre numéro de carte.',
+    },
+  },
+  en: {
+    pageTitles: { pay: 'Payment' },
+    products: { intro: 'Add products to “My box”, then pick the pickup day and time. You pay at pickup or online by card, as you prefer.' },
+    box: { totalsNote: 'No service or packaging fee. Only GST and QST are added where they apply. The price is the same at pickup and online.' },
+    checkout: {
+      emailHint: 'Optional if you pay at pickup; required online, for your receipt.',
+      cancelText: (p) => `To cancel or change the date, call the shop${p ? ` at ${p}` : ''} at least 24 hours before your pickup. An online payment is refunded to the same card. If the shop cannot fill the order, it calls you and you choose another slot or cancellation, at no charge.`,
+      pay: (amount) => `Order · ${amount}`,
+      payTitle: 'How would you like to pay?',
+      payCounter: 'At pickup, at the counter (cash)',
+      payCounterHint: 'You pay when you come for your order. No card is asked for online.',
+      payOnline: 'Online, by card',
+      payOnlineHint: 'You pay at the next step, on Stripe’s secure form. The website never sees your card number.',
+    },
+  },
+  es: {
+    pageTitles: { pay: 'Pago' },
+    products: { intro: 'Añada los productos a «Mi caja» y luego elija el día y la hora de recogida. Paga al recoger o en línea con tarjeta, como prefiera.' },
+    box: { totalsNote: 'Sin cargos de servicio ni de embalaje. Solo se añaden la TPS y la TVQ, si corresponde. El precio es el mismo al recoger y en línea.' },
+    checkout: {
+      emailHint: 'Opcional si paga al recoger; obligatorio en línea, para su recibo.',
+      cancelText: (p) => `Para cancelar o cambiar la fecha, llame a la tienda${p ? ` al ${p}` : ''} al menos 24 horas antes de la recogida. Un pago en línea se reembolsa en la misma tarjeta. Si la tienda no puede cumplir el pedido, le llama y usted elige otra franja o la cancelación, sin cargo.`,
+      pay: (amount) => `Pedir · ${amount}`,
+      payTitle: '¿Cómo quiere pagar?',
+      payCounter: 'Al recoger, en el mostrador (efectivo)',
+      payCounterHint: 'Paga cuando viene a buscar su pedido. No se pide ninguna tarjeta en línea.',
+      payOnline: 'En línea, con tarjeta',
+      payOnlineHint: 'Paga en el paso siguiente, en el formulario seguro de Stripe. El sitio nunca ve el número de su tarjeta.',
+    },
+  },
+}
+
+// One level deep: a section replaces only the lines it names.
 const withReserve = (base, over) => Object.fromEntries(Object.entries(base).map(([key, section]) => [key, over[key] ? { ...section, ...over[key] } : section]))
-const RESERVING = { fr: withReserve(fr, RESERVE.fr), en: withReserve(en, RESERVE.en), es: withReserve(es, RESERVE.es) }
+const each = (fn) => ({ fr: fn('fr', fr), en: fn('en', en), es: fn('es', es) })
+const SETS = {
+  counter: each((l, base) => withReserve(base, RESERVE[l])),
+  both: each((l, base) => withReserve(withReserve(withReserve(base, RESERVE[l]), BOTH[l]), PAID[l])),
+  online: each((l, base) => withReserve(base, PAID[l])),
+  none: { fr, en, es },
+}
 export const orderingCopy = (locale) => {
-  const set = paymentProvider() === 'counter' ? RESERVING : COPY
+  const set = SETS[paymentMode()] || SETS.none
   return set[locale] || set.fr
 }

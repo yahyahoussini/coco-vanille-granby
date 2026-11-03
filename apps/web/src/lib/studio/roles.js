@@ -28,6 +28,7 @@ export const SCREENS = {
   faits: [P, G, A, T],
   journal: [P, G, A, T], // the blog: write, translate, schedule (Traduction: English only)
   reglages: [P, G, C, A, T],
+  paiement: [P], // how customers pay, the shop's Stripe account
   agence: [P, A], // Propriétaire: read
   plus: [P, G, C, A, T],
   messages: [P, G, C], // « Écrivez-nous »: the people who serve customers; never Agence or Traduction (Loi 25)
@@ -72,6 +73,10 @@ export const ACTIONS = {
   'shop.special': [P, G],
   'capacity.adjust': [P, G],
   'shop.ordering': [P, G],
+  'payment.connect': [P],
+  'payment.check': [P],
+  'payment.methods': [P],
+  'payment.disconnect': [P],
   'shop.season': [P, G],
   'request.quote': [P, G],
   'request.confirm': [P, G],
@@ -106,7 +111,7 @@ export const ACTIONS = {
 }
 
 // Money, prices, allergens, taxes and people need a fresh identity check (16b §4 #4).
-export const STEP_UP = new Set(['order.refund', 'product.price', 'product.pricesOk', 'product.formats', 'product.create', 'product.allergens', 'product.tax', 'settings.deposit', 'users.create', 'users.pin', 'users.active'])
+export const STEP_UP = new Set(['payment.connect', 'payment.methods', 'payment.disconnect', 'order.refund', 'product.price', 'product.pricesOk', 'product.formats', 'product.create', 'product.allergens', 'product.tax', 'settings.deposit', 'users.create', 'users.pin', 'users.active'])
 
 // Actions that may wait in the offline outbox; everything else needs the network (16 §3.0 offline policy).
 export const OFFLINE_OK = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create', 'order.phone'])

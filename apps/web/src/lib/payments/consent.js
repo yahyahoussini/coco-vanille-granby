@@ -1,6 +1,15 @@
+import { paymentOptions } from './settings.js'
+
 // Express acceptance of the conditions (07 O2, O3): unticked box, French first, with the accepted version:
 // the owner's label in Boutique & heures, else the date the conditions page last changed.
+// The terms say how an order is paid: while a card can be taken online, the version says so too.
 export async function termsVersionOf(payload) {
+  const { online } = await paymentOptions(payload)
+  const version = await baseTermsVersion(payload)
+  return version && online === 'stripe' ? `${version}+paiement-en-ligne` : version
+}
+
+async function baseTermsVersion(payload) {
   const shop = await payload.findGlobal({ slug: 'shop', overrideAccess: true, depth: 0 })
   if (shop?.ordering?.termsVersion) return shop.ordering.termsVersion
   const doc = (await payload.find({ collection: 'pages', where: { key: { equals: 'conditions-de-vente' } }, locale: 'fr', limit: 1, overrideAccess: true, depth: 0 })).docs[0]

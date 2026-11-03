@@ -23,7 +23,7 @@ test('T4 « Tempête demain. Fermez la boutique toute la journée et prévenez l
   await expect(fx).toContainText('texter 1 client')
   await expect(page.locator('.fx[data-duree="jour"]')).toBeHidden()
   await tap(page.getByRole('button', { name: 'Fermer la boutique' }))
-  await expect(page.locator('.st-snack')).toContainText('les textos partent dans 60 s')
+  await expect(page.locator('.st-snack')).toContainText(/les textos partent dans 60 s|à appeler : 1 client/)
   expect(taps).toBeLessThanOrEqual(5)
   const nadia = await demoOrder('Nadia')
   const [sms] = await sql(`select status, body from messages where order_id = $1 and template = 'closure'`, [nadia.id])
