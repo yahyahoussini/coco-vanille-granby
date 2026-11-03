@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Pour | La propriétaire de la Pâtisserie Coco Vanille inc. |
+| Pour | La direction de la Pâtisserie Coco Vanille inc. |
 | Par | L'Agence (Yahya, BrandHub.ma) |
 | Date | 3 novembre 2026, veille du lancement |
 | Votre site (adresse temporaire) | https://cocovanille.brandhubos.cloud |
@@ -17,7 +17,7 @@ Trois choses à retenir :
 
 1. **Un prix réservé est un prix promis.** Le site affiche « prix indicatif » tant que vous n'avez pas vérifié un produit. Mais le prix écrit dans le récapitulatif d'un client est celui qu'il paie, et la loi québécoise interdit d'exiger plus que le prix annoncé. Vérifiez les prix en premier.
 2. **La réservation est ouverte dès maintenant.** Un client choisit ses produits, sa journée et son heure, et paie à la cueillette. Aucune carte n'est demandée. Pour la fermer : Boutique & heures › Réservation en ligne.
-3. **Aucun courriel ni texto ne part encore.** Studio vous dit quand appeler le client. Gardez Studio ouvert sur la tablette de la boutique : il sonne à chaque nouvelle commande.
+3. **Aucun courriel ni texto ne part encore.** Studio vous dit quand appeler le client. **Activez donc les alertes sur votre téléphone** : Plus › Réglages › Alertes de commandes (sur iPhone, ajoutez d'abord Studio à l'écran d'accueil). Gardez aussi Studio ouvert sur la tablette de la boutique : il sonne à chaque nouvelle commande.
 
 ## Par où commencer (dans cet ordre)
 
@@ -75,5 +75,5 @@ Le site n'affiche aucun courriel tant qu'une boîte n'existe pas : il donne le t
 
 ## Sécurité
 
-- Votre mot de passe est à vous seule; l'Agence a son propre compte et ne vous le demandera jamais.
+- Votre mot de passe n'appartient qu'à vous; l'Agence a son propre compte et ne vous le demandera jamais.
 - Un compte par personne : ajoutez votre équipe dans Studio, avec un rôle et un NIP pour la tablette.
