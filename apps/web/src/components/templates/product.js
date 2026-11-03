@@ -137,7 +137,8 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
       </div>
       <section aria-labelledby="product-sizes" className="product-sizes">
         <h2 id="product-sizes">{o.sizesTitle}</h2>
-        {onRequest ? <p className="product-on-request">{o.onRequestLine}</p> : <SizesTable variants={product.variants} locale={locale} caption={`${product.title} · ${o.pricesCaption}`} />}
+        {onRequest ? <p className="product-on-request">{o.onRequestLine}</p> : <SizesTable variants={product.variants} locale={locale} caption={`${product.title} · ${o.pricesCaption}`} estimated={product.priceEstimated} />}
+        {!onRequest && product.priceEstimated && <p className="small prices-indicative">{o.indicativeNote}</p>}
       </section>
       <div className="product-info">
         <section aria-labelledby="product-ready" className="info-card ready-card">

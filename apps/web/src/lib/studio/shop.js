@@ -1,7 +1,7 @@
 // Shop status wording for Aujourd'hui and Boutique & heures (16 §3.1, §3.6).
 import { shopStatus, clockFr, clockOf, localParts } from './time.js'
 import { whenFr } from './format.js'
-import { marker } from '../facts.js'
+import { toGive } from '../facts.js'
 
 const active = (g, now) => Boolean(g?.active) && (!g.until || new Date(g.until).getTime() > new Date(now).getTime())
 
@@ -20,7 +20,7 @@ export function statusLine(shop = {}, now = new Date()) {
     case 'closed':
       return { tone: 'muted', icon: '○', text: `Fermé aujourd’hui${next ? ` · prochaine ouverture : ${next}` : ''}`, state: s.state }
     default:
-      return { tone: 'warn', icon: '?', text: `Heures à confirmer · ${marker('heures d’ouverture')}`, state: 'unknown' }
+      return { tone: 'warn', icon: '?', text: `Heures à confirmer · ${toGive('heures d’ouverture')}`, state: 'unknown' }
   }
 }
 

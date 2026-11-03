@@ -67,6 +67,11 @@ describe('an answer fills its slots', () => {
     assert.equal(answerMap([{ key: 'repere', en: 'next to the Palace: the red door' }], 'en').get('repere'), 'next to the Palace: the red door')
   })
 
+  test('the French answer gets the whole typography of the copy: 45 $ and 14 h stay with their number', () => {
+    const fr = answerMap([{ key: 'prix-format', fr: 'à titre indicatif, 45 $ pour 6 po, avant 14 h' }], 'fr')
+    assert.equal(fr.get('prix-format'), 'à titre indicatif, 45\u00a0$ pour 6 po, avant 14\u00a0h')
+  })
+
   test('no answers: the copy comes back untouched', () => {
     assert.equal(resolveFacts(copy, new Map(), idFor), copy)
   })

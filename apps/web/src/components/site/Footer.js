@@ -171,9 +171,7 @@ export function Footer({ business, shop, locale, served, chat = false }) {
           {colon}
           <Fact value={officerTitle(officer.title, locale)} label="titre de la personne responsable" id="privacyOfficer.title" />
           {' · '}
-          <Fact value={officer.email} label="courriel de la personne responsable" id="privacyOfficer.email">
-            <a href={`mailto:${officer.email}`}>{officer.email}</a>
-          </Fact>
+          {officer.email ? <a href={`mailto:${officer.email}`} data-fact="privacyOfficer.email">{officer.email}</a> : <a href={`tel:${business?.phone}`}>{business?.phoneDisplay}</a>}
         </p>
       </div>
     </footer>

@@ -2,7 +2,8 @@
 //  stripe  STRIPE_SECRET_KEY set (PaymentIntents + Payment Element, webhook marks orders paid)
 //  mock    no Stripe keys, outside production (development and tests): a « Payer » button that settles at once
 //  none    production without keys: online payment unavailable, the page asks the customer to call
-// PAYMENT_PROVIDER=stripe|mock|none forces one; PAYMENT_MOCK=off disables the mock everywhere.
+//  counter reservation: the order is confirmed with its pickup code and paid at the counter, no card online
+// PAYMENT_PROVIDER=stripe|mock|none|counter forces one; PAYMENT_MOCK=off disables the mock everywhere.
 const PRODUCTION_ORIGIN = /^https:\/\/(www\.)?cocovanillegranby\.com\/?$/
 
 export function mockAllowed(env = process.env) {
@@ -15,6 +16,7 @@ export function paymentProvider(env = process.env) {
   if (forced === 'stripe') return env.STRIPE_SECRET_KEY ? 'stripe' : 'none'
   if (forced === 'mock') return mockAllowed(env) ? 'mock' : 'none'
   if (forced === 'none') return 'none'
+  if (forced === 'counter') return 'counter'
   if (env.STRIPE_SECRET_KEY) return 'stripe'
   return mockAllowed(env) ? 'mock' : 'none'
 }

@@ -1389,31 +1389,19 @@ html:not(.js) .nav-today {
   font-weight: 700;
 }
 
-/* A missing fact is loud on staging, never silent (zero-invention rule). */
+/* A fact the shop has not given: the reader is sent to the shop, in plain words. The element keeps its marker in
+   data-marker for the gate; the words live here so they never enter a search snippet (lib/facts.js ASK_THE_SHOP). */
 
 .fact-needed::before {
-  content: 'À confirmer\A0: ';
-  font-weight: 600;
+  content: 'demandez à la boutique';
 }
 
 .fact-needed:lang(en)::before {
-  content: 'To confirm: ';
+  content: 'ask the shop';
 }
 
 .fact-needed:lang(es)::before {
-  content: 'Por confirmar: ';
-}
-
-.fact-needed {
-  color: var(--ink-fact);
-  background: var(--paper-notice);
-  font-size: 0.9em;
-  padding: 0.05em 0.35em;
-  border: 1px dashed rgb(138 43 0 / 0.45);
-  border-radius: 6px;
-  overflow-wrap: anywhere;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  content: 'pregunte en la tienda';
 }
 
 /* ---------- Tables: the quotable facts (portions, prices, hours, allergens) ---------- */

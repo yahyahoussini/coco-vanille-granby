@@ -237,13 +237,9 @@ ul.product-grid {
   padding-block-start: 0.4rem;
 }
 
-/* A missing price stays a visible marker, kept small on a card. */
+/* A missing price on a card: the same plain words, kept small. */
 .product-card .fact-needed {
-  display: inline-block;
   font-size: 0.75rem;
-  line-height: 1.4;
-  padding: 0.2rem 0.45rem;
-  border-radius: 8px;
 }
 
 /* ---------- Price ---------- */
@@ -383,8 +379,6 @@ ul.product-grid {
 
 .badge .fact-needed {
   font-size: 0.75rem;
-  background: transparent;
-  padding: 0;
 }
 
 /* ---------- Phones: the three shapes of a product list ---------- */

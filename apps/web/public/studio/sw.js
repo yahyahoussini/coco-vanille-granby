@@ -1,7 +1,7 @@
 // Coco Studio service worker (16b §3): caches the app shell only (hashed scripts and styles, fonts, icons,
 // the offline page). Never a page with orders, names or phones, never an API or action response.
-// Offline taps wait in IndexedDB (components/studio/outbox.js), not here.
-const VERSION = 'coco-studio-1'
+// Offline taps wait in IndexedDB (components/studio/outbox.js), not here. Also shows the team's alerts (lib/studio/push.js).
+const VERSION = 'coco-studio-2'
 const SHELL = ['/hors-ligne/', '/manifest.webmanifest', '/icone-192.png', '/icone-512.png', '/apple-touch-icon.png', '/favicon-32.png']
 
 self.addEventListener('install', (event) => {
@@ -19,6 +19,28 @@ self.addEventListener('activate', (event) => {
       .keys()
       .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
+  )
+})
+
+self.addEventListener('push', (event) => {
+  let data = {}
+  try {
+    data = event.data ? event.data.json() : {}
+  } catch {
+    data = {}
+  }
+  event.waitUntil(self.registration.showNotification(data.title || 'Coco Studio', { body: data.body || '', icon: '/icone-192.png', badge: '/icone-192.png', tag: data.tag || 'coco', renotify: true, data: { url: data.url || '/' } }))
+})
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const target = new URL(event.notification.data?.url || '/', self.location.origin).href
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+      const open = windows.find((w) => 'focus' in w)
+      if (open) return open.navigate(target).then((w) => (w || open).focus())
+      return self.clients.openWindow(target)
+    }),
   )
 })
 

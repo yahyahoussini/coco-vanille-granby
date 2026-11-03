@@ -6,7 +6,10 @@ import { localParts, addDays, shortDay, longDay, dayOf, dayBounds } from '@/lib/
 import { answerTimer, customerName, money, whenFr } from '@/lib/studio/format'
 import { declineText, otherDateText } from '@/lib/studio/requests'
 import { PRODUCTION_CATEGORIES } from '@/collections/Catalog'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
+import { paymentProvider } from '@/lib/payments/provider'
+import { liveChannels } from '@/lib/messaging/senders'
+import { phoneDisplay } from '@/lib/ordering/customer'
 import { LangBadge } from '@/components/studio/OrderCard'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Flash } from '@/components/studio/Flash'
@@ -33,7 +36,9 @@ function Photos({ photos = [] }) {
   )
 }
 
-// Demandes (16 §3.4): request → price → deposit link, with the 24 h timer, the day's capacity and the photos.
+// Demandes (16 §3.4): request → price → deposit link, with the 24 h timer, the day's capacity and the photos. While nothing
+// is paid online: the team calls the customer, then the agreed price makes the order. While no email or text leaves, the
+// « Refuser » and « Autre date » answers are noted, and the team says them on the phone.
 export default async function Demandes({ searchParams }) {
   const ctx = await studioPage('demandes')
   const now = new Date()
@@ -44,6 +49,9 @@ export default async function Demandes({ searchParams }) {
   const phone = senderFacts(business).phone
   const caps = await Promise.all(open.map((r) => capacityOn(ctx.payload, { date: dayOf(r.eventDate), category: r.productionCategory || 'gateaux', now })))
   const waiting = open.filter((r) => r.status === 'new').length
+  const reserve = paymentProvider() === 'counter'
+  const channels = liveChannels()
+  const canSend = (r) => (r.customer?.email ? channels.email : channels.sms)
 
   return (
     <>
@@ -52,6 +60,7 @@ export default async function Demandes({ searchParams }) {
         <span className="st-date">{waiting ? `${waiting} en attente` : 'à jour'}</span>
       </div>
       <Flash ctx={ctx} searchParams={searchParams} back={BACK} />
+      {!(channels.email && channels.sms) && open.length > 0 && <p className="meta">Aucun courriel ni texto ne part encore : appelez le client, puis notez sa réponse ici.</p>}
       {!open.length && <p className="empty">Aucune demande en attente.</p>}
       {open.map((r, i) => {
         const day = dayOf(r.eventDate)
@@ -89,7 +98,7 @@ export default async function Demandes({ searchParams }) {
             )}
             <p className="meta">
               {cap.limit === null
-                ? `Capacité du ${shortDay(day)} : ${marker(`capacité ${CAT[cap.category] || cap.category} par jour`)}`
+                ? `Capacité du ${shortDay(day)} : ${toGive(`capacité ${CAT[cap.category] || cap.category} par jour`)}`
                 : full
                   ? `Le ${shortDay(day)} est complet (${cap.used}/${cap.limit} ${CAT[cap.category] || ''})`
                   : `Capacité du ${shortDay(day)} : ${cap.used}/${cap.limit} ${CAT[cap.category] || ''}`}
@@ -104,7 +113,7 @@ export default async function Demandes({ searchParams }) {
             <div className="actions">
               {r.status === 'new' && !full && (
                 <Link className="btn btn-primary" href={`/demandes/${r.id}/`}>
-                  Chiffrer et envoyer
+                  {reserve ? 'Confirmer le prix' : 'Chiffrer et envoyer'}
                 </Link>
               )}
               <div className="btn-row">
@@ -119,10 +128,10 @@ export default async function Demandes({ searchParams }) {
                       <div className="field">
                         <label htmlFor={`alt-msg-${r.id}`}>Message (modifiable)</label>
                         <textarea id={`alt-msg-${r.id}`} name="message" defaultValue={otherDateText(r.customer?.language, { date: day, alt: addDays(day, 7), phone })} required />
-                        <span className="hint">Envoyé par {r.customer?.email ? 'courriel' : 'texto'}. Vérifiez la date dans le texte.</span>
+                        <span className="hint">{canSend(r) ? `Envoyé par ${r.customer?.email ? 'courriel' : 'texto'}. Vérifiez la date dans le texte.` : 'Gardé au dossier : dites-le au client par téléphone.'}</span>
                       </div>
                       <button className="btn btn-primary" type="submit">
-                        Envoyer la proposition
+                        {canSend(r) ? 'Envoyer la proposition' : 'Noter la proposition'}
                       </button>
                     </ActionForm>
                   </details>
@@ -135,13 +144,13 @@ export default async function Demandes({ searchParams }) {
                       <textarea id={`no-${r.id}`} name="message" defaultValue={declineText(r.customer?.language, { date: day })} required />
                     </div>
                     <button className="btn" type="submit">
-                      Envoyer le refus
+                      {canSend(r) ? 'Envoyer le refus' : 'Noter le refus'}
                     </button>
                   </ActionForm>
                 </details>
                 {r.customer?.phone && (
                   <a className="btn" href={`tel:${r.customer.phone}`}>
-                    Appeler
+                    Appeler · {phoneDisplay(r.customer.phone)}
                   </a>
                 )}
               </div>

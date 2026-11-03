@@ -1,7 +1,8 @@
 // Ordering interface copy. Québec French is the source; EN/ES adapt it. « vous », « cueillette », « acompte » (16 §0).
-// No reply time is promised to customers: the shop has not answered « En combien de temps répondez-vous à une
-// demande de gâteau? » (Studio fact `reponse-demandes`, research/14 P9), and interface strings get past the publish
-// guard. Nor is a deposit link promised while online payment is off; « la façon de verser l’acompte » holds either way.
+// No reply time is promised here: it is the owner's answer to the fact `reponse-demandes`, on the custom-cake page.
+// While reservations are on (PAYMENT_PROVIDER=counter) the words of RESERVE, at the end, replace the ones about payment.
+import { paymentProvider } from '../../lib/payments/provider.js'
+
 const fr = {
   steps: { label: 'Étapes de votre commande', box: 'Boîte', day: 'Date', you: 'Coordonnées', pay: 'Paiement', done: '(étape terminée)' },
   pageTitles: { box: 'Ma boîte', checkout: 'Vos coordonnées et le récapitulatif', pay: 'Paiement', thanks: 'Merci!', requestThanks: 'Merci, votre demande est envoyée', pending: 'Paiement en cours de confirmation' },
@@ -537,5 +538,118 @@ const es = {
   },
 }
 
+// A reservation: no card online, the order is confirmed with its pickup code and paid at the counter. No email or text
+// is promised: the confirmation is the page itself, and the shop calls if a detail is missing.
+const RESERVE = {
+  fr: {
+    steps: { pay: 'Confirmation' },
+    pageTitles: { pay: 'Confirmation' },
+    metaTitles: { checkout: 'Récapitulatif et réservation · Coco Vanille' },
+    request: {
+      intro: 'Remplissez cette demande : la boutique vous appelle avec un prix. Rien n’est préparé avant votre accord, et le gâteau se paie à la cueillette.',
+      phoneHint: 'La boutique vous appelle à ce numéro avec le prix.',
+      emailHint: 'Facultatif.',
+    },
+    products: {
+      title: 'Que peut-on réserver en ligne?',
+      intro: 'Ajoutez les produits à « Ma boîte », puis choisissez la journée et l’heure de cueillette. Aucune carte n’est demandée : vous payez à la cueillette.',
+      none: 'Aucun produit ne se réserve en ligne pour le moment. Envoyez une demande ou appelez la boutique.',
+    },
+    box: {
+      browse: 'Voir ce qui se réserve en ligne',
+      unavailable: 'Ce produit ne peut plus être réservé en ligne :',
+      totalsNote: 'Aucuns frais de service ou d’emballage. Seules la TPS et la TVQ s’ajoutent, s’il y a lieu. Vous payez au comptoir, à la cueillette.',
+    },
+    checkout: {
+      emailHint: 'Facultatif.',
+      phoneHint: 'La boutique vous appelle à ce numéro si un détail doit être précisé.',
+      cancelTitle: 'Annulation',
+      cancelText: (p) => `Pour annuler ou changer la date, appelez la boutique${p ? ` au ${p}` : ''} au plus tard 24 heures avant votre cueillette. Si la boutique ne peut pas honorer la commande, elle vous appelle et vous choisissez une autre plage ou l’annulation, sans frais.`,
+      pay: (amount) => `Réserver · ${amount} à payer à la cueillette`,
+      reserveNote: 'Aucune carte n’est demandée. Vous payez au comptoir, à la cueillette, le prix écrit dans ce récapitulatif.',
+      errorsTitle: 'La réservation n’est pas passée. Vérifiez ces points :',
+    },
+    thanks: {
+      requestText: () => 'La boutique vous appelle avec un prix. Rien n’est préparé avant votre accord.',
+      reserved: (amount) => `Votre réservation est confirmée. À payer au comptoir, à la cueillette : ${amount}. La boutique vous appelle si un détail doit être précisé.`,
+      keep: 'Gardez cette page, ou notez votre code de cueillette : c’est votre confirmation.',
+    },
+  },
+  en: {
+    steps: { pay: 'Confirmation' },
+    pageTitles: { pay: 'Confirmation' },
+    metaTitles: { checkout: 'Summary and reservation · Coco Vanille' },
+    request: {
+      intro: 'Fill in this request: the shop calls you with a price. Nothing is made before you agree, and the cake is paid at pickup.',
+      phoneHint: 'The shop calls you at this number with the price.',
+      emailHint: 'Optional.',
+    },
+    products: {
+      title: 'What can I reserve online?',
+      intro: 'Add products to “My box”, then pick the pickup day and time. No card is asked for: you pay at pickup.',
+      none: 'Nothing can be reserved online right now. Send a request or call the shop.',
+    },
+    box: {
+      browse: 'See what can be reserved online',
+      unavailable: 'This product can no longer be reserved online:',
+      totalsNote: 'No service or packaging fee. Only GST and QST are added where they apply. You pay at the counter, at pickup.',
+    },
+    checkout: {
+      emailHint: 'Optional.',
+      phoneHint: 'The shop calls you at this number if a detail needs clearing up.',
+      cancelTitle: 'Cancellation',
+      cancelText: (p) => `To cancel or change the date, call the shop${p ? ` at ${p}` : ''} at least 24 hours before your pickup. If the shop cannot fill the order, it calls you and you choose another slot or cancellation, at no charge.`,
+      pay: (amount) => `Reserve · ${amount} to pay at pickup`,
+      reserveNote: 'No card is asked for. You pay at the counter, at pickup, the price written in this summary.',
+      errorsTitle: 'The reservation was not placed. Please check:',
+    },
+    thanks: {
+      requestText: () => 'The shop calls you with a price. Nothing is made before you agree.',
+      reserved: (amount) => `Your reservation is confirmed. To pay at the counter, at pickup: ${amount}. The shop calls you if a detail needs clearing up.`,
+      keep: 'Keep this page, or write down your pickup code: it is your confirmation.',
+    },
+  },
+  es: {
+    steps: { pay: 'Confirmación' },
+    pageTitles: { pay: 'Confirmación' },
+    metaTitles: { checkout: 'Resumen y reserva · Coco Vanille' },
+    request: {
+      intro: 'Complete esta solicitud: la tienda le llama con un precio. Nada se prepara sin su acuerdo, y el pastel se paga al recogerlo.',
+      phoneHint: 'La tienda le llama a este número con el precio.',
+      emailHint: 'Opcional.',
+    },
+    products: {
+      title: '¿Qué se puede reservar en línea?',
+      intro: 'Añada los productos a «Mi caja» y luego elija el día y la hora de recogida. No se pide ninguna tarjeta: paga al recoger.',
+      none: 'Por ahora no se puede reservar nada en línea. Envíe una solicitud o llame a la tienda.',
+    },
+    box: {
+      browse: 'Ver lo que se puede reservar en línea',
+      unavailable: 'Este producto ya no se puede reservar en línea:',
+      totalsNote: 'Sin cargos de servicio ni de embalaje. Solo se añaden la TPS y la TVQ, si corresponde. Paga en el mostrador, al recoger.',
+    },
+    checkout: {
+      emailHint: 'Opcional.',
+      phoneHint: 'La tienda le llama a este número si hay que precisar un detalle.',
+      cancelTitle: 'Cancelación',
+      cancelText: (p) => `Para cancelar o cambiar la fecha, llame a la tienda${p ? ` al ${p}` : ''} al menos 24 horas antes de la recogida. Si la tienda no puede cumplir el pedido, le llama y usted elige otra franja o la cancelación, sin cargo.`,
+      pay: (amount) => `Reservar · ${amount} a pagar al recoger`,
+      reserveNote: 'No se pide ninguna tarjeta. Paga en el mostrador, al recoger, el precio escrito en este resumen.',
+      errorsTitle: 'La reserva no se realizó. Revise estos puntos:',
+    },
+    thanks: {
+      requestText: () => 'La tienda le llama con un precio. Nada se prepara sin su acuerdo.',
+      reserved: (amount) => `Su reserva está confirmada. A pagar en el mostrador, al recoger: ${amount}. La tienda le llama si hay que precisar un detalle.`,
+      keep: 'Guarde esta página o anote su código de recogida: es su confirmación.',
+    },
+  },
+}
+
 const COPY = { fr, en, es }
-export const orderingCopy = (locale) => COPY[locale] || fr
+// One level deep: a section of RESERVE replaces only the lines it names.
+const withReserve = (base, over) => Object.fromEntries(Object.entries(base).map(([key, section]) => [key, over[key] ? { ...section, ...over[key] } : section]))
+const RESERVING = { fr: withReserve(fr, RESERVE.fr), en: withReserve(en, RESERVE.en), es: withReserve(es, RESERVE.es) }
+export const orderingCopy = (locale) => {
+  const set = paymentProvider() === 'counter' ? RESERVING : COPY
+  return set[locale] || set.fr
+}

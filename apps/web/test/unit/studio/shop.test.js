@@ -11,6 +11,8 @@ const hours = ['Thursday', 'Friday', 'Saturday'].map((day) => ({ day, opens: '09
 const shop = (over = {}) => ({ hours, specialDays: [], closure: { active: false }, busy: { extraMinutes: 0 }, onlinePause: { active: false }, ...over })
 const fri = new Date('2026-10-30T10:00:00-04:00') // Friday 10 h
 const owner = { id: 1, role: 'proprietaire', name: 'Proprio', active: true }
+// A text service is connected in these tests.
+process.env.SMS_PROVIDER = 'twilio'
 const lea = { id: 2, role: 'comptoir', name: 'Léa', active: true }
 const order = (id, iso, start, extra = {}) => ({ id, number: 1000 + id, status: 'paid', locale: 'fr', customer: { firstName: 'C', phone: `+1514555${String(id).padStart(4, '0')}` }, pickupDate: `${iso}T12:00:00.000Z`, pickupWindowStart: start, pickupWindowEnd: start.replace(/:00$/, ':15'), ...extra })
 

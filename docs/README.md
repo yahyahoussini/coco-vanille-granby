@@ -31,10 +31,11 @@ Ces documents, en français du Québec, tirent leur contenu de la recherche du d
 | [19-marche-et-concurrence.md](19-marche-et-concurrence.md) | Qui possède le marché, les faiblesses légales des concurrents, la carte de bataille, les dix coups dans l'ordre |
 | [20-seo-geo-aeo-local.md](20-seo-geo-aeo-local.md) | Le plan local : ce que veulent dire le SEO local, l'AEO et le GEO à Granby, la fiche maîtresse et ses copies, les trois batailles (boulangerie, Zoo, spécialités marocaines), les avis, les 15 questions locales, les 12 requêtes du mois, les liens locaux, la mesure, les 90 jours |
 | [21-questions-proprietaire.md](21-questions-proprietaire.md) | Les 37 questions à la propriétaire, par urgence (le bloc 1 suffit pour lancer) : produits et prix, allergènes, gâteaux, délais, heures des Fêtes, bûches, paiement, capacité, accès, équipe, administratif |
-| [22-acces-et-premiers-pas.md](22-acces-et-premiers-pas.md) | Pour la propriétaire : les deux adresses (site et Coco Studio), quoi faire en premier dans « Faits du site », ce qui n'est pas encore actif et pourquoi, le passage au vrai domaine |
+| [22-acces-et-premiers-pas.md](22-acces-et-premiers-pas.md) | Pour la propriétaire : les deux adresses, quoi vérifier en premier dans Studio (prix, allergènes, réponses du site, réservation), ce qui se passe quand une commande arrive, ce qui n’est pas encore actif |
 | [23-registre-incidents.md](23-registre-incidents.md) | Le registre de tous les incidents (site, Coco Studio, serveur, fiches), tenu par l'agence depuis le 1er novembre 2026 |
 | [24-registre-incidents-confidentialite.md](24-registre-incidents-confidentialite.md) | Le modèle du registre des incidents de confidentialité (Loi 25, article 3.8), qui appartient à la boutique et se garde hors du dépôt |
 | [25-feuille-produits.md](25-feuille-produits.md) | La feuille des vrais produits : une ligne par format (famille, nom, format, prix, portions, délai, allergènes), et ce que l'import fait et ne fait pas (les allergènes restent à confirmer dans Coco Studio) |
+| [26-efvp-hebergement.md](26-efvp-hebergement.md) | Le brouillon de l’évaluation des facteurs relatifs à la vie privée pour l’hébergement à Paris (Loi 25, article 17), à relire et à signer par la personne responsable |
 
 **À côté de ce dossier** : [scoreboard/](../scoreboard/README.md) (les requêtes suivies, les relevés du lundi, les cibles d'extraits, les avis) et [site.config.json](../site.config.json) (la configuration lue par les outils de mesure).
 

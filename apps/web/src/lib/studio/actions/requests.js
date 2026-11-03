@@ -1,13 +1,16 @@
-// Demandes actions (16 §3.4, F6): « Chiffrer et envoyer » through sendQuote, « Autre date », « Refuser ».
+// Demandes actions (16 §3.4, F6): « Chiffrer et envoyer » through sendQuote, or, while nothing is paid online, a price agreed
+// by phone that becomes a confirmed order (confirmRequest); « Autre date », « Refuser ».
 // The quote's email and texto leave after the undo window; « Annuler » restores the request as it was.
-import { sendQuote } from '../../ordering/create-order.js'
+import { sendQuote, confirmRequest } from '../../ordering/create-order.js'
 import { enqueueMessage, cancelQueued } from '../../messaging/queue.js'
 import { senderFacts } from '../../messaging/templates.js'
 import { parseMoney, money, customerName } from '../format.js'
+import { phoneDisplay } from '../../ordering/customer.js'
 import { shortDay } from '../time.js'
 import { sentence } from '../audit.js'
 import { answerMessage } from '../requests.js'
 import { refuse, load, str, bool, holdMessages, timelineEntry, pushTimeline } from './util.js'
+import { liveChannels } from '../../messaging/senders.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const snapshot = (r) => ({ status: r.status, quote: r.quote || {}, answerBy: r.answerBy || null, timeline: r.timeline || [], accessToken: r.accessToken || null })
@@ -29,7 +32,41 @@ async function send(ctx, request, text) {
   return m
 }
 
+// While no email or text can leave, the answer is noted and the team calls.
+const answered = (request, m, what) => {
+  const live = liveChannels()
+  if (m.channel === 'email' ? live.email : live.sms) return null
+  return `${what} noté · appelez ${customerName(request.customer)}${request.customer?.phone ? ` au ${phoneDisplay(request.customer.phone)}` : ''} : aucun courriel ni texto ne part encore`
+}
+
 export const requestActions = {
+  // The customer agreed on a price by phone: the cake joins the day's orders, the whole amount due at pickup.
+  'request.confirm': {
+    async run(ctx, input) {
+      const request = await load(ctx, 'requests', input.requestId)
+      const totalCents = parseMoney(input.price)
+      if (!totalCents) refuse('total_invalid', 'Indiquez le prix convenu avant taxes (ex. 120 ou 120,50).', 422)
+      const taxClass = ['zero', 'taxable'].includes(input.taxClass) ? input.taxClass : null
+      if (!taxClass) refuse('tax_class', 'Choisissez la taxe : détaxé ou taxable.', 422)
+      const r = await confirmRequest(ctx.payload, { requestId: request.id, totalCents, taxClass, force: bool(input.force) && ctx.user.role === 'proprietaire', req: { user: ctx.user }, now: ctx.now })
+      if (r.errors?.length) {
+        const e = r.errors[0]
+        refuse(e.code, e.code === 'day_full' ? `Le ${shortDay(e.date || request.eventDate)} est complet (${e.used}/${e.limit}). Proposez une autre date.` : e.message, 422)
+      }
+      await holdMessages(ctx.payload, r.messages, ctx.undoUntil)
+      return {
+        entity: 'requests',
+        entityId: request.id,
+        before: snapshot(request),
+        after: { status: 'confirmed', order: r.order.number, totalCents: r.order.totals?.totalCents },
+        summary: sentence(ctx.user, ctx.device, `a confirmé la demande ${request.id} à ${money(totalCents)} avant taxes (commande ${r.order.number})`, ctx.now),
+        message: `Commande ${r.order.number} créée · ${money(r.order.totals?.totalCents)} à payer à la cueillette`,
+        data: { redirect: `/commandes/${r.order.id}/` },
+        noUndo: true,
+      }
+    },
+  },
+
   'request.quote': {
     async run(ctx, input) {
       const request = await load(ctx, 'requests', input.requestId)
@@ -76,7 +113,7 @@ export const requestActions = {
         before: snapshot(request),
         after: { status: 'declined', channel: m.channel },
         summary: sentence(ctx.user, ctx.device, `a refusé la demande ${request.id}`, ctx.now),
-        message: `Réponse envoyée à ${customerName(request.customer)} (${m.channel === 'email' ? 'courriel' : 'texto'}) dans 30 s`,
+        message: answered(request, m, 'Refus') || `Réponse envoyée à ${customerName(request.customer)} (${m.channel === 'email' ? 'courriel' : 'texto'}) dans 30 s`,
       }
     },
     async undo(ctx, entry) {
@@ -101,7 +138,7 @@ export const requestActions = {
         before: snapshot(request),
         after: { proposed: alt, channel: m.channel },
         summary: sentence(ctx.user, ctx.device, `a proposé le ${shortDay(alt)} pour la demande ${request.id}`, ctx.now),
-        message: `Autre date proposée (${shortDay(alt)}) · ${m.channel === 'email' ? 'courriel' : 'texto'} dans 30 s`,
+        message: answered(request, m, `Autre date (${shortDay(alt)})`) || `Autre date proposée (${shortDay(alt)}) · ${m.channel === 'email' ? 'courriel' : 'texto'} dans 30 s`,
       }
     },
     async undo(ctx, entry) {

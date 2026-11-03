@@ -12,12 +12,13 @@ import { AuditLog } from './AuditLog.js'
 import { Questions } from './Questions.js'
 import { Conversations } from './Conversations.js'
 import { SiteFacts } from './SiteFacts.js'
+import { PushSubscriptions } from './PushSubscriptions.js'
 import { withRevalidation } from '../lib/revalidate.js'
 
 // What the public site shows: a change refreshes its ISR pages (lib/revalidate.js). Capacity pools only feed
 // the « Prête dès … » line, which renews within 5 minutes on its own. Journal posts: lib/revalidate.js affected('posts').
 const PUBLIC = ['media', 'allergens', 'categories', 'products', 'seasons', 'pages', 'posts', 'site-facts']
 
-export const collections = [Users, Media, Allergens, Categories, Products, Seasons, Pages, Posts, Redirects, Orders, Requests, RequestPhotos, CapacityPools, Messages, Reviews, AuditLog, Questions, Conversations, SiteFacts].map((c) =>
+export const collections = [Users, Media, Allergens, Categories, Products, Seasons, Pages, Posts, Redirects, Orders, Requests, RequestPhotos, CapacityPools, Messages, Reviews, AuditLog, Questions, Conversations, SiteFacts, PushSubscriptions].map((c) =>
   PUBLIC.includes(c.slug) ? withRevalidation(c) : c,
 )

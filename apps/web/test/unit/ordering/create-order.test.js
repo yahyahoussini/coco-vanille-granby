@@ -1,7 +1,7 @@
 // createOrder / availableWindows / availableDays / sendQuote against an in-memory Local API.
 import { test, describe, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { createOrder, availableWindows, availableDays, sendQuote } from '../../../src/lib/ordering/create-order.js'
+import { createOrder, availableWindows, availableDays, sendQuote, confirmRequest } from '../../../src/lib/ordering/create-order.js'
 import { fakePayload } from './fake-payload.js'
 import { shop, pools, cake, croissant, local } from './fixtures.js'
 
@@ -30,6 +30,45 @@ beforeEach(() => {
 })
 
 const codes = (r) => r.errors.map((e) => e.code)
+
+describe('a reservation (PAYMENT_PROVIDER=counter)', () => {
+  beforeEach(() => {
+    process.env.PAYMENT_PROVIDER = 'counter'
+  })
+  const after = () => delete process.env.PAYMENT_PROVIDER
+
+  test('confirmed at once with its code, the whole amount due at pickup, no hold and no payment link', async () => {
+    const r = await createOrder(payload, web())
+    after()
+    assert.deepEqual(r.errors, [])
+    assert.equal(r.order.status, 'paid')
+    assert.match(r.order.pickupCode, /^\d{4}$/)
+    assert.equal(r.order.holdExpiresAt, null)
+    assert.equal(r.paymentLink, null)
+    assert.deepEqual([r.order.payment.provider, r.order.payment.status], ['counter', 'pending'])
+    assert.equal(r.order.totals.balanceCents, r.order.totals.totalCents)
+    assert.match(r.order.timeline[0].note, /Réservation en ligne/)
+  })
+
+  test('asks for a phone number, not an email, and still needs the terms', async () => {
+    const noEmail = await createOrder(payload, web({ customer: { firstName: 'Julie', phone: '450 555-0101' } }))
+    const noPhone = await createOrder(payload, web({ customer: { firstName: 'Julie', email: 'julie@example.test' } }))
+    const noTerms = await createOrder(payload, web({ consent: {} }))
+    after()
+    assert.deepEqual(noEmail.errors, [])
+    assert.ok(codes(noPhone).includes('phone_required'))
+    assert.ok(codes(noTerms).includes('terms_required'))
+  })
+
+  test('takes a place on the day: the slot is gone for the next customer', async () => {
+    const days = () => availableWindows(payload, { date: '2026-10-29', items: [{ productId: 11, qty: 1 }], now: NOW })
+    const before = (await days()).find((w) => w.start === '10:15').remaining
+    await createOrder(payload, web())
+    const left = (await days()).find((w) => w.start === '10:15')
+    after()
+    assert.equal(left ? left.remaining : 0, before - 1)
+  })
+})
 
 describe('createOrder', () => {
   test('a valid web order is held 10 minutes, numbered, coded, priced from the catalogue, with a timeline', async () => {
@@ -172,5 +211,35 @@ describe('sendQuote', () => {
     payload.store['capacity-pools'].find((p) => p.productionCategory === 'gateaux').defaultPerDay = 0
     assert.equal((await sendQuote(payload, { requestId: 7, totalCents: 18000, depositPercent: 30, taxClass: 'zero', now: NOW })).errors[0].code, 'day_full')
     assert.deepEqual((await sendQuote(payload, { requestId: 7, totalCents: 18000, depositPercent: 30, taxClass: 'zero', force: true, now: NOW })).errors, [])
+  })
+})
+
+describe('a price agreed by phone (confirmRequest)', () => {
+  const request = (over = {}) => ({ id: 7, status: 'new', occasion: 'Anniversaire', eventDate: '2026-10-31T12:00:00.000Z', cakeMessage: 'Bonne fête', customer: { firstName: 'Julie', phone: '+14505550101', language: 'fr' }, ...over })
+  beforeEach(() => {
+    payload = fakePayload({ globals: { shop: shop(), business: {} }, collections: { requests: [request()], 'capacity-pools': pools() } })
+  })
+
+  test('the request becomes a confirmed order for its day, the whole amount due at pickup', async () => {
+    const r = await confirmRequest(payload, { requestId: 7, totalCents: 12000, taxClass: 'zero', now: NOW })
+    assert.deepEqual(r.errors, [])
+    assert.equal(r.order.status, 'paid')
+    assert.equal(r.order.source, 'request')
+    assert.equal(r.order.pickupDate, '2026-10-31T12:00:00.000Z')
+    assert.equal(r.order.pickupWindowStart ?? null, null)
+    assert.deepEqual([r.order.payment.provider, r.order.payment.status], ['counter', 'pending'])
+    assert.deepEqual([r.order.totals.totalCents, r.order.totals.balanceCents], [12000, 12000])
+    assert.equal(r.request.status, 'confirmed')
+    assert.equal(r.request.order, r.order.id)
+  })
+
+  test('adds the taxes of a taxable cake; refuses a bad price, a used request, a full day', async () => {
+    const r = await confirmRequest(payload, { requestId: 7, totalCents: 10000, taxClass: 'taxable', now: NOW })
+    assert.equal(r.order.totals.totalCents, 11498)
+    assert.equal((await confirmRequest(payload, { requestId: 7, totalCents: 10000, taxClass: 'zero', now: NOW })).errors[0].code, 'request_state')
+    payload = fakePayload({ globals: { shop: shop(), business: {} }, collections: { requests: [request()], 'capacity-pools': [{ id: 1, productionCategory: 'gateaux', defaultPerDay: 0 }] } })
+    assert.equal((await confirmRequest(payload, { requestId: 7, totalCents: 0, taxClass: 'zero', now: NOW })).errors[0].code, 'total_invalid')
+    assert.equal((await confirmRequest(payload, { requestId: 7, totalCents: 10000, taxClass: 'zero', now: NOW })).errors[0].code, 'day_full')
+    assert.equal((await confirmRequest(payload, { requestId: 7, totalCents: 10000, taxClass: 'zero', force: true, now: NOW })).errors.length, 0)
   })
 })

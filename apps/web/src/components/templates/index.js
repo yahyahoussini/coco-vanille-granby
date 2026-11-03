@@ -167,7 +167,7 @@ function AboutTemplate(props) {
           [l.neq, business?.neq, 'NEQ', 'neq'],
           [l.address, addressLine(business, locale), 'adresse', 'address', keepTogether(addressLine(business, locale))],
           [l.phone, business?.phone, 'téléphone', 'phone', <a key="tel" href={`tel:${business?.phone}`}>{business?.phoneDisplay}</a>],
-          [l.email, business?.email, 'courriel de la boutique', 'email', <a key="mail" href={`mailto:${business?.email}`}>{business?.email}</a>],
+          ...(business?.email ? [[l.email, business.email, 'courriel de la boutique', 'email', <a key="mail" href={`mailto:${business.email}`}>{business.email}</a>]] : []),
           [l.languages, (business?.languagesServed || []).map((x) => names[x] || x).join(', '), 'langues de service', 'languagesServed'],
           [l.social, profiles.map((x) => x.url).join(' '), 'page officielle vérifiée', 'sameAs', profiles.map((x, i) => (
             <span key={x.url}>
@@ -206,9 +206,9 @@ async function AllergensTemplate(props) {
             return (
               <tr key={p.id} role="row">
                 <th scope="row" role="rowheader">{href ? <Link href={href}>{p.title}</Link> : p.title}</th>
-                <td role="cell" data-label={s.offer.contains}>{verified ? (p.allergens || []).map((a) => a.label).join(', ') || '—' : <Fact value={null} label="allergènes vérifiés par une personne" />}</td>
-                {/* Unchecked: a marker, never « — », which would read as « nothing to fear ». */}
-                <td role="cell" data-label={s.mayContain}>{verified ? (p.mayContain || []).map((a) => a.label).join(', ') || '—' : <Fact value={null} label="allergènes vérifiés par une personne" />}</td>
+                <td role="cell" data-label={s.offer.contains}>{verified ? (p.allergens || []).map((a) => a.label).join(', ') || '—' : s.offer.askShop}</td>
+                {/* Unchecked: « ask the shop », never « — », which would read as « nothing to fear ». */}
+                <td role="cell" data-label={s.mayContain}>{verified ? (p.mayContain || []).map((a) => a.label).join(', ') || '—' : s.offer.askShop}</td>
               </tr>
             )
           })}
@@ -250,6 +250,7 @@ async function PricesTemplate(props) {
             {o.pricesAsOf} {asOf ? <time dateTime={asOf}>{longDate(asOf, locale)}</time> : <Fact value={null} label="date de la grille de prix" />} · {s.taxesExtra}
           </p>
         )}
+        {products.some((p) => p.priceEstimated) && <p className="small prices-indicative">{o.indicativeNote}</p>}
       </section>
     </ContentTemplate>
   )
@@ -311,7 +312,7 @@ async function CalculatorTemplate(props) {
                 <span className="calc-best-name">{productPath(best.product, locale) ? <Link href={productPath(best.product, locale)}>{best.product.title}</Link> : best.product.title}</span>{' '}
                 <span className="calc-best-detail">
                   {sizeText(best.variant, locale)} · {c.feeds(best.feeds)}
-                  {priceText(best.variant, locale) && ` · ${priceText(best.variant, locale)}`}
+                  {priceText(best.variant, locale) && ` · ${priceText(best.variant, locale)}${best.product.priceEstimated ? ` (${s.offer.indicative})` : ''}`}
                   {perPortionText(best.variant, locale) && ` (${perPortionText(best.variant, locale)} ${s.offer.each})`}
                 </span>
               </p>
@@ -403,7 +404,7 @@ function LegalTemplate(props) {
             // Loi 25 s. 3.2 asks for the title and the contact information; the name shows only when it is given.
             ...(officer.name ? [[l.name, officer.name, 'nom de la personne responsable (Loi 25)', 'privacyOfficer.name']] : []),
             [l.role, officerTitle(officer.title, locale), 'titre de la personne responsable', 'privacyOfficer.title'],
-            [l.email, officer.email, 'courriel de la personne responsable', 'privacyOfficer.email', <a key="mail" href={`mailto:${officer.email}`}>{officer.email}</a>],
+            ...(officer.email ? [[l.email, officer.email, 'courriel de la personne responsable', 'privacyOfficer.email', <a key="mail" href={`mailto:${officer.email}`}>{officer.email}</a>]] : []),
             [l.phone, business?.phoneDisplay, 'téléphone', 'phoneDisplay'],
           ]}
         />
@@ -417,7 +418,7 @@ function LegalTemplate(props) {
             [l.address, addressLine(business, locale), 'adresse', 'address', keepTogether(addressLine(business, locale))],
             [l.neq, business?.neq, 'NEQ', 'neq'],
             [l.phone, business?.phoneDisplay, 'téléphone', 'phoneDisplay'],
-            [l.email, business?.email, 'courriel de la boutique', 'email'],
+            ...(business?.email ? [[l.email, business.email, 'courriel de la boutique', 'email']] : []),
           ]}
         />
       )}

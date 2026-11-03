@@ -8,6 +8,7 @@
 // sendQuote(payload, { requestId, totalCents, depositPercent, validHours, taxClass, force, req }) → { request, paymentLink, errors, messages }
 // availableWindows(payload, { date, items, now }) → [{ start: 'HH:MM', end: 'HH:MM', remaining }]
 // availableDays(payload, { items, now, source }) → { days: [{ date, windows, toConfirm }], reason }
+// confirmRequest(payload, { requestId, totalCents, taxClass, force, req }) → { request, order, errors }   (reservation: price agreed by phone)
 import { localParts, addDays, dayOf } from '../studio/time.js'
 import { hasRole } from '../access.js'
 import { productLine, lineBlockers } from './lines.js'
@@ -22,6 +23,8 @@ import { getShopSettings, getPools, getUsage, engineContext, withCapacityLock, n
 import { paymentProvider } from '../payments/provider.js'
 import { cancelIntent } from '../payments/stripe.js'
 import { notifyOrderConfirmed, notifyQuoteSent, scheduleReminder } from '../messaging/notify.js'
+import { pushToTeam } from '../studio/push.js'
+import { longDayLabel, windowLabel } from './labels.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/
@@ -72,7 +75,11 @@ export async function createOrder(payload, args = {}) {
   errors.push(...built.errors)
   const { lines } = built
 
-  const { customer, errors: customerErrors } = cleanCustomer(rawCustomer, { requireEmail: source === 'web', requirePhone: true, locale })
+  const provider = source === 'web' ? paymentProvider() : payment.provider === 'counter' || !payment.provider ? 'counter' : payment.provider === 'stripe' || payment.provider === 'mock' ? paymentProvider() : 'counter'
+  if (provider === 'none') errors.push(orderError('payment_unavailable'))
+
+  // A reservation asks for a phone number only: the confirmation is its page, and the shop calls if a detail is missing.
+  const { customer, errors: customerErrors } = cleanCustomer(rawCustomer, { requireEmail: source === 'web' && provider !== 'counter', requirePhone: true, locale })
   errors.push(...customerErrors.map((e) => orderError(e.code, { field: e.field })))
 
   // Express acceptance of the conditions, French first (07 O2, O3). Phone orders: counsel question (16 §3.2).
@@ -84,9 +91,6 @@ export async function createOrder(payload, args = {}) {
   }
   const note = String(allergyNote || '').trim()
   if (note.length > 500) errors.push(orderError('allergy_note_too_long', { field: 'allergyNote' }))
-
-  const provider = source === 'web' ? paymentProvider() : payment.provider === 'counter' || !payment.provider ? 'counter' : payment.provider === 'stripe' || payment.provider === 'mock' ? paymentProvider() : 'counter'
-  if (provider === 'none') errors.push(orderError('payment_unavailable'))
 
   if (!ISO_DAY.test(pickup.date || '') || !HHMM.test(pickup.windowStart || '')) errors.push(orderError('pickup_required', { field: 'pickup' }))
 
@@ -155,7 +159,7 @@ export async function createOrder(payload, args = {}) {
         depositCents: null,
         balanceCents: counter ? totals.totalCents : 0,
       },
-      // Phone order paid at the counter: booked (status « paid » = confirmed in the flow), money still due.
+      // Paid at the counter (phone order, or a reservation on the site): booked (status « paid » = confirmed in the flow), money still due.
       payment: { provider, kind: 'full', status: 'pending', amountCents: totals.totalCents },
       allergyNote: note || null,
       consent: {
@@ -170,13 +174,15 @@ export async function createOrder(payload, args = {}) {
       },
       attribution: attribution || null,
       boxToken: boxToken || null,
-      timeline: [timelineEntry(status, { by, source, at: now, note: counter ? 'Commande téléphone · paiement au comptoir' : 'Plage réservée pendant le paiement' })],
+      timeline: [timelineEntry(status, { by, source, at: now, note: counter ? (source === 'web' ? 'Réservation en ligne · paiement à la cueillette' : 'Commande téléphone · paiement au comptoir') : 'Plage réservée pendant le paiement' })],
     }
     const order = await payload.create({ collection: 'orders', data, ...SYS })
-    // Phone order booked at once: same confirmation as the web (16 §3.2), after the undo window.
+    // Booked at once: same confirmation as a paid web order (16 §3.2), after the undo window on a phone order.
     if (counter) {
       await notifyOrderConfirmed(payload, order).catch(() => null)
       await scheduleReminder(payload, order, { now }).catch(() => null)
+      // A reservation on the site: the only thing that tells the team while Studio is closed. No customer's name in it.
+      if (source === 'web') await pushToTeam(payload, { title: `Nouvelle réservation · ${order.number}`, body: `${longDayLabel(pickup.date, 'fr')}, ${windowLabel(window.start, window.end, 'fr')} · ${lines.length > 1 ? `${lines.length} produits` : lines[0].title}`, url: `/commandes/${order.id}/`, tag: `commande-${order.id}` })
     }
     return { order, totals, errors: [], paymentLink: counter ? null : paymentLinkFor(order) }
   })
@@ -285,6 +291,65 @@ export async function sendQuote(payload, { requestId, totalCents, depositPercent
     // Email (recap) + SMS (link), sent after the undo window (16 §3.0).
     const messages = await notifyQuoteSent(payload, updated).catch(() => [])
     return { request: updated, paymentLink, errors: [], messages }
+  })
+}
+
+// Reservation mode (PAYMENT_PROVIDER=counter, no deposit link): the shop called the customer and they agreed on a price. The
+// request becomes a confirmed order on the pools, for its day, with the time to agree; the whole amount is due at pickup.
+export async function confirmRequest(payload, { requestId, totalCents, taxClass, force = false, req = null, now = new Date() } = {}) {
+  const fail = (code, extra) => ({ request: null, order: null, errors: [orderError(code, extra)] })
+  if (req && !hasRole(req.user, 'proprietaire', 'gerant')) return fail('forbidden')
+  const request = await payload.findByID({ collection: 'requests', id: requestId, ...SYS, disableErrors: true }).catch(() => null)
+  if (!request) return fail('request_missing')
+  if (!['new', 'quoted'].includes(request.status)) return fail('request_state')
+  if (!Number.isInteger(totalCents) || totalCents <= 0) return fail('total_invalid', { field: 'totalCents' })
+  if (taxBlocker({ taxClass: taxClass === 'rule' ? 'pending' : taxClass })) return fail('tax_class_pending', { field: 'taxClass' })
+  return withCapacityLock(payload, async () => {
+    const day = dayOf(request.eventDate)
+    const category = request.productionCategory || 'gateaux'
+    const units = request.capacityUnits > 0 ? request.capacityUnits : 1
+    if (!force) {
+      const pools = await getPools(payload)
+      const { usage } = await getUsage(payload, { now, fromISO: day, toISO: day, excludeRequestId: request.id })
+      const limit = capacityLimit(pools, category, day)
+      const used = usedUnits(usage, day, category)
+      if (limit !== null && used + units > limit) return fail('day_full', { date: day, category, limit, used })
+    }
+    const totals = orderTotals([{ cents: totalCents, qty: 1, taxClass }], { supplyDate: day })
+    const note = `Prix convenu avec le client : ${totalCents} ¢ avant taxes · paiement à la cueillette`
+    const order = await payload.create({
+      collection: 'orders',
+      data: {
+        number: await nextOrderNumber(payload),
+        status: 'paid',
+        source: 'request',
+        locale: request.customer?.language || 'fr',
+        customer: request.customer,
+        items: [{ title: `Gâteau personnalisé · ${request.occasion}`, qty: 1, unitPriceCents: totals.subtotalCents, taxClass, message: request.cakeMessage || null, productionCategory: category, units, productionDate: day }],
+        pickupDate: storedDay(day),
+        pickupCode: newPickupCode(),
+        accessToken: newToken(),
+        totals: { subtotalCents: totals.subtotalCents, gstCents: totals.gstCents, qstCents: totals.qstCents, totalCents: totals.totalCents, depositCents: null, balanceCents: totals.totalCents },
+        payment: { provider: 'counter', kind: 'full', status: 'pending', amountCents: totals.totalCents },
+        request: request.id,
+        timeline: [timelineEntry('paid', { by: req?.user?.id ?? null, at: now, note })],
+      },
+      ...SYS,
+    })
+    const updated = await payload.update({
+      collection: 'requests',
+      id: request.id,
+      data: {
+        status: 'confirmed',
+        order: order.id,
+        answerBy: null,
+        quote: { subtotalCents: totals.subtotalCents, taxClass, gstCents: totals.gstCents, qstCents: totals.qstCents, totalCents: totals.totalCents, balanceCents: totals.totalCents, sentAt: new Date(now).toISOString() },
+        timeline: [...(Array.isArray(request.timeline) ? request.timeline : []), timelineEntry('confirmed', { by: req?.user?.id ?? null, at: now, note: `${note} · commande ${order.number}` })],
+      },
+      ...SYS,
+    })
+    const messages = await notifyOrderConfirmed(payload, order).catch(() => [])
+    return { request: updated, order, errors: [], messages }
   })
 }
 

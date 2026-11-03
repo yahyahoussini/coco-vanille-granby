@@ -1,5 +1,6 @@
 import { ActionForm } from '../ActionForm'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
+import { paymentProvider } from '@/lib/payments/provider'
 
 // Réglages › Boutique (owner): deposit % for custom-cake quotes, the /avis QR target (16 §8.1).
 export async function ShopSettings({ ctx, back }) {
@@ -9,16 +10,18 @@ export async function ShopSettings({ ctx, back }) {
   return (
     <section aria-labelledby="reglages-boutique-titre" id="reglages-boutique">
       <h2 id="reglages-boutique-titre">Boutique</h2>
+      {paymentProvider() !== 'counter' && (
       <ActionForm type="settings.deposit" back={back} needsNetwork className="card">
         <div className="field">
           <label htmlFor="acompte">Acompte des gâteaux sur demande (%)</label>
           <input id="acompte" name="percent" type="text" inputMode="decimal" defaultValue={typeof pct === 'number' ? String(pct).replace('.', ',') : ''} placeholder="ex. 30" required style={{ maxInlineSize: '8rem' }} />
-          <span className="hint">Actuel : {typeof pct === 'number' ? `${pct} %` : marker('pourcentage d’acompte')}. Changer l’acompte demande de confirmer que c’est vous.</span>
+          <span className="hint">Actuel : {typeof pct === 'number' ? `${pct} %` : toGive('pourcentage d’acompte')}. Changer l’acompte demande de confirmer que c’est vous.</span>
         </div>
         <button className="btn" type="submit">
           Enregistrer l’acompte
         </button>
       </ActionForm>
+      )}
       <ActionForm type="settings.reviewLink" back={back} needsNetwork className="card">
         <div className="field">
           <label htmlFor="lien-avis">Lien Google « Demander des avis » (cible du code QR /avis)</label>

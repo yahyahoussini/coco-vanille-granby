@@ -1,6 +1,7 @@
 import Script from 'next/script'
 import '@fontsource-variable/fraunces/soft.css'
 import '@fontsource-variable/inter'
+import { SITE_ORIGIN } from '@/lib/routes'
 import '@/styles/site.css'
 import '@/styles/content.css'
 import '@/styles/journal.css'
@@ -9,7 +10,7 @@ import '@/styles/catalogue.css'
 
 // Icons: the round logo (public/brand), one favicon link for Google and the tabs (audit: favicon link).
 export const metadata = {
-  metadataBase: new URL('https://cocovanillegranby.com'),
+  metadataBase: new URL(SITE_ORIGIN),
   icons: {
     icon: [
       { url: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' },

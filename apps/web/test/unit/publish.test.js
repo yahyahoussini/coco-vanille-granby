@@ -21,9 +21,10 @@ describe('served pages (publish guard)', () => {
     assert.equal(readyCopy(docs[1]), true)
   })
 
-  test('show answers every registry page of the language; strict only ready copy', () => {
+  test('show answers every registry page of the language, except a conditional page with a fact missing; strict only ready copy', () => {
     const show = servedKeys(docs, 'en', { strict: false })
-    assert.equal(show.size, PAGES.filter((p) => p.paths.en).length)
+    assert.equal(show.has('prix'), false, 'a conditional page with a marker does not exist')
+    assert.equal(show.size, PAGES.filter((p) => p.paths.en).length - 1)
     const strict = servedKeys(docs, 'fr', { strict: true })
     assert.deepEqual([...strict].sort(), ['carte', 'home'])
   })
@@ -34,10 +35,11 @@ describe('served pages (publish guard)', () => {
     assert.ok(servedKeys(noHome, 'fr', { strict: false }).has('carte'))
   })
 
-  test('strict: a product page needs its description, priced and portioned sizes, lead time, checked allergens', () => {
+  test('strict: a product page needs its description, priced and portioned sizes and lead time; allergens not checked send the customer to the shop', () => {
     const ready = { summary: 'Pur beurre.', leadTimeHours: 24, allergensVerified: { at: '2026-10-20' }, variants: [{ label: 'Unité', priceCents: 375, portionsMin: 1 }] }
     assert.equal(productReady(ready), true)
-    for (const gap of [{ summary: '' }, { leadTimeHours: 0 }, { allergensVerified: {} }, { variants: [] }, { variants: [{ label: 'Unité', portionsMin: 1 }] }, { variants: [{ label: 'Unité', priceCents: 375 }] }]) {
+    assert.equal(productReady({ ...ready, allergensVerified: {} }), true)
+    for (const gap of [{ summary: '' }, { leadTimeHours: 0 }, { variants: [] }, { variants: [{ label: 'Unité', portionsMin: 1 }] }, { variants: [{ label: 'Unité', priceCents: 375 }] }]) {
       assert.equal(productReady({ ...ready, ...gap }), false, JSON.stringify(gap))
     }
     const home = new Set(['home'])
@@ -50,7 +52,6 @@ describe('served pages (publish guard)', () => {
     assert.equal(productReady(quoted), true)
     assert.equal(productReady({ ...quoted, priceOnRequest: false }), false)
     assert.equal(productReady({ ...quoted, leadTimeHours: 0 }), false)
-    assert.equal(productReady({ ...quoted, allergensVerified: null }), false)
     assert.equal(productReady({ ...quoted, summary: '' }), false)
   })
 

@@ -5,6 +5,7 @@ import { capacityLimit, usedUnits, bookedInWindow, holdIsLive, COMMITTED_STATUSE
 import { windowSettings } from '../ordering/slots.js'
 import { getShopSettings, getPools, getUsage, withCapacityLock, newToken, newPickupCode, nextOrderNumber } from '../ordering/context.js'
 import { notifyOrderConfirmed, scheduleReminder } from '../messaging/notify.js'
+import { pushToTeam } from '../studio/push.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 export const REFUND_DAYS = 15
@@ -96,6 +97,7 @@ export async function markOrderPaid(payload, { orderId, provider, reference = nu
     if (status === 'paid' && COMMITTED_STATUSES.includes(updated.status)) {
       await notifyOrderConfirmed(payload, updated).catch((e) => payload.logger?.error?.({ err: e }, 'order_confirmed not queued'))
       await scheduleReminder(payload, updated, { now }).catch(() => null)
+      await pushToTeam(payload, { title: `Nouvelle commande · ${updated.number}`, body: 'Payée en ligne.', url: `/commandes/${updated.id}/`, tag: `commande-${updated.id}` })
     }
     return { ok: true, order: updated, ...(refundDueBy ? { refundDue: true } : {}) }
   })

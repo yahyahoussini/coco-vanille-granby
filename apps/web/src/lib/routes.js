@@ -1,7 +1,9 @@
 // Page registry: one intent = one page per language (00 §5.2). URLs are fixed once (v1 L9).
 // status: core | conditional (needs owner facts) | utility (noindex)
 // es pages exist only when ENABLE_ES=true (someone serves customers in Spanish, M10).
-export const SITE_ORIGIN = 'https://cocovanillegranby.com'
+// The address this deployment answers on (PUBLIC_ORIGIN, infra/scripts/make-env.sh): canonical URLs, JSON-LD and the
+// sitemap never point at a domain that is not live.
+export const SITE_ORIGIN = (process.env.PUBLIC_ORIGIN || 'https://cocovanillegranby.com').replace(/\/$/, '')
 export const LOCALES = ['fr', 'en', 'es']
 export const HTML_LANG = { fr: 'fr-CA', en: 'en-CA', es: 'es' }
 

@@ -77,6 +77,13 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
     if (open && here.hh >= 10 && !photoToday && canSee(user, 'vitrine')) cards.push({ key: 'photo', rank: 4, title: 'Pas encore de photo de la vitrine aujourd’hui', why: 'La photo du jour s’affiche sur le site.', href: '/vitrine/#photo', action: 'Prendre la photo' })
   }
 
+  // Reservations made on the site since yesterday, whatever their pickup day: nothing else tells the team while no text leaves.
+  if (canSee(user, 'commandes') && user.role !== 'agence') {
+    const since = new Date(now.getTime() - 24 * 3600000).toISOString()
+    const fresh = await payload.count({ collection: 'orders', where: { and: [{ source: { equals: 'web' } }, { createdAt: { greater_than_equal: since } }, { status: { in: ['paid', 'ready'] } }] }, overrideAccess: true }).catch(() => null)
+    if (fresh?.totalDocs) cards.push({ key: 'fresh', rank: 1, title: `${fresh.totalDocs} ${fresh.totalDocs > 1 ? 'réservations reçues' : 'réservation reçue'} sur le site depuis hier`, why: 'À préparer pour leur jour de cueillette.', href: '/commandes/', action: 'Voir' })
+  }
+
   if (['proprietaire', 'gerant'].includes(user.role)) {
     // Money received that must go back within 15 days (07 A9): a cancelled order paid anyway, a payment after
     // its slot was taken, a deposit for a quote that changed or ran out.
@@ -87,6 +94,17 @@ export async function todoCards(ctx, { now = new Date(), shop = {}, todayOrders 
     const known = new Set((shop.specialDays || []).filter((d) => d.state && d.state !== 'to_confirm').map((d) => String(d.date).slice(0, 10)))
     const soon = holidaySuggestions(shop, { fromISO: here.iso }).filter((h) => h.date <= addDays(here.iso, 30) && !known.has(h.date))
     for (const h of soon.slice(0, 2)) cards.push({ key: `hol-${h.date}`, rank: 3, title: `Le ${shortDay(h.date)} approche : ouvert ou fermé?`, why: `${h.label || 'Jour férié'} · à confirmer`, href: '/boutique/#jours-speciaux', action: 'Choisir' })
+  }
+  // The launch list (2026-11-03): what the agency filled in with approximations, for the owner to check. After the shop's work.
+  if (['proprietaire', 'gerant'].includes(user.role)) {
+    const count = async (collection, where) => (await payload.count({ collection, where, overrideAccess: true }).catch(() => null))?.totalDocs ?? 0
+    if (!(await count('push-subscriptions', { user: { exists: true } }))) cards.push({ key: 'push', rank: 4, title: 'Recevoir les nouvelles commandes sur votre téléphone', why: 'Sans alerte, une réservation ne se voit que Studio ouvert : aucun courriel ni texto ne part encore.', href: '/plus/reglages/#alertes-section', action: 'Activer' })
+    const facts = await count('site-facts', { proposed: { equals: true } })
+    if (facts) cards.push({ key: 'facts', rank: 5, title: `${facts} ${facts > 1 ? 'réponses du site' : 'réponse du site'} à vérifier`, why: 'Le site affiche des réponses proposées par l’agence : lisez-les et touchez « C’est bon », ou changez-les.', href: '/plus/faits/', action: 'Vérifier' })
+    const prices = await count('products', { and: [{ priceEstimated: { equals: true } }, { availability: { not_equals: 'discontinued' } }] })
+    if (prices) cards.push({ key: 'prices', rank: 6, title: `${prices} ${prices > 1 ? 'produits' : 'produit'} : prix à vérifier`, why: 'Le site affiche « prix indicatif », et une réservation garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
+    const allergens = await count('products', { and: [{ 'allergensVerified.at': { exists: false } }, { _status: { equals: 'published' } }, { availability: { not_equals: 'discontinued' } }] })
+    if (allergens) cards.push({ key: 'allergens', rank: 7, title: `${allergens} ${allergens > 1 ? 'fiches' : 'fiche'} d’allergènes à cocher`, why: 'Sans cette vérification, le site invite le client à appeler avant de commander.', href: '/plus/produits/?vue=allergenes', action: 'Cocher' })
   }
   return pickCards(cards)
 }

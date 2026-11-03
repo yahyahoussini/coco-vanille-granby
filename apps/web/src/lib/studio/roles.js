@@ -51,6 +51,13 @@ export const ACTIONS = {
   'product.price': [P, G],
   'product.allergens': [P, G],
   'product.tax': [P],
+  'product.pricesOk': [P, G],
+  'product.formats': [P, G],
+  'product.text': [P, G],
+  'product.photoAdd': [P, G],
+  'product.photoRemove': [P, G],
+  'product.retire': [P, G],
+  'product.create': [P, G],
   'vitrine.add': [P, G, C],
   'vitrine.remove': [P, G, C],
   'vitrine.copyYesterday': [P, G, C],
@@ -64,7 +71,10 @@ export const ACTIONS = {
   'shop.hours': [P, G],
   'shop.special': [P, G],
   'capacity.adjust': [P, G],
+  'shop.ordering': [P, G],
+  'shop.season': [P, G],
   'request.quote': [P, G],
+  'request.confirm': [P, G],
   'request.decline': [P, G],
   'request.otherDate': [P, G],
   'review.create': [P, G],
@@ -72,6 +82,7 @@ export const ACTIONS = {
   'review.later': [P, G],
   'question.create': [P, G, C, A],
   'fact.answer': [P, G, A, T],
+  'fact.confirm': [P, G, A],
   // Journal: Traduction writes the English copy; a person of the shop or the agency releases it.
   'post.saveFr': [P, G, A],
   'post.saveEn': [P, G, A, T],
@@ -89,10 +100,13 @@ export const ACTIONS = {
   'users.pin': [P],
   'users.active': [P],
   'device.mode': [P, G, C, A, T],
+  'push.subscribe': [P, G, C],
+  'push.unsubscribe': [P, G, C],
+  'push.test': [P, G, C],
 }
 
 // Money, prices, allergens, taxes and people need a fresh identity check (16b §4 #4).
-export const STEP_UP = new Set(['order.refund', 'product.price', 'product.allergens', 'product.tax', 'settings.deposit', 'users.create', 'users.pin', 'users.active'])
+export const STEP_UP = new Set(['order.refund', 'product.price', 'product.pricesOk', 'product.formats', 'product.create', 'product.allergens', 'product.tax', 'settings.deposit', 'users.create', 'users.pin', 'users.active'])
 
 // Actions that may wait in the offline outbox; everything else needs the network (16 §3.0 offline policy).
 export const OFFLINE_OK = new Set(['product.soldout', 'product.restock', 'order.ready', 'order.pickup', 'vitrine.photo', 'question.create', 'order.phone'])

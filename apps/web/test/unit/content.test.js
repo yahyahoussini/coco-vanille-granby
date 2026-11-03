@@ -183,7 +183,7 @@ describe('hours: one record for the seed, the copy and the hours table', () => {
     for (const e of entries) assert.doesNotMatch(plain(e.copy), /heures d’ouverture confirmées|opening hours confirmed/, label(e))
   })
 
-  test('holiday hours are still unknown, so they stay a marker', () => {
+  test('holiday hours are an owner fact, so the copy keeps their slot', () => {
     assert.match(plain(copyOf('nous-trouver', 'fr')), /\[\[FACT NEEDED: heures des Fêtes 2026\]\]/)
     assert.match(plain(copyOf('nous-trouver', 'en')), /\[\[FACT NEEDED: 2026 holiday hours\]\]/)
   })
@@ -220,7 +220,7 @@ describe('café, ateliers and the « Écrivez-nous » chat', () => {
       assert.match(text, kept, `${locale}: retention`)
       assert.match(text, asked, `${locale}: reply only on request`)
       assert.match(text, /clavardage externe|outside chat service/, `${locale}: no outside chat service`)
-      assert.match(text, /OVHcloud/, `${locale}: names its host`)
+      assert.match(text, /Hostinger.*(France)/, `${locale}: names its host and its country`)
     }
   })
 })

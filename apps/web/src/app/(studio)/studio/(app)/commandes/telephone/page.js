@@ -5,7 +5,7 @@ import { availableDays, errorText } from '@/lib/ordering'
 import { effectiveAvailability } from '@/lib/ordering/lines'
 import { money } from '@/lib/studio/format'
 import { shortDay, clockFr } from '@/lib/studio/time'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Stepper } from '@/components/studio/Stepper'
 import { Flash } from '@/components/studio/Flash'
@@ -67,7 +67,7 @@ export default async function Telephone({ searchParams }) {
                     <span className="grow">
                       {label}
                       <small className="meta" style={{ display: 'block' }}>
-                        {Number.isInteger(v.priceCents) ? money(v.priceCents) : marker('prix')}
+                        {Number.isInteger(v.priceCents) ? money(v.priceCents) : toGive('prix')}
                         {soldout ? ' · Épuisé' : ''}
                       </small>
                     </span>
@@ -184,7 +184,7 @@ export default async function Telephone({ searchParams }) {
           </fieldset>
 
           <p>
-            <strong>Total {subtotal !== null ? `${money(subtotal)} + taxes` : marker('prix')}</strong>
+            <strong>Total {subtotal !== null ? `${money(subtotal)} + taxes` : toGive('prix')}</strong>
           </p>
           <button className="btn btn-primary" type="submit">
             Créer la commande

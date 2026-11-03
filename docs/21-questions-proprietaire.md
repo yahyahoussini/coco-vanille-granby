@@ -7,6 +7,8 @@
 | Par | L'Agence (Yahya, BrandHub.ma) |
 | Comment répondre | Directement dans Coco Studio › Plus › « Faits du site » (les questions y sont rangées par sujet), ou par écrit, par message vocal ou en photo à l'Agence, qui les y entre. « Je ne sais pas » est une bonne réponse. |
 
+**Depuis le 3 novembre 2026, chaque question a une réponse proposée par l’Agence, affichée sur le site et à vérifier dans Studio ([docs/22](22-acces-et-premiers-pas.md)). Cette liste reste le détail de ce qu’il faut relire.** Le paragraphe qui suit date d’avant ce changement.
+
 Le site est construit et testé. Il ne manque plus que des faits que vous seule pouvez donner : sans eux, une page reste cachée, parce que le site n'invente jamais un prix, un délai ou un allergène. Les questions sont classées par urgence; le bloc 1 suffit pour lancer. Les prix, portions, délais et allergènes de chaque produit se donnent dans Coco Studio › Plus › Produits; les heures et les fermetures, dans Boutique & heures.
 
 ---

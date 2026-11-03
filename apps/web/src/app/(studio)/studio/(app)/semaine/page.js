@@ -1,6 +1,7 @@
 import { studioPage } from '@/lib/studio/guard'
 import { shortDay } from '@/lib/studio/time'
 import { weekBounds, fiveNumbers, weekCards, systemTile } from '@/lib/studio/week'
+import { paymentProvider } from '@/lib/payments/provider'
 
 export const metadata = { title: 'Cette semaine · Coco Studio' }
 
@@ -17,12 +18,12 @@ export default async function Semaine() {
     ['proprietaire', 'gerant'].includes(ctx.user.role) ? ctx.payload.find({ collection: 'requests', where: range(w.from, w.to), limit: 500, depth: 0, ...ctx.as, select: { status: true } }) : { docs: [] },
     ctx.payload.find({ collection: 'reviews', where: range(w.from, w.to, 'receivedAt'), limit: 500, depth: 0, ...ctx.as }),
     ctx.payload.findGlobal({ slug: 'shop', locale: 'fr', depth: 0, ...ctx.as }),
-    ctx.payload.find({ collection: 'products', limit: 200, depth: 0, locale: 'fr', ...ctx.as, select: { title: true, variants: true, _status: true } }),
+    ctx.payload.find({ collection: 'products', limit: 200, depth: 0, locale: 'fr', ...ctx.as, select: { title: true, variants: true, _status: true, priceEstimated: true } }),
     ctx.payload.find({ collection: 'capacity-pools', limit: 20, depth: 0, ...ctx.as }),
     systemTile(ctx.payload, { now }),
   ])
   const numbers = fiveNumbers({ orders: orders.docs, prevOrders: prevOrders.docs, requests: requests.docs, reviews: reviews.docs })
-  const cards = weekCards({ shop, products: products.docs, pools: pools.docs, now })
+  const cards = weekCards({ shop, products: products.docs, pools: pools.docs, now, reserve: paymentProvider() === 'counter' })
   const readOnly = ctx.user.role === 'gerant'
   return (
     <>

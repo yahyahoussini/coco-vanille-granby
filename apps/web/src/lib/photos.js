@@ -235,6 +235,25 @@ const PRODUCT_PHOTO = {
   baguette: 'pains',
   'gateau-aux-framboises': 'gateaux',
   'raspberry-cake': 'gateaux',
+  croissant: 'croissant-au-beurre',
+  chocolatine: 'viennoiseries',
+  'gateau-royal': 'gateau-au-chocolat',
+  'mousse-au-chocolat': 'parts',
+  'chocolate-mousse': 'parts',
+  // Savoury food and Moroccan specialties: no stock picture of the dish itself, so the kitchen rather than another product.
+  msemmen: 'boulangerie',
+  harcha: 'boulangerie',
+  'feuillete-sale': 'boulangerie',
+  'savoury-puff-pastry': 'boulangerie',
+  'mini-pizza': 'boulangerie',
+  'pastilla-au-poulet': 'boulangerie',
+  'chicken-pastilla': 'boulangerie',
+  'sandwich-au-thon': 'boulangerie',
+  'tuna-sandwich': 'boulangerie',
+  'sandwich-au-cachir': 'boulangerie',
+  'cachir-sandwich': 'boulangerie',
+  'plateau-de-bouchees-salees': 'boulangerie',
+  'savoury-bites-platter': 'boulangerie',
 }
 const FAMILIES = ['viennoiseries', 'pains', 'gateaux', 'patisseries']
 export function productPhotoKey(product) {

@@ -1,4 +1,4 @@
-// Puts the shop's cakes on the site from the owner's photos, without prices (« Prix sur demande »). Safe to run again:
+// Puts the shop's cakes on the site from the owner's photos, without prices (seed/launch.js adds them). Safe to run again:
 // a photo already uploaded is reused, and nothing typed in Studio (a price, a summary, a photo) is replaced.
 // A product is made only when at least one of its photos is in src/seed/client-photos/ (a cake with no picture of
 // its own would show a stock illustration under the name of a real cake). The photos are cut out on a transparent 4:5
@@ -110,5 +110,5 @@ for (const p of EXISTING_PRODUCTS) {
 }
 
 const { totalDocs } = await payload.count({ collection: 'products', where: { _status: { equals: 'published' } }, ...SYS })
-console.log(`Catalogue: ${created} product(s) added, ${waiting} waiting for a photo, ${totalDocs} published. Allergens: to confirm in Studio › Plus › Produits. Prices: « Prix sur demande » until set.`)
+console.log(`Catalogue: ${created} product(s) added, ${waiting} waiting for a photo, ${totalDocs} published. Prices: npm run seed:launch. Allergens: checked in Studio › Plus › Produits.`)
 process.exit(0)

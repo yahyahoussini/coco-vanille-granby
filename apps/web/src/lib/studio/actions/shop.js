@@ -1,5 +1,6 @@
 // Boutique & heures actions (16 §3.6): busy mode, online pause, exceptional closure (effects preview, textos
-// after a 60 s grace), regular hours, special days, capacity ± per day. Studio never closes the shop by itself.
+// after a 60 s grace), regular hours, special days, capacity ± per day, the online reservation settings and the season's
+// dates. Studio never closes the shop by itself.
 import { capacityLimit } from '../../ordering/capacity.js'
 import { enqueueMessage, cancelQueued } from '../../messaging/queue.js'
 import { senderFacts } from '../../messaging/templates.js'
@@ -8,7 +9,7 @@ import { whenFr } from '../format.js'
 import { sentence } from '../audit.js'
 import { studioSms } from '../texts.js'
 import { closurePlan, affectedOrders, withPhone, CLOSURE_LABEL, CLOSURE_MARK, CLOSURE_UNDONE } from '../closure.js'
-import { refuse, str, int, holdMessages } from './util.js'
+import { refuse, str, int, holdMessages, textsLeave } from './util.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/
@@ -97,7 +98,7 @@ export const shopActions = {
   // « Pause en ligne »: 1 h · Reste de la journée · Jusqu'à… Paid orders stay planned (10 §13).
   'shop.pause': toggle('onlinePause', (shop, input, ctx) => {
     const until = untilFrom(shop, input, ctx.now)
-    return { next: { active: true, until: until.toISOString() }, what: `a mis les commandes en ligne en pause jusqu’à ${whenFr(until, ctx.now)}`, message: `Commandes en ligne en pause jusqu’à ${whenFr(until, ctx.now)} · les commandes déjà payées restent prévues` }
+    return { next: { active: true, until: until.toISOString() }, what: `a mis les commandes en ligne en pause jusqu’à ${whenFr(until, ctx.now)}`, message: `Commandes en ligne en pause jusqu’à ${whenFr(until, ctx.now)} · les commandes déjà confirmées restent prévues` }
   }),
 
   'shop.resume': toggle('onlinePause', () => ({ next: { active: false, until: null }, what: 'a repris les commandes en ligne', message: 'Commandes en ligne reprises.' })),
@@ -153,7 +154,7 @@ export const shopActions = {
         before,
         after: { mode: plan.mode, reason, firstDay: plan.firstDay, lastDay: plan.lastDay, until: plan.until.toISOString(), orders: orders.map((o) => o.number), texted: messages.length },
         summary: sentence(ctx.user, ctx.device, `a fermé la boutique ${span} (${REASON_FR[reason]}), ${messages.length} textos`, ctx.now),
-        message: `Boutique fermée ${span} · ${messages.length ? `les textos partent dans 60 s (${messages.length} ${messages.length > 1 ? 'clients' : 'client'})` : 'aucun client à prévenir'} · Google : à faire à la main (1 min)`,
+        message: `Boutique fermée ${span} · ${!messages.length ? 'aucun client à prévenir' : textsLeave() ? `les textos partent dans 60 s (${messages.length} ${messages.length > 1 ? 'clients' : 'client'})` : `à appeler : ${messages.length} ${messages.length > 1 ? 'clients' : 'client'}`} · Google : à faire à la main (1 min)`,
         data: { texted: messages.length, orders: orders.length },
       }
     },
@@ -232,7 +233,79 @@ export const shopActions = {
     },
   },
 
-  // Capacity ± for one day: a date override on the category's pool (the default stays in « Avancé »).
+  // Online reservation: on or off, the cut-off for the next day, the pickup windows, how far ahead, and how many items
+  // each family can make per day.
+  'shop.ordering': {
+    undoSeconds: 30,
+    async run(ctx, input) {
+      const shop = await readShop(ctx)
+      const cutoff = str(input.cutoff, 5)
+      if (!HHMM.test(cutoff)) refuse('cutoff', 'Indiquez l’heure limite (ex. 14:00).', 422)
+      const windowMinutes = int(input.windowMinutes)
+      if (![15, 30, 60].includes(windowMinutes)) refuse('window', 'Choisissez la durée d’une plage.', 422)
+      const maxPerWindow = int(input.maxPerWindow)
+      if (!(maxPerWindow >= 1 && maxPerWindow <= 50)) refuse('per_window', 'Commandes par plage : de 1 à 50.', 422)
+      const maxDaysAhead = int(input.maxDaysAhead)
+      if (!(maxDaysAhead >= 1 && maxDaysAhead <= 365)) refuse('days_ahead', 'Jours d’avance : de 1 à 365.', 422)
+      const enabled = input.enabled === 'on' || input.enabled === 'true'
+      const pools = (await ctx.payload.find({ collection: 'capacity-pools', limit: 20, depth: 0, ...ctx.as })).docs
+      const before = { ordering: shop.ordering || {}, pools: pools.map((p) => ({ id: p.id, defaultPerDay: p.defaultPerDay ?? null })) }
+      const caps = pools.map((p) => {
+        const raw = str(input[`cap_${p.productionCategory}`], 5)
+        const n = raw === '' ? null : int(raw)
+        if (raw !== '' && !(n >= 0 && n <= 10000)) refuse('capacity', 'Capacité par jour invalide.', 422)
+        return { id: p.id, defaultPerDay: n }
+      })
+      await writeShop(ctx, { ordering: { ...(shop.ordering || {}), enabled, nextDayCutoff: cutoff, windowMinutes, maxPerWindow, maxDaysAhead } })
+      for (const c of caps) await ctx.payload.update({ collection: 'capacity-pools', id: c.id, data: { defaultPerDay: c.defaultPerDay }, depth: 0, ...ctx.write })
+      return {
+        entity: 'shop',
+        entityId: 'ordering',
+        before,
+        after: { enabled, nextDayCutoff: cutoff, windowMinutes, maxPerWindow, maxDaysAhead, pools: caps },
+        summary: sentence(ctx.user, ctx.device, `a réglé la réservation en ligne (${enabled ? 'ouverte' : 'fermée'})`, ctx.now),
+        message: enabled ? 'Réservation en ligne enregistrée · le site suit aussitôt.' : 'Réservation en ligne fermée · le site invite à appeler la boutique.',
+      }
+    },
+    async undo(ctx, entry) {
+      await restoreShop(ctx, { ordering: entry.before.ordering })
+      for (const p of entry.before.pools || []) await ctx.payload.update({ collection: 'capacity-pools', id: p.id, data: { defaultPerDay: p.defaultPerDay }, ...SYS, context: { studioAudited: true } })
+      return { message: 'Annulé · réglages d’avant remis.' }
+    },
+  },
+
+  // Bûches de Noël: when pre-orders open and close, and the pickup days.
+  'shop.season': {
+    undoSeconds: 30,
+    async run(ctx, input) {
+      const res = await ctx.payload.find({ collection: 'seasons', where: { key: { equals: str(input.key, 40) || 'noel' } }, limit: 1, depth: 0, ...ctx.as })
+      const season = res.docs[0]
+      if (!season) refuse('season', 'Cette saison n’existe pas encore.', 404)
+      const ISO = /^\d{4}-\d{2}-\d{2}$/
+      const opens = str(input.opens, 10)
+      const closes = str(input.closes, 10)
+      if (!ISO.test(opens) || !ISO.test(closes) || closes < opens) refuse('dates', 'Indiquez l’ouverture et la fermeture des précommandes, dans cet ordre.', 422)
+      const pickups = [].concat(input.pickup ?? []).map((d) => str(d, 10)).filter(Boolean)
+      if (pickups.some((d) => !ISO.test(d))) refuse('dates', 'Une date de cueillette n’est pas valide.', 422)
+      if (!pickups.length) refuse('dates', 'Gardez au moins une date de cueillette.', 422)
+      const data = { preorderOpensAt: zonedTime(opens, '00:00').toISOString(), preorderClosesAt: zonedTime(closes, '23:59').toISOString(), pickupDates: [...new Set(pickups)].sort().map((d) => ({ date: `${d}T12:00:00.000Z` })) }
+      await ctx.payload.update({ collection: 'seasons', id: season.id, data, depth: 0, ...ctx.write })
+      return {
+        entity: 'seasons',
+        entityId: season.id,
+        before: { preorderOpensAt: season.preorderOpensAt, preorderClosesAt: season.preorderClosesAt, pickupDates: (season.pickupDates || []).map(({ date }) => ({ date })) },
+        after: data,
+        summary: sentence(ctx.user, ctx.device, 'a changé les dates des bûches', ctx.now),
+        message: 'Dates des bûches enregistrées · la page des bûches suit aussitôt. Relisez aussi leurs réponses dans Faits du site.',
+      }
+    },
+    async undo(ctx, entry) {
+      await ctx.payload.update({ collection: 'seasons', id: entry.entityId, data: entry.before, ...SYS, context: { studioAudited: true } })
+      return { message: 'Annulé · dates d’avant remises.' }
+    },
+  },
+
+  // Capacity ± for one day: a date override on the category's pool (the default is set above).
   'capacity.adjust': {
     undoSeconds: 30,
     async run(ctx, input) {

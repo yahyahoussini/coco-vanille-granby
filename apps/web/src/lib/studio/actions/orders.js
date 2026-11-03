@@ -12,7 +12,7 @@ import { customerName, money } from '../format.js'
 import { clockFr, shortDay } from '../time.js'
 import { sentence } from '../audit.js'
 import { studioSms } from '../texts.js'
-import { refuse, load, timelineEntry, pushTimeline, holdMessages, str, bool, int } from './util.js'
+import { refuse, load, timelineEntry, pushTimeline, holdMessages, str, bool, int, textsLeave } from './util.js'
 
 const SYS = { overrideAccess: true, depth: 0 }
 const REFUND_DAYS = 15
@@ -67,7 +67,7 @@ export const orderActions = {
         before: snapshot(order),
         after: { status: 'ready' },
         summary: sentence(ctx.user, ctx.device, `a marqué la commande ${order.number} prête`, ctx.now),
-        message: messages.length ? `Commande ${order.number} prête · texto à ${who} dans 30 s` : `Commande ${order.number} prête · pas de téléphone ni de courriel au dossier`,
+        message: !textsLeave() ? `Commande ${order.number} prête · appelez ${who} si besoin` : messages.length ? `Commande ${order.number} prête · texto à ${who} dans 30 s` : `Commande ${order.number} prête · pas de téléphone ni de courriel au dossier`,
         data: { orderId: order.id, status: 'ready', messages: messages.map((m) => m.id) },
       }
     },
@@ -76,7 +76,7 @@ export const orderActions = {
       if (order.status !== 'ready') refuse('undo_state', `la commande ${order.number} a changé depuis.`)
       await cancelQueued(ctx.payload, { orderId: order.id, template: 'order_ready' })
       await revert(ctx, order.id, entry.before, 'Annulé : pas encore prête')
-      return { message: `Commande ${order.number} : retour à « Payée », le texto ne part pas.` }
+      return { message: `Commande ${order.number} : retour à « Confirmée », le texto ne part pas.` }
     },
   },
 
@@ -102,7 +102,7 @@ export const orderActions = {
         before: { orders: done.map((d) => ({ id: d.id, ...d.before })) },
         after: { status: 'ready', orders: done.map((d) => d.number) },
         summary: sentence(ctx.user, ctx.device, `a marqué ${done.length} commandes prêtes (${done.map((d) => d.number).join(', ')})`, ctx.now),
-        message: `${done.length} ${done.length > 1 ? 'commandes prêtes' : 'commande prête'} · textos dans 30 s${skipped.length ? ` · ${skipped.length} ignorée(s)` : ''}`,
+        message: `${done.length} ${done.length > 1 ? 'commandes prêtes' : 'commande prête'}${textsLeave() ? ' · textos dans 30 s' : ''}${skipped.length ? ` · ${skipped.length} ignorée(s)` : ''}`,
         data: { orderIds: done.map((d) => d.id) },
       }
     },
@@ -149,7 +149,7 @@ export const orderActions = {
       const order = await ctx.payload.findByID({ collection: 'orders', id: entry.entityId, ...SYS })
       if (order.status !== 'picked_up') refuse('undo_state', `la commande ${order.number} a changé depuis.`)
       await revert(ctx, order.id, entry.before, 'Annulé : pas encore remise')
-      return { message: `Commande ${order.number} : retour à « ${{ ready: 'Prête', paid: 'Payée' }[entry.before.status] || 'Non récupérée'} ».` }
+      return { message: `Commande ${order.number} : retour à « ${{ ready: 'Prête', paid: 'Confirmée' }[entry.before.status] || 'Non récupérée'} ».` }
     },
   },
 
@@ -193,7 +193,7 @@ export const orderActions = {
         before: null,
         after: { number: order.number, status: order.status, source: 'phone', payment: byLink ? 'lien' : 'comptoir' },
         summary: sentence(ctx.user, ctx.device, `a pris la commande téléphone ${order.number}`, ctx.now),
-        message: `Commande ${order.number} créée · ${byLink ? 'lien de paiement par texto' : 'à payer au comptoir'} · confirmation au client dans 30 s`,
+        message: `Commande ${order.number} créée · ${byLink ? 'lien de paiement par texto' : 'à payer au comptoir'}${textsLeave() ? ' · confirmation au client dans 30 s' : ''}`,
         data: { orderId: order.id, number: order.number, redirect: `/commandes/${order.id}/` },
       }
     },

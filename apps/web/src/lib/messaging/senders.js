@@ -88,3 +88,7 @@ export function emailSender(env = process.env) {
 }
 
 export const senders = (env = process.env) => ({ sms: smsSender(env), email: emailSender(env) })
+
+// Which channels really leave the server: the log sender keeps a message in the container's log. While one is off, the
+// public pages promise nothing on it and Studio tells the team to call instead.
+export const liveChannels = (env = process.env) => ({ sms: smsSender(env).name !== 'log', email: emailSender(env).name !== 'log' })

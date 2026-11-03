@@ -16,6 +16,7 @@ import { longDayLabel, windowLabel } from '@/lib/ordering/labels'
 import { boxPath, checkoutPath, thanksPath, orderPath, termsPath, Q } from '@/lib/ordering/paths'
 import { openInBrowserHref } from '@/lib/ordering/iab'
 import { paymentProvider } from '@/lib/payments/provider'
+import { liveChannels } from '@/lib/messaging/senders'
 import { ensureIntent, publishableKey, STRIPE_JS_URL } from '@/lib/payments/stripe'
 import { senderFacts } from '@/lib/messaging/templates'
 import { CardMedia, familyOf } from '@/components/site/Products'
@@ -77,7 +78,8 @@ function TotalsTable({ totals, locale, id }) {
 }
 
 function InAppNotice({ iab, ua, url, locale }) {
-  if (!iab) return null
+  // Its point is the card form: a reservation asks for no card.
+  if (!iab || paymentProvider() === 'counter') return null
   const c = orderingCopy(locale).iab
   const href = openInBrowserHref(url, ua)
   return (
@@ -411,6 +413,8 @@ async function ReviewStep({ locale, business, box, day, start }) {
   }
   const facts = senderFacts(business)
   const provider = paymentProvider()
+  const reserve = provider === 'counter'
+  const channels = liveChannels()
   const url = `${origin()}${boxPath(locale, box)}`
   const checkoutUrl = (w) => `${checkoutPath(locale)}?boite=${box}&${Q.day}=${day}&${Q.window}=${w}`
 
@@ -527,8 +531,8 @@ async function ReviewStep({ locale, business, box, day, start }) {
                 </Field>
               </div>
               <div className="field-row">
-                <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')}>
-                  <input id="c-email" name="email" type="email" required maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
+                <Field id="c-email" label={c.email} hint={c.emailHint} error={err('email')} optional={reserve} optionalLabel={optionalLabel(locale)}>
+                  <input id="c-email" name="email" type="email" required={!reserve} maxLength={120} autoComplete="email" defaultValue={values.email || ''} aria-invalid={err('email') ? 'true' : undefined} aria-describedby={describedBy('c-email', { hint: true, error: err('email') })} />
                 </Field>
                 <Field id="c-phone" label={c.phone} hint={c.phoneHint} error={err('phone')}>
                   <input id="c-phone" name="phone" type="tel" required maxLength={30} autoComplete="tel" inputMode="tel" defaultValue={values.phone || ''} aria-invalid={err('phone') ? 'true' : undefined} aria-describedby={describedBy('c-phone', { hint: true, error: err('phone') })} />
@@ -551,18 +555,21 @@ async function ReviewStep({ locale, business, box, day, start }) {
               </p>
             </fieldset>
 
-            <fieldset className="form-group">
-              <legend>
-                <span className="legend-icon" aria-hidden="true">
-                  <Icon name="mail" size={20} />
-                </span>
-                {c.consentTitle}
-              </legend>
-              <p className="field-hint">{c.consentHint}</p>
-              {Object.entries(c.consents).map(([name, label]) => (
-                <CheckboxField key={name} id={`c-${name}`} name={name} label={label} defaultChecked={false} />
-              ))}
-            </fieldset>
+            {/* Nothing is asked for while nothing can be sent (no email or text service yet). */}
+            {(channels.email || channels.sms) && (
+              <fieldset className="form-group">
+                <legend>
+                  <span className="legend-icon" aria-hidden="true">
+                    <Icon name="mail" size={20} />
+                  </span>
+                  {c.consentTitle}
+                </legend>
+                <p className="field-hint">{c.consentHint}</p>
+                {Object.entries(c.consents).map(([name, label]) => (
+                  <CheckboxField key={name} id={`c-${name}`} name={name} label={label} defaultChecked={false} />
+                ))}
+              </fieldset>
+            )}
 
             <div className="checkout-policy">
               <h3>{c.cancelTitle}</h3>
@@ -590,9 +597,12 @@ async function ReviewStep({ locale, business, box, day, start }) {
             {provider === 'none' ? (
               <p className="notice">{c.noPayment}</p>
             ) : (
-              <button type="submit" className="btn btn-primary pay-button">
-                {c.pay(money(totals.totalCents, locale))}
-              </button>
+              <>
+                {reserve && <p className="small reserve-note">{c.reserveNote}</p>}
+                <button type="submit" className="btn btn-primary pay-button">
+                  {c.pay(money(totals.totalCents, locale))}
+                </button>
+              </>
             )}
           </div>
         </form>
@@ -787,7 +797,7 @@ async function QuoteStep({ locale, business, token, error }) {
                   </button>
                 </>
               )}
-              {provider === 'none' && <p className="notice">{ck.noPayment}</p>}
+              {(provider === 'none' || provider === 'counter') && <p className="notice">{ck.noPayment}</p>}
             </form>
             {stripe && (
               <StripePayment

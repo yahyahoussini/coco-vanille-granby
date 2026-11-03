@@ -8,7 +8,7 @@ import { holidaySuggestions } from '@/lib/ordering/holidays'
 import { capacityOn } from '@/lib/ordering'
 import { onlineState } from '@/lib/ordering/availability'
 import { PRODUCTION_CATEGORIES } from '@/collections/Catalog'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { SaveBar } from '@/components/studio/SaveBar'
 import { Flash } from '@/components/studio/Flash'
@@ -64,6 +64,9 @@ export default async function Boutique({ searchParams }) {
   const capDays = [0, 1, 2, 3, 4, 5, 6].map((i) => addDays(today, i))
   const caps = {}
   for (const p of pools) caps[p.productionCategory] = await Promise.all(capDays.map((d) => capacityOn(ctx.payload, { date: d, category: p.productionCategory, now })))
+  const season = (await ctx.payload.find({ collection: 'seasons', where: { key: { equals: 'noel' } }, limit: 1, depth: 0, ...ctx.as }).catch(() => ({ docs: [] }))).docs[0] || null
+  const seasonPickups = (season?.pickupDates || []).map((d) => dayOf(d.date)).filter(Boolean)
+  const canOrdering = ctx.can('shop.ordering')
   const a = business.address || {}
   const hoursByDay = Object.fromEntries((shop.hours || []).map((h) => [h.day, h]))
 
@@ -81,7 +84,7 @@ export default async function Boutique({ searchParams }) {
           </strong>
         </p>
         <p className="meta">
-          Commandes en ligne : {online.open ? 'actives' : online.reason === 'disabled' ? 'pas encore ouvertes (formulaire de demande)' : online.reason === 'paused' ? 'en pause' : online.reason === 'closure' ? 'fermées (fermeture)' : online.reason === 'hours' ? `en attente des heures · ${marker('heures d’ouverture')}` : 'non disponibles'}
+          Commandes en ligne : {online.open ? 'actives' : online.reason === 'disabled' ? 'pas encore ouvertes (formulaire de demande)' : online.reason === 'paused' ? 'en pause' : online.reason === 'closure' ? 'fermées (fermeture)' : online.reason === 'hours' ? `en attente des heures · ${toGive('heures d’ouverture')}` : 'non disponibles'}
         </p>
       </div>
       {banners.map((b) => (
@@ -195,7 +198,7 @@ export default async function Boutique({ searchParams }) {
                   ))}
                 </div>
               </fieldset>
-              <p className="meta">Les commandes déjà payées ne changent pas.</p>
+              <p className="meta">Les commandes déjà confirmées ne changent pas.</p>
               <button className="btn btn-primary" type="submit">
                 Allonger le délai
               </button>
@@ -223,7 +226,7 @@ export default async function Boutique({ searchParams }) {
                   ))}
                 </div>
               </fieldset>
-              <p className="meta">Les commandes déjà payées restent prévues.</p>
+              <p className="meta">Les commandes déjà confirmées restent prévues.</p>
               <button className="btn btn-primary" type="submit">
                 Mettre en pause
               </button>
@@ -234,7 +237,7 @@ export default async function Boutique({ searchParams }) {
 
       <section aria-labelledby="heures">
         <h2 id="heures">Heures habituelles</h2>
-        {!(shop.hours || []).length && <p className="error-summary">{marker('heures d’ouverture confirmées par la propriétaire')}</p>}
+        {!(shop.hours || []).length && <p className="error-summary">{toGive('heures d’ouverture confirmées par la propriétaire')}</p>}
         {editHours ? (
           <ActionForm type="shop.hours" back={BACK} needsNetwork className="card">
             <ul className="rows">
@@ -323,14 +326,90 @@ export default async function Boutique({ searchParams }) {
         <p className="meta">Les jours fériés restent « à confirmer » tant que personne n’a choisi : rien n’est publié avant (G18).</p>
       </section>
 
+      <section aria-labelledby="reservation">
+        <h2 id="reservation">Réservation en ligne</h2>
+        {canOrdering ? (
+          <ActionForm type="shop.ordering" back={`${BACK}#reservation`} needsNetwork className="card">
+            <label className="check">
+              <input type="checkbox" name="enabled" value="true" defaultChecked={Boolean(shop.ordering?.enabled)} />
+              <span>Les clients peuvent réserver sur le site</span>
+            </label>
+            <p className="meta">Décoché : le site n’affiche plus « Ajouter à ma boîte » et invite à appeler ou à envoyer une demande. Pour une courte pause, utilisez plutôt « Pause en ligne ».</p>
+            <div className="field">
+              <label htmlFor="heure-limite">Heure limite pour le lendemain</label>
+              <input id="heure-limite" name="cutoff" type="time" step={900} required defaultValue={shop.ordering?.nextDayCutoff || '14:00'} style={{ inlineSize: '8rem' }} />
+              <span className="hint">Passé cette heure, un produit à 24 h se réserve pour le surlendemain.</span>
+            </div>
+            <div className="field">
+              <label htmlFor="duree-plage">Durée d’une plage de cueillette</label>
+              <select id="duree-plage" name="windowMinutes" defaultValue={String(shop.ordering?.windowMinutes || 30)}>
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="60">1 heure</option>
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="par-plage">Commandes au plus par plage</label>
+              <input id="par-plage" name="maxPerWindow" type="number" min={1} max={50} required defaultValue={shop.ordering?.maxPerWindow || 4} style={{ inlineSize: '8rem' }} />
+            </div>
+            <div className="field">
+              <label htmlFor="jours-avance">Jours d’avance au plus</label>
+              <input id="jours-avance" name="maxDaysAhead" type="number" min={1} max={365} required defaultValue={shop.ordering?.maxDaysAhead || 60} style={{ inlineSize: '8rem' }} />
+            </div>
+            <fieldset className="field">
+              <legend>Ce que la boutique peut préparer par jour</legend>
+              {pools.map((p) => (
+                <div className="field" key={p.id}>
+                  <label htmlFor={`cap-${p.productionCategory}`}>{CAT[p.productionCategory] || p.productionCategory}</label>
+                  <input id={`cap-${p.productionCategory}`} name={`cap_${p.productionCategory}`} type="number" min={0} max={10000} defaultValue={typeof p.defaultPerDay === 'number' ? p.defaultPerDay : ''} style={{ inlineSize: '8rem' }} />
+                </div>
+              ))}
+              {!pools.length && <p className="meta">Pas encore de familles : à créer dans « Avancé ».</p>}
+            </fieldset>
+            <button className="btn btn-primary" type="submit">
+              Enregistrer la réservation en ligne
+            </button>
+          </ActionForm>
+        ) : (
+          <p className="card">{shop.ordering?.enabled ? 'Ouverte' : 'Fermée'} · heure limite {shop.ordering?.nextDayCutoff ? clockFr(shop.ordering.nextDayCutoff) : '—'}</p>
+        )}
+        {canOrdering && season && (
+          <ActionForm type="shop.season" fields={{ key: 'noel' }} back={`${BACK}#reservation`} needsNetwork className="card">
+            <h3>Bûches de Noël</h3>
+            <div className="field">
+              <label htmlFor="saison-ouvre">Les précommandes ouvrent le</label>
+              <input id="saison-ouvre" name="opens" type="date" required defaultValue={season.preorderOpensAt ? localParts(season.preorderOpensAt).iso : ''} />
+            </div>
+            <div className="field">
+              <label htmlFor="saison-ferme">Elles ferment le (inclus)</label>
+              <input id="saison-ferme" name="closes" type="date" required defaultValue={season.preorderClosesAt ? localParts(season.preorderClosesAt).iso : ''} />
+            </div>
+            <fieldset className="field">
+              <legend>Dates de cueillette</legend>
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i}>
+                  <label className="sr-only" htmlFor={`saison-date-${i}`}>
+                    Date de cueillette {i + 1}
+                  </label>
+                  <input id={`saison-date-${i}`} name="pickup[]" type="date" defaultValue={seasonPickups[i] || ''} />
+                </div>
+              ))}
+            </fieldset>
+            <button className="btn" type="submit">
+              Enregistrer les dates des bûches
+            </button>
+          </ActionForm>
+        )}
+      </section>
+
       <section aria-labelledby="capacite">
-        <h2 id="capacite">Capacité</h2>
-        {!pools.length && <p className="card">{marker('capacité de production par jour')} · à régler dans « Avancé ».</p>}
+        <h2 id="capacite">Capacité, jour par jour</h2>
+        {!pools.length && <p className="card">{toGive('capacité de production par jour')}</p>}
         {pools.map((p) => (
           <div className="card" key={p.id}>
             <div className="card-head">
               <h3>{CAT[p.productionCategory] || p.productionCategory} par jour</h3>
-              <strong>{typeof p.defaultPerDay === 'number' ? p.defaultPerDay : marker('capacité')}</strong>
+              <strong>{typeof p.defaultPerDay === 'number' ? p.defaultPerDay : toGive('capacité')}</strong>
             </div>
             <ul className="rows">
               {caps[p.productionCategory].map((c) => (
@@ -363,13 +442,13 @@ export default async function Boutique({ searchParams }) {
             <strong>{business.name}</strong>
           </p>
           <p>
-            {[a.street, a.city].filter(Boolean).join(', ') || marker('adresse')} · {business.phoneDisplay || marker('téléphone')}
+            {[a.street, a.city].filter(Boolean).join(', ') || toGive('adresse')} · {business.phoneDisplay || toGive('téléphone')}
           </p>
           <p className="meta">Site ✓ (automatique) · Google : à vérifier à la main · Apple : tâche</p>
           <p className="meta">Nom verrouillé : le même partout, sans mots-clés. Un changement passe par l’agence et la propriétaire.</p>
         </div>
       </section>
-      <p className="meta">Prochaine ouverture : {nextOpening(shop, now) ? whenFr(nextOpening(shop, now), now) : marker('heures d’ouverture')}</p>
+      <p className="meta">Prochaine ouverture : {nextOpening(shop, now) ? whenFr(nextOpening(shop, now), now) : toGive('heures d’ouverture')}</p>
     </>
   )
 }

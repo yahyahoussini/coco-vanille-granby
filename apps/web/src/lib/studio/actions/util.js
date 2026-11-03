@@ -1,4 +1,9 @@
 // Shared pieces for Studio actions.
+import { liveChannels } from '../../messaging/senders.js'
+
+// While no text service exists, Studio never says a text is leaving: the team calls instead.
+export const textsLeave = () => liveChannels().sms
+
 export class Refusal extends Error {
   constructor(code, message, status = 409, extra = {}) {
     super(message)

@@ -1,6 +1,7 @@
-// Seed: only facts verified by research (data/facts.json, research/01) — everything else stays empty,
-// so the site shows [[FACT NEEDED]] markers until the owner answers (research/14).
-// Run: npm run seed   (idempotent: updates globals, upserts by key/code/slug)
+// Seed: only facts verified by research (data/facts.json, research/01). Prices, answers and reservation settings come
+// next, from seed/launch.js, as proposals the owner checks in Studio.
+// Run: npm run seed   (safe to run again: it rewrites the entity and the page copy, and leaves hours, settings and products
+// someone changed alone)
 import { getPayload } from 'payload'
 import config from '../payload.config.js'
 import { PRIORITY_ALLERGENS } from '../collections/Catalog.js'
@@ -40,11 +41,11 @@ await payload.updateGlobal({
       { url: 'https://www.instagram.com/coco_vanillegranby/', verified: true },
     ],
     languagesServed: ['fr'],
-    // Agency decisions of 2026-10-29 (research/21, mandate from Yahya): both mailboxes are created on the domain at
-    // launch (docs/13). Loi 25 s. 3.2 asks for the title and contact of the person in charge, not the name; by
+    // No mailbox exists yet (the domain is not registered): no address is published until one answers; the site gives the
+    // phone and « Écrivez-nous ». Loi 25 s. 3.2 asks for the title and contact of the person in charge, not the name; by
     // default that person is the one with the highest authority in the business (s. 3.1).
-    email: 'bonjour@cocovanillegranby.com',
-    privacyOfficer: { title: 'Propriétaire', email: 'confidentialite@cocovanillegranby.com' },
+    email: null,
+    privacyOfficer: { title: 'Propriétaire', email: null },
     // The Visit page's parking row: public facts of research/20c (the City's by-law; distances computed), applied on
     // 2026-10-29 (research/21 §6). The page copy (content.js) gives the time limits and the second lot.
     parking: PARKING.fr,
@@ -64,10 +65,9 @@ await payload.updateGlobal({
 // 2. Shop: regular hours from the shop's Google listing, supplied by the operator on 2026-10-27 (01 « Update
 // 2026-10-27 » and §3; 15 D26). They replace the empty record kept while 6 directory schedules conflicted. The page
 // copy (content.js) is written from the same HOURS record. Holiday hours stay unknown: no special days are seeded.
-await payload.updateGlobal({
-  slug: 'shop',
-  data: { hours: HOURS, ordering: { enabled: false, windowMinutes: 15, maxPerWindow: 4, maxDaysAhead: 30, quoteValidHours: 72 } },
-})
+// Only on a first run: afterwards the hours belong to Studio › Boutique & heures.
+const shopNow = await payload.findGlobal({ slug: 'shop', depth: 0 })
+if (!(shopNow.hours || []).length) await payload.updateGlobal({ slug: 'shop', data: { hours: HOURS } })
 
 // 3. Priority allergens (07 A-3)
 for (const [code, fr, en, es] of PRIORITY_ALLERGENS) {
@@ -91,7 +91,7 @@ for (const c of CATS) {
   catIds[c.key] = doc.id
 }
 
-// 5. Products evidenced in public sources (01 §5). No prices, portions or allergens: owner facts.
+// 5. Products evidenced in public sources (01 §5), created once. Allergens: a person checks them in Studio.
 const PRODUCTS = [
   { cat: 'viennoiseries', fr: ['Croissant aux amandes', 'croissant-aux-amandes'], en: ['Almond croissant', 'almond-croissant'] },
   { cat: 'pains', fr: ['Baguette', 'baguette'], en: ['Baguette', 'baguette'] },
@@ -110,6 +110,7 @@ for (const p of PRODUCTS) {
     availability: 'instock',
     _status: 'published',
   }
+  if ((await payload.find({ collection: 'products', where: { slug: { equals: p.fr[1] } }, limit: 1, locale: 'fr', depth: 0, draft: true })).docs[0]) continue
   const doc = await upsert('products', { slug: { equals: p.fr[1] } }, data)
   await payload.update({ collection: 'products', id: doc.id, locale: 'en', data: { title: p.en[0], slug: p.en[1], variants: [{ id: doc.variants?.[0]?.id, label: 'Standard size' }], _status: 'published' } })
 }

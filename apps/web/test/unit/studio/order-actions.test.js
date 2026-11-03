@@ -13,6 +13,9 @@ const shopG = { hours: [{ day: 'Saturday', opens: '09:00', closes: '15:00' }] }
 const order = (id, status, extra = {}) => ({ id, number: 1000 + id, status, locale: 'fr', customer: { firstName: 'Julie', lastName: 'T.', phone: '+15145550101' }, pickupDate: '2026-10-31T12:00:00.000Z', pickupWindowStart: '10:15', pickupWindowEnd: '10:30', pickupCode: '4821', items: [{ title: 'Paris-Brest', qty: 1 }], totals: { totalCents: 4800, balanceCents: 0 }, payment: { provider: 'mock', status: 'paid' }, timeline: [], ...extra })
 const setup = (orders) => fakePayload({ globals: { business, shop: shopG }, collections: { orders } })
 
+// A text service is connected in these tests (the wording without one has its own test below).
+process.env.SMS_PROVIDER = 'twilio'
+
 describe('« Marquer prête »', () => {
   test('status Prête, texto queued after the undo window', async () => {
     const payload = setup([order(42, 'paid')])
@@ -27,7 +30,20 @@ describe('« Marquer prête »', () => {
     assert.match(r.message, /texto à Julie T\./)
   })
 
-  test('« Annuler » inside the window: back to Payée, nothing leaves', async () => {
+  test('no text service yet: Studio says to call, never that a text is leaving', async () => {
+    process.env.SMS_PROVIDER = 'log'
+    try {
+      const payload = setup([order(43, 'paid')])
+      const r = await perform(payload, { user: lea, device, type: 'order.ready', input: { orderId: 43 }, now: new Date() })
+      assert.ok(r.ok, r.message)
+      assert.match(r.message, /appelez Julie T\. si besoin/)
+      assert.doesNotMatch(r.message, /texto/)
+    } finally {
+      process.env.SMS_PROVIDER = 'twilio'
+    }
+  })
+
+  test('« Annuler » inside the window: back to Confirmée, nothing leaves', async () => {
     const payload = setup([order(42, 'paid')])
     const r = await perform(payload, { user: lea, device, type: 'order.ready', input: { orderId: 42 } })
     const u = await undo(payload, { user: lea, device, id: r.undo.id })
@@ -82,13 +98,13 @@ describe('« Remettre la commande »', () => {
 })
 
 describe('the customer is already at the counter', () => {
-  test('a paid order is handed over directly; undo puts it back to Payée', async () => {
+  test('a confirmed order is handed over directly; undo puts it back to Confirmée', async () => {
     const payload = setup([order(42, 'paid')])
     const r = await perform(payload, { user: lea, device, type: 'order.pickup', input: { orderId: 42, code: '4821' } })
     assert.ok(r.ok, r.message)
     assert.equal(payload.store.orders[0].status, 'picked_up')
     const u = await undo(payload, { user: lea, id: r.undo.id })
-    assert.match(u.message, /Payée/)
+    assert.match(u.message, /Confirmée/)
     assert.equal(payload.store.orders[0].status, 'paid')
   })
 

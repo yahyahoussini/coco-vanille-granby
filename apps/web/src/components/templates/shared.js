@@ -1,5 +1,4 @@
 import { t, longDate } from '@/lib/i18n'
-import { factLabel } from '@/lib/facts'
 import { PAGES, pathFor } from '@/lib/routes'
 import { Fact } from '../site/Fact'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
@@ -24,11 +23,6 @@ export function categoryHref(c, locale, served) {
   const page = PAGES.find((p) => p.template === 'category' && p.category === c.productionCategory)
   if (!c?.slug || (served && !(page && served[locale]?.has(page.key)))) return null
   return `${prefixFor(locale)}/${c.slug}/`
-}
-
-export function Missing({ text }) {
-  if (!text) return null
-  return <p className="notice fact-needed" data-marker={text} data-nosnippet="">{factLabel(text)}</p>
 }
 
 // `served` (lib/publish.js): no « Commander » button while the order page is not published in that language.
@@ -92,16 +86,14 @@ export function PageHero({ doc, locale }) {
 }
 
 // Generic page-contract template: h1 → answer → hero picture → template content → sections → key facts → FAQ →
-// action → meta. The answer stays the first paragraph of <main>; a page's missing condition (staging) is flagged
-// right after it. Legal and utility pages (boilerplate) have no picture.
-export function ContentTemplate({ doc, locale, conditionNotice, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, className = '' }) {
+// action → meta. The answer stays the first paragraph of <main>. Legal and utility pages (boilerplate) have no picture.
+export function ContentTemplate({ doc, locale, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, className = '' }) {
   return (
     <article className={`wrap page ${className}`.trim()}>
       <header className="page-head">
         <Ornament name="vanilla" className="page-head-ornament" />
         <h1>{doc?.h1 || doc?.title ? <Unbroken text={doc?.h1 || doc?.title} /> : <Fact value={null} label="titre de la page" />}</h1>
         <AnswerBlock text={doc?.answer} />
-        <Missing text={conditionNotice} />
       </header>
       {!boilerplate && <PageHero doc={doc} locale={locale} />}
       {children}

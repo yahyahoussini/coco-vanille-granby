@@ -2,7 +2,7 @@
 // form that adds it to « Ma boîte » (works without JavaScript). Prices as text, taxes extra (07 C-9).
 // Grouped by family in the menu's order, so a long list stays scannable; on a phone each product is a compact row
 // (photo, name, price, readiness) with its size, quantity and « Ajouter » on one line below (ordering.css).
-import { money } from '@/lib/i18n'
+import { money, t } from '@/lib/i18n'
 import { productPath, CardMedia, familyOf } from '@/components/site/Products'
 import { AddToBoxForm, pricedVariants } from '@/components/catalogue/AddToBox'
 import { Icon } from '@/components/site/Icon'
@@ -41,7 +41,7 @@ function OrderRow({ product: p, state: st = {}, locale, boxToken, level }) {
         {variants.length > 0 && (
           <p className="price">
             {variants.length > 1 && <span className="price-from">{c.from} </span>}
-            <span className="price-amount">{money(Math.min(...variants.map((v) => v.priceCents)), locale)}</span> <span className="price-tax">({c.taxes})</span>
+            <span className="price-amount">{money(Math.min(...variants.map((v) => v.priceCents)), locale)}</span> <span className="price-tax">({p.priceEstimated ? `${t(locale).offer.indicative}, ${c.taxes}` : c.taxes})</span>
           </p>
         )}
         {st.label && <p className={`order-ready ${st.orderable ? 'is-ready' : 'is-blocked'}`}>{st.label}</p>}

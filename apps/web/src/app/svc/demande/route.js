@@ -2,6 +2,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { submitRequest } from '@/lib/ordering/requests'
 import { notifyRequestReceived } from '@/lib/messaging/notify'
+import { pushToTeam } from '@/lib/studio/push'
 import { orderPath, thanksPath, Q } from '@/lib/ordering/paths'
 import { setCookie, clearCookie, draftValue, seeOther } from '@/lib/ordering/cookies'
 import { allow, clientIp } from '@/lib/ordering/rate-limit'
@@ -38,5 +39,6 @@ export async function POST(request) {
   if (errors.length) return back(locale, { v: draftValues, e: errors.map(({ code, field }) => ({ code, field })) })
 
   await notifyRequestReceived(payload, saved).catch((e) => payload.logger.error({ err: e }, 'request_received not queued'))
+  await pushToTeam(payload, { title: 'Nouvelle demande de gâteau', body: `${saved.occasion}${saved.guests ? ` · ${saved.guests} personnes` : ''}`, url: '/demandes/', tag: `demande-${saved.id}` })
   return seeOther(`${thanksPath(locale)}?${Q.request}=${saved.accessToken}`, [clearCookie(DRAFT)])
 }

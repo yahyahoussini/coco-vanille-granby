@@ -4,7 +4,7 @@
 import { localParts, addDays, weekStart, zonedTime, shortDay } from './time.js'
 import { money } from './format.js'
 import { holidaySuggestions } from '../ordering/holidays.js'
-import { marker } from '../facts.js'
+import { toGive } from '../facts.js'
 
 const COUNTED = ['paid', 'ready', 'picked_up', 'not_picked_up']
 
@@ -38,14 +38,17 @@ export function fiveNumbers({ orders = [], prevOrders = [], requests = [], revie
 }
 
 // Owner cards (≤ 3): a missing fact that blocks something first, then what is due soonest (16 §4.4–§4.5).
-export function weekCards({ shop = {}, products = [], pools = [], now = new Date() }) {
+export function weekCards({ shop = {}, products = [], pools = [], now = new Date(), reserve = false }) {
   const today = localParts(now).iso
   const cards = []
-  if (!(shop.hours || []).length) cards.push({ key: 'hours', rank: 0, title: 'Confirmer les heures d’ouverture', why: `Le site affiche « à confirmer » et la commande en ligne attend : ${marker('heures d’ouverture')}`, href: '/boutique/#heures', action: 'Répondre' })
-  if (typeof shop.ordering?.depositPercent !== 'number') cards.push({ key: 'deposit', rank: 1, title: 'Fixer le pourcentage d’acompte', why: 'Sans lui, aucune soumission de gâteau ne peut partir.', href: '/plus/reglages/#reglages-boutique', action: 'Fixer' })
+  if (!(shop.hours || []).length) cards.push({ key: 'hours', rank: 0, title: 'Confirmer les heures d’ouverture', why: `Le site affiche « à confirmer » et la commande en ligne attend : ${toGive('heures d’ouverture')}`, href: '/boutique/#heures', action: 'Répondre' })
+  // A reservation is paid at pickup: no deposit to set.
+  if (!reserve && typeof shop.ordering?.depositPercent !== 'number') cards.push({ key: 'deposit', rank: 1, title: 'Fixer le pourcentage d’acompte', why: 'Sans lui, aucune soumission de gâteau ne peut partir.', href: '/plus/reglages/#reglages-boutique', action: 'Fixer' })
   const noPrice = products.filter((p) => p._status === 'published' && (p.variants || []).some((v) => !Number.isInteger(v.priceCents)))
   if (noPrice.length) cards.push({ key: 'price', rank: 2, title: `Valider le prix ${noPrice.length > 1 ? `de ${noPrice.length} produits` : `du ${noPrice[0].title}`}`, why: 'Un prix manquant reste « à confirmer » sur le site.', href: `/plus/produits/${noPrice.length === 1 ? `${noPrice[0].id}/` : ''}`, action: 'Valider' })
-  if (!pools.some((p) => typeof p.defaultPerDay === 'number')) cards.push({ key: 'capacity', rank: 3, title: 'Indiquer la capacité de production par jour', why: 'Sans capacité, rien ne se commande en ligne.', href: '/boutique/#capacite', action: 'Répondre' })
+  if (!pools.some((p) => typeof p.defaultPerDay === 'number')) cards.push({ key: 'capacity', rank: 3, title: 'Indiquer la capacité de production par jour', why: 'Sans capacité, rien ne se commande en ligne.', href: '/boutique/#reservation', action: 'Répondre' })
+  const estimated = products.filter((p) => p.priceEstimated)
+  if (estimated.length) cards.push({ key: 'estimated', rank: 2, title: `Vérifier le prix ${estimated.length > 1 ? `de ${estimated.length} produits` : `de ${estimated[0].title}`}`, why: 'Le site affiche « prix indicatif », et une réservation garde le prix affiché.', href: '/plus/produits/?vue=prix', action: 'Vérifier' })
   const holiday = holidaySuggestions(shop, { fromISO: today }).find((h) => h.date <= addDays(today, 30))
   if (holiday) cards.push({ key: `hol-${holiday.date}`, rank: 1, title: `Le ${shortDay(holiday.date)} approche : ouvert ou fermé?`, why: `${holiday.label} · à confirmer`, href: '/boutique/#jours-speciaux', action: 'Choisir' })
   return cards.sort((a, b) => a.rank - b.rank).slice(0, 3)

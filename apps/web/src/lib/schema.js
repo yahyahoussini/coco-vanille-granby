@@ -173,7 +173,8 @@ const DATED = ['https://schema.org/BackOrder', 'https://schema.org/PreOrder']
 export function productNode({ product, url, imageUrls = [], offer = null }) {
   const availability = offer?.schemaAvailability || AVAILABILITY[product.availability] || AVAILABILITY.instock
   const starts = offer ? (DATED.includes(availability) && offer.availabilityDate) || undefined : ['backorder', 'preorder'].includes(product.availability) ? product.availabilityDate : undefined
-  const offers = (product.variants || [])
+  // A price the owner has not checked yet stays on the page, marked « indicatif », and out of the structured data.
+  const offers = (product.priceEstimated ? [] : product.variants || [])
     .filter((v) => !isMissing(v.priceCents))
     .map((v) => ({
       '@type': 'Offer',

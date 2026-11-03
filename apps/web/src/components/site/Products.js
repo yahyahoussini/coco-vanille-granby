@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { t, money, longDate } from '@/lib/i18n'
-import { containsMarker, publishGuard, factLabel } from '@/lib/facts'
+import { containsMarker, publishGuard } from '@/lib/facts'
 import { productReady } from '@/lib/publish'
 import { mediaFile } from '@/lib/media'
 import { getOfferStates, getShop } from '@/lib/data'
@@ -70,16 +70,14 @@ export function CardMedia({ product, className = '', size = 'card', priority = f
   )
 }
 
-// The engine's availability line (« Prête dès … », « Épuisé », « De retour le … »); a missing fact stays a marker.
+// The engine's availability line (« Prête dès … », « Épuisé », « De retour le … »).
 export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
   const badge = offerBadge(state, { orderingEnabled })
   if (!badge || skip.includes(badge.tone)) return null
   return (
     <p className={`badge badge-${badge.tone}`} data-fact="availability">
       {containsMarker(badge.text) ? (
-        <span className="fact-needed" data-marker={badge.text} data-nosnippet="">
-          {factLabel(badge.text)}
-        </span>
+        <span className="fact-needed" data-marker={badge.text} data-nosnippet="" />
       ) : (
         badge.text
       )}
@@ -88,7 +86,8 @@ export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
 }
 
 // Price as text, before taxes: « 4,25 $ », « à partir de 38,00 $ » when there are several sizes.
-// `fromLabel` swaps the « à partir de » for a shorter word where room is tight (cards: « dès »).
+// `fromLabel` swaps the « à partir de » for a shorter word where room is tight (cards: « dès »). A price the owner has
+// not checked yet says « prix indicatif » (Studio › Produits).
 export function PriceLine({ product, locale, className = 'price', fromLabel, ...attributes }) {
   const s = t(locale)
   const from = fromPriceCents(product)
@@ -98,7 +97,7 @@ export function PriceLine({ product, locale, className = 'price', fromLabel, ...
       {from !== null ? (
         <>
           {several && <span className="price-from">{fromLabel || s.priceFrom} </span>}
-          <span className="price-amount">{money(from, locale)}</span> <span className="price-tax">({s.taxesExtra})</span>
+          <span className="price-amount">{money(from, locale)}</span> <span className="price-tax">({product.priceEstimated ? `${s.offer.indicative}, ${s.taxesExtra}` : s.taxesExtra})</span>
         </>
       ) : product.priceOnRequest ? (
         <span className="price-request">{s.offer.priceOnRequest}</span>
@@ -191,7 +190,7 @@ export async function ProductGrid({ products: all, locale, showPlanned, level, l
 // beside it and the other cells show their column name (data-label). Several products (showProduct: prices,
 // calculator) become one compact row per size, the numbers followed by their unit (data-unit, shown for the eye only).
 // The explicit table roles keep it a table for screen readers once the stylesheet changes how the rows are displayed.
-export function SizesTable({ variants = [], locale, caption, showProduct, rows }) {
+export function SizesTable({ variants = [], locale, caption, showProduct, rows, estimated = false }) {
   const s = t(locale)
   const o = s.offer
   const k = catalogueCopy(locale)
@@ -248,7 +247,7 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows }
                 <td role="cell" className="sizes-num sizes-price-cell" data-label={o.price}>
                   {price ? (
                     <>
-                      <strong className="sizes-price">{price}</strong> <span className="sizes-tax">({s.taxesExtra})</span>
+                      <strong className="sizes-price">{price}</strong> <span className="sizes-tax">({estimated || product?.priceEstimated ? `${o.indicative}, ${s.taxesExtra}` : s.taxesExtra})</span>
                     </>
                   ) : product?.priceOnRequest ? (
                     <span className="sizes-on-request">{o.onRequest}</span>
@@ -270,7 +269,7 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows }
   )
 }
 
-// Verified allergens only (G3: checked by a person, never by AI). Unverified → one marker, no list.
+// Verified allergens only (G3: checked by a person, never by AI). Unverified: no list, the customer asks the shop.
 export function AllergenBlock({ product, business, locale, headingId = 'product-allergens' }) {
   const s = t(locale)
   const o = s.offer
@@ -300,9 +299,7 @@ export function AllergenBlock({ product, business, locale, headingId = 'product-
           </p>
         </>
       ) : (
-        <p>
-          <Fact value={null} label="allergènes vérifiés par une personne" />
-        </p>
+        <p>{o.allergensAsk}</p>
       )}
       {business?.phoneDisplay && (
         <p className="info-card-note">

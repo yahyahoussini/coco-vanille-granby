@@ -4,6 +4,8 @@ import { DEVICE_LABELS } from '@/lib/studio/audit'
 import { ActionForm } from '@/components/studio/ActionForm'
 import { Flash } from '@/components/studio/Flash'
 import { ShopSettings } from '@/components/studio/settings/ShopSettings'
+import { PushToggle } from '@/components/studio/PushToggle'
+import { vapidKeys } from '@/lib/studio/push'
 import { PasskeySettings } from '@/components/studio/settings/PasskeySettings'
 
 export const metadata = { title: 'Réglages · Coco Studio' }
@@ -29,6 +31,16 @@ export default async function Reglages({ searchParams }) {
         <h1>Réglages</h1>
       </div>
       <Flash ctx={ctx} searchParams={searchParams} back={BACK} />
+
+      {ctx.can('push.subscribe') && (
+        <section aria-labelledby="alertes" id="alertes-section">
+          <h2 id="alertes">Alertes de commandes</h2>
+          <div className="card">
+            <p>Une notification sur ce téléphone, cette tablette ou cet ordinateur à chaque réservation et à chaque demande de gâteau, même quand Studio est fermé.</p>
+            <PushToggle publicKey={vapidKeys()?.publicKey || null} />
+          </div>
+        </section>
+      )}
 
       <section aria-labelledby="moi">
         <h2 id="moi">Vous et cet appareil</h2>

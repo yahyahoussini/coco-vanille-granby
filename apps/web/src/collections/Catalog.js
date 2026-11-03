@@ -104,6 +104,9 @@ export const Products = {
         { name: 'packCount', type: 'number', min: 1, admin: { description: 'Portions individuelles par boîte (vide = à l’unité).' } },
       ],
     },
+    // An approximate price the owner has not checked yet (lib/seed): the site says « prix indicatif » and keeps it out of
+    // the structured data; « Ces prix sont les bons » in Studio takes the mention off.
+    { name: 'priceEstimated', type: 'checkbox', defaultValue: false, label: 'Prix à vérifier', access: moneyPG, admin: { description: 'Le site affiche « prix indicatif » tant que la case est cochée.' } },
     // Sur mesure: the shop quotes each cake. A size with a price always wins over this.
     { name: 'priceOnRequest', type: 'checkbox', defaultValue: false, label: 'Prix sur demande', access: moneyPG, admin: { description: 'La fiche dit « Prix sur demande » tant qu’aucun format n’a de prix.' } },
     { name: 'allergens', type: 'relationship', relationTo: 'allergens', hasMany: true, access: moneyPG },

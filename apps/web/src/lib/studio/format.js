@@ -20,7 +20,8 @@ export function parseMoney(text) {
 
 export const STATUS = {
   pending_payment: { label: 'Paiement en cours', tone: 'warn', icon: '◷' },
-  paid: { label: 'Payée', tone: 'info', icon: '●' },
+  // A confirmed order, paid or not yet: the payment line of the card says which.
+  paid: { label: 'Confirmée', tone: 'info', icon: '●' },
   ready: { label: 'Prête', tone: 'ok', icon: '✓' },
   picked_up: { label: 'Récupérée', tone: 'done', icon: '✓' },
   not_picked_up: { label: 'Non récupérée', tone: 'bad', icon: '!' },
@@ -36,7 +37,7 @@ export function paymentLine(order) {
   const t = order?.totals || {}
   if (p.status === 'refunded' || order?.status === 'refunded') return 'Remboursée'
   if (p.kind === 'deposit') return t.balanceCents > 0 ? `Acompte payé · solde ${money(t.balanceCents)} au comptoir` : 'Acompte et solde payés'
-  if (p.provider === 'counter') return t.balanceCents > 0 ? `À payer au comptoir · ${money(t.balanceCents)}` : `Payée au comptoir · ${money(t.totalCents)}`
+  if (p.provider === 'counter') return t.balanceCents > 0 ? `À payer à la cueillette · ${money(t.balanceCents)}` : `Payée au comptoir · ${money(t.totalCents)}`
   if (p.status === 'paid') return `Payée en ligne · ${money(t.totalCents)}`
   if (p.status === 'failed') return 'Paiement refusé'
   return 'Paiement en attente'

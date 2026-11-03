@@ -4,8 +4,10 @@ import { studioPage } from '@/lib/studio/guard'
 import { capacityOn } from '@/lib/ordering'
 import { shortDay, longDay, dayOf } from '@/lib/studio/time'
 import { customerName, whenFr } from '@/lib/studio/format'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
 import { ActionForm } from '@/components/studio/ActionForm'
+import { paymentProvider } from '@/lib/payments/provider'
+import { phoneDisplay } from '@/lib/ordering/customer'
 import { QuotePreview } from '@/components/studio/QuotePreview'
 import { Flash } from '@/components/studio/Flash'
 
@@ -13,6 +15,7 @@ export const metadata = { title: 'Chiffrer une demande · Coco Studio' }
 
 // « Chiffrer » (16 §3.4, F6): total before taxes → deposit and balance → recap → « Envoyer le lien d'acompte ».
 // The deposit % has no default until the owner sets it (10 §1.2); the tax class comes from the accountant.
+// While nothing is paid online: call the customer, then the price agreed makes the order, paid at pickup.
 export default async function Chiffrer({ params, searchParams }) {
   const ctx = await studioPage('demandes')
   const { id } = await params
@@ -29,6 +32,74 @@ export default async function Chiffrer({ params, searchParams }) {
   const formId = `chiffrer-${r.id}`
   const photo = (r.photos || []).find((p) => p && typeof p === 'object')
   const validUntil = typeof hours === 'number' ? new Date(now.getTime() + hours * 3600000) : null
+
+  if (paymentProvider() === 'counter') {
+    return (
+      <>
+        <p>
+          <Link href="/demandes/">‹ Demandes</Link>
+        </p>
+        <div className="st-head">
+          <h1>Confirmer le prix</h1>
+          <span className="st-date">
+            {r.occasion}
+            {r.guests ? ` · ${r.guests} pers.` : ''} · {shortDay(day)}
+          </span>
+        </div>
+        <Flash ctx={ctx} searchParams={searchParams} back={back} />
+        {r.status !== 'new' && <p className="error-summary">Cette demande n’attend plus de prix (statut : {r.status}).</p>}
+        {full && <p className="st-banner" data-tone="warn">Le {shortDay(day)} est complet ({cap.used}/{cap.limit}).</p>}
+        <div className="card">
+          <p>
+            <strong>1. Appelez {customerName(r.customer)}</strong> et convenez du prix, du décor et de l’heure de cueillette.
+          </p>
+          {r.customer?.phone && (
+            <p>
+              <a className="btn" href={`tel:${r.customer.phone}`}>
+                Appeler · {phoneDisplay(r.customer.phone)}
+              </a>
+            </p>
+          )}
+          {r.flavour && <p className="meta">Saveur : {r.flavour}</p>}
+          {r.cakeMessage && <p className="meta">Message : « {r.cakeMessage} »</p>}
+          {r.details && <p className="meta">{r.details}</p>}
+        </div>
+        <ActionForm type="request.confirm" fields={{ requestId: r.id }} back={back} needsNetwork pending="Création de la commande…" className="card">
+          <p>
+            <strong>2. Le client est d’accord : créez la commande.</strong> Elle s’ajoute aux commandes du {shortDay(day)}, à payer à la cueillette.
+          </p>
+          <div className="field">
+            <label htmlFor="price">Prix convenu, avant taxes</label>
+            <input id="price" name="price" type="text" inputMode="decimal" autoComplete="off" placeholder="ex. 120" required />
+            <span className="hint">À titre de repère : un gâteau décoré de 6 po est à 65 $, de 8 po à 85 $, de 10 po à 125 $ (voir Produits).</span>
+          </div>
+          <fieldset className="field">
+            <legend>Taxes</legend>
+            <div className="choices">
+              {[
+                ['zero', 'Détaxé (gâteau entier)'],
+                ['taxable', 'Taxable (TPS + TVQ)'],
+              ].map(([v, l], i) => (
+                <label className="choice" key={v}>
+                  <input type="radio" name="taxClass" value={v} defaultChecked={i === 0} required />
+                  <span>{l}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          {full && ctx.user.role === 'proprietaire' && (
+            <label className="check">
+              <input type="checkbox" name="force" value="true" />
+              <span>Créer quand même (journée complète)</span>
+            </label>
+          )}
+          <button className="btn btn-primary" type="submit" disabled={r.status !== 'new'}>
+            Créer la commande
+          </button>
+        </ActionForm>
+      </>
+    )
+  }
 
   return (
     <>
@@ -51,7 +122,7 @@ export default async function Chiffrer({ params, searchParams }) {
           <div className="field">
             <label htmlFor="price">Prix total, avant taxes</label>
             <input id="price" name="price" type="text" inputMode="decimal" autoComplete="off" placeholder="ex. 120" required />
-            <span className="hint">Grille de prix : {marker('grille de prix des gâteaux sur demande')}</span>
+            <span className="hint">Grille de prix : {toGive('grille de prix des gâteaux sur demande')}</span>
           </div>
           <fieldset className="field">
             <legend>Taxes (selon le comptable)</legend>
@@ -71,11 +142,11 @@ export default async function Chiffrer({ params, searchParams }) {
             <QuotePreview formId={formId} percent={pct} supplyDate={day} initialTax={['zero', 'taxable'].includes(r.quote?.taxClass) ? r.quote.taxClass : null} />
           ) : (
             <p className="error-summary">
-              Pourcentage d’acompte : {marker('pourcentage d’acompte')} ·{' '}
+              Pourcentage d’acompte : {toGive('pourcentage d’acompte')} ·{' '}
               {ctx.user.role === 'proprietaire' ? <Link href="/plus/reglages/#reglages-boutique">le régler dans Réglages</Link> : 'la propriétaire le règle dans Réglages'}
             </p>
           )}
-          <p className="meta">Valide jusqu’au {validUntil ? whenFr(validUntil, now) : marker('durée de validité des soumissions')} · la place du {shortDay(day)} est réservée en attendant.</p>
+          <p className="meta">Valide jusqu’au {validUntil ? whenFr(validUntil, now) : toGive('durée de validité des soumissions')} · la place du {shortDay(day)} est réservée en attendant.</p>
           {full && ctx.user.role === 'proprietaire' && (
             <label className="check">
               <input type="checkbox" name="force" value="true" />

@@ -3,13 +3,13 @@
 // (dynamic routes in src/app/(site-*)/…); client components only enhance (message preview, copy link, Stripe).
 import '@/styles/ordering.css'
 import { notFound } from 'next/navigation'
-import { marker } from '@/lib/facts'
 import { money, clock, keepTogether } from '@/lib/i18n'
 import { payloadClient, getProducts } from '@/lib/data'
 import { dayOf, localParts } from '@/lib/studio/time'
 import { offerStates } from '@/lib/ordering/create-order'
 import { longDayLabel, windowLabel } from '@/lib/ordering/labels'
 import { senderFacts } from '@/lib/messaging/templates'
+import { liveChannels } from '@/lib/messaging/senders'
 import { totalsRows } from '@/lib/ordering/totals'
 import { termsPath, Q } from '@/lib/ordering/paths'
 import { AnswerBlock, Sections, Faq, MetaLine, Unbroken } from '../site/Contract'
@@ -38,7 +38,7 @@ async function OrderTemplate({ locale, business, shop, doc }) {
   }
   return (
     <article className="wrap page ordering order">
-      <h1>{doc?.h1 ? <Unbroken text={doc.h1} /> : marker('titre de la page')}</h1>
+      <h1><Unbroken text={doc?.h1 || orderingCopy(locale).request.title} /></h1>
       <AnswerBlock text={doc?.answer} />
       <PageHero doc={doc} locale={locale} />
       {enabled && <ProductOrderList locale={locale} products={products} states={states} shop={shop} boxToken={ctx.boxToken} boxItems={ctx.boxItems} />}
@@ -116,6 +116,8 @@ function OrderThanks({ order, locale, business }) {
   const maps = mapsLinks(business)
   const paid = ['paid', 'ready', 'picked_up'].includes(order.status)
   const cancelled = ['cancelled', 'refunded'].includes(order.status)
+  // Booked with nothing paid yet: the amount due at the counter (a reservation, a price agreed by phone).
+  const dueAtCounter = paid && order.payment?.provider === 'counter' && order.totals?.balanceCents > 0
   const day = dayOf(order.pickupDate)
   const tbd = { fr: 'heure à convenir avec la boutique', en: 'time to be agreed with the shop', es: 'hora por acordar con la tienda' }[locale] || 'heure à convenir avec la boutique'
   const when = `${longDayLabel(day, locale)}, ${order.pickupWindowStart ? windowLabel(order.pickupWindowStart, order.pickupWindowEnd || order.pickupWindowStart, locale) : tbd}`
@@ -135,6 +137,7 @@ function OrderThanks({ order, locale, business }) {
           <AutoRefresh />
         </div>
       )}
+      {dueAtCounter && t.reserved && <p className="answer thanks-reserved">{t.reserved(money(order.totals.balanceCents, locale))}</p>}
       {paid && (
         <div className="thanks-layout">
           <div className="pickup-code" role="group" aria-labelledby="code-title">
@@ -190,7 +193,8 @@ function OrderThanks({ order, locale, business }) {
               </p>
             </section>
           </div>
-          {order.customer?.email && (
+          {dueAtCounter && t.keep && <p className="thanks-keep">{t.keep}</p>}
+          {order.customer?.email && liveChannels().email && (
             <p className="thanks-emailed">
               <Icon name="mail" size={18} />
               {t.emailed(order.customer.email)}

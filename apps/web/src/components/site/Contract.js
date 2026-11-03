@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { factLabel } from '@/lib/facts'
 import { t, longDate } from '@/lib/i18n'
 import { Icon } from './Icon'
 import { ReadMore } from './ReadMore'
@@ -27,16 +26,13 @@ export function Breadcrumb({ crumbs }) {
 // (« Heures : », « … ») never break across two lines. The text stays byte-identical; only nowrap spans are added.
 const KEEP = /(\d{3}-\d{3}-\d{4}|\b\d{1,2} h(?: \d{2})?(?!\p{L})|\b\d{1,2}(?::\d{2})? [ap]\.m\.|\b[A-Z]\d[A-Z] \d[A-Z]\d\b|« \S+|\S+(?: [:;!?»])+(?=\s|$))/u
 
-// A fact the owner has not given yet, inside the copy (PUBLISH_GUARD=show; strict never serves one): the same badge
-// as the template markers (Fact.js), so the client sees at a glance what is missing. The marker stays in data-marker,
-// so the gate still counts it, and it stays out of search snippets.
+// A fact with no answer at all, inside the copy: the same plain words as the template markers (Fact.js). The marker
+// stays in data-marker, so the gate still counts it, and it stays out of search snippets.
 const SLOT = /(\[\[FACT NEEDED: [^\]]+\]\])/
 const withSlots = (text, render) =>
   text.split(SLOT).map((part, i) =>
     i % 2 ? (
-      <span key={i} className="fact-needed" data-marker={part} data-nosnippet="">
-        {factLabel(part)}
-      </span>
+      <span key={i} className="fact-needed" data-marker={part} data-nosnippet="" />
     ) : (
       render(part, i)
     ),

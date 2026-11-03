@@ -58,7 +58,7 @@ if grep -q '^LIVE_COLOR=.' /opt/coco/production/state.env 2>/dev/null; then
   step "Database tasks skipped: the site is live, what was typed in Studio stays (deploy.sh migrates)"
 else
   step "Database: migrations, verified seed, the shop's products, the Journal"
-  for task in migrate seed seed:catalogue seed:journal; do
+  for task in migrate seed seed:catalogue seed:launch seed:journal; do
     echo "--- $task"
     as_coco "bash '$release/scripts/run-task.sh' production '$task' --tag '$sha'" 2>&1 | grep -vE 'Pulling schema' | tail -8
   done

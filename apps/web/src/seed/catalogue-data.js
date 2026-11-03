@@ -1,23 +1,36 @@
 // The shop's cakes, from the owner's own photos (nimages/ → cut out and cleaned → src/seed/client-photos/, 2026-11-02).
-// Each description says only what the photo shows: no price, servings, lead time, recipe or allergen here. The names are
-// read from the pictures and await the owner's confirmation (docs/21 block 5). Customers' names written on the cakes were
+// Each description says only what the photo shows: no recipe or allergen here; formats and prices are in seed/launch-data.js.
+// The names are read from the pictures and the owner can change them in Studio › Produits. Customers' names written on the cakes were
 // taken off the photos (Loi 25); cakes showing a licensed character (Lego, Sonic) were left out.
 
+// The sentences the seed wrote when prices were not set yet: seed/launch.js replaces them in a description nobody edited.
+const OLD = {
+  CAKE: { fr: 'Un gâteau sur commande de la Pâtisserie Coco Vanille, à Granby : le format, le décor et le prix se confirment avec la boutique, par téléphone ou au comptoir.', en: 'A made-to-order cake from Pâtisserie Coco Vanille in Granby: size, decoration and price are confirmed with the shop, by phone or at the counter.' },
+  LOG: { fr: 'Une bûche sur commande de la Pâtisserie Coco Vanille, à Granby : le format, le décor et le prix se confirment avec la boutique, par téléphone ou au comptoir.', en: 'A made-to-order Yule log from Pâtisserie Coco Vanille in Granby: size, decoration and price are confirmed with the shop, by phone or at the counter.' },
+  BOUQUET: { fr: 'Un bouquet sur commande de la Pâtisserie Coco Vanille, à Granby : le format, les couleurs et le prix se confirment avec la boutique, par téléphone ou au comptoir.', en: 'A made-to-order bouquet from Pâtisserie Coco Vanille in Granby: size, colours and price are confirmed with the shop, by phone or at the counter.' },
+  SHOP: { fr: 'En vente à la Pâtisserie Coco Vanille, à Granby : le prix et la disponibilité du jour se confirment avec la boutique, par téléphone ou au comptoir.', en: 'Sold at Pâtisserie Coco Vanille in Granby: the price and what is available today are confirmed with the shop, by phone or at the counter.' },
+}
+export const OLD_TAILS = Object.values(OLD)
+
 const CAKE = {
-  fr: 'Un gâteau sur commande de la Pâtisserie Coco Vanille, à Granby : le format, le décor et le prix se confirment avec la boutique, par téléphone ou au comptoir.',
-  en: 'A made-to-order cake from Pâtisserie Coco Vanille in Granby: size, decoration and price are confirmed with the shop, by phone or at the counter.',
+  fr: 'Un gâteau sur commande de la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou par téléphone et à récupérer au 3, rue Court.',
+  en: 'A made-to-order cake from Pâtisserie Coco Vanille in Granby, to reserve online or by phone and pick up at 3 rue Court.',
+  old: OLD.CAKE.fr,
 }
 const LOG = {
-  fr: 'Une bûche sur commande de la Pâtisserie Coco Vanille, à Granby : le format, le décor et le prix se confirment avec la boutique, par téléphone ou au comptoir.',
-  en: 'A made-to-order Yule log from Pâtisserie Coco Vanille in Granby: size, decoration and price are confirmed with the shop, by phone or at the counter.',
+  fr: 'Une bûche à précommander à la Pâtisserie Coco Vanille, à Granby, à récupérer au 3, rue Court.',
+  en: 'A Yule log to pre-order from Pâtisserie Coco Vanille in Granby, to pick up at 3 rue Court.',
+  old: OLD.LOG.fr,
 }
 const BOUQUET = {
-  fr: 'Un bouquet sur commande de la Pâtisserie Coco Vanille, à Granby : le format, les couleurs et le prix se confirment avec la boutique, par téléphone ou au comptoir.',
-  en: 'A made-to-order bouquet from Pâtisserie Coco Vanille in Granby: size, colours and price are confirmed with the shop, by phone or at the counter.',
+  fr: 'Un bouquet sur commande de la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou par téléphone et à récupérer au 3, rue Court.',
+  en: 'A made-to-order bouquet from Pâtisserie Coco Vanille in Granby, to reserve online or by phone and pick up at 3 rue Court.',
+  old: OLD.BOUQUET.fr,
 }
 const SHOP = {
-  fr: 'En vente à la Pâtisserie Coco Vanille, à Granby : le prix et la disponibilité du jour se confirment avec la boutique, par téléphone ou au comptoir.',
-  en: 'Sold at Pâtisserie Coco Vanille in Granby: the price and what is available today are confirmed with the shop, by phone or at the counter.',
+  fr: 'À la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou à prendre au comptoir du 3, rue Court.',
+  en: 'At Pâtisserie Coco Vanille in Granby, to reserve online or pick up at the counter, 3 rue Court.',
+  old: OLD.SHOP.fr,
 }
 
 // title (its French slug is the product's key: never rename one that is live) · en · family · photos (file names in

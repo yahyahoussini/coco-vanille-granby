@@ -1,4 +1,5 @@
-// The facts only the shop can give, as the owner answers them in Studio › Plus › « Faits du site » (16 §2.1).
+// The facts only the shop can give, as the owner checks or answers them in Studio › Plus › « Faits du site » (16 §2.1).
+// Each starts with a proposal from the agency (lib/facts-proposals.js).
 // The page copy (src/seed/content.js) keeps a [[FACT NEEDED: label]] slot for each; an answer saved in Studio
 // (collection site-facts) fills every slot of its fact, in its language, wherever it appears (lib/facts.js
 // resolveFacts). One fact can fill several labels that ask the same thing on different pages.
@@ -73,7 +74,7 @@ export const FACTS = [
   { id: 'lendemain-message', group: 'delais', q: 'Un message écrit est-il possible sur un gâteau pour le lendemain?', fr: ['message possible sur un gâteau pour le lendemain'], en: ['message possible on a next-day cake'] },
   { id: 'lendemain-perso', group: 'delais', q: 'Une personnalisation est-elle possible pour le lendemain?', fr: ['personnalisation possible pour le lendemain ou non'], en: ['next-day customization possible or not'] },
   { id: 'delais-produits', group: 'delais', q: 'Les délais par produit et l’heure limite de commande', fr: ['délais par produit et heure limite de commande'], en: ['lead time per product and order cut-off time'] },
-  { id: 'modif-acompte', group: 'delais', q: 'Jusqu’à quand le client peut-il modifier sa commande après l’acompte?', fr: ['délai de modification après l’acompte'], en: ['deadline for changes after the deposit'] },
+  { id: 'modif-acompte', group: 'delais', q: 'Jusqu’à quand le client peut-il modifier sa commande?', fr: ['délai de modification après l’acompte'], en: ['deadline for changes after the deposit'] },
   { id: 'reponse-demandes', group: 'delais', q: 'En combien de temps répondez-vous à une demande de gâteau?', hint: 'ex. dans les 2 jours ouvrables', fr: ['délai de réponse aux demandes'], en: ['response time for requests'] },
   { id: 'boites-groupes', group: 'delais', q: 'Boîtes de viennoiseries pour un groupe : quantité minimale et délai', fr: ['boîtes de viennoiseries pour groupes offertes ou non, quantité minimale et délai'], en: ['group viennoiserie boxes offered or not, minimum quantity and lead time'] },
   { id: 'pain-quantite', group: 'delais', q: 'Commandes de pain en quantité : minimum et délai', fr: ['commandes de pain en quantité, minimum et délai'], en: ['bulk bread orders, minimum and lead time'] },

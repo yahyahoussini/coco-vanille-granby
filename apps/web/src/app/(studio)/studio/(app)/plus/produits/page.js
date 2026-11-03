@@ -1,21 +1,34 @@
 import Link from 'next/link'
-import { studioPage } from '@/lib/studio/guard'
+import { studioPage, firstParam } from '@/lib/studio/guard'
 import { money } from '@/lib/studio/format'
 import { shortDay, localParts } from '@/lib/studio/time'
 import { effectiveAvailability } from '@/lib/ordering/lines'
-import { marker } from '@/lib/facts'
+import { toGive } from '@/lib/facts'
 
 export const metadata = { title: 'Produits · Coco Studio' }
 
-const TAX = { pending: 'Taxe à confirmer (comptable)', zero: 'Détaxé', taxable: 'Taxable', rule: 'Règle des produits de boulangerie' }
+const TAX = { pending: 'Taxe à choisir', zero: 'Détaxé', taxable: 'Taxable', rule: 'Règle des produits de boulangerie' }
 const AVAIL = { instock: ['En vente', 'ok'], soldout: ['Épuisé', 'bad'], backorder: ['Saisonnier (de retour)', 'warn'], preorder: ['Nouveau (précommande)', 'warn'], discontinued: ['Retiré', 'bad'] }
+const FAMILY = { gateaux: 'Gâteaux', viennoiseries: 'Viennoiseries', pains: 'Pains', patisseries: 'Pâtisseries', traiteur: 'Traiteur' }
 
-// Plus › Produits (16 §8.1): prices, allergen verification, tax class. Facts missing stay visible markers.
-export default async function Produits() {
+const VIEWS = {
+  tout: ['Tous', () => true],
+  prix: ['Prix à vérifier', (p) => p.priceEstimated],
+  allergenes: ['Allergènes à cocher', (p) => !p.allergensVerified?.at && p.availability !== 'discontinued'],
+  retires: ['Retirés', (p) => p.availability === 'discontinued'],
+}
+
+// Plus › Produits (16 §8.1): the shop's list. Each product opens its formats and prices, words, photos, allergens and tax;
+// the two views the owner works through after the launch: prices to check, allergens to tick.
+export default async function Produits({ searchParams }) {
   const ctx = await studioPage('produits')
   const now = new Date()
+  const sp = (await searchParams) || {}
+  const view = VIEWS[firstParam(sp.vue)] ? firstParam(sp.vue) : 'tout'
   const shop = await ctx.payload.findGlobal({ slug: 'shop', locale: 'fr', depth: 0, ...ctx.as })
-  const res = await ctx.payload.find({ collection: 'products', sort: 'title', limit: 200, depth: 0, locale: 'fr', ...ctx.as })
+  const res = await ctx.payload.find({ collection: 'products', sort: 'title', limit: 300, depth: 0, locale: 'fr', ...ctx.as })
+  const count = (key) => res.docs.filter(VIEWS[key][1]).length
+  const shown = res.docs.filter(VIEWS[view][1])
   return (
     <>
       <p>
@@ -23,8 +36,21 @@ export default async function Produits() {
       </p>
       <div className="st-head">
         <h1>Produits</h1>
+        {ctx.can('product.create') && (
+          <Link className="btn btn-primary" href="/plus/produits/nouveau/">
+            Ajouter un produit
+          </Link>
+        )}
       </div>
-      {res.docs.map((p) => {
+      <nav className="btn-row" aria-label="Filtrer les produits" style={{ marginBlockEnd: '0.75rem' }}>
+        {Object.entries(VIEWS).map(([key, [label]]) => (
+          <Link key={key} className="btn" href={key === 'tout' ? '/plus/produits/' : `/plus/produits/?vue=${key}`} aria-current={view === key ? 'page' : undefined}>
+            {label} ({count(key)})
+          </Link>
+        ))}
+      </nav>
+      {!shown.length && <p className="card empty">Rien à faire ici.</p>}
+      {shown.map((p) => {
         const [label, tone] = AVAIL[effectiveAvailability(p, shop, now)] || [p.availability, undefined]
         const verified = p.allergensVerified?.at
         return (
@@ -35,15 +61,21 @@ export default async function Produits() {
                 {label}
               </span>
             </div>
-            <p className="meta">{(p.variants || []).map((v) => `${v.label} : ${Number.isInteger(v.priceCents) ? money(v.priceCents) : marker('prix')}`).join(' · ')}</p>
+            <p className="meta">{(p.variants || []).map((v) => `${v.label} : ${Number.isInteger(v.priceCents) ? money(v.priceCents) : toGive('prix')}`).join(' · ')}</p>
             <p className="meta">
-              {verified ? `Allergènes vérifiés le ${shortDay(localParts(verified).iso)}` : 'Allergènes à vérifier'} · {TAX[p.taxClass] || p.taxClass}
+              {FAMILY[p.productionCategory] || p.productionCategory} · {verified ? `Allergènes vérifiés le ${shortDay(localParts(verified).iso)}` : 'Allergènes à cocher'} · {TAX[p.taxClass] || p.taxClass}
               {p._status !== 'published' ? ' · brouillon' : ''}
             </p>
+            {p.priceEstimated && (
+              <p>
+                <span className="tag" data-tone="warn">
+                  Prix à vérifier
+                </span>
+              </p>
+            )}
           </Link>
         )
       })}
-      <p className="meta">Ajouter un produit ou modifier ses textes : « Avancé ».</p>
     </>
   )
 }

@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 const POLL_MS = 30 * 1000
+// Requests and site messages have no event of their own: an open screen also re-reads the database every 2 minutes.
+const REFRESH_MS = 2 * 60 * 1000
 
 // Two short tones on the shop tablet for a new order (16 §6.1); browsers allow it after the first tap.
 function beep() {
@@ -59,6 +61,7 @@ export function LiveRefresh({ sound = false }) {
         startPolling()
       })
     } else startPolling()
+    const steady = setInterval(refresh, REFRESH_MS)
     const onVisible = () => {
       if (document.visibilityState === 'visible' && Date.now() - last.current > POLL_MS) refresh()
     }
@@ -66,6 +69,7 @@ export function LiveRefresh({ sound = false }) {
     return () => {
       source?.close()
       clearInterval(poll)
+      clearInterval(steady)
       document.removeEventListener('visibilitychange', onVisible)
     }
   }, [router, sound])

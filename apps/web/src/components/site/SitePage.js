@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { PAGES, resolvePath, pathFor, isIndexable, SITE_ORIGIN, LOCALES, HTML_LANG, localeEnabled, pageByKey } from '@/lib/routes'
 import { getBusiness, getShop, getPageDoc, getProductBySlugs, getOfferStates, getServed, getServedPosts, getPostBySlug, payloadClient } from '@/lib/data'
-import { containsMarker, publishGuard, marker } from '@/lib/facts'
+import { containsMarker, publishGuard } from '@/lib/facts'
 import { readyCopy, servedAlternates, productServed, productReady } from '@/lib/publish'
 import { journalRoute, paginate, postAlternates, isoWithOffset, dateModifiedOf, CATEGORY_LABELS, PAGE_SIZE } from '@/lib/journal'
 import { mediaUrl } from '@/lib/media'
@@ -189,12 +189,14 @@ export async function SitePage({ locale, segments = [], query }) {
     const { page } = hit
     pageKey = page.key
     doc = await getPageDoc(page.key, locale)
-    // Strict: the Journal index also needs a served post in its language (lib/journal.js withJournal).
+    // Strict: the Journal index also needs a served post in its language (lib/journal.js withJournal). In any mode, a
+    // conditional page with a fact still missing (the chef's page) does not exist (lib/publish.js).
     if (strict && (!readyCopy(doc) || (page.key === 'journal' && !served[locale]?.has('journal')))) notFound()
+    if (page.status === 'conditional' && !served[locale]?.has(page.key)) notFound()
     // A list page past the last one (/journal/page/9/) does not exist.
     if (page.key === 'journal' && !paginate(posts[locale] || [], hit.listPage)) notFound()
     Template = TEMPLATES[page.template] || TEMPLATES.content
-    props = { ...props, page, doc, listPage: hit.listPage, conditionNotice: page.status === 'conditional' && (!doc || containsMarker(doc)) ? marker(page.condition) : null }
+    props = { ...props, page, doc, listPage: hit.listPage }
     pageName = doc?.h1 || doc?.title
     crumbs = crumbsFor(page.key, locale, doc?.h1, strict ? served[locale] : null)
   }

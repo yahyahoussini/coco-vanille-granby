@@ -4,8 +4,8 @@
 # only the host names and the options below are rewritten.
 #   bash infra/scripts/make-env.sh production --public-host cocovanille.<ip-with-dashes>.sslip.io \
 #     --admin-host admin-cocovanille.<ip-with-dashes>.sslip.io [--guard strict|show] [--image coco-vanille-web] [--port-base 3000]
-# Messages stay in the container log (EMAIL_PROVIDER=log, SMS_PROVIDER=log) and no payment is taken
-# (PAYMENT_PROVIDER=none) until the owner's Amazon SES, Twilio and Stripe accounts exist (docs/13).
+# Messages stay in the container log (EMAIL_PROVIDER=log, SMS_PROVIDER=log) and no payment is taken online
+# (PAYMENT_PROVIDER=counter: a reservation, paid at pickup) until the owner's Amazon SES, Twilio and Stripe accounts exist (docs/13).
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -92,7 +92,7 @@ if [ -n "$port_base" ]; then
 fi
 set_kv SEED_DEMO false
 set_kv SEED_DEV_USER false
-set_kv PAYMENT_PROVIDER none
+set_kv PAYMENT_PROVIDER counter
 set_kv PAYMENT_MOCK off
 set_kv EMAIL_PROVIDER log
 set_kv SMS_PROVIDER log

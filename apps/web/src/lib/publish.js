@@ -1,5 +1,6 @@
 // Which registry pages the public site serves, per language (zero-invention rule, src/lib/facts.js).
-//   show (CI, staging): every registry page renders; markers show; noindex while copy or facts are missing.
+//   show (live now): every registry page renders, noindex while copy or facts are missing; a conditional page with a
+//   fact still missing (the chef's page) is not served at all.
 //   strict (production): a page answers only with its copy in that language and no [[FACT NEEDED]] marker.
 // SitePage, hreflang, the sitemap and every internal link (footer, home, related pages) use this one rule,
 // so production never links to a page it hides. Pure module (relative imports) for node --test.
@@ -11,7 +12,7 @@ export const hasCopy = (doc) => Boolean(doc && typeof doc.title === 'string' && 
 // Copy in this language, nothing missing: may be indexed.
 export const readyCopy = (doc) => hasCopy(doc) && !containsMarker(doc)
 
-export const served = (doc, { strict = false } = {}) => !strict || readyCopy(doc)
+export const served = (doc, { strict = false, conditional = false } = {}) => (strict ? readyCopy(doc) : !conditional || !containsMarker(doc))
 
 // docs: page docs read in `locale` (any order). → Set of registry keys the site answers in that language.
 // Under strict a language goes live with its home page: without it, nothing in that language is served
@@ -21,7 +22,7 @@ export function servedKeys(docs = [], locale = 'fr', { strict = false, french = 
   const byKey = new Map(docs.map((d) => [d.key, d]))
   const frenchToo = (key) => locale === 'fr' || !pathFor(key, 'fr') || Boolean(french?.has(key))
   if (strict && !(pathFor('home', locale) && served(byKey.get('home'), { strict }) && frenchToo('home'))) return new Set()
-  return new Set(PAGES.filter((p) => pathFor(p.key, locale) && served(byKey.get(p.key), { strict }) && (!strict || frenchToo(p.key))).map((p) => p.key))
+  return new Set(PAGES.filter((p) => pathFor(p.key, locale) && served(byKey.get(p.key), { strict, conditional: p.status === 'conditional' }) && (!strict || frenchToo(p.key))).map((p) => p.key))
 }
 
 // docsByLocale: { fr: [...], en: [...], es: [...] } → { fr: Set, en: Set, es: Set }, French computed first.
@@ -33,8 +34,8 @@ export function servedByLocale(docsByLocale = {}, { strict = false } = {}) {
 const positive = (n) => typeof n === 'number' && Number.isFinite(n) && n > 0
 
 // A product page states only facts: under strict it needs its description, every size with its price and
-// servings (or « Prix sur demande »: quoted cake by cake, a price and servings are not owed), the lead time and
-// allergens checked by a person (the template shows a marker for each missing one).
+// servings (or « Prix sur demande »: quoted cake by cake, a price and servings are not owed) and the lead time. Allergens
+// a person has not checked yet are not stated: the page sends the customer to the shop (Products.js AllergenBlock).
 export function productReady(product) {
   const variants = product?.variants || []
   const quoted = Boolean(product?.priceOnRequest)
@@ -43,7 +44,6 @@ export function productReady(product) {
     variants.length > 0 &&
     variants.every((v) => v?.label && (quoted || (positive(v.priceCents) && (positive(v.portionsMin) || positive(v.portionsMax))))) &&
     positive(product.leadTimeHours) &&
-    Boolean(product.allergensVerified?.at) &&
     !containsMarker(product)
   )
 }

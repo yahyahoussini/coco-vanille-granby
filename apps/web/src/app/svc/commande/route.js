@@ -2,15 +2,15 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { createOrder } from '@/lib/ordering/create-order'
 import { decodeBox } from '@/lib/ordering/box'
-import { checkoutPath, Q } from '@/lib/ordering/paths'
+import { checkoutPath, thanksPath, Q } from '@/lib/ordering/paths'
 import { inAppBrowser } from '@/lib/ordering/iab'
 import { setCookie, clearCookie, draftValue, seeOther } from '@/lib/ordering/cookies'
 import { allow, clientIp } from '@/lib/ordering/rate-limit'
 import { termsVersionOf } from '@/lib/payments/consent'
 
-// POST /svc/commande/: « Confirmer et payer » on the review step. Creates the order (10-minute hold on its
-// window and capacity), then 303 to the payment page. Errors → back to the review step with a draft cookie
-// (the allergy note is never kept in it).
+// POST /svc/commande/: « Confirmer et payer » or « Réserver » on the review step. Creates the order: with a payment, a
+// 10-minute hold on its window and capacity, then 303 to the payment page; a reservation is confirmed at once, then 303 to
+// its confirmation. Errors → back to the review step with a draft cookie (the allergy note is never kept in it).
 export const dynamic = 'force-dynamic'
 
 const DRAFT = 'cv_caisse'
@@ -55,5 +55,6 @@ export async function POST(request) {
     attribution: { language: locale, inAppBrowser: inAppBrowser(request.headers.get('user-agent') || '') },
   })
   if (result.errors.length) return back(result.errors.map(({ code, field, alternatives, nextDay }) => ({ code, field, alternatives, nextDay })))
-  return seeOther(`${checkoutPath(locale)}?${Q.order}=${result.order.accessToken}`, [clearCookie(DRAFT)])
+  const next = result.order.status === 'paid' ? thanksPath(locale) : checkoutPath(locale)
+  return seeOther(`${next}?${Q.order}=${result.order.accessToken}`, [clearCookie(DRAFT)])
 }

@@ -47,6 +47,7 @@ describe('payment adapter choice', () => {
     assert.equal(paymentProvider({ PUBLIC_ORIGIN: 'https://cocovanillegranby.com' }), 'none')
     assert.equal(paymentProvider({ PUBLIC_ORIGIN: 'https://cocovanillegranby.com', PAYMENT_PROVIDER: 'mock' }), 'none')
     assert.equal(mockAllowed({ PUBLIC_ORIGIN: 'http://localhost:3000', PAYMENT_MOCK: 'off' }), false)
+    assert.equal(paymentProvider({ PUBLIC_ORIGIN: 'https://cocovanillegranby.com', PAYMENT_PROVIDER: 'counter' }), 'counter')
   })
 
   test('Instagram / Facebook in-app browsers and the Safari hand-off link', () => {
