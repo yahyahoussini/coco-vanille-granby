@@ -13,8 +13,8 @@ const OLD = {
 export const OLD_TAILS = Object.values(OLD)
 
 const CAKE = {
-  fr: 'Un gâteau sur commande de la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou par téléphone et à récupérer au 3, rue Court.',
-  en: 'A made-to-order cake from Pâtisserie Coco Vanille in Granby, to reserve online or by phone and pick up at 3 rue Court.',
+  fr: 'Un gâteau sur commande de la Pâtisserie Coco Vanille, à Granby, à commander en ligne ou par téléphone et à récupérer au 3, rue Court.',
+  en: 'A made-to-order cake from Pâtisserie Coco Vanille in Granby, to order online or by phone and pick up at 3 rue Court.',
   old: OLD.CAKE.fr,
 }
 const LOG = {
@@ -23,13 +23,13 @@ const LOG = {
   old: OLD.LOG.fr,
 }
 const BOUQUET = {
-  fr: 'Un bouquet sur commande de la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou par téléphone et à récupérer au 3, rue Court.',
-  en: 'A made-to-order bouquet from Pâtisserie Coco Vanille in Granby, to reserve online or by phone and pick up at 3 rue Court.',
+  fr: 'Un bouquet sur commande de la Pâtisserie Coco Vanille, à Granby, à commander en ligne ou par téléphone et à récupérer au 3, rue Court.',
+  en: 'A made-to-order bouquet from Pâtisserie Coco Vanille in Granby, to order online or by phone and pick up at 3 rue Court.',
   old: OLD.BOUQUET.fr,
 }
 const SHOP = {
-  fr: 'À la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou à prendre au comptoir du 3, rue Court.',
-  en: 'At Pâtisserie Coco Vanille in Granby, to reserve online or pick up at the counter, 3 rue Court.',
+  fr: 'À la Pâtisserie Coco Vanille, à Granby, à commander en ligne ou à prendre au comptoir du 3, rue Court.',
+  en: 'At Pâtisserie Coco Vanille in Granby, to order online or pick up at the counter, 3 rue Court.',
   old: OLD.SHOP.fr,
 }
 

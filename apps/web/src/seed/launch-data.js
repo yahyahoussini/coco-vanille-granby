@@ -89,8 +89,8 @@ export const OFFERS = {
 }
 
 const SHOP_TAIL = {
-  fr: 'À la Pâtisserie Coco Vanille, à Granby, à réserver en ligne ou à prendre au comptoir du 3, rue Court.',
-  en: 'At Pâtisserie Coco Vanille in Granby, to reserve online or pick up at the counter, 3 rue Court.',
+  fr: 'À la Pâtisserie Coco Vanille, à Granby, à commander en ligne ou à prendre au comptoir du 3, rue Court.',
+  en: 'At Pâtisserie Coco Vanille in Granby, to order online or pick up at the counter, 3 rue Court.',
 }
 
 // What the shop publishes itself (research/20b §1, posts of August to October 2026) and a few plain basics, as products with a

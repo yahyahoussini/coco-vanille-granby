@@ -71,8 +71,8 @@ export const PROPOSALS = {
   'boites-groupes': { fr: `Oui : à partir de 12 viennoiseries, avec 48 h d’avance, par téléphone au ${PHONE}.`, en: `Yes: from 12 viennoiseries, 48 hours ahead, by phone at ${PHONE}.` },
   'pain-quantite': { fr: `Oui : à partir de 6 pains, avec 48 h d’avance, par téléphone au ${PHONE}.`, en: `Yes: from 6 loaves, 48 hours ahead, by phone at ${PHONE}.` },
   'patisseries-evenement': { fr: `Oui : à partir de 12 pâtisseries, avec 72 h d’avance, par téléphone au ${PHONE}. La boutique prépare aussi des plateaux de bouchées salées.`, en: `Yes: from 12 pastries, 72 hours ahead, by phone at ${PHONE}. The shop also makes platters of savoury bites.` },
-  'reservation-pain': { fr: `Oui : réservez avant 14 h la veille sur la page Commander, ou appelez au ${PHONE}.`, en: `Yes: reserve before 2 p.m. the day before on the Order page, or call ${PHONE}.` },
-  'reservation-viennoiseries': { fr: `Oui : réservez avant 14 h la veille sur la page Commander, ou appelez au ${PHONE}.`, en: `Yes: reserve before 2 p.m. the day before on the Order page, or call ${PHONE}.` },
+  'reservation-pain': { fr: `Oui : commandez avant 14 h la veille sur la page Commander, ou appelez au ${PHONE}.`, en: `Yes: order before 2 p.m. the day before on the Order page, or call ${PHONE}.` },
+  'reservation-viennoiseries': { fr: `Oui : commandez avant 14 h la veille sur la page Commander, ou appelez au ${PHONE}.`, en: `Yes: order before 2 p.m. the day before on the Order page, or call ${PHONE}.` },
   'reservation-vitrine': { fr: `Oui : appelez au ${PHONE} le jour même, et la boutique met le produit de côté jusqu’à la fermeture, tant qu’il en reste.`, en: `Yes: call ${PHONE} the same day, and the shop sets the product aside until closing, while there are some left.` },
 
   // Fêtes et bûches

@@ -112,6 +112,18 @@ for (const p of [...NEW_PRODUCTS, ...EXISTING_PRODUCTS]) {
   if (en.summary?.includes(oldTail.en)) await payload.update({ collection: 'products', id: found.id, locale: 'en', data: { summary: en.summary.replace(oldTail.en, p.tail.en) }, ...SYS })
 }
 
+// « réserver » became « commander » on the site: the descriptions already stored follow, word for word.
+const OLD_WORDS = { fr: ['à réserver en ligne', 'à commander en ligne'], en: ['to reserve online', 'to order online'] }
+for (const locale of ['fr', 'en']) {
+  const [from, to] = OLD_WORDS[locale]
+  const all = await payload.find({ collection: 'products', locale, fallbackLocale: false, limit: 500, pagination: false, ...SYS })
+  for (const doc of all.docs) {
+    if (!doc.summary?.includes(from)) continue
+    await payload.update({ collection: 'products', id: doc.id, locale, data: { summary: doc.summary.split(from).join(to) }, ...SYS })
+    if (locale === 'fr') reworded++
+  }
+}
+
 const { totalDocs } = await payload.count({ collection: 'products', where: { _status: { equals: 'published' } }, ...SYS })
 console.log(`Answers: ${added} added, ${refreshed} refreshed. Products: ${made} added, ${priced} priced (« Prix à vérifier »), ${kept} already priced, ${reworded} descriptions reworded, ${totalDocs} published.`)
 if (missing.length) console.log(`No product for these offers (seed:catalogue not run, or a photo missing): ${missing.join(', ')}`)
