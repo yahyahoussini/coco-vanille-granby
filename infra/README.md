@@ -121,6 +121,7 @@ records in hPanel › Domains › brandhubos.cloud; the apex of that domain is u
   nohup bash /root/panel-install.sh $S cocovanille.brandhubos.cloud admin-cocovanille.brandhubos.cloud 72.60.92.29 </dev/null >/root/coco-install.log 2>&1 &
   ```
   The database tasks run only the first time (`LIVE_COLOR` empty): a new commit never overwrites what was typed in Studio.
+- **After a commit that changes copy or catalogue data,** as root, once the install has finished: `runuser -u coco -- bash -c "cd /tmp && bash /opt/coco/releases/$S/scripts/run-task.sh production <task> --tag $S"` for `seed`, `seed:catalogue`, then `seed:launch`. They fill what is empty and refresh what is still the agency's proposal; nothing the owner checked or changed in Studio is overwritten. Pages renew within 5 minutes.
 - **Accounts:** passwords printed once, in `/root/coco-accounts.txt` (root only). Delete the file once they are in a password manager.
 - **Backups:** nightly dump in `/opt/coco/production/backups`, same disk as the database, until `BACKUP_REMOTES` names an off-site bucket.
 - **To the real domain:** new A records, then the same command with the new hosts and `GUARD=strict`, once the owner's facts are in.
