@@ -502,15 +502,28 @@ ul.product-grid {
     margin: 0;
   }
 
+  /* As tall as the row, as wide as its column: on its own, the ratio would turn a taller row (a status on two lines)
+     into a wider frame, over the start of the name and the price. */
   .product-grid--list .card-media {
     grid-column: 1;
     grid-row: 1 / -1;
+    inline-size: 100%;
     aspect-ratio: 1;
     align-self: stretch;
   }
 
   .product-grid--list .card-media-emblem {
     inline-size: 62%;
+  }
+
+  /* A thumbnail: the notice whole, along the foot of the picture. */
+  .product-grid--list .card-media.is-illustration .stock-photo-label {
+    inset-block: auto 0.25rem;
+    inset-inline: 0.25rem;
+    max-inline-size: none;
+    padding-inline: 0.25rem;
+    font-size: 0.625rem;
+    text-align: center;
   }
 
   .product-grid--list .product-card-title,
@@ -572,9 +585,15 @@ ul.product-grid {
     block-size: 2.75rem;
   }
 
-  /* With a « + » the price keeps to its own column; without one it takes the whole line. */
-  .product-grid--list .product-card:has(.card-add) .price {
+  /* With a « + » or a chevron the price keeps to its own column, and its note may wrap there (a narrow phone): never
+     under the button or past the card. Without either it takes the whole line. */
+  .product-grid--list .product-card:has(.card-add, .card-go) .price {
     grid-column: 2;
+  }
+
+  .product-grid--list .price-tax {
+    white-space: normal;
+    text-wrap: balance;
   }
 }
 
@@ -1075,9 +1094,12 @@ html:has(.cat-nav) {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--caramel) 35%, transparent);
 }
 
-/* No photo of the shop's yet: the illustration fills the frame, labelled in its corner (StockPhoto). */
+/* No photo of the shop's yet: the illustration fills the frame, labelled in its corner (StockPhoto). Placed on the
+   frame, like the shop's own pictures below: a picture never decides how tall its frame is. */
 .card-media.is-illustration .stock-photo,
 .product-media.is-illustration .stock-photo {
+  position: absolute;
+  inset: 0;
   inline-size: 100%;
   block-size: 100%;
 }
@@ -1118,12 +1140,23 @@ html:has(.cat-nav) {
 }
 
 /* The shop's own pictures are cut out on a transparent 4:5 canvas (nimages → src/seed/client-photos): shown whole, on
-   the pastel of their family, with a soft shadow that follows the cake (drop-shadow follows the transparency). The
-   illustrations keep filling their frame. */
+   warm paper (the frame takes the colour the picture shows while it loads, so a picture that starts lower leaves no
+   band), with a soft shadow that follows the cake (drop-shadow follows the transparency). The illustrations keep
+   filling their frame. Placed on the frame itself: left in the frame's grid, a 4:5 canvas takes its
+   own height in any shape wider than 4:5 (a square on a phone, 4:3 on a tablet, the order cards) and the frame cuts the
+   bottom of the cake off. */
 .card-media.has-photo:not(.is-illustration) img,
 .product-media.has-photo:not(.is-illustration) img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
   object-fit: contain;
   filter: drop-shadow(0 0.7rem 0.6rem rgb(59 36 28 / 0.2));
+}
+
+.card-media.has-photo:not(.is-illustration) {
+  background-color: var(--paper-sunk);
 }
 
 .product-media.has-photo:not(.is-illustration) {
@@ -1182,7 +1215,8 @@ html:has(.cat-nav) {
   inline-size: 100%;
   block-size: auto;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--paper-sunk);
   border-radius: var(--radius);
 }
 
@@ -1798,6 +1832,12 @@ table.sizes tbody tr {
     pointer-events: none;
   }
 
+  /* The picture starts under that badge: the top of a tall cake stays in view. */
+  .product-card:has(> .badge) .card-media.has-photo:not(.is-illustration) img {
+    inset-block-start: 1.5rem;
+    block-size: calc(100% - 1.5rem);
+  }
+
   /* « dès » on its own line above the price, as on the editorial cards. */
   .product-card .price-from {
     flex-basis: 100%;
@@ -1899,7 +1939,8 @@ table.sizes tbody tr {
 
   /* Tablets (one column until 56rem): a wide frame, so the name and the price show on the first screen; the arch
      returns with the two columns. */
-  .product-media.has-photo {
+  .product-media.has-photo,
+  .product-media.has-photo:not(.is-illustration) {
     aspect-ratio: 16 / 10;
     box-shadow: var(--shadow);
   }
