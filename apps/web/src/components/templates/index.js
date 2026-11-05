@@ -6,7 +6,9 @@ import { Fact } from '../site/Fact'
 import { HoursTable } from '../site/HoursTable'
 import { OpenNow } from '../site/OpenNow'
 import { AnswerBlock, KeyFacts, Sections, Faq, ConversionBand, MetaLine, Unbroken } from '../site/Contract'
-import { ProductGrid, SizesTable, Photo, productPath } from '../site/Products'
+import { ProductGrid, SizesTable, PriceTable, Photo, productPath } from '../site/Products'
+import { Fold } from '../catalogue/Fold'
+import { catalogueCopy } from '../catalogue/copy'
 import { hoursSummary, pillSchedule } from '../site/hours'
 import { vitrinePhotoOf } from '@/lib/studio/vitrine'
 import { localParts } from '@/lib/studio/time'
@@ -181,14 +183,18 @@ function AboutTemplate(props) {
   )
 }
 
-// ---------- Allergens: per-product table, verified lists only ----------
+// ---------- Allergens: the checked lists in a table, the products still to check one tap away ----------
 async function AllergensTemplate(props) {
   const { locale, business } = props
   const s = t(locale)
+  const k = catalogueCopy(locale)
   const [allergens, products] = await Promise.all([getAllergens(locale), getProducts({ locale })])
+  const checked = products.filter((p) => p.allergensVerified?.at)
+  const unchecked = products.filter((p) => !p.allergensVerified?.at)
+  const legend = allergens.length > 0 && <p className="small allergen-legend">{allergens.map((a) => a.label).join(' · ')}</p>
   // On phones each product becomes one row of a list (content.css): explicit roles keep the table semantics when
   // CSS changes the display, and data-label repeats the column header in front of each value.
-  const table = products.length ? (
+  const table = checked.length > 0 && (
     <div className="table-scroll allergen-scroll" role="region" aria-label={s.allergens} tabIndex={0}>
       <table className="allergen-table" role="table">
         <caption>{s.allergens}</caption>
@@ -200,32 +206,51 @@ async function AllergensTemplate(props) {
           </tr>
         </thead>
         <tbody role="rowgroup">
-          {products.map((p) => {
-            const verified = Boolean(p.allergensVerified?.at)
+          {checked.map((p) => {
             const href = productPath(p, locale)
             return (
               <tr key={p.id} role="row">
                 <th scope="row" role="rowheader">{href ? <Link href={href}>{p.title}</Link> : p.title}</th>
-                <td role="cell" data-label={s.offer.contains}>{verified ? (p.allergens || []).map((a) => a.label).join(', ') || '—' : s.offer.askShop}</td>
-                {/* Unchecked: « ask the shop », never « — », which would read as « nothing to fear ». */}
-                <td role="cell" data-label={s.mayContain}>{verified ? (p.mayContain || []).map((a) => a.label).join(', ') || '—' : s.offer.askShop}</td>
+                {/* Checked: « — » means none. A product nobody has checked never comes here: it would read as « nothing to fear ». */}
+                <td role="cell" data-label={s.offer.contains}>{(p.allergens || []).map((a) => a.label).join(', ') || '—'}</td>
+                <td role="cell" data-label={s.mayContain}>{(p.mayContain || []).map((a) => a.label).join(', ') || '—'}</td>
               </tr>
             )
           })}
         </tbody>
       </table>
     </div>
+  )
+  const lists = products.length ? (
+    <div className="catalogue-slot allergen-lists">
+      {table}
+      {unchecked.length > 0 ? (
+        <>
+          <p className="allergen-ask">{k.allergensAskAll}</p>
+          <Fold summary={k.allergensToAsk(unchecked.length)}>
+            {legend}
+            <ul className="allergen-ask-list">
+              {unchecked.map((p) => {
+                const href = productPath(p, locale)
+                return <li key={p.id}>{href ? <Link href={href}>{p.title}</Link> : p.title}</li>
+              })}
+            </ul>
+          </Fold>
+        </>
+      ) : (
+        legend
+      )}
+    </div>
   ) : (
     <p><Fact value={null} label="liste des allergènes par produit" /></p>
   )
-  return (
-    <ContentTemplate {...props} secondary={phoneAction(business, locale)} slot={{ after: 0, node: table }}>
-      {allergens.length > 0 && <p className="small allergen-legend">{allergens.map((a) => a.label).join(' · ')}</p>}
-    </ContentTemplate>
-  )
+  // Allergy answers stay whole, like legal text: a warning cut after three lines could cost more than a long page.
+  return <ContentTemplate {...props} secondary={phoneAction(business, locale)} slot={{ after: 0, node: lists }} folds={false} />
 }
 
-// ---------- Prices: one dated table per category; price per serving only when both numbers exist ----------
+// ---------- Prices: one dated table per category, one group per product; price per serving only when both numbers exist ----------
+const PRICE_FAMILY_SHOWN = 8
+
 async function PricesTemplate(props) {
   const { locale } = props
   const s = t(locale)
@@ -234,23 +259,24 @@ async function PricesTemplate(props) {
   const priced = products.filter((p) => fromPriceCents(p) !== null)
   const asOf = priced.map((p) => p.updatedAt).filter(Boolean).sort().at(-1)
   const groups = categories
-    .map((c) => ({ category: c, rows: products.filter((p) => p.productionCategory === c.productionCategory).flatMap((p) => (p.variants || []).map((variant) => ({ product: p, variant }))) }))
-    .filter((g) => g.rows.length)
+    .map((c) => ({ category: c, products: products.filter((p) => p.productionCategory === c.productionCategory && (p.variants || []).length) }))
+    .filter((g) => g.products.length)
   return (
     <ContentTemplate {...props} primary={orderAction(locale, props.served)}>
       <section aria-labelledby="prices-table" className="prices">
         <h2 id="prices-table">{o.sizesTitle}</h2>
-        {groups.length ? (
-          groups.map((g) => <SizesTable key={g.category.id} rows={g.rows} locale={locale} caption={g.category.title} showProduct />)
-        ) : (
-          <p><Fact value={null} label="grille de prix par format" /></p>
-        )}
+        {/* The date, the taxes and what « indicatif » means come first: said once, for every table below. */}
         {(priced.length > 0 || !products.every((p) => p.priceOnRequest)) && (
           <p className="small prices-as-of">
             {o.pricesAsOf} {asOf ? <time dateTime={asOf}>{longDate(asOf, locale)}</time> : <Fact value={null} label="date de la grille de prix" />} · {s.taxesExtra}
           </p>
         )}
         {products.some((p) => p.priceEstimated) && <p className="small prices-indicative">{o.indicativeNote}</p>}
+        {groups.length ? (
+          groups.map((g) => <PriceTable key={g.category.id} products={g.products} locale={locale} caption={g.category.title} foldAfter={PRICE_FAMILY_SHOWN} />)
+        ) : (
+          <p><Fact value={null} label="grille de prix par format" /></p>
+        )}
       </section>
     </ContentTemplate>
   )
@@ -426,6 +452,12 @@ function LegalTemplate(props) {
   )
 }
 
+// The custom-cake page's button goes straight to the request form, as on the home page (home.js).
+function requestAction(locale, served) {
+  const order = orderAction(locale, served)
+  return order && { ...order, href: `${order.href}#demande`, label: t(locale).home.request }
+}
+
 export const TEMPLATES = {
   home: HomeTemplate,
   // The Zoo page's visitor wants the way and the phone, not the order form (docs/08 §1: one main action per page).
@@ -433,7 +465,7 @@ export const TEMPLATES = {
     p.page?.key === 'zoo-de-granby' ? (
       <ContentTemplate {...p} primary={mapsAction(p.business, p.locale)} secondary={phoneAction(p.business, p.locale)} />
     ) : (
-      <ContentTemplate {...p} primary={p.page?.key === 'chef' ? null : orderAction(p.locale, p.served)} />
+      <ContentTemplate {...p} primary={p.page?.key === 'chef' ? null : p.page?.key === 'gateaux-personnalises' ? requestAction(p.locale, p.served) : orderAction(p.locale, p.served)} />
     ),
   about: AboutTemplate,
   visit: VisitTemplate,

@@ -1,6 +1,6 @@
 // Product cards on a phone, a narrow phone, a tablet and a computer: the whole picture inside its frame (the shop's
 // photos are 4:5 canvases, most frames are not), the frame clear of the name and the price, the price clear of the
-// round button and inside the card, the « Illustration » notice never cut off.
+// round button and inside the card, no notice written on a picture.
 import { test, expect } from '@playwright/test'
 
 const SCREENS = [
@@ -27,8 +27,7 @@ function auditCards() {
     const name = card?.querySelector('.product-card-title, .order-card-title')?.textContent.trim() || document.querySelector('h1')?.textContent.trim()
     const img = frame.querySelector('img')
     if (img && outside(img.getBoundingClientRect(), f)) problems.push(`${name}: the picture runs past its frame`)
-    const label = frame.querySelector('.stock-photo-label')
-    if (label && label.scrollWidth > label.clientWidth + 1) problems.push(`${name}: the notice on the picture is cut off`)
+    if (frame.querySelector('.stock-photo-label')) problems.push(`${name}: a notice sits on the picture`)
     if (!card) continue
     for (const el of card.querySelectorAll('.product-card-title a, .order-card-title a, .price, .order-ready')) {
       if (meets(textBox(el), f)) problems.push(`${name}: the frame covers « ${el.textContent.trim().slice(0, 20)} »`)

@@ -26,6 +26,8 @@ const UPDATED_1101 = '2026-11-01T16:00:00.000Z'
 // Pages changed on 2026-11-03 for the launch: a reservation online, paid at pickup; approximate answers and prices the
 // owner checks in Studio (operator's request); no sentence left waiting for an answer; the host named as it is.
 const UPDATED_1103 = '2026-11-03T16:00:00.000Z'
+// The note on illustrations, once the mention left the pictures (owner's decision, research/sessions/04 #14).
+const UPDATED_1104 = '2026-11-04T16:00:00.000Z'
 
 // Regular hours: the shop's Google listing, supplied by the operator on 2026-10-27 (research/01 « Update 2026-10-27 »,
 // 15 D26; owner sign-off still welcome, 14 H1). The seed writes this record to the shop global, the single source of
@@ -442,11 +444,11 @@ const aPropos = {
         q('Qui est propriétaire de la Pâtisserie Coco Vanille?', fn('nom et rôle des propriétaires')),
         q('La Pâtisserie Coco Vanille est-elle au Marché public de Granby?', fn('présence au Marché public de Granby en 2026')),
         q('Les produits sont-ils faits à la boutique?', fn('produits faits au 3, rue Court ou ailleurs')),
-        q('Où voir des photos de la boutique?', 'Les photos publiées par la boutique sont sur son compte Instagram, @coco_vanillegranby, et sur sa page Facebook, facebook.com/PatisserieCocoVanille. Sur ce site, toute photo qui n’est pas celle de la boutique porte la mention « Photo d’illustration ».'),
+        q('Où voir des photos de la boutique?', 'Les photos publiées par la boutique sont sur son compte Instagram, @coco_vanillegranby, et sur sa page Facebook, facebook.com/PatisserieCocoVanille. Sur ce site, une photo qui n’est pas celle de la boutique sert d’illustration : elle ne montre pas un de ses produits.'),
         q('Comment joindre la Pâtisserie Coco Vanille?', 'Par téléphone, au 450-372-7177, en personne au 3, rue Court, à Granby, ou avec le bouton « Écrivez-nous » de ce site.'),
       ],
-      changeNote: 'Équipe, lieu de fabrication et façons de joindre la boutique précisés.',
-      contentUpdatedAt: UPDATED_1103,
+      changeNote: 'Équipe, lieu de fabrication et façons de joindre la boutique précisés; note sur les photos d’illustration.',
+      contentUpdatedAt: UPDATED_1104,
     },
     en: {
       title: 'About: pastry shop and bakery in Granby · Coco Vanille',
@@ -466,11 +468,11 @@ const aPropos = {
         q('Who owns Pâtisserie Coco Vanille?', fn('owners’ names and roles')),
         q('Is Pâtisserie Coco Vanille at the Granby public market?', fn('presence at the Marché public de Granby in 2026')),
         q('Are the products made in the shop?', fn('products made at 3 rue Court or elsewhere')),
-        q('Where can I see photos of the shop?', 'Photos posted by the shop are on its Instagram account, @coco_vanillegranby, and its Facebook page, facebook.com/PatisserieCocoVanille. On this site, any photo that is not the shop’s own is labelled “Illustrative photo”.'),
+        q('Where can I see photos of the shop?', 'Photos posted by the shop are on its Instagram account, @coco_vanillegranby, and its Facebook page, facebook.com/PatisserieCocoVanille. On this site, a photo that is not the shop’s own is an illustration: it does not show one of its products.'),
         q('How do I contact Pâtisserie Coco Vanille?', 'By phone at 450-372-7177, in person at 3 rue Court, Granby, or with the “Message us” button on this website.'),
       ],
-      changeNote: 'Team, where products are made and ways to reach the shop made clear.',
-      contentUpdatedAt: UPDATED_1103,
+      changeNote: 'Team, where products are made and ways to reach the shop made clear; note on illustrative photos.',
+      contentUpdatedAt: UPDATED_1104,
     },
   },
 }

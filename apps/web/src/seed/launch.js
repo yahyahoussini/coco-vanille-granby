@@ -124,6 +124,21 @@ for (const locale of ['fr', 'en']) {
   }
 }
 
+// The pictures carry no mention any more (research/sessions/04 #14): the About page's FAQ follows. Only that sentence, only
+// where it still stands: the owner may be editing the page, and the seed would rewrite all of it.
+const OLD_NOTE = {
+  fr: [/Sur ce site, toute photo qui n’est pas celle de la boutique porte la mention «s*Photo d’illustrations*»./, 'Sur ce site, une photo qui n’est pas celle de la boutique sert d’illustration : elle ne montre pas un de ses produits.'],
+  en: [/On this site, any photo that is not the shop’s own is labelled “Illustrative photo”./, 'On this site, a photo that is not the shop’s own is an illustration: it does not show one of its products.'],
+}
+const about = await find('pages', { key: { equals: 'a-propos' } })
+for (const locale of about ? ['fr', 'en'] : []) {
+  const [from, to] = OLD_NOTE[locale]
+  const doc = await payload.findByID({ collection: 'pages', id: about.id, locale, fallbackLocale: false, ...SYS })
+  if (!(doc.faq || []).some((f) => from.test(f.answer || ''))) continue
+  await payload.update({ collection: 'pages', id: about.id, locale, data: { faq: doc.faq.map((f) => ({ ...f, answer: (f.answer || '').replace(from, to) })), _status: 'published' }, ...SYS })
+  console.log(`About page FAQ (${locale}): the note on illustrations updated.`)
+}
+
 const { totalDocs } = await payload.count({ collection: 'products', where: { _status: { equals: 'published' } }, ...SYS })
 console.log(`Answers: ${added} added, ${refreshed} refreshed. Products: ${made} added, ${priced} priced (« Prix à vérifier »), ${kept} already priced, ${reworded} descriptions reworded, ${totalDocs} published.`)
 if (missing.length) console.log(`No product for these offers (seed:catalogue not run, or a photo missing): ${missing.join(', ')}`)

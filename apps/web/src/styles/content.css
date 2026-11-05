@@ -16,17 +16,17 @@
   max-inline-size: var(--measure);
 }
 
-/* The answer block (first paragraph of the page): on phones a calm lead on a thin caramel rule; from 48rem the
-   raised card with its thick caramel edge. */
+/* The answer block (first paragraph of the page), never folded: on phones a light lead on a thin caramel rule, 15 px so
+   that its 40 to 60 words take six or seven lines, not ten; from 48rem the raised card with its thick caramel edge. */
 
 .answer {
   position: relative;
   max-inline-size: var(--measure);
-  margin-block: 0 var(--space-4);
-  padding-inline-start: 1rem;
+  margin-block: 0 var(--space-3);
+  padding-inline-start: 0.75rem;
   border-inline-start: 2px solid var(--caramel);
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: var(--ink);
 }
 
@@ -35,15 +35,18 @@
   margin-block: calc(-1 * var(--space-2)) var(--space-4);
 }
 
-/* Q&A: question h2 → answer passage → details (folded under « Lire la suite » on phones, see Contract.js). */
+/* Q&A: question h2 → answer passage → details, the text folded after three lines under « Lire la suite » (Contract.js).
+   A folded section on a phone is about 150 px: a smaller question, little air around it. */
 
 .qa {
   max-inline-size: var(--measure);
-  margin-block: 3rem;
+  margin-block: 1.75rem;
 }
 
 .qa h2 {
-  margin-block: 0 0.75rem;
+  margin-block: 0 0.5rem;
+  font-size: 1.3125rem;
+  line-height: 1.2;
 }
 
 /* The short caramel rule over a section's question and over the FAQ title, on every page (the home's FAQ too):
@@ -57,6 +60,10 @@
   border-radius: 2px;
   background: var(--caramel);
   margin-block-end: var(--space-2);
+}
+
+.qa h2::before {
+  margin-block-end: 0.625rem;
 }
 
 .qa-answer {
@@ -76,10 +83,8 @@
   color: var(--ink-rose);
 }
 
-/* Folded details: about four lines show, the answer above always shows whole. */
-.qa[data-clamp] {
-  --clamp-height: 7em;
-}
+/* A folded section: three lines, then « Lire la suite » (the height is the default of site.css, the first paragraph's
+   type grows from 48rem, below). */
 
 /* The folded box is its own formatting context: its first and last margins would no longer collapse. */
 .qa .clamp-body > :first-child {
@@ -92,6 +97,15 @@
 
 .qa .read-more {
   margin-block-start: 0.25rem;
+}
+
+/* Closed, the lines follow one another with no margin: a paragraph's margin inside the three lines would leave half a
+   line at the bottom of the box. The margins come back when it opens. */
+@media screen {
+  html.js .qa[data-clamp]:not([data-open]):not(:has(:target)) .clamp-body > *,
+  html.js .qa[data-clamp]:not([data-open]):not(:has(:target)) .clamp-body li + li {
+    margin-block: 0;
+  }
 }
 
 /* « Coco Vanille en bref »: one fact per line on a hairline, a small rose heart before each. */
@@ -109,6 +123,12 @@
 .key-facts h2 {
   margin-block: 0 0.25rem;
   font-size: var(--step-1);
+}
+
+/* KeyFacts with `fold`: the first facts, then « Lire la suite », inside the card. */
+.key-facts[data-clamp] {
+  --clamp-height: 8.5em;
+  padding-block-end: 0.75rem;
 }
 
 .key-facts ul {
@@ -260,6 +280,41 @@
 
 .meta-line time {
   white-space: nowrap;
+}
+
+/* The change note under the meta line: the site's fold (Fold.js), made small and quiet, a 48 px target all the same. */
+.meta-line:has(+ .meta-note) {
+  margin-block-end: 0;
+}
+
+.meta-note {
+  max-inline-size: var(--measure);
+  margin-block: 0 var(--space-2);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.meta-note .fold-summary {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-weight: 600;
+}
+
+.meta-note .fold-summary:hover {
+  background: none;
+  text-decoration: underline;
+}
+
+.meta-note .fold-chevron {
+  margin-inline-start: 0;
+}
+
+.meta-note p {
+  margin: 0;
 }
 
 .notice {
@@ -1043,16 +1098,27 @@
   }
 
   .qa {
-    margin-block: var(--space-5);
+    margin-block: var(--space-4);
   }
 
   .qa h2 {
-    margin-block: 0 var(--space-2);
+    margin-block: 0 var(--space-1);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .qa h2::before {
+    margin-block-end: var(--space-2);
   }
 
   .qa-answer {
     font-weight: 560;
     font-size: calc(var(--step-0) * 1.04);
+  }
+
+  /* The first paragraph is 1.04× the box's type, and its three lines are what must show (lh reads the box's own). */
+  .qa[data-clamp] {
+    --clamp-height: calc(3lh * 1.04);
   }
 
   .key-facts {
@@ -1361,6 +1427,71 @@
 
   .qa:not(:has(.product-grid, .menu-families, .catalogue-slot, table)) > :not(h2) {
     grid-column: 2;
+  }
+
+  /* The page's picture in the empty half of the page head, not a 684 px band under it. The DOM does not move: h1, answer,
+     picture. Two rows, so a long answer never pushes the picture down; the ornament would sit on the picture. */
+  .page-head:has(> .page-hero) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-5);
+  }
+
+  .page-head:has(> .page-hero) > h1 {
+    grid-area: 1 / 1;
+    max-inline-size: none;
+  }
+
+  .page-head:has(> .page-hero) > .answer {
+    grid-area: 2 / 1;
+    align-self: start;
+  }
+
+  .page-head > .page-hero {
+    grid-area: 1 / 2 / span 2;
+    margin-block: var(--space-2) var(--space-4);
+  }
+
+  .page-head > .page-hero img {
+    aspect-ratio: 4 / 3;
+  }
+
+  .page-head:has(> .page-hero) > .page-head-ornament {
+    display: none;
+  }
+
+  /* The same place for a picture that follows the head instead of being in it (a post, the order page): out of the flow,
+     so the margins of everything below still collapse as they do on any page. The left column is always the taller, with
+     its 40 to 60 words of answer, and the picture stays low (site.css), so it never reaches what follows. */
+  .page:has(> .page-hero) {
+    position: relative;
+  }
+
+  .page > .page-hero {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-end: 0;
+    inline-size: calc(50% - var(--space-5) / 2);
+    margin: 0;
+  }
+
+  .page > .page-hero img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .page:has(> .page-hero) > .page-head,
+  .page:has(> .page-hero) > h1,
+  .page:has(> .page-hero) > .answer {
+    max-inline-size: calc(50% - var(--space-5) / 2);
+  }
+
+  .page:has(> .page-hero) > .page-head h1 {
+    max-inline-size: none;
+  }
+
+  .page:has(> .page-hero) > .page-head > .page-head-ornament {
+    display: none;
   }
 
   .visit-card {

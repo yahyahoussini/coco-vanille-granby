@@ -110,7 +110,7 @@ Coût mensuel estimé (est., avant TPS et TVQ, [research/20e §4](../research/20
 
 | # | Tâche | Couche | Qui | Preuve | Temps | Déjà prêt | Fait |
 |---|---|---|---|---|---|---|---|
-| A41 | Vos meilleures photos existantes, avec la permission de les utiliser et le consentement des personnes visibles (14 B2) | L10, L19 | P | Fichiers et accord écrit | 15 min (est.) | Photos d'ambiance étiquetées « Photo d'illustration », à remplacer | ☐ |
+| A41 | Vos meilleures photos existantes, avec la permission de les utiliser et le consentement des personnes visibles (14 B2) | L10, L19 | P | Fichiers et accord écrit | 15 min (est.) | Photos d'illustration, à remplacer | ☐ |
 | A42 | Demi-journée de photos : produits confirmés seulement, lumière de fenêtre, coupes, façade, porte, stationnement (14 B3) | L10, L12 | Ph ou P | Au moins 10 photos réelles | Une demi-journée (14 B3) | — | ☐ |
 | A43 | Approuver le texte et les prix de chaque page avant sa mise en ligne (14 P13) | L10 | P | « Approuvé » pour chaque page | ≈ 10 min par page (est.) | Les pages construites, avec leurs marqueurs | ☐ |
 | A44 | Biographie du propriétaire ou du chef et consentement photo (14 C1) ; histoire de la boutique (14 C2) | L8, L10 | P | Court texte et consentement | 20 min (est.) | La page `/a-propos/chef/` (publiée seulement avec le consentement) | ☐ |

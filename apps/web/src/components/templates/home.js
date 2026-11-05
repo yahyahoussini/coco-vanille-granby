@@ -21,8 +21,9 @@ import { PostCard } from './journal'
 // The picture behind each card of « Ce que vous trouverez chez nous », by the card's icon (lib/i18n.js home.services).
 const SERVICE_PHOTO = { croissant: 'viennoiseries', cake: 'gateaux', coffee: 'cafe', palette: 'peinture' }
 
-// The home page template (registry key « home »): the logo stage, services, vitrine du jour, categories, cakes,
-// hours and visit, the newest Journal posts, Q&A, FAQ. Styles: src/styles/home.css (the post cards: journal.css).
+// The home page template (registry key « home »): the logo stage, answer, « en bref », services, vitrine du jour,
+// categories, cakes, hours and visit, the newest Journal posts, Q&A, FAQ. Styles: src/styles/home.css (the post cards:
+// journal.css). Every word stays in the HTML in reading order; what a phone folds has a visible control.
 
 // The short link beside a section title (UI words only, no business fact).
 const HEAD_LINK = { fr: 'Voir la carte', en: 'See the menu', es: 'Ver la carta' }
@@ -147,11 +148,6 @@ export async function HomeTemplate(props) {
             <h1>
               <HeroTitle text={doc?.h1} />
             </h1>
-            <p className="hero-deck">
-              <Fact value={business?.categorySentence} label="phrase de catégorie (option B en attente d’approbation)" id="categorySentence">
-                {business?.categorySentence ? <Kept text={frenchSpaces(business.categorySentence)} /> : null}
-              </Fact>
-            </p>
             <div className="hero-actions">
               {order && (
                 <a className="btn btn-primary btn-large" href={order.href} data-event={order.event} data-magnetic="">
@@ -225,22 +221,10 @@ export async function HomeTemplate(props) {
         </div>
       </header>
 
-      <div className="marquee" aria-hidden="true" data-scroll-progress="" data-nosnippet="">
-        <div className="marquee-track">
-          {[0, 1, 2].flatMap((n) =>
-            h.marquee.map((word) => (
-              <span key={`${n}-${word}`} className="marquee-item">
-                {word}
-                <Icon name="heart" size={16} className="marquee-heart" />
-              </span>
-            )),
-          )}
-        </div>
-      </div>
-
       <div className="wrap">
         <section className="home-intro" aria-label={h.brief}>
-          <div className="intro-answer" data-reveal="">
+          {/* The answer never waits for a scroll: no data-reveal here, it is never at opacity 0. */}
+          <div className="intro-answer">
             <AnswerBlock text={doc?.answer} />
             {rating && (
               <p className="rating-strip" data-fact="google.rating">
@@ -255,8 +239,9 @@ export async function HomeTemplate(props) {
               </p>
             )}
           </div>
-          {/* Phones show the first facts and « Lire la suite »; every fact stays in the HTML (and shows without JS). */}
-          <div className="intro-facts" data-reveal="" data-clamp="">
+          {/* The title and two lines at every width, then « Lire la suite »; every fact stays in the HTML (and shows without
+              JS). The card folds here, not in KeyFacts: a clamp never goes inside a clamp. */}
+          <div className="intro-facts" data-clamp="">
             <div className="clamp-body">
               <KeyFacts items={briefItems(props)} locale={locale} title={h.brief} />
             </div>
@@ -273,8 +258,15 @@ export async function HomeTemplate(props) {
                 <span className="icon-badge">
                   <Icon name={sv.icon} size={26} />
                 </span>
-                <h3>{sv.title}</h3>
-                <p>{frenchSpaces(sv.text)}</p>
+                {/* Phones: the title alone, its sentence one tap away. From 48rem home.css keeps the sentence on show,
+                    so a computer never needs the tap. */}
+                <details className="service-more">
+                  <summary>
+                    <h3>{sv.title}</h3>
+                    <Icon name="chevron" size={18} />
+                  </summary>
+                  <p>{frenchSpaces(sv.text)}</p>
+                </details>
               </li>
             ))}
           </ul>
@@ -308,24 +300,16 @@ export async function HomeTemplate(props) {
               </p>
             )
           ) : (
-            <div className={`vitrine-empty${PHOTOS.vitrine ? ' has-photo' : ''}`} data-reveal="">
-              {PHOTOS.vitrine ? (
-                <StockPhoto name="vitrine" locale={locale} className="vitrine-empty-photo" sizes="(min-width: 60rem) 40rem, 92vw" />
-              ) : (
-                <span className="icon-badge">
-                  <Icon name="store" size={26} />
-                </span>
+            // No vitrine today: one line and its link. A stock photo here read as an unfinished page.
+            <p className="vitrine-empty">
+              {h.vitrineEmptyLine}{' '}
+              {menuHref && (
+                <Link href={menuHref} className="link-arrow">
+                  {h.seeMenu}
+                  <Icon name="arrow" size={18} />
+                </Link>
               )}
-              <p>
-                {h.vitrineEmpty}{' '}
-                {menuHref && (
-                  <Link href={menuHref} className="link-arrow">
-                    {h.seeMenu}
-                    <Icon name="arrow" size={18} />
-                  </Link>
-                )}
-              </p>
-            </div>
+            </p>
           )}
         </section>
 
@@ -367,8 +351,8 @@ export async function HomeTemplate(props) {
       {request && (
         <section className="cake-band" aria-labelledby="home-cakes">
           <Ornament name="palm" className="cake-band-palm" />
-          {/* Read in order: the title, the three steps, the action, then the photo. From 60rem the steps take the
-              right column (grid areas in home.css). */}
+          {/* Read in order: the title, the three steps, the action, then the photo. The photo sits beside the title on
+              phones and beside the whole band from 48rem; from 60rem the steps make one numbered row (home.css). */}
           <div className="wrap cake-band-grid">
             <div className="cake-band-head" data-reveal="">
               <span className="eyebrow">{h.cakeEyebrow}</span>
@@ -389,7 +373,7 @@ export async function HomeTemplate(props) {
                 <Icon name="arrow" size={20} className="icon-arrow" />
               </a>
             </div>
-            {PHOTOS['gateau-fete'] && <StockPhoto name="gateau-fete" locale={locale} className="cake-band-photo" sizes="(min-width: 60rem) 30rem, 92vw" />}
+            {PHOTOS['gateau-fete'] && <StockPhoto name="gateau-fete" locale={locale} className="cake-band-photo" sizes="(min-width: 60rem) 22rem, (min-width: 48rem) 15rem, 7rem" />}
           </div>
         </section>
       )}
@@ -453,11 +437,15 @@ export async function HomeTemplate(props) {
         )}
         <Sections sections={doc?.sections} locale={locale} />
         <Faq items={doc?.faq} locale={locale} />
-        <section className="finale" aria-labelledby="home-finale" data-reveal="">
-          <img className="finale-badge" src="/brand/logo-badge-192.webp" srcSet="/brand/logo-badge-192.webp 192w, /brand/logo-badge-384.webp 384w" sizes="(min-width: 48rem) 120px, 80px" width="120" height="120" alt="" loading="lazy" decoding="async" />
-          <h2 id="home-finale">{h.finale}</h2>
-          <ConversionBand primary={order} secondary={maps || phone} />
-        </section>
+        {/* With « Commander » on the first screen and in the tab bar, a closing band only repeats it. Ordering off: the
+            hero has no action, so this band is where the page still offers one. */}
+        {!order && (maps || phone) && (
+          <section className="finale" aria-labelledby="home-finale" data-reveal="">
+            <img className="finale-badge" src="/brand/logo-badge-192.webp" srcSet="/brand/logo-badge-192.webp 192w, /brand/logo-badge-384.webp 384w" sizes="(min-width: 48rem) 120px, 80px" width="120" height="120" alt="" loading="lazy" decoding="async" />
+            <h2 id="home-finale">{h.finale}</h2>
+            <ConversionBand primary={maps || phone} secondary={maps ? phone : null} />
+          </section>
+        )}
         <MetaLine doc={doc} locale={locale} />
       </div>
     </article>

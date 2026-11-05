@@ -276,6 +276,67 @@ ul.product-grid {
   white-space: nowrap;
 }
 
+/* The one line about prices above a list, in place of a note on every row (Products.js PriceNote). */
+.price-note {
+  margin-block: 0.75rem 0;
+  font-size: var(--text-meta);
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+/* ---------- Fold (Fold.js): the site's one look for a <details> around a list or reference material ---------- */
+.fold {
+  margin-block-start: 0.75rem;
+}
+
+.fold-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.5rem;
+  min-block-size: var(--target);
+  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-weight: 620;
+  line-height: 1.3;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--dur-1) var(--ease-soft),
+    border-color var(--dur-1) var(--ease-soft);
+}
+
+.fold-summary::-webkit-details-marker {
+  display: none;
+}
+
+.fold-chevron {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--ink-accent);
+  transition: rotate var(--dur-2) var(--ease-whip);
+}
+
+.fold[open] > .fold-summary .fold-chevron {
+  rotate: 180deg;
+}
+
+.fold-summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .fold-summary:hover {
+    border-color: var(--caramel);
+    background: color-mix(in srgb, var(--paper-caramel) 45%, var(--paper-raised));
+  }
+}
+
 /* ---------- « + » : the same POST to « Ma boîte » as the order page ---------- */
 .card-add {
   position: relative;
@@ -516,16 +577,6 @@ ul.product-grid {
     inline-size: 62%;
   }
 
-  /* A thumbnail: the notice whole, along the foot of the picture. */
-  .product-grid--list .card-media.is-illustration .stock-photo-label {
-    inset-block: auto 0.25rem;
-    inset-inline: 0.25rem;
-    max-inline-size: none;
-    padding-inline: 0.25rem;
-    font-size: 0.625rem;
-    text-align: center;
-  }
-
   .product-grid--list .product-card-title,
   .product-grid--list .product-card > .badge,
   .product-grid--list .price {
@@ -585,15 +636,10 @@ ul.product-grid {
     block-size: 2.75rem;
   }
 
-  /* With a « + » or a chevron the price keeps to its own column, and its note may wrap there (a narrow phone): never
-     under the button or past the card. Without either it takes the whole line. */
+  /* With a « + » or a chevron the price keeps to its own column: never under the button or past the card. Without
+     either it takes the whole line. */
   .product-grid--list .product-card:has(.card-add, .card-go) .price {
     grid-column: 2;
-  }
-
-  .product-grid--list .price-tax {
-    white-space: normal;
-    text-wrap: balance;
   }
 }
 
@@ -1094,7 +1140,7 @@ html:has(.cat-nav) {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--caramel) 35%, transparent);
 }
 
-/* No photo of the shop's yet: the illustration fills the frame, labelled in its corner (StockPhoto). Placed on the
+/* No photo of the shop's yet: the illustration fills the frame (StockPhoto). Placed on the
    frame, like the shop's own pictures below: a picture never decides how tall its frame is. */
 .card-media.is-illustration .stock-photo,
 .product-media.is-illustration .stock-photo {
@@ -1102,12 +1148,6 @@ html:has(.cat-nav) {
   inset: 0;
   inline-size: 100%;
   block-size: 100%;
-}
-
-.card-media.is-illustration .stock-photo-label {
-  inset-block-start: 0.375rem;
-  inset-inline-end: 0.375rem;
-  font-size: 0.6875rem;
 }
 
 .product-media-emblem {
@@ -1285,11 +1325,6 @@ table.sizes .sizes-num {
   font-weight: 700;
 }
 
-.sizes-tax {
-  font-size: var(--text-meta);
-  color: var(--ink-soft);
-}
-
 table.sizes tbody tr {
   transition: background-color var(--dur-1) var(--ease-soft);
 }
@@ -1369,6 +1404,69 @@ table.sizes tbody tr {
 
 .allergen-legend {
   max-inline-size: var(--measure);
+}
+
+/* /allergenes/: one sentence in view, the products still to check in their fold (a name is a link to its page). */
+.allergen-ask {
+  margin-block: var(--space-2) 0;
+  max-inline-size: var(--measure);
+}
+
+.allergen-lists .allergen-legend {
+  margin-block: 0.75rem;
+}
+
+.allergen-ask-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  column-gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.allergen-ask-list li {
+  margin: 0;
+  border-block-end: 1px solid var(--line);
+}
+
+.allergen-ask-list a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target);
+  padding-block: 0.35rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+/* /prix/: the date and the notes above the tables, close to them; a table's fold under it. */
+.prices .prices-as-of,
+.prices .prices-indicative {
+  margin-block: 0 0.25rem;
+  max-inline-size: var(--measure);
+}
+
+/* A name is a quiet link at every width, on one line or two: its 48 px target is the padding of an inline box, which
+   takes no room, and a list of 23 names stays calm in the text colour. */
+table.price-table .price-name a {
+  display: inline;
+  min-block-size: 0;
+  margin-block: 0;
+  padding-block: 0.75rem;
+  color: var(--ink);
+  text-decoration-color: var(--caramel);
+}
+
+.prices .fold {
+  margin-block: 0.5rem 0;
+}
+
+.prices .fold + .table-scroll {
+  margin-block-start: 1.25rem;
+}
+
+.prices .fold > .table-scroll {
+  margin-block: 0.6rem 0;
 }
 
 /* ---------- Product page buy bar (phones and tablets): the price and « Ajouter », always at hand ---------- */
@@ -1595,11 +1693,6 @@ table.sizes tbody tr {
     white-space: nowrap;
   }
 
-  table.sizes .sizes-price-cell .sizes-tax {
-    display: block;
-    font-size: 0.75rem;
-  }
-
   table.sizes .sizes-price {
     font-family: var(--font-display);
     font-variation-settings: 'SOFT' 50;
@@ -1614,12 +1707,12 @@ table.sizes tbody tr {
 
   /* One product (product page): each size is a small card, the size and its price, then the details as
      label · value. */
-  table.sizes:not(.sizes-products) tbody {
+  table.sizes:not(.sizes-products, .price-table) tbody {
     display: grid;
     gap: 0.6rem;
   }
 
-  table.sizes:not(.sizes-products) tbody tr {
+  table.sizes:not(.sizes-products, .price-table) tbody tr {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
@@ -1631,7 +1724,7 @@ table.sizes tbody tr {
     box-shadow: var(--shadow-soft);
   }
 
-  table.sizes:not(.sizes-products) .sizes-head {
+  table.sizes:not(.sizes-products, .price-table) .sizes-head {
     grid-column: 1;
     grid-row: 1;
     font-weight: 650;
@@ -1639,12 +1732,12 @@ table.sizes tbody tr {
     line-height: 1.3;
   }
 
-  table.sizes:not(.sizes-products) .sizes-price-cell {
+  table.sizes:not(.sizes-products, .price-table) .sizes-price-cell {
     grid-column: 2;
     grid-row: 1;
   }
 
-  table.sizes:not(.sizes-products) .sizes-detail {
+  table.sizes:not(.sizes-products, .price-table) .sizes-detail {
     grid-column: 1 / -1;
     display: flex;
     justify-content: space-between;
@@ -1654,26 +1747,26 @@ table.sizes tbody tr {
     font-variant-numeric: tabular-nums;
   }
 
-  table.sizes:not(.sizes-products) .sizes-detail + .sizes-detail {
+  table.sizes:not(.sizes-products, .price-table) .sizes-detail + .sizes-detail {
     padding-block-start: 0.1rem;
   }
 
-  table.sizes:not(.sizes-products) .sizes-detail:first-of-type {
+  table.sizes:not(.sizes-products, .price-table) .sizes-detail:first-of-type {
     margin-block-start: 0.3rem;
     border-block-start: 1px solid var(--line);
     padding-block-start: 0.55rem;
   }
 
   /* The label is the column header, shown again for sighted readers (empty alternative text: not read twice). */
-  table.sizes:not(.sizes-products) .sizes-detail::before {
+  table.sizes:not(.sizes-products, .price-table) .sizes-detail::before {
     content: attr(data-label);
     content: attr(data-label) / '';
     color: var(--ink-soft);
     font-weight: 500;
   }
 
-  /* Several products (prices, calculator): one card per table and one compact row per size: the product and its
-     price, the size under it (the taxes note beside), then « 8 à 10 portions · 4,20 $ à 5,25 $ la portion ».
+  /* Several products (calculator): one card per table and one compact row per size: the product and its price, the
+     size under it, then « 8 à 10 portions · 4,20 $ à 5,25 $ la portion ».
      The units are shown for the eye only (data-unit, empty alternative text): screen readers hear the headers. */
   table.sizes-products tbody {
     background: var(--paper-raised);
@@ -1699,9 +1792,14 @@ table.sizes tbody tr {
     line-height: 1.35;
   }
 
-  /* The product link keeps its 48 px target without making the line taller. */
+  /* The product link keeps its 48 px target without making the line taller, on one line or two: the padding of an
+     inline box takes no room. The box this replaces (48 px high, negative margins) printed a name on two lines over
+     the line below it. */
   table.sizes-products .sizes-head a {
-    margin-block: -0.75rem;
+    display: inline;
+    min-block-size: 0;
+    margin-block: 0;
+    padding-block: 0.75rem;
   }
 
   table.sizes-products .sizes-price-cell {
@@ -1763,6 +1861,136 @@ table.sizes tbody tr {
   table.sizes-products td.sizes-detail:has(~ td.sizes-none) {
     grid-column: 1 / -1;
   }
+
+  /* /prix/ (PriceTable): one block per product, joined in one card under the family's caption. Several sizes: the
+     name, then per size a line « size, price » and a small line « servings · per serving ». One size: the name and
+     its price, then the same small line. The cells are placed in that order (`order`), the reading order stays the
+     table's. The units are for the eye only (data-unit, empty alternative text): screen readers hear the headers. */
+  table.price-table tbody {
+    padding: 0.7rem var(--card-pad);
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-block-end: 0;
+  }
+
+  table.price-table tbody:first-of-type {
+    border-start-start-radius: var(--radius);
+    border-start-end-radius: var(--radius);
+  }
+
+  table.price-table tbody:last-of-type {
+    border-block-end: 1px solid var(--line);
+    border-end-start-radius: var(--radius);
+    border-end-end-radius: var(--radius);
+  }
+
+  table.price-table tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+  }
+
+  table.price-table tr + tr {
+    margin-block-start: 0.45rem;
+  }
+
+  table.price-table .price-name {
+    grid-column: 1 / -1;
+    margin-block-end: 0.3rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+
+  table.price-table .price-size {
+    order: 1;
+    grid-column: 1 / 3;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  table.price-table .sizes-price-cell {
+    order: 2;
+    grid-column: 3;
+    padding-inline-start: 0.75rem;
+  }
+
+  table.price-table .price-portions {
+    order: 3;
+    grid-column: 1;
+  }
+
+  table.price-table .price-each {
+    order: 4;
+    grid-column: 2 / -1;
+    padding-inline-start: 1.1em;
+    text-indent: -1.1em;
+  }
+
+  table.price-table .price-portions,
+  table.price-table .price-each,
+  .price-group:not(.price-group-sizes) .price-size {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    text-align: start;
+    white-space: normal;
+  }
+
+  /* The dot between the two small numbers, a second line hanging after it. */
+  table.price-table .price-each::before,
+  .price-group:not(.price-group-sizes) .price-portions::before {
+    content: '·';
+    content: '·' / '';
+    display: inline-block;
+    inline-size: 1.1em;
+    text-align: center;
+    text-indent: 0;
+  }
+
+  table.price-table [data-unit]::after {
+    content: ' ' attr(data-unit);
+    content: ' ' attr(data-unit) / '';
+  }
+
+  /* One size: the name beside its price, the size and the servings on one line under them. */
+  .price-group:not(.price-group-sizes) .price-name {
+    grid-column: 1 / 3;
+    margin-block-end: 0.1rem;
+  }
+
+  .price-group:not(.price-group-sizes) .sizes-price-cell {
+    order: 0;
+  }
+
+  .price-group:not(.price-group-sizes) .price-size {
+    grid-column: 1;
+  }
+
+  .price-group:not(.price-group-sizes) .price-portions {
+    grid-column: 2 / -1;
+  }
+
+  .price-group:not(.price-group-sizes) .price-each {
+    grid-column: 1 / -1;
+    padding-inline-start: 0;
+    text-indent: 0;
+  }
+
+  .price-group:not(.price-group-sizes) .price-each::before {
+    content: none;
+  }
+
+  /* No price per serving here (one serving, or a number missing): the dash stays for screen readers only. */
+  table.price-table td.sizes-none {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 /* ---------- Larger screens: four cards a row, the product head in two columns ---------- */
@@ -1813,11 +2041,6 @@ table.sizes tbody tr {
     .card-media {
       aspect-ratio: 4 / 3;
     }
-  }
-
-  .product-card-summary {
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
   }
 
   /* The engine's badge sits on the picture (it stays after the title in the reading order). */
@@ -1963,6 +2186,95 @@ table.sizes tbody tr {
   .sizes-scroll {
     box-shadow: var(--shadow);
   }
+
+  /* /prix/ (PriceTable): one group per product, its name once on the left. Fixed columns, so a family's first table
+     and the one in its fold line up. */
+  table.price-table {
+    table-layout: fixed;
+  }
+
+  table.price-table thead th:nth-child(1) {
+    inline-size: 40%;
+  }
+
+  table.price-table thead th:nth-child(2) {
+    inline-size: 28%;
+  }
+
+  table.price-table thead th:nth-child(3),
+  table.price-table thead th:nth-child(4) {
+    inline-size: 16%;
+  }
+
+  table.price-table:has(thead th:nth-child(5)) thead th:nth-child(1) {
+    inline-size: 32%;
+  }
+
+  table.price-table:has(thead th:nth-child(5)) thead th:nth-child(2) {
+    inline-size: 23%;
+  }
+
+  table.price-table:has(thead th:nth-child(5)) thead th:nth-child(3),
+  table.price-table:has(thead th:nth-child(5)) thead th:nth-child(4) {
+    inline-size: 12%;
+  }
+
+  table.price-table:has(thead th:nth-child(5)) thead th:nth-child(5) {
+    inline-size: 21%;
+  }
+
+  table.price-table th,
+  table.price-table td {
+    padding: 0.5rem 0.875rem;
+    border-block-end: 0;
+    overflow-wrap: anywhere;
+  }
+
+  table.price-table thead th {
+    padding-block: 0.7rem;
+  }
+
+  table.price-table .price-name {
+    vertical-align: top;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  table.price-table .price-size {
+    font-weight: 500;
+  }
+
+  table.price-table .sizes-num {
+    overflow-wrap: normal;
+  }
+
+  /* A little air around a product, a hairline between two. */
+  table.price-table tbody > tr:first-child > * {
+    padding-block-start: 0.8rem;
+  }
+
+  table.price-table tbody > tr:last-child > *,
+  table.price-table tbody > tr:first-child > [rowspan] {
+    padding-block-end: 0.8rem;
+  }
+
+  table.price-table tbody + tbody > tr:first-child > * {
+    border-block-start: 1px solid var(--line);
+  }
+
+  table.price-table tbody tr:hover {
+    background: none;
+  }
+
+  @media (hover: hover) {
+    table.price-table tbody:hover {
+      background: color-mix(in srgb, var(--paper-caramel) 45%, transparent);
+    }
+  }
+
+  .prices .fold > .table-scroll {
+    margin-block: 0.75rem 0;
+  }
 }
 
 @media (min-width: 56rem) {
@@ -2029,8 +2341,10 @@ table.sizes tbody tr {
   .product-buy,
   .menu-family-head,
   .product-buybar,
-  table.sizes:not(.sizes-products) tbody tr,
-  table.sizes-products tbody {
+  table.sizes:not(.sizes-products, .price-table) tbody tr,
+  table.sizes-products tbody,
+  table.price-table tbody,
+  .fold-summary {
     border: 1px solid CanvasText;
   }
 

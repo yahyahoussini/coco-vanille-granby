@@ -1,10 +1,15 @@
 // Products that can be ordered online, each with its « Prête dès … » line from the engine (08 P1) and a plain
-// form that adds it to « Ma boîte » (works without JavaScript). Prices as text, taxes extra (07 C-9).
-// Grouped by family in the menu's order, so a long list stays scannable; on a phone each product is a compact row
-// (photo, name, price, readiness) with its size, quantity and « Ajouter » on one line below (ordering.css).
-import { money, t } from '@/lib/i18n'
-import { productPath, CardMedia, familyOf } from '@/components/site/Products'
+// form that adds it to « Ma boîte » (works without JavaScript). Prices as text, taxes extra (07 C-9): said once, above
+// the list. Grouped by family in the menu's order, each family a <details> with its count, the first one open, so the
+// long list stays scannable and the request form below stays within reach; an anchor into a closed family opens it
+// (OpenOnHash). On a phone each product is a compact row (photo, name, price, readiness) with its size, quantity and
+// « Ajouter » on one line below (ordering.css).
+import { money } from '@/lib/i18n'
+import { productPath, CardMedia, familyOf, PriceNote } from '@/components/site/Products'
 import { AddToBoxForm, pricedVariants } from '@/components/catalogue/AddToBox'
+import { Fold } from '@/components/catalogue/Fold'
+import { OpenOnHash } from '@/components/catalogue/OpenOnHash'
+import { catalogueCopy } from '@/components/catalogue/copy'
 import { Icon } from '@/components/site/Icon'
 import { cutoffLine } from '@/lib/ordering/availability'
 import { errorText } from '@/lib/ordering/errors'
@@ -41,7 +46,7 @@ function OrderRow({ product: p, state: st = {}, locale, boxToken, level }) {
         {variants.length > 0 && (
           <p className="price">
             {variants.length > 1 && <span className="price-from">{c.from} </span>}
-            <span className="price-amount">{money(Math.min(...variants.map((v) => v.priceCents)), locale)}</span> <span className="price-tax">({p.priceEstimated ? `${t(locale).offer.indicative}, ${c.taxes}` : c.taxes})</span>
+            <span className="price-amount">{money(Math.min(...variants.map((v) => v.priceCents)), locale)}</span>
           </p>
         )}
         {st.label && <p className={`order-ready ${st.orderable ? 'is-ready' : 'is-blocked'}`}>{st.label}</p>}
@@ -82,24 +87,41 @@ export function ProductOrderList({ locale = 'fr', products = [], states, shop, b
       {products.length === 0 ? (
         <p className="order-none">{c.none}</p>
       ) : (
-        groups.map((g) => {
-          const titled = grouped && Boolean(g.title)
-          const Group = titled ? 'section' : 'div'
-          return (
-            <Group key={g.key} className={`order-group family-${g.key}`} aria-labelledby={titled ? `commande-${g.key}` : undefined}>
-              {titled && (
-                <h3 id={`commande-${g.key}`} className="order-group-title">
-                  {g.title}
-                </h3>
-              )}
+        <>
+          <PriceNote products={products} locale={locale} />
+          {groups.map((g, i) => {
+            const titled = grouped && Boolean(g.title)
+            const rows = (
               <ul className="order-grid">
                 {g.products.map((p) => (
                   <OrderRow key={p.id} product={p} state={states.get(p.id)} locale={locale} boxToken={boxToken} level={titled ? 4 : 3} />
                 ))}
               </ul>
-            </Group>
-          )
-        })
+            )
+            return titled ? (
+              <section key={g.key} className={`order-group family-${g.key}`} aria-labelledby={`commande-${g.key}`}>
+                <Fold
+                  open={i === 0}
+                  summary={
+                    <>
+                      <h3 id={`commande-${g.key}`} className="order-group-title">
+                        {g.title}
+                      </h3>
+                      <span className="order-group-count">· {catalogueCopy(locale).products(g.products.length)}</span>
+                    </>
+                  }
+                >
+                  {rows}
+                </Fold>
+              </section>
+            ) : (
+              <div key={g.key} className={`order-group family-${g.key}`}>
+                {rows}
+              </div>
+            )
+          })}
+          <OpenOnHash />
+        </>
       )}
     </section>
   )

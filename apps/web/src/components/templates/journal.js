@@ -8,6 +8,7 @@ import { AnswerBlock, Sections, Faq, ConversionBand, Unbroken } from '../site/Co
 import { Photo } from '../site/Products'
 import { StockPhoto } from '../site/StockPhoto'
 import { Ornament } from '../site/Ornament'
+import { Fold } from '../catalogue/Fold'
 import { ContentTemplate, answers, orderAction, mapsAction, phoneAction } from './shared'
 
 // The Journal (blog): the index and its pages (template « journal », registry page), the post page (template
@@ -22,6 +23,8 @@ export const ownHeroOf = (post) => (post?.hero && typeof post.hero === 'object' 
 const photoKeyOf = (post) => (photoKnown(post?.photo) ? post.photo : 'hero')
 
 // One post in a list: its picture, category, title (the post's own h1, never « Lire la suite »), description and date.
+// `compact` (the home page): a row with a small picture and the first words of the description; the whole row links
+// to the post, where the rest is. Same HTML on every screen, journal.css lays it out.
 export function PostCard({ post, locale, compact = false }) {
   const href = postPath(post, locale)
   if (!href) return null
@@ -34,7 +37,7 @@ export function PostCard({ post, locale, compact = false }) {
           {own ? (
             <Photo media={own} size="card" />
           ) : (
-            <StockPhoto name={photoKeyOf(post)} locale={locale} decorative sizes="(min-width: 60rem) 18rem, (min-width: 48rem) 45vw, 92vw" />
+            <StockPhoto name={photoKeyOf(post)} locale={locale} decorative sizes={compact ? '(min-width: 48rem) 11rem, 5rem' : '(min-width: 60rem) 18rem, (min-width: 48rem) 45vw, 92vw'} />
           )}
         </div>
         <div className="post-card-body">
@@ -174,29 +177,38 @@ export function PostArticle({ post, locale, business, served, around = {}, previ
       <Sections sections={post.sections} locale={locale} />
       {(post.sources || []).length > 0 && (
         <section className="post-sources" aria-labelledby="post-sources">
-          <h2 id="post-sources">{j.sources}</h2>
-          <ol>
-            {post.sources.map((src, i) => (
-              <li key={src.id || i}>
-                <a href={src.url} rel="noopener">
-                  {src.label}
-                </a>
-                {src.date && (
-                  <>
-                    {' · '}
-                    <time dateTime={src.date}>{dayLabel(src.date, locale)}</time>
-                  </>
-                )}
-              </li>
-            ))}
-          </ol>
+          {/* Reference material: closed, with its count. The links stay in the HTML and the h2 keeps its exact words. */}
+          <Fold
+            summary={
+              <>
+                <h2 id="post-sources">{j.sources}</h2>
+                <span className="post-sources-count">· {post.sources.length}</span>
+              </>
+            }
+          >
+            <ol>
+              {post.sources.map((src, i) => (
+                <li key={src.id || i}>
+                  <a href={src.url} rel="noopener">
+                    {src.label}
+                  </a>
+                  {src.date && (
+                    <>
+                      {' · '}
+                      <time dateTime={src.date}>{dayLabel(src.date, locale)}</time>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </Fold>
         </section>
       )}
       <Faq items={post.faq} locale={locale} />
       {related.length > 0 && (
-        <nav className="related post-related" aria-labelledby="post-related">
+        <nav className="related related-line post-related" aria-labelledby="post-related">
           <h2 id="post-related">{s.related}</h2>
-          <ul className="start-grid">
+          <ul>
             {related.map((key) => (
               <li key={key}>
                 <Link href={pathFor(key, locale)}>{s.pageNames[key] || s.nav[key]}</Link>
@@ -224,9 +236,10 @@ export function PostArticle({ post, locale, business, served, around = {}, previ
       <ConversionBand primary={primary || phoneAction(business, locale)} secondary={primary ? phoneAction(business, locale) : null} />
       {post.changeNote && (
         <footer className="post-footer">
-          <p className="meta-line">
-            {j.changeNote} {post.changeNote}
-          </p>
+          {/* The same small fold as the meta line of the other pages (Contract.js MetaLine): the dates stay in the byline. */}
+          <Fold summary={s.changeNoteTitle} className="meta-note">
+            <p>{post.changeNote}</p>
+          </Fold>
         </footer>
       )}
     </article>

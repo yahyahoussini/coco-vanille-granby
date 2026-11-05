@@ -75,7 +75,7 @@ test.describe('uploads on the public host (/media/)', () => {
   })
 
   // Uploads are /media/<file>; the only other images are static files: the logo (public/brand/) and the
-  // labelled ambiance photos (public/photos/, src/lib/photos.js).
+  // ambiance photos (public/photos/, src/lib/photos.js).
   test('public pages reference uploads as /media/<file>, never through /api', async () => {
     for (const path of ['/', '/carte/', '/gateaux/']) {
       const res = await raw(`${PUBLIC_URL}${path}`)

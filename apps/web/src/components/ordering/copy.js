@@ -52,6 +52,7 @@ const fr = {
     viewBox: (n) => `Voir ma boîte (${n})`,
     taxes: 'taxes en sus',
     from: 'dès',
+    choose: 'Choisir des produits',
   },
   box: {
     empty: 'Votre boîte est vide pour le moment.',
@@ -231,6 +232,7 @@ const en = {
     viewBox: (n) => `See my box (${n})`,
     taxes: 'plus taxes',
     from: 'from',
+    choose: 'Choose products',
   },
   box: {
     empty: 'Your box is empty for now.',
@@ -410,6 +412,7 @@ const es = {
     viewBox: (n) => `Ver mi caja (${n})`,
     taxes: 'impuestos aparte',
     from: 'desde',
+    choose: 'Elegir productos',
   },
   box: {
     empty: 'Su caja está vacía por ahora.',

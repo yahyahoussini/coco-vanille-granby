@@ -1,8 +1,8 @@
 // Illustration photos used until the shop's own photos replace them (research/sessions/04 #12; on 2026-11-01 Yahya
 // asked for a picture in every place that should have one): free licences only (Unsplash License; a CC licence
-// with its attribution where noted), no face, no brand, no storefront. The site labels every one « Photo
-// d'illustration » (except the map, which is real), never puts one in JSON-LD as the shop's product, and shows the
-// owner's own photo instead as soon as it exists (a product's photos, a page's hero, the « Vitrine du jour »).
+// with its attribution where noted), no face, no brand, no storefront. The site never puts one in
+// JSON-LD as the shop's product, writes nothing on the picture (owner's decision, 2026-11-04), and shows the owner's
+// own photo instead as soon as it exists (a product's photos, a page's hero, the « Vitrine du jour »).
 // Files: public/photos/<key>-<width>.avif and .webp, metadata stripped; hero and products 4:5, the others 4:3.
 // Pure module (no imports) so node --test can load it.
 
@@ -104,8 +104,8 @@ export const PHOTOS = {
     },
   },
 
-  // Product illustrations (4:5, like the product cards), shown where a product has no photo of its own yet: always
-  // labelled « Photo d'illustration », never in the product's JSON-LD (Product.image lists the shop's photos only).
+  // Product illustrations (4:5, like the product cards), shown where a product has no photo of its own yet:
+  // never in the product's JSON-LD (Product.image lists the shop's photos only).
   'croissant-aux-amandes': product(
     { fr: 'Croissants garnis d’amandes effilées sur un plateau de marbre', en: 'Croissants topped with sliced almonds on a marble tray', es: 'Croissants cubiertos de almendras laminadas sobre una bandeja de mármol' },
     { author: 'Redd Francisco', profile: 'https://unsplash.com/@reddfrancisco', source: 'https://unsplash.com/photos/brown-and-white-bread-on-white-textile-5HC8MhpE7dA' },
@@ -194,7 +194,7 @@ export const PHOTOS = {
     },
   },
 
-  // The shop's surroundings: a real map, not an illustration (no label; the attribution is in the image and the
+  // The shop's surroundings: a real map, not an illustration (the attribution is in the image and the
   // caption). OpenStreetMap standard tiles, built once by scratchpad/make-map.cjs around the shop's coordinates.
   'carte-granby': {
     kind: 'map',

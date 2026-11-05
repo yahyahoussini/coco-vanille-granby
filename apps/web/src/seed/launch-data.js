@@ -94,7 +94,7 @@ const SHOP_TAIL = {
 }
 
 // What the shop publishes itself (research/20b §1, posts of August to October 2026) and a few plain basics, as products with a
-// page and a price. No photo of their own yet: the site labels the picture « Photo d'illustration » (lib/photos.js), and
+// page and a price. No photo of their own yet: the site shows an illustration (lib/photos.js), and
 // the owner can add a real one in Studio › Produits.
 export const SHOP_PRODUCTS = [
   { slug: 'croissant', enSlug: 'croissant', title: 'Croissant', en: 'Croissant', family: 'viennoiseries', fr: 'Un croissant nature.', enText: 'A plain croissant.', offer: { variants: one(325), taxClass: 'zero', leadTimeHours: 24 } },

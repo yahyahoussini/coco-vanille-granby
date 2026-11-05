@@ -48,6 +48,13 @@ export function perPortionText(v = {}, locale = 'fr') {
   return locale === 'en' ? `${money(low, locale)}–${money(high, locale)}` : `${money(low, locale)} à ${money(high, locale)}`
 }
 
+// A card shows one sentence: the rest of a summary is often the same words on every product, and stays on the
+// product page. Cuts at the first period followed by a capital (« 3, rue Court » has none); no such period, the whole text.
+export function firstSentence(text = '') {
+  const match = /^.*?\.(?=\s+\p{Lu})/su.exec(text)
+  return match ? match[0] : text
+}
+
 export function fromPriceCents(product = {}) {
   const prices = (product.variants || []).map((v) => v.priceCents).filter(positive)
   return prices.length ? Math.min(...prices) : null

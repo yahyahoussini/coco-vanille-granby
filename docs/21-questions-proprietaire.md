@@ -76,7 +76,7 @@ Le site est construit et testé. Il ne manque plus que des faits que vous seule 
 ## Bloc 5 — Vos produits, vos photos et le Journal
 
 34. **La liste de vos produits**, d'un coup : la feuille `produits-a-remplir` (une ligne par format : famille, nom, format, prix, portions, délai, allergènes, en ligne oui ou non), ou simplement une photo de votre menu et de vos prix, que l'Agence entre pour vous. Chaque produit s'affiche alors sur le site; ses allergènes ne s'affichent comme vérifiés qu'après votre confirmation dans Coco Studio › Plus › Produits.
-35. **Vos vraies photos**, avec votre accord : la devanture, le comptoir, chaque gâteau (entier et coupé), les viennoiseries, le café. Le site montre pour l'instant des photos d'illustration, marquées « Photo d'illustration »; chacune est remplacée par la vôtre dès qu'elle existe.
+35. **Vos vraies photos**, avec votre accord : la devanture, le comptoir, chaque gâteau (entier et coupé), les viennoiseries, le café. Le site montre pour l'instant des photos d'illustration; chacune est remplacée par la vôtre dès qu'elle existe.
 36. **Le Journal** (une courte publication par semaine sur le site) : votre accord pour publier les huit premiers textes préparés par l'Agence (chocolatine ou pain au chocolat, conserver les croissants, l'histoire du Paris-Brest, la bûche de Noël, une demi-journée au centre-ville, vos ateliers créatifs, le vol-au-vent, les allergènes prioritaires), et qui les relit avant leur sortie.
 37. **Qui relit les textes en anglais**, s'il y a quelqu'un : sinon, l'anglais reste un brouillon et seule la version française paraît.
 

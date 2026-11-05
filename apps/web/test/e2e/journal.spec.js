@@ -68,7 +68,7 @@ test.describe('Journal post', () => {
       }
     }, post.body)
     expect(dom.firstP).toBe('answer')
-    expect(dom.ownPhoto || dom.figure.includes('Photo d’illustration'), 'an illustration says so (or it is the shop’s own photo)').toBe(true)
+    expect(dom.ownPhoto || dom.figure.includes('Illustration'), 'the caption says illustration (or it is the shop’s own photo)').toBe(true)
     expect(dom.author, 'visible author link').toBe(true)
     expect(dom.sources.length).toBeGreaterThan(0)
     for (const s of dom.sources) expect(s).toMatch(/^https:\/\//)

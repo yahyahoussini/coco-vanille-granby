@@ -1,7 +1,7 @@
-import Script from 'next/script'
 import '@fontsource-variable/fraunces/soft.css'
 import '@fontsource-variable/inter'
 import { SITE_ORIGIN } from '@/lib/routes'
+import { FoldScript } from '@/components/site/FoldScript'
 import '@/styles/site.css'
 import '@/styles/content.css'
 import '@/styles/journal.css'
@@ -21,14 +21,14 @@ export const metadata = {
 }
 export const viewport = { themeColor: '#FAF4E8', width: 'device-width', initialScale: 1 }
 
-// Root layout for the es site: <html lang="es"> (v1 L2); html.js is set before paint (suppressHydrationWarning).
+// Root layout for the es site: <html lang="es"> (v1 L2); html.js is set before paint, by a real inline script in the head (FoldScript.js; suppressHydrationWarning).
 export default function Layout({ children }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body>
-        {children}
-        <Script id="js-class" strategy="beforeInteractive">{"document.documentElement.classList.add('js')"}</Script>
-      </body>
+      <head>
+        <FoldScript />
+      </head>
+      <body>{children}</body>
     </html>
   )
 }

@@ -3,7 +3,7 @@
 // (dynamic routes in src/app/(site-*)/…); client components only enhance (message preview, copy link, Stripe).
 import '@/styles/ordering.css'
 import { notFound } from 'next/navigation'
-import { money, clock, keepTogether } from '@/lib/i18n'
+import { money, clock, keepTogether, t as interfaceCopy } from '@/lib/i18n'
 import { payloadClient, getProducts } from '@/lib/data'
 import { dayOf, localParts } from '@/lib/studio/time'
 import { offerStates } from '@/lib/ordering/create-order'
@@ -41,6 +41,19 @@ async function OrderTemplate({ locale, business, shop, doc }) {
     <article className="wrap page ordering order">
       <h1><Unbroken text={doc?.h1 || orderingCopy(locale).request.title} /></h1>
       <AnswerBlock text={doc?.answer} />
+      {/* The two reasons to be on this page, one tap from the top: both lists are long. */}
+      <p className="order-jump">
+        {enabled && (
+          <a className="chip" href="#commande-en-ligne">
+            <Icon name="box" size={18} />
+            {orderingCopy(locale).products.choose}
+          </a>
+        )}
+        <a className="chip" href="#demande">
+          <Icon name="cake" size={18} />
+          {interfaceCopy(locale).home.request}
+        </a>
+      </p>
       <PageHero doc={doc} locale={locale} />
       {enabled && <ProductOrderList locale={locale} products={products} states={states} shop={shop} boxToken={ctx.boxToken} boxItems={ctx.boxItems} />}
       <RequestForm locale={locale} business={business} draft={ctx.draft} />

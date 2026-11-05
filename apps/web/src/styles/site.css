@@ -627,34 +627,54 @@ label.chip:active {
   }
 }
 
-/* « Lire la suite » (components/site/ReadMore.js): on phones, once the script runs, a long block shows its first
-   lines and a button opens the rest. Without JavaScript, and from 48rem, everything shows. The text is in the HTML. */
+/* « Lire la suite » (components/site/ReadMore.js, FoldScript.js): on screen, once html.js is set, a long block shows its
+   first three lines and a button opens the rest, at every width. Without JavaScript and on paper everything shows. The
+   text is in the HTML and stays rendered. A browser that knows neither :has() nor lh drops the clamp: the block shows
+   in full, the measure finds that it fits, and no button stays. A #anchor inside a block opens it (:target).
+   Overflow hidden, never clip: only a real scroll box lets Ctrl+F and text fragments reach the words (FoldScript.js). */
 
 .read-more {
   display: none;
 }
 
-@media (max-width: 47.99rem) {
-  html.js [data-clamp]:not([data-open]) .clamp-body {
-    max-block-size: var(--clamp-height, 11.5em);
+@media screen {
+  html.js [data-clamp]:not([data-open]):not(:has(:target)) .clamp-body {
+    max-block-size: var(--clamp-height, 3lh);
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
-    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    /* The last line whole, fading toward its end: a fade from top to bottom cuts every letter of that line in half. */
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - 1lh) no-repeat,
+      linear-gradient(to right, #000 25%, transparent 92%) bottom / 100% 1lh no-repeat;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - 1lh) no-repeat,
+      linear-gradient(to right, #000 25%, transparent 92%) bottom / 100% 1lh no-repeat;
   }
 
+  /* 24 px of layout under the three lines; the 48 px target comes from the ::after. */
   html.js .read-more:not([hidden]) {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    min-block-size: var(--target);
+    justify-self: start;
+    gap: 0.3rem;
+    min-block-size: 1.5rem;
     padding: 0;
     border: 0;
     background: none;
     font: inherit;
+    font-size: 0.9375rem;
     font-weight: 650;
+    line-height: 1.5rem;
     color: var(--ink-link);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  html.js .read-more:not([hidden])::after {
+    content: '';
+    position: absolute;
+    inset-block: calc((1.5rem - var(--target)) / 2);
+    inset-inline: -0.5rem;
   }
 
   .read-more .icon {
@@ -663,6 +683,12 @@ label.chip:active {
 
   .read-more[aria-expanded='true'] .icon {
     transform: rotate(180deg);
+  }
+
+  @media (hover: hover) {
+    .read-more:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -1650,10 +1676,7 @@ html[data-today='Sunday'] .hours tr[data-days~='Sunday'] th::before {
   min-inline-size: 7rem;
 }
 
-/* ---------- Ambiance photos (src/lib/photos.js), always labelled « Photo d'illustration » ---------- */
-
-/* One small pill, top end corner, 8px in, above the photo and under any control (a section moves it only where a
-   shape clips that corner, e.g. the hero's arch). */
+/* ---------- Ambiance photos (src/lib/photos.js) ---------- */
 
 .stock-photo {
   position: relative;
@@ -1672,46 +1695,30 @@ html[data-today='Sunday'] .hours tr[data-days~='Sunday'] th::before {
   object-fit: cover;
 }
 
-.stock-photo-label {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: 0.5rem;
-  inset-inline-end: 0.5rem;
-  max-inline-size: calc(100% - 1rem);
-  padding: 0.125rem 0.5rem;
-  border-radius: 999px;
-  background: rgb(59 36 28 / 0.74);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  color: var(--ink-on-dark);
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.5;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  pointer-events: none;
-}
-
-/* A page's picture under its h1 and answer (shared.js PageHero): wide, rounded, its caption below in small type. */
+/* A page's picture after its h1 and answer (shared.js PageHero), rounded, its caption below in small type. A low frame on
+   phones and tablets, lower still on the pages that open on a list of products, so what the visitor came for starts
+   sooner. From 60rem it sits in the empty half of the page head (content.css). */
 .page-hero {
   inline-size: 100%;
-  margin-block: 1.25rem 2rem;
+  margin-block: 0 1.5rem;
   margin-inline: 0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }
 
 .page-hero img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
+}
+
+.menu-page .page-hero img,
+.category .page-hero img {
+  aspect-ratio: 21 / 9;
 }
 
 @media (min-width: 48rem) {
   .page-hero img {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 21 / 9;
   }
 }
 
@@ -2465,7 +2472,8 @@ html.motion-ready [data-reveal].is-in {
   }
 
   .sticky-bar a[aria-current],
-  .nav-row[aria-current] {
+  .nav-row[aria-current],
+  .read-more {
     text-decoration: underline;
   }
 }
@@ -2478,11 +2486,21 @@ html.motion-ready [data-reveal].is-in {
   .marquee,
   .hero-stage,
   .footer-edge,
-  .ornament {
+  .ornament,
+  .read-more {
     display: none !important;
   }
 
   body {
     padding-block-end: 0;
+  }
+
+  /* On paper a closed <details> keeps nothing of what it holds: its text prints open, every answer and every list. A
+     rule of its own: a browser that does not know the pseudo-element drops this rule only. */
+  details::details-content {
+    content-visibility: visible !important;
+    display: block !important;
+    block-size: auto !important;
+    overflow: visible !important;
   }
 }

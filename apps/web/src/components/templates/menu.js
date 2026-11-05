@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getProducts, getCategories } from '@/lib/data'
 import { Fact } from '../site/Fact'
 import { Icon, CATEGORY_ICON } from '../site/Icon'
-import { ProductGrid } from '../site/Products'
+import { ProductGrid, PriceNote } from '../site/Products'
 import { CategoryNav } from '../catalogue/CategoryNav'
 import { catalogueCopy } from '../catalogue/copy'
 import { ContentTemplate, categoryHref, orderAction } from './shared'
@@ -10,11 +10,14 @@ import { ContentTemplate, categoryHref, orderAction } from './shared'
 // ---------- Menu hub and category pages ----------
 // Page contract kept: h1 → answer → family chips → sections (the product list sits in the first section's slot).
 // Phones read the list as compact rows (photo, name, price, « + »); from 48rem it is the grid of cards.
-async function CategoryList({ locale, productionCategory, level, products }) {
+async function CategoryList({ locale, productionCategory, level, products, foldAfter, priceNote }) {
   const list = products || (await getProducts({ locale, productionCategory }))
   if (!list.length) return <p><Fact value={null} label="liste des produits confirmée par le propriétaire" id="products" /></p>
-  return <ProductGrid products={list} locale={locale} level={level} layout="list" />
+  return <ProductGrid products={list} locale={locale} level={level} layout="list" foldAfter={foldAfter} priceNote={priceNote} />
 }
+
+// The menu is a tour of the families: each shows its first products, its own page (and the fold) has the others.
+const MENU_FAMILY_SHOWN = 8
 
 export async function MenuTemplate(props) {
   const { locale, served } = props
@@ -22,6 +25,8 @@ export async function MenuTemplate(props) {
   const [categories, products] = await Promise.all([getCategories(locale), getProducts({ locale })])
   const list = (
     <div className="menu-families catalogue-slot">
+      {/* Once for the whole menu, not once per family. */}
+      <PriceNote products={products} locale={locale} />
       {categories.map((c) => {
         const href = categoryHref(c, locale, served)
         const items = products.filter((p) => p.productionCategory === c.productionCategory)
@@ -46,7 +51,7 @@ export async function MenuTemplate(props) {
               </div>
               {c.intro && <p className="menu-family-intro">{c.intro}</p>}
             </div>
-            <CategoryList locale={locale} products={items} level={4} />
+            <CategoryList locale={locale} products={items} level={4} foldAfter={MENU_FAMILY_SHOWN} priceNote={false} />
           </section>
         )
       })}

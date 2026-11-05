@@ -70,8 +70,9 @@ export function ratingOf(business, locale) {
   return { rating: decimal(g.rating, locale), count: g.reviewCount, date: longDate(g.ratingAsOf, locale), iso: g.ratingAsOf }
 }
 
-// The picture under a page's h1 and answer (v1 Layer 10: a hero photo with a factual alt and a caption): the photo
-// the owner gave the page (its « hero » field), else its illustration (src/lib/photos.js), labelled and credited.
+// The picture after a page's h1 and answer (v1 Layer 10: a hero photo with a factual alt and a caption): the photo
+// the owner gave the page (its « hero » field), else its illustration (src/lib/photos.js), credited. From 60rem it
+// sits in the empty half of the page head (content.css), hence its `sizes`; a phone gets a low frame (site.css).
 export function PageHero({ doc, locale }) {
   const own = doc?.hero && typeof doc.hero === 'object' && mediaFile(doc.hero, 'hero') ? doc.hero : null
   if (own) {
@@ -82,20 +83,21 @@ export function PageHero({ doc, locale }) {
     )
   }
   const key = pagePhotoKey(doc?.key)
-  return key ? <StockPhoto name={key} locale={locale} caption priority className="page-hero" sizes="(min-width: 60rem) 56rem, 92vw" /> : null
+  return key ? <StockPhoto name={key} locale={locale} caption priority className="page-hero" sizes="(min-width: 60rem) 37rem, 92vw" /> : null
 }
 
 // Generic page-contract template: h1 → answer → hero picture → template content → sections → key facts → FAQ →
 // action → meta. The answer stays the first paragraph of <main>. Legal and utility pages (boilerplate) have no picture.
-export function ContentTemplate({ doc, locale, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, className = '' }) {
+// The picture is the last thing in the head, so a computer can lay it beside the h1 and the answer (content.css).
+export function ContentTemplate({ doc, locale, primary, secondary, children, keyFacts, keyFactsTitle, slot, boilerplate = false, folds = true, className = '' }) {
   return (
     <article className={`wrap page ${className}`.trim()}>
       <header className="page-head">
         <Ornament name="vanilla" className="page-head-ornament" />
         <h1>{doc?.h1 || doc?.title ? <Unbroken text={doc?.h1 || doc?.title} /> : <Fact value={null} label="titre de la page" />}</h1>
         <AnswerBlock text={doc?.answer} />
+        {!boilerplate && <PageHero doc={doc} locale={locale} />}
       </header>
-      {!boilerplate && <PageHero doc={doc} locale={locale} />}
       {children}
       {boilerplate ? (
         <div data-nosnippet="">
@@ -104,8 +106,8 @@ export function ContentTemplate({ doc, locale, primary, secondary, children, key
         </div>
       ) : (
         <>
-          <Sections sections={doc?.sections} slot={slot} locale={locale} />
-          <KeyFacts items={keyFacts} locale={locale} title={keyFactsTitle} />
+          <Sections sections={doc?.sections} slot={slot} locale={locale} folds={folds} />
+          <KeyFacts items={keyFacts} locale={locale} title={keyFactsTitle} fold />
           <Faq items={doc?.faq} locale={locale} />
         </>
       )}

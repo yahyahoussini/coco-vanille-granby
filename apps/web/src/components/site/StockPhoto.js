@@ -1,23 +1,19 @@
 import { PHOTOS, photoSources } from '@/lib/photos'
 
-const LABEL = { fr: 'Photo d’illustration', en: 'Illustrative photo', es: 'Foto ilustrativa' }
-// Small pictures (product cards): the same notice in one word, so it is never cut off.
+// The caption under a page's picture: this word, then the credit. Nothing is written on the picture itself.
 const SHORT = { fr: 'Illustration', en: 'Illustration', es: 'Ilustración' }
 const BY = { fr: 'Photo', en: 'Photo', es: 'Foto' }
 const MAP = { fr: 'Carte', en: 'Map', es: 'Mapa' }
 // A CC licence asks to say the picture was changed (here: cropped and resized).
 const MODIFIED = { fr: 'recadrée', en: 'cropped', es: 'recortada' }
-const ILLUSTRATION_NOTE = {
-  fr: 'La photo de la boutique la remplacera.',
-  en: 'The shop’s own photo will replace it.',
-  es: 'La foto de la tienda la reemplazará.',
-}
 
 // An illustration photo (src/lib/photos.js) until the shop's own photo replaces it (research/sessions/04 #12).
-// Always labelled « Photo d'illustration »: it shows the kind of thing, never a specific Coco Vanille product. The
-// map, the Zoo photo and the shop's own cake are real (kind map / place / shop) and carry their credit instead. Intrinsic size on the <img>, lazy unless `priority`.
-// `caption`: a <figure> with the label and the credit under the picture (page heroes; a CC licence needs it).
-export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = false, className, label = true, decorative = false, caption = false, compact = false }) {
+// It shows the kind of thing, never a specific Coco Vanille product; no notice on the picture (owner's decision,
+// 2026-11-04, research/sessions/04 #14). The map, the Zoo photo and the shop's own cake are real (kind map / place /
+// shop). Intrinsic size on the <img>, lazy unless `priority`.
+// `caption`: a <figure> with the credit under the picture (page heroes; the Zoo's CC licence and the map's OpenStreetMap
+// attribution require theirs: keep them).
+export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = false, className, decorative = false, caption = false }) {
   const photo = Object.hasOwn(PHOTOS, name || '') ? PHOTOS[name] : null
   if (!photo) return null
   const src = photoSources(name)
@@ -40,16 +36,10 @@ export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = fa
       />
     </picture>
   )
-  const badge = label && !isReal && (
-    <span className="stock-photo-label" data-nosnippet="">
-      {(compact ? SHORT : LABEL)[locale] || LABEL.fr}
-    </span>
-  )
   if (!caption) {
     return (
       <span className={['stock-photo', className].filter(Boolean).join(' ')}>
         {picture}
-        {badge}
       </span>
     )
   }
@@ -59,9 +49,8 @@ export function StockPhoto({ name, locale = 'fr', sizes = '100vw', priority = fa
   return (
     <figure className={['stock-photo', 'stock-figure', className].filter(Boolean).join(' ')}>
       {picture}
-      {badge}
       <figcaption className="stock-caption" data-nosnippet="">
-        {isMap ? `${MAP[locale] || MAP.fr}${colon}` : isReal ? `${BY[locale] || BY.fr}${colon}` : `${LABEL[locale] || LABEL.fr}. ${ILLUSTRATION_NOTE[locale] || ILLUSTRATION_NOTE.fr} ${BY[locale] || BY.fr}${colon}`}
+        {isMap ? `${MAP[locale] || MAP.fr}${colon}` : isReal ? `${BY[locale] || BY.fr}${colon}` : `${SHORT[locale] || SHORT.fr} · `}
         {c.profile ? <a href={c.profile} rel="nofollow noopener">{c.author}</a> : c.author}
         {c.license && ' · '}
         {c.license && (c.licenseUrl ? <a href={c.licenseUrl} rel="license nofollow noopener">{c.license}</a> : c.license)}

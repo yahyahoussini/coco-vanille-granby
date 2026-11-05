@@ -146,7 +146,7 @@ Le chiffre donne le nombre de cases `[[FACT NEEDED]]` distinctes de la page rend
 Ce que le contrôle du 28 octobre 2026 signale aussi sur les textes (`apps/web/reports/gate/audit.json`) :
 - **Pages de produits trop courtes** (93 à 139 mots, bloc réponse de 9 mots, description de 115 à 128 caractères) : normal tant que la description du produit manque.
 - **Trois pages anglaises sans texte** (`/en/cake-for-tomorrow/`, `/en/yule-logs/`, `/en/about/chef/`) : à écrire en anglais, par une personne anglophone, une fois la version française confirmée (§6).
-- **Accueil :** un bloc de texte caché de plus de 15 mots est signalé (risque au regard de la règle de Google sur le texte caché). À vérifier pendant la refonte : un texte replié doit l'être dans un `<details>`.
+- **Accueil :** un bloc de texte caché de plus de 15 mots est signalé (risque au regard de la règle de Google sur le texte caché). Règle depuis le 2026-11-05 (demande du propriétaire : moins de texte à l'écran) : un texte replié garde un contrôle visible et reste dans le HTML, soit un `<details>` (listes, tableaux), soit un bloc « Lire la suite » dont les trois premières lignes restent à l'écran (ReadMore.js). Jamais de texte sans contrôle.
 - **Aucune citation d'une personne nommée** sur le site : elle viendra avec l'accord de la propriétaire ou du chef (C1).
 
 ---

@@ -1,7 +1,7 @@
 // Pure template logic: portions, price per serving, calculator matching, seasonal state, hours summary.
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { servings, portionsText, inchesText, perPortionText, fromPriceCents, leadTimeText, parseGuests, matchSizes, seasonState, monthYear, offerBadge } from '../../src/components/site/offer.js'
+import { servings, portionsText, inchesText, perPortionText, fromPriceCents, firstSentence, leadTimeText, parseGuests, matchSizes, seasonState, monthYear, offerBadge } from '../../src/components/site/offer.js'
 import { productOfferState } from '../../src/lib/ordering/availability.js'
 import { productNode } from '../../src/lib/schema.js'
 import { shop, pools, cake, local } from './ordering/fixtures.js'
@@ -15,6 +15,14 @@ describe('sizes and prices', () => {
     assert.equal(servings({ portionsMin: 8 }), 8)
     assert.equal(servings({}), null)
     assert.equal(servings({ portionsMin: 0 }), null)
+  })
+
+  test('a card keeps the first sentence of a summary', () => {
+    assert.equal(firstSentence('Un gâteau rond à la crème. Un gâteau sur commande, à récupérer au 3, rue Court.'), 'Un gâteau rond à la crème.')
+    assert.equal(firstSentence('Une part de tarte. À la Pâtisserie Coco Vanille, à Granby.'), 'Une part de tarte.')
+    assert.equal(firstSentence('À récupérer au 3, rue Court, à Granby.'), 'À récupérer au 3, rue Court, à Granby.')
+    assert.equal(firstSentence('Sans point final'), 'Sans point final')
+    assert.equal(firstSentence(), '')
   })
 
   test('portions and inches read the Québec way', () => {

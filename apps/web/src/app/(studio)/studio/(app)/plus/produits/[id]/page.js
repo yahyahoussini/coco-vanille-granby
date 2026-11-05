@@ -195,7 +195,7 @@ export default async function Produit({ params, searchParams }) {
         <h2 id="photos" style={{ marginTop: 0 }}>
           Photos
         </h2>
-        {!(p.photos || []).length && <p className="meta">Pas encore de photo : le site montre une photo d’illustration, identifiée comme telle.</p>}
+        {!(p.photos || []).length && <p className="meta">Pas encore de photo : le site montre une photo d’illustration à la place.</p>}
         {(p.photos || []).length > 0 && <p className="meta">La première photo est celle des cartes du site.</p>}
         <ul className="rows">
           {(p.photos || [])

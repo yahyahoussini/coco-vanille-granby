@@ -8,9 +8,10 @@ import { Fact } from './Fact'
 import { Icon } from './Icon'
 import { StockPhoto } from './StockPhoto'
 import { productPhotoKey } from '@/lib/photos'
-import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, offerBadge } from './offer'
+import { sizeText, portionsText, priceText, perPortionText, fromPriceCents, leadTimeText, offerBadge, servings, firstSentence } from './offer'
 import { catalogueCopy } from '../catalogue/copy'
 import { AddPlus, pricedVariants } from '../catalogue/AddToBox'
+import { Fold } from '../catalogue/Fold'
 import { KeepPhone } from '../catalogue/KeepPhone'
 
 const prefixFor = (locale) => (locale === 'fr' ? '' : `/${locale}`)
@@ -52,7 +53,7 @@ export function Photo({ media, size = 'card', priority = false, className, lang 
 }
 
 // The picture area of a card: the owner's photo, or, until she adds one, an illustration photo of the kind of
-// product (src/lib/photos.js productPhotoKey), labelled « Photo d'illustration » on the picture itself.
+// product (src/lib/photos.js productPhotoKey).
 export function CardMedia({ product, className = '', size = 'card', priority = false, locale = 'fr', sizes = '(min-width: 60rem) 18rem, (min-width: 48rem) 33vw, 50vw' }) {
   const family = familyOf(product)
   const photo = (product?.photos || []).find((p) => mediaFile(p, size))
@@ -65,7 +66,7 @@ export function CardMedia({ product, className = '', size = 'card', priority = f
   }
   return (
     <div className={`card-media has-photo is-illustration media-${family} ${className}`.trim()}>
-      <StockPhoto name={productPhotoKey(product)} locale={locale} priority={priority} sizes={sizes} compact />
+      <StockPhoto name={productPhotoKey(product)} locale={locale} priority={priority} sizes={sizes} />
     </div>
   )
 }
@@ -86,9 +87,10 @@ export function OfferBadge({ state, orderingEnabled = false, skip = [] }) {
 }
 
 // Price as text, before taxes: « 4,25 $ », « à partir de 38,00 $ » when there are several sizes.
-// `fromLabel` swaps the « à partir de » for a shorter word where room is tight (cards: « dès »). A price the owner has
-// not checked yet says « prix indicatif » (Studio › Produits).
-export function PriceLine({ product, locale, className = 'price', fromLabel, ...attributes }) {
+// `fromLabel` swaps the « à partir de » for a shorter word where room is tight (cards: « dès »). `note` adds the words
+// after the price, « taxes en sus », with « prix indicatif » for a price the owner has not checked yet (Studio ›
+// Produits): for a price that stands alone, the product page's buy box. A list says them once, above it (PriceNote).
+export function PriceLine({ product, locale, className = 'price', fromLabel, note = false, ...attributes }) {
   const s = t(locale)
   const from = fromPriceCents(product)
   const several = (product.variants || []).length > 1
@@ -97,7 +99,13 @@ export function PriceLine({ product, locale, className = 'price', fromLabel, ...
       {from !== null ? (
         <>
           {several && <span className="price-from">{fromLabel || s.priceFrom} </span>}
-          <span className="price-amount">{money(from, locale)}</span> <span className="price-tax">({product.priceEstimated ? `${s.offer.indicative}, ${s.taxesExtra}` : s.taxesExtra})</span>
+          <span className="price-amount">{money(from, locale)}</span>
+          {note && (
+            <>
+              {' '}
+              <span className="price-tax">({product.priceEstimated ? `${s.offer.indicative}, ${s.taxesExtra}` : s.taxesExtra})</span>
+            </>
+          )}
         </>
       ) : product.priceOnRequest ? (
         <span className="price-request">{s.offer.priceOnRequest}</span>
@@ -106,6 +114,14 @@ export function PriceLine({ product, locale, className = 'price', fromLabel, ...
       )}
     </p>
   )
+}
+
+// The one line above a list of prices, in place of a note on every row: « Prix indicatifs, taxes en sus. » as soon as
+// one listed product has a price the owner has not checked yet, else « Taxes en sus. ».
+export function PriceNote({ products = [], locale }) {
+  const k = catalogueCopy(locale)
+  if (!products.some((p) => fromPriceCents(p) !== null)) return null
+  return <p className="price-note">{products.some((p) => p.priceEstimated) ? k.pricesIndicative : k.pricesTaxes}</p>
 }
 
 // Card for category, menu and vitrine lists: the title link is the card's name and its whole hit area; price as
@@ -125,7 +141,7 @@ export function ProductCard({ product, locale, state, orderingEnabled, showPlann
     <li className={`product-card family-${familyOf(product)}${tone === 'soldout' ? ' is-soldout' : ''}`} data-spotlight="" data-reveal="">
       <CardMedia product={product} locale={locale} className="product-card-media" />
       <Heading className="product-card-title">{href ? <Link href={href}>{product.title}</Link> : product.title}</Heading>
-      {product.summary && <p className="product-card-summary">{product.summary}</p>}
+      {product.summary && <p className="product-card-summary">{firstSentence(product.summary)}</p>}
       <OfferBadge state={state} orderingEnabled={orderingEnabled} />
       {(portions || lead || planned) && (
         <p className="product-card-meta">
@@ -170,27 +186,41 @@ export function ProductCard({ product, locale, state, orderingEnabled, showPlann
 //   of tall cards (home vitrine, with the shared .rail of site.css).
 const LAYOUTS = ['grid', 'list', 'rail']
 
-export async function ProductGrid({ products: all, locale, showPlanned, level, layout = 'grid' }) {
+// A long list keeps its first `after` items in view and folds the rest; a fold is worth a tap from 4 items on.
+const splitForFold = (items, after) => (after && items.length - after >= 4 ? [items.slice(0, after), items.slice(after)] : [items, []])
+
+// `foldAfter`: the first products in view, the others in a <details> « Voir les N autres »: their links stay in the HTML.
+export async function ProductGrid({ products: all, locale, showPlanned, level, layout = 'grid', foldAfter, priceNote = true }) {
   // Production (strict) lists only products whose facts are complete: a card never shows a marker there.
   const products = publishGuard() === 'strict' ? all.filter(linkable) : all
   const [states, shop] = await Promise.all([getOfferStates(products, locale), getShop(locale)])
   const orderingEnabled = Boolean(shop?.ordering?.enabled)
   const shape = LAYOUTS.includes(layout) ? layout : 'grid'
-  return (
+  const [shown, folded] = splitForFold(products, foldAfter)
+  const grid = (items) => (
     <ul className={`product-grid product-grid--${shape}${shape === 'rail' ? ' rail' : ''}`} data-reveal-stagger="">
-      {products.map((p) => (
+      {items.map((p) => (
         <ProductCard key={p.id} product={p} locale={locale} state={states.get(p.id)} orderingEnabled={orderingEnabled} showPlanned={showPlanned} level={level} />
       ))}
     </ul>
+  )
+  return (
+    <>
+      {priceNote && <PriceNote products={products} locale={locale} />}
+      {grid(shown)}
+      {folded.length > 0 && <Fold summary={catalogueCopy(locale).seeOthers(folded.length)}>{grid(folded)}</Fold>}
+    </>
   )
 }
 
 // Sizes table (08 P2): the quotable fact. Price per serving only when both numbers exist.
 // On a phone (catalogue.css) one product's sizes become small cards: the first cell is the title, the price sits
-// beside it and the other cells show their column name (data-label). Several products (showProduct: prices,
-// calculator) become one compact row per size, the numbers followed by their unit (data-unit, shown for the eye only).
+// beside it and the other cells show their column name (data-label). Several products (showProduct: calculator)
+// become one compact row per size, the numbers followed by their unit (data-unit, shown for the eye only).
 // The explicit table roles keep it a table for screen readers once the stylesheet changes how the rows are displayed.
-export function SizesTable({ variants = [], locale, caption, showProduct, rows, estimated = false }) {
+// The caption is the one line about the prices (PriceNote's words), never a note on each row, and never the heading
+// again: the section's h2 already asks « Quels formats et à quel prix? ».
+export function SizesTable({ variants = [], locale, showProduct, rows, estimated = false }) {
   const s = t(locale)
   const o = s.offer
   const k = catalogueCopy(locale)
@@ -200,9 +230,9 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows, 
   const portionsUnit = (n) => (showProduct && n ? (n === '1' ? k.portionUnit : s.portions) : undefined)
   // Focusable scroll region: a keyboard user can scroll a wide table on a phone (WCAG 2.1.1).
   return (
-    <div className="table-scroll sizes-scroll" role="region" aria-label={caption || o.pricesCaption} tabIndex={0}>
+    <div className="table-scroll sizes-scroll" role="region" aria-label={o.pricesCaption} tabIndex={0}>
       <table className={showProduct ? 'sizes sizes-products' : 'sizes'} role="table">
-        <caption>{caption || o.pricesCaption}</caption>
+        <caption>{estimated || list.some(({ product }) => product?.priceEstimated) ? k.pricesIndicative : k.pricesTaxes}</caption>
         <thead role="rowgroup">
           <tr role="row">
             {showProduct && (
@@ -246,9 +276,7 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows, 
                 </td>
                 <td role="cell" className="sizes-num sizes-price-cell" data-label={o.price}>
                   {price ? (
-                    <>
-                      <strong className="sizes-price">{price}</strong> <span className="sizes-tax">({estimated || product?.priceEstimated ? `${o.indicative}, ${s.taxesExtra}` : s.taxesExtra})</span>
-                    </>
+                    <strong className="sizes-price">{price}</strong>
                   ) : product?.priceOnRequest ? (
                     <span className="sizes-on-request">{o.onRequest}</span>
                   ) : (
@@ -266,6 +294,99 @@ export function SizesTable({ variants = [], locale, caption, showProduct, rows, 
         </tbody>
       </table>
     </div>
+  )
+}
+
+// The price list of one family (/prix/): one <tbody> per product, so a name prints once beside its sizes: a row
+// header for one size, a row-group header (rowspan) for several, each size then its own row header. The price per
+// serving says nothing new when the size is one serving, so it stays out. The first products stay in view, the others
+// go in a second table with the same columns, inside a <details> « Voir les N autres ». On a phone (catalogue.css) a
+// product is one block: its name, then per size a line « size, price » and a small line « servings · per serving »;
+// the units are for the eye only (data-unit), and the explicit roles keep it a table for screen readers.
+export function PriceTable({ products = [], locale, caption, foldAfter }) {
+  const s = t(locale)
+  const o = s.offer
+  const k = catalogueCopy(locale)
+  const perServing = (variant) => (servings(variant) === 1 ? null : perPortionText(variant, locale))
+  const anyPerServing = products.some((p) => (p.variants || []).some(perServing))
+  const [shown, folded] = splitForFold(products, foldAfter)
+  const table = (items) => (
+    <div className="table-scroll sizes-scroll" role="region" aria-label={caption} tabIndex={0}>
+      <table className="sizes price-table" role="table">
+        <caption>{caption}</caption>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th scope="col" role="columnheader">
+              {o.product}
+            </th>
+            <th scope="col" role="columnheader">
+              {o.size}
+            </th>
+            <th scope="col" role="columnheader">
+              {o.portions}
+            </th>
+            <th scope="col" role="columnheader" className="sizes-num">
+              {o.price}
+            </th>
+            {anyPerServing && (
+              <th scope="col" role="columnheader" className="sizes-num">
+                {o.perPortion}
+              </th>
+            )}
+          </tr>
+        </thead>
+        {items.map((product) => {
+          const sizes = product.variants || []
+          const several = sizes.length > 1
+          const href = productPath(product, locale)
+          return (
+            <tbody key={product.id} role="rowgroup" className={several ? 'price-group price-group-sizes' : 'price-group'}>
+              {sizes.map((variant, i) => {
+                const price = priceText(variant, locale)
+                const portions = portionsText(variant, locale)
+                const each = perServing(variant)
+                const Size = several ? 'th' : 'td'
+                return (
+                  <tr key={variant.id || i} role="row">
+                    {i === 0 && (
+                      <th scope={several ? 'rowgroup' : 'row'} rowSpan={several ? sizes.length : undefined} role="rowheader" className="price-name">
+                        {href ? <Link href={href}>{product.title}</Link> : product.title}
+                      </th>
+                    )}
+                    <Size scope={several ? 'row' : undefined} role={several ? 'rowheader' : 'cell'} className="price-size">
+                      {sizeText(variant, locale) || <Fact value={null} label="nom du format" />}
+                    </Size>
+                    <td role="cell" className="price-portions" data-unit={portions ? (portions === '1' ? k.portionUnit : s.portions) : undefined}>
+                      {portions || (product.priceOnRequest ? '—' : <Fact value={null} label="portions" />)}
+                    </td>
+                    <td role="cell" className="sizes-num sizes-price-cell">
+                      {price ? (
+                        <strong className="sizes-price">{price}</strong>
+                      ) : product.priceOnRequest ? (
+                        <span className="sizes-on-request">{o.onRequest}</span>
+                      ) : (
+                        <Fact value={null} label="prix" />
+                      )}
+                    </td>
+                    {anyPerServing && (
+                      <td role="cell" className={each ? 'sizes-num price-each' : 'sizes-num price-each sizes-none'} data-unit={each ? o.each.replace(/ /g, ' ') : undefined}>
+                        {each || '—'}
+                      </td>
+                    )}
+                  </tr>
+                )
+              })}
+            </tbody>
+          )
+        })}
+      </table>
+    </div>
+  )
+  return (
+    <>
+      {table(shown)}
+      {folded.length > 0 && <Fold summary={k.seeOthers(folded.length)}>{table(folded)}</Fold>}
+    </>
   )
 }
 

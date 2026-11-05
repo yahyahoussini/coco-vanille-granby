@@ -459,24 +459,44 @@ html:has(form.checkout-form) {
   background: var(--paper-raised);
 }
 
-/* One family per group, its name on a hairline. */
+/* Two links under the answer (the two reasons to be on this page, both long to reach). */
+.order-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: var(--space-2);
+}
+
+.order-products .price-note {
+  margin-block: 0.75rem 0;
+}
+
+/* One family per group: a row with its name and count that opens on its products (Fold, catalogue.css). */
 .order-group {
-  margin-block-start: 1.5rem;
+  margin-block-start: 0.625rem;
+}
+
+.order-products .price-note + .order-group {
+  margin-block-start: 0.75rem;
+}
+
+.order-group > .fold {
+  margin: 0;
 }
 
 .order-group-title {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin: 0 0 0.6rem;
+  margin: 0;
   font-size: var(--step-1);
 }
 
-.order-group-title::after {
-  content: '';
-  flex: 1;
-  block-size: 1px;
-  background: var(--line);
+.order-group-count {
+  font-size: var(--text-meta);
+  font-weight: 560;
+  color: var(--ink-soft);
+}
+
+.order-group .fold > .order-grid {
+  margin-block-start: 0.625rem;
 }
 
 .order-grid {
@@ -587,16 +607,6 @@ html:has(form.checkout-form) {
     inline-size: 62%;
   }
 
-  /* A thumbnail: the notice whole, along the foot of the picture. */
-  .card-media.is-illustration.order-card-media .stock-photo-label {
-    inset-block: auto 0.25rem;
-    inset-inline: 0.25rem;
-    max-inline-size: none;
-    padding-inline: 0.25rem;
-    font-size: 0.625rem;
-    text-align: center;
-  }
-
   .order-card-body {
     display: contents;
   }
@@ -616,10 +626,6 @@ html:has(form.checkout-form) {
 
   .order-card .price-amount {
     font-size: 1.125rem;
-  }
-
-  .order-card .price-tax {
-    white-space: normal;
   }
 
   .order-ready,
@@ -643,8 +649,25 @@ html:has(form.checkout-form) {
     color: var(--ink-soft);
   }
 
-  /* With « − 1 + » the quantity speaks for itself in the row: its label is read, not shown (shown without the
-     script, when the field is a plain number). « Format » stays visible above its list. */
+  /* Before the script runs, and without it, the quantity is a plain number field with its label beside it, in the
+     width of the « − 1 + » that takes their place: the row keeps its height when the page wakes up. Label above the
+     field, each row lost 25 px at that moment: 1357 px on the whole list, after the browser had already scrolled to
+     #demande, which then landed far below its title. */
+  .order-add .field-qty {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    inline-size: 8.5rem;
+  }
+
+  .order-add .field-qty .qty {
+    flex: 1;
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+
+  /* With « − 1 + » the quantity speaks for itself in the row: its label is read, not shown. « Format » stays visible
+     above its list. */
   .order-add .field-qty:has(.qty.is-ready) > label {
     position: absolute;
     inline-size: 1px;
@@ -829,16 +852,6 @@ html:has(form.checkout-form) {
 
 .box-line-media .card-media-emblem {
   inline-size: 62%;
-}
-
-/* A small thumbnail: the notice whole, along the foot of the picture. */
-.card-media.is-illustration.box-line-media .stock-photo-label {
-  inset-block: auto 0.25rem;
-  inset-inline: 0.125rem;
-  max-inline-size: none;
-  padding-inline: 0.125rem;
-  font-size: 0.5625rem;
-  text-align: center;
 }
 
 .box-line-main {

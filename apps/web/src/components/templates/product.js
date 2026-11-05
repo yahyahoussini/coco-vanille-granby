@@ -14,7 +14,7 @@ import { catalogueCopy } from '../catalogue/copy'
 import { phoneAction, mapsAction, addressLine } from './shared'
 
 // The picture: the owner's first photo in an arch-topped frame, her other angles below, or, until she adds them, an illustration
-// photo of the kind of product, labelled « Photo d'illustration » with its credit (src/lib/photos.js). The
+// photo of the kind of product (src/lib/photos.js). The
 // illustration never reaches the Product JSON-LD below (images: the shop's photos only).
 function ProductMedia({ product, locale }) {
   const family = familyOf(product)
@@ -83,7 +83,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
           )}
           <div className="product-buy">
             <div className="product-price-row">
-              <PriceLine product={product} locale={locale} className="price product-price" data-live-price={canAdd ? formId : undefined} />
+              <PriceLine product={product} locale={locale} className="price product-price" note data-live-price={canAdd ? formId : undefined} />
               {portions && (
                 <p className="product-portions" data-live-portions={canAdd ? formId : undefined}>
                   <Icon name="users" size={18} />
@@ -124,7 +124,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
                 and tab order; the button submits that form (form attribute), so it works without JavaScript. */}
             {buyBar && (
               <div className="product-buybar">
-                <PriceLine product={product} locale={locale} className="price buybar-price" fromLabel={catalogueCopy(locale).from} data-live-total={formId} />
+                <PriceLine product={product} locale={locale} className="price buybar-price" fromLabel={catalogueCopy(locale).from} note data-live-total={formId} />
                 <button type="submit" form={formId} className="btn buybar-add">
                   <Icon name="box" size={20} />
                   <AddLabel locale={locale} />
@@ -137,7 +137,7 @@ export function ProductTemplate({ product, offer, shop, locale, business, served
       </div>
       <section aria-labelledby="product-sizes" className="product-sizes">
         <h2 id="product-sizes">{o.sizesTitle}</h2>
-        {onRequest ? <p className="product-on-request">{o.onRequestLine}</p> : <SizesTable variants={product.variants} locale={locale} caption={`${product.title} · ${o.pricesCaption}`} estimated={product.priceEstimated} />}
+        {onRequest ? <p className="product-on-request">{o.onRequestLine}</p> : <SizesTable variants={product.variants} locale={locale} estimated={product.priceEstimated} />}
         {!onRequest && product.priceEstimated && <p className="small prices-indicative">{o.indicativeNote}</p>}
       </section>
       <div className="product-info">

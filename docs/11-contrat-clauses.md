@@ -33,7 +33,7 @@ Pourquoi cette clause : Google l'écrit lui-même : « No one can guarantee a #1
 
 « Le code du site et de Coco Studio développé pour le client, les textes, les photos fournies par le client, les données et les rapports appartiennent au client `[[FACT NEEDED: à la livraison ou au paiement de quelle facture — à décider avec le juriste]]`. Le dépôt de code est hébergé dans une organisation GitHub au nom du client `[[FACT NEEDED: date du transfert ; aujourd'hui, le dépôt est sous le compte de l'agence]]`. Les composants libres gardent leurs licences. Les outils génériques de mesure de l'agence (dossier `tools/`) sont concédés au client sous une licence perpétuelle et non exclusive, pour ses propres sites `[[FACT NEEDED: validation du juriste]]`. »
 
-Les photos d'ambiance libres de droits utilisées en attendant les vôtres sont sous licence Unsplash et restent étiquetées « Photo d'illustration » ([research/sessions/04-design-direction.md](../research/sessions/04-design-direction.md)).
+Les photos d'ambiance libres de droits utilisées en attendant les vôtres sont sous licence Unsplash ([research/sessions/04-design-direction.md](../research/sessions/04-design-direction.md)).
 
 ## 4. Contenus et faits
 
